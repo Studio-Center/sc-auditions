@@ -1,0 +1,105 @@
+'use strict';
+
+/**
+ * Module dependencies.
+ */
+var mongoose = require('mongoose'),
+	errorHandler = require('./errors'),
+	Typecast = mongoose.model('Typecast'),
+	_ = require('lodash');
+
+/**
+ * Create a Typecast
+ */
+exports.create = function(req, res) {
+	var typecast = new Typecast(req.body);
+	typecast.user = req.user;
+
+	typecast.save(function(err) {
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			res.jsonp(typecast);
+		}
+	});
+};
+
+/**
+ * Show the current Typecast
+ */
+exports.read = function(req, res) {
+	res.jsonp(req.typecast);
+};
+
+/**
+ * Update a Typecast
+ */
+exports.update = function(req, res) {
+	var typecast = req.typecast ;
+
+	typecast = _.extend(typecast , req.body);
+
+	typecast.save(function(err) {
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			res.jsonp(typecast);
+		}
+	});
+};
+
+/**
+ * Delete an Typecast
+ */
+exports.delete = function(req, res) {
+	var typecast = req.typecast ;
+
+	typecast.remove(function(err) {
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			res.jsonp(typecast);
+		}
+	});
+};
+
+/**
+ * List of Typecasts
+ */
+exports.list = function(req, res) { Typecast.find().sort('-created').populate('user', 'displayName').exec(function(err, typecasts) {
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			res.jsonp(typecasts);
+		}
+	});
+};
+
+/**
+ * Typecast middleware
+ */
+exports.typecastByID = function(req, res, next, id) { Typecast.findById(id).populate('user', 'displayName').exec(function(err, typecast) {
+		if (err) return next(err);
+		if (! typecast) return next(new Error('Failed to load Typecast ' + id));
+		req.typecast = typecast ;
+		next();
+	});
+};
+
+/**
+ * Typecast authorization middleware
+ */
+exports.hasAuthorization = function(req, res, next) {
+	if (req.typecast.user.id !== req.user.id) {
+		return res.status(403).send('User is not authorized');
+	}
+	next();
+};
