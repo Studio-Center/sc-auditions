@@ -1,0 +1,19 @@
+<section data-ng-controller="TalentsController" data-ng-init="find()">
+    <div class="page-header">
+        <h1>Talents</h1>
+    </div>
+    <div class="list-group">
+        <a data-ng-repeat="talent in talents" data-ng-href="#!/talents/{{talent._id}}" class="list-group-item">
+			<small class="list-group-item-text">
+				Posted on
+				<span data-ng-bind="talent.created | date:'medium'"></span>
+				by
+				<span data-ng-bind="talent.user.displayName"></span>
+			</small>
+			<h4 class="list-group-item-heading" data-ng-bind="talent.name"></h4>
+        </a>
+    </div>
+    <div class="alert alert-warning text-center" data-ng-hide="!talents.$resolved || talents.length">
+    	No Talents yet, why don't you <a href="/#!/talents/create">create one</a>?
+    </div>
+</section>
