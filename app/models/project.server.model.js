@@ -28,9 +28,9 @@ var ProjectSchema = new Schema({
 	},
 	scopeCreep: {
 		type: Number
-	}
+	},
 	phases: {
-		type: String
+		type: Object
 	},
 	status: {
 		type: [{
@@ -58,23 +58,23 @@ var ProjectSchema = new Schema({
 		trim: true
 	},
 	scripts: {
-		type: 'string';
+		type: Object
 	},
 	mediaFiles: {
-		type: 'string';
+		type: Object
 	},
 	user: {
 		type: Schema.ObjectId,
 		ref: 'User'
 	},
 	team: {
-		type: 'string'
+		type: Object
 	},
 	talent: {
-		type: 'string'
+		type: Object
 	},
 	client: {
-		type: 'string'
+		type: Object
 	}
 });
 
@@ -83,7 +83,7 @@ var ProjectSchema = new Schema({
  */
 ProjectSchema.pre('save', function(next) {
 
-	this.phases = {
+	this.phases = [
 					{
 						name: 'Project Creation',
 						status: 'Open',
@@ -143,8 +143,8 @@ ProjectSchema.pre('save', function(next) {
 						status: 'Open',
 						startDate: Date.now,
 						endDate: ''
-					},
-				};
+					}
+				];
 
 	next();
 });

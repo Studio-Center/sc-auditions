@@ -12,6 +12,75 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label class="control-label" for="type">Type</label>
+                    <div class="controls">
+                        <input type="text" data-ng-model="type" id="type" class="form-control" placeholder="Type" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="unionStatus">Union Status</label><br/>
+                    <div class="btn-group" data-toggle="buttons">
+                        <label class="btn btn-primary">
+                            Union
+                            <input type="radio" data-ng-model="unionStatus" id="unionStatus1" name="unionStatus" class="form-control" value="union">
+                        </label>
+                        <label class="btn btn-primary">
+                            Non-Union
+                            <input type="radio" data-ng-model="unionStatus" id="unionStatus2" name="unionStatus" class="form-control" value="non-union">
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="gender">Gender</label><br/>
+                    <div class="btn-group" data-toggle="buttons">
+                        <label class="btn btn-primary">
+                            Male
+                            <input type="radio" data-ng-model="gender" id="gender1" name="gender" class="form-control" value="male">
+                        </label>
+                        <label class="btn btn-primary">
+                            Female
+                            <input type="radio" data-ng-model="gender" id="gender2" name="gender" class="form-control" value="female">
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="lastNameCode">Last Name Code</label>
+                    <div class="controls">
+                        <input type="text" data-ng-model="lastNameCode" id="lastNameCode" class="form-control" placeholder="lastNameCode" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="outageTimes">Outage Times</label>
+                    <div class="controls">
+                        <input type="text" data-ng-model="outageTimes" id="outageTimes" class="form-control" placeholder="outageTimes" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="locationISDN">Location/ISDN</label>
+                    <div class="controls">
+                        <input type="text" data-ng-model="locationISDN" id="locationISDN" class="form-control" placeholder="locationISDN" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="typeCasts">Typecasts</label>
+                    <script>
+                      var typecasts = angular.module("typecasts", []);
+                      typecasts.controller("TypecastsController", function($scope) {
+                          $scope.typecasts = Typecasts.query();
+                          console.log($scope.typecasts);
+                      });
+                    </script>
+                    <div class="controls" ng-module="typecasts">
+                        <div ng-controller="TypecastsController" data-ng-init="find()">
+                            <div class="btn-group" data-toggle="buttons">
+                                <label class="btn btn-primary" data-ng-repeat="typecast in typecasts">
+                                    {{typecast.name}} <input type="checkbox" name="typeCasts[]" class="form-control" data-ng-model="typeCasts" value="typecast.name"> 
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
                     <input type="submit" class="btn btn-default">
                 </div>
 				<div data-ng-show="error" class="text-danger">

@@ -21,7 +21,7 @@ var AgencySchema = new Schema({
 		trim: true
 	},
 	clients: {
-		type: String
+		type: Object
 	},
 	notes: {
 		type: String,
