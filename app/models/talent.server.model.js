@@ -24,7 +24,7 @@ var TalentSchema = new Schema({
 		trim: true
 	},
 	unionStatus: {
-		type: Boolean
+		type: String
 	},
 	producerID: {
 		type: Schema.ObjectId,
@@ -45,7 +45,7 @@ var TalentSchema = new Schema({
 		type: String
 	},
 	typeCasts: {
-		type: String
+		type: Array
 	},
 	created: {
 		type: Date,

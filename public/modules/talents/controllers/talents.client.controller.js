@@ -1,15 +1,22 @@
 'use strict';
 
 // Talents controller
-angular.module('talents').controller('TalentsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Talents',
-	function($scope, $stateParams, $location, Authentication, Talents ) {
+angular.module('talents').controller('TalentsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Talents', 
+	function($scope, $stateParams, $location, Authentication, Talents) {
 		$scope.authentication = Authentication;
 
 		// Create new Talent
 		$scope.create = function() {
 			// Create new Talent object
 			var talent = new Talents ({
-				name: this.name
+				name: this.name,
+				type: this.type,
+				gender: this.gender,
+				unionStatus: this.unionStatus,
+				lastNameCode: this.lastNameCode,
+				outageTimes: this.outageTimes,
+				locationISDN: this.locationISDN,
+				typeCasts: this.typeCasts
 			});
 
 			// Redirect after save

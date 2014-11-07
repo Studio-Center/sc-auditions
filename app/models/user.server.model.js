@@ -80,7 +80,7 @@ var UserSchema = new Schema({
 	},
 	notes: {
 		type: String
-	}
+	},
 	updated: {
 		type: Date
 	},
