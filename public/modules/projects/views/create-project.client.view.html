@@ -6,9 +6,49 @@
         <form class="form-horizontal" data-ng-submit="create()" novalidate>
             <fieldset>
                 <div class="form-group">
-                    <label class="control-label" for="name">Name</label>
+                    <label class="control-label" for="name">Title</label>
                     <div class="controls">
-                        <input type="text" data-ng-model="name" id="name" class="form-control" placeholder="Name" required>
+                        <input type="text" data-ng-model="title" id="title" class="form-control" placeholder="Title" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="name">Estimated Completion Date</label>
+                    <div class="controls">
+                        <input type="date" data-ng-model="estimatedCompletionDate" id="estimatedCompletionDate" class="form-control" placeholder="Estimated Completion Date" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="name">Estimated Time</label>
+                    <div class="controls">
+                        <input type="text" data-ng-model="estimatedTime" id="estimatedTime" class="form-control" placeholder="Estimated Time">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="name">Actual Time</label>
+                    <div class="controls">
+                        <input type="text" data-ng-model="actualTime" id="actualTime" class="form-control" placeholder="Estimated Time">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="name">Status</label>
+                    <div class="controls">
+                        <select ng-model="status" required>
+                            <option ng-repeat="item in statusOpts" value="{{item}}">{{item}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="name">Priority</label>
+                    <div class="controls">
+                        <select ng-model="priority" required>
+                            <option ng-repeat="item in priorityOpts" value="{{item}}">{{item}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="name">Description</label>
+                    <div class="controls">
+                        <textarea type="date" data-ng-model="description" id="description" class="form-control" ></textarea>
                     </div>
                 </div>
                 <div class="form-group">

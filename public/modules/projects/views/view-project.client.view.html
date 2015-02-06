@@ -1,6 +1,28 @@
 <section data-ng-controller="ProjectsController" data-ng-init="findOne()">
 	<div class="page-header">
-		<h1 data-ng-bind="project.name"></h1>
+		<h1 data-ng-bind="project.title"></h1>
+		<ul style="list-style-type:none;padding:0">
+			<li><strong>Estimated Completion Date:</strong></li>
+			<li data-ng-bind="project.estimatedCompletionDate"></li>
+			<li><strong>Estimated Time:</strong></li>
+			<li data-ng-bind="project.estimatedTime"></li>
+			<li><strong>Actual Time:</strong></li>
+			<li data-ng-bind="project.actualTime"></li>
+			<li><strong>Status:</strong></li>
+			<li data-ng-bind="project.status"></li>
+			<li><strong>Priority:</strong></li>
+			<li data-ng-bind="project.priority"></li>
+			<li><strong>Description:</strong></li>
+			<li data-ng-bind="project.description"></li>
+		</ul>
+		<input type="file" ng-file-select="onFileSelect($files)">
+		<input type="file" ng-file-select="onFileSelect($files)" multiple accept="image/*">
+		<div class="button" ng-file-select="onFileSelect($files)" data-multiple="true"></div>
+		<div ng-file-drop="onFileSelect($files)" ng-file-drag-over-class="optional-css-class-name-or-function"
+        ng-show="dropSupported">drop files here</div>
+		<div ng-file-drop-available="dropSupported=true" 
+		        ng-show="!dropSupported">HTML5 Drop File is not supported!</div>
+		<button ng-click="upload.abort()">Cancel Upload</button>
 	</div>
 	<div class="pull-right" data-ng-show="authentication.user._id == project.user._id">
 		<a class="btn btn-primary" href="/#!/projects/{{project._id}}/edit">
