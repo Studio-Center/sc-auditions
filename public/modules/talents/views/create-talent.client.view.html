@@ -20,27 +20,16 @@
                 <div class="form-group">
                     <label class="control-label" for="unionStatus">Union Status</label><br/>
                     <div class="btn-group" data-toggle="buttons">
-                        <label class="btn btn-primary">
-                            Union
-                            <input type="radio" data-ng-model="unionStatus" id="unionStatus1" name="unionStatus" class="form-control" value="union">
-                        </label>
-                        <label class="btn btn-primary">
-                            Non-Union
-                            <input type="radio" data-ng-model="unionStatus" id="unionStatus2" name="unionStatus" class="form-control" value="non-union">
-                        </label>
+                        <unionOptions ng-repeat="union in unionOptions">
+                            <input type="checkbox" class="btn btn-primary" ng-model="unionStatus[union]" ng-click="toggleNewUnion(union)" btn-checkbox> {{union}}<br>
+                        </unionOptions>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label" for="gender">Gender</label><br/>
                     <div class="btn-group" data-toggle="buttons">
-                        <label class="btn btn-primary">
-                            Male
-                            <input type="radio" data-ng-model="gender" id="gender1" name="gender" class="form-control" value="male">
-                        </label>
-                        <label class="btn btn-primary">
-                            Female
-                            <input type="radio" data-ng-model="gender" id="gender2" name="gender" class="form-control" value="female">
-                        </label>
+                        <label class="btn btn-primary" ng-model="talent.gender" btn-radio="'male'">Male</label>
+                        <label class="btn btn-primary" ng-model="talent.gender" btn-radio="'female'">Female</label>
                     </div>
                 </div>
                 <div class="form-group">
@@ -70,12 +59,12 @@
                           console.log($scope.typecasts);
                       });
                     </script>
-                    <div class="controls" ng-module="typecasts">
+                     <div class="controls" ng-module="typecasts">
                         <div ng-controller="TypecastsController" data-ng-init="find()">
                             <div class="btn-group" data-toggle="buttons">
-                                <label class="btn btn-primary" data-ng-repeat="typecast in typecasts">
-                                    {{typecast.name}} <input type="checkbox" name="typeCasts[]" class="form-control" data-ng-model="typeCasts" value="typecast.name"> 
-                                </label>
+                                <typecasts data-ng-repeat="typecast in typecasts">
+                                    <input type="checkbox" class="btn btn-primary" ng-model="talent.typeCasts[typecast.name]" btn-checkbox="'{{typecast.name}}'" ng-click="toggleNewTypecast(typecast.name)"> {{typecast.name}}<br>
+                                </typecasts>
                             </div>
                         </div>
                     </div>

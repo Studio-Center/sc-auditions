@@ -5,6 +5,46 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 	function($scope, $stateParams, $location, Authentication, Talents) {
 		$scope.authentication = Authentication;
 
+		// talent static options
+		$scope.unionOptions = ['union','non-union'];
+		$scope.unionSelected = [];
+		$scope.selTypecasts = [];
+
+		// toggle checkbox options
+		$scope.toggleUnion = function(union){
+			  var idx = $scope.talent.unionStatus.indexOf(union);
+			  if (idx > -1){
+			    $scope.talent.unionStatus.splice(idx, 1);
+			  }else{
+			    $scope.talent.unionStatus.push(union);
+			}
+		};
+		$scope.toggleTypecast = function(typeCast){
+			  var idx = $scope.talent.typeCasts.indexOf(typeCast);
+			  if (idx > -1){
+			    $scope.talent.typeCasts.splice(idx, 1);
+			  }else{
+			    $scope.talent.typeCasts.push(typeCast);
+			}
+		};
+		// used for creating new talent
+		$scope.toggleNewUnion = function(union){
+			  var idx = $scope.unionSelected.indexOf(union);
+			  if (idx > -1){
+			    $scope.unionSelected.splice(idx, 1);
+			  }else{
+			    $scope.unionSelected.push(union);
+			}
+		};
+		$scope.toggleNewTypecast = function(typeCast){
+			  var idx = $scope.selTypecasts.indexOf(typeCast);
+			  if (idx > -1){
+			    $scope.selTypecasts.splice(idx, 1);
+			  }else{
+			    $scope.selTypecasts.push(typeCast);
+			}
+		};
+
 		// Create new Talent
 		$scope.create = function() {
 			// Create new Talent object
@@ -12,11 +52,11 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 				name: this.name,
 				type: this.type,
 				gender: this.gender,
-				unionStatus: this.unionStatus,
+				unionStatus: this.unionSelected,
 				lastNameCode: this.lastNameCode,
 				outageTimes: this.outageTimes,
 				locationISDN: this.locationISDN,
-				typeCasts: this.typeCasts
+				typeCasts: this.selTypecasts
 			});
 
 			// Redirect after save
