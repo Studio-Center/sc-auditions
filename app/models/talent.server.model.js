@@ -24,7 +24,7 @@ var TalentSchema = new Schema({
 		trim: true
 	},
 	unionStatus: {
-		type: String
+		type: Array
 	},
 	producerID: {
 		type: Schema.ObjectId,
