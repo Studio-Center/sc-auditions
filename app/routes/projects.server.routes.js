@@ -3,6 +3,8 @@
 module.exports = function(app) {
 	var users = require('../../app/controllers/users');
 	var projects = require('../../app/controllers/projects');
+	var multiparty = require('connect-multiparty'),
+	multipartyMiddleware = multiparty();
 
 	// Projects Routes
 	app.route('/projects')
@@ -13,6 +15,10 @@ module.exports = function(app) {
 		.get(projects.read)
 		.put(users.requiresLogin, projects.hasAuthorization, projects.update)
 		.delete(users.requiresLogin, projects.hasAuthorization, projects.delete);
+
+	app.route('/projects/uploads')
+		.post(users.requiresLogin, multipartyMiddleware, projects.uploadFile);
+
 
 	// Finish by binding the Project middleware
 	app.param('projectId', projects.projectByID);
