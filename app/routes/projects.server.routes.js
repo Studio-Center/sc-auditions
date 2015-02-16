@@ -19,6 +19,11 @@ module.exports = function(app) {
 	app.route('/projects/uploads')
 		.post(users.requiresLogin, multipartyMiddleware, projects.uploadFile);
 
+	app.route('/projects/uploads/script')
+		.post(users.requiresLogin, multipartyMiddleware, projects.uploadScript);
+
+	app.route('/projects/uploads/audition')
+		.post(users.requiresLogin, multipartyMiddleware, projects.uploadAudition);
 
 	// Finish by binding the Project middleware
 	app.param('projectId', projects.projectByID);

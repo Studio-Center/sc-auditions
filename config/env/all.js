@@ -15,6 +15,8 @@ module.exports = {
 			css: [
 				'public/lib/bootstrap/dist/css/bootstrap.css',
 				'public/lib/bootstrap/dist/css/bootstrap-theme.css',
+				'public/lib/soundmanager/demo/demo/play-mp3-links/css/inlineplayer.css',
+				'public/lib/soundmanager/demo/flashblock/flashblock.css'
 			],
 			js: [
 				'public/lib/ng-file-upload-shim/angular-file-upload-shim.min.js',
@@ -28,7 +30,8 @@ module.exports = {
 				'public/lib/angular-sanitize/angular-sanitize.js', 
 				'public/lib/angular-ui-router/release/angular-ui-router.js',
 				'public/lib/angular-ui-utils/ui-utils.js',
-				'public/lib/angular-bootstrap/ui-bootstrap-tpls.js'
+				'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
+				'public/lib/ngAudio/app/angular.audio.js'
 			]
 		},
 		css: [

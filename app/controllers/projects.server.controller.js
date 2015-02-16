@@ -6,7 +6,12 @@
 var mongoose = require('mongoose'),
 	errorHandler = require('./errors'),
 	Project = mongoose.model('Project'),
-	_ = require('lodash');
+	User = mongoose.model('User'),
+	Talent = mongoose.model('Talent'),
+	fs = require('fs'),
+	_ = require('lodash'),
+	path = require('path'),
+	mv = require('mv');
 
 /**
  * Create a Project
@@ -41,6 +46,8 @@ exports.update = function(req, res) {
 
 	project = _.extend(project , req.body);
 
+	exports.deleteFiles(project);
+
 	project.save(function(err) {
 		if (err) {
 			return res.status(400).send({
@@ -56,7 +63,21 @@ exports.update = function(req, res) {
  * Delete an Project
  */
 exports.delete = function(req, res) {
-	var project = req.project ;
+	var project = req.project;
+
+	// generate delete files list
+	var delFilesLn = project.deleteFiles.length;
+	for(var i = 0; project.auditions.length; ++i){
+		project.deleteFiles[delFilesLn] = '/res/auditions/' + project._id + '/' + project.auditions[i].file.name;
+		delFilesLn++;
+	};
+	for(var i = 0; project.scripts.length; ++i){
+		project.deleteFiles[delFilesLn] = '/res/scripts/' + project._id + '/' + project.scripts[i].file.name;
+		delFilesLn++;
+	};
+
+	// delete found files
+	exports.deleteFiles(project);
 
 	project.remove(function(err) {
 		if (err) {
@@ -67,6 +88,25 @@ exports.delete = function(req, res) {
 			res.jsonp(project);
 		}
 	});
+};
+
+// remove file from local file system
+exports.deleteFiles = function(project){
+	
+	var appDir = path.dirname(require.main.filename);
+
+	for(var i = 0; i < project.deleteFiles.length; ++i){
+		var file = appDir + '/public' + project.deleteFiles[i];
+		
+		// remove file is exists
+		if (fs.existsSync(file)) {
+			fs.unlinkSync(file);
+			console.log(file + ' removed');
+		}
+
+		// remove file from delete queue
+		project.deleteFiles.splice(i, 1);
+	};
 };
 
 /**
@@ -105,10 +145,110 @@ exports.hasAuthorization = function(req, res, next) {
 };
 
 // file upload
-exports.uploadFile = function(req, res){
+exports.uploadFile = function(req, res, next){
 	// We are able to access req.files.file thanks to 
     // the multiparty middleware
     var file = req.files.file;
-    console.log(file.name);
-    console.log(file.type);
-}
+    //console.log(file.name);
+    //console.log(file.type);
+
+    var project = JSON.parse(req.body.data);
+
+    //var file = req.files.file;
+    var appDir = path.dirname(require.main.filename);
+    var tempPath = file.path;
+
+    var relativePath =  'res' + '/' + project.project._id + '/';
+    var newPath = appDir + '/public/' + relativePath;
+
+    // create project directory if not found
+    if (!fs.existsSync(newPath)) {
+    	fs.mkdirSync(newPath);
+    }
+
+    // add file to path
+    newPath += file.name;
+
+    //console.log(newPath);
+
+    mv(tempPath, newPath, function(err) {
+        console.log(err);
+        if (err){
+            res.status(500).end();
+        }else{
+            res.status(200).end();
+        }
+    });
+};
+
+// file upload
+exports.uploadScript = function(req, res, next){
+	// We are able to access req.files.file thanks to 
+    // the multiparty middleware
+    var file = req.files.file;
+    //console.log(file.name);
+    //console.log(file.type);
+
+    var project = JSON.parse(req.body.data);
+
+    //var file = req.files.file;
+    var appDir = path.dirname(require.main.filename);
+    var tempPath = file.path;
+    var relativePath =  'res' + '/' + 'scripts' + '/' + project.project._id + '/';
+    var newPath = appDir + '/public/' + relativePath;
+
+    // create project directory if not found
+    if (!fs.existsSync(newPath)) {
+    	fs.mkdirSync(newPath);
+    }
+
+    // add file path
+    newPath += file.name;
+
+    //console.log(newPath);
+
+    mv(tempPath, newPath, function(err) {
+        console.log(err);
+        if (err){
+            res.status(500).end();
+        }else{
+            res.status(200).end();
+        }
+    });
+};
+
+// file upload
+exports.uploadAudition = function(req, res, next){
+	// We are able to access req.files.file thanks to 
+    // the multiparty middleware
+    var file = req.files.file;
+    //console.log(file.name);
+    //console.log(file.type);
+
+    var project = JSON.parse(req.body.data);
+
+    //var file = req.files.file;
+    var appDir = path.dirname(require.main.filename);
+    var tempPath = file.path;
+    var relativePath =  'res' + '/' + 'auditions' + '/' + project.project._id + '/';
+    var newPath = appDir + '/public/' + relativePath;
+
+    // create project directory if not found
+    if (!fs.existsSync(newPath)) {
+    	fs.mkdirSync(newPath);
+    }
+
+    // add file path
+    newPath += file.name;
+
+    //console.log(newPath);
+
+    mv(tempPath, newPath, function(err) {
+        console.log(err);
+        if (err){
+            res.status(500).end();
+        }else{
+            res.status(200).end();
+        }
+    });
+};

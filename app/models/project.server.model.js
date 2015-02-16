@@ -30,7 +30,7 @@ var ProjectSchema = new Schema({
 		type: Number
 	},
 	phases: {
-		type: Object
+		type: Array
 	},
 	status: {
 		type: [{
@@ -58,23 +58,29 @@ var ProjectSchema = new Schema({
 		trim: true
 	},
 	scripts: {
-		type: Object
+		type: Array
 	},
-	mediaFiles: {
-		type: Object
+	auditions: {
+		type: Array
+	},
+	discussion: {
+		type: Array
 	},
 	user: {
 		type: Schema.ObjectId,
 		ref: 'User'
 	},
 	team: {
-		type: Object
+		type: Array
 	},
 	talent: {
-		type: Object
+		type: Array
 	},
 	client: {
-		type: Object
+		type: Array
+	},
+	deleteFiles: {
+		type: Array
 	}
 });
 
@@ -83,65 +89,67 @@ var ProjectSchema = new Schema({
  */
 ProjectSchema.pre('save', function(next) {
 
+	var now = new Date();
+
 	this.phases = [
 					{
 						name: 'Project Creation',
-						status: 'Open',
-						startDate: Date.now,
+						status: 'open',
+						startDate: now.toJSON(),
 						endDate: ''
 					},
 					{
 						name: 'Casting',
-						status: 'Open',
-						startDate: Date.now,
+						status: 'open',
+						startDate: now.toJSON(),
 						endDate: ''
 					},
 					{
 						name: 'Talent Notification',
-						status: 'Open',
-						startDate: Date.now,
+						status: 'open',
+						startDate: now.toJSON(),
 						endDate: ''
 					},
 					{
 						name: 'Recording',
-						status: 'Open',
-						startDate: Date.now,
+						status: 'open',
+						startDate: now.toJSON(),
 						endDate: ''
 					},
 					{
 						name: 'Posting and Publishing',
-						status: 'Open',
-						startDate: Date.now,
+						status: 'open',
+						startDate: now.toJSON(),
 						endDate: ''
 					},
 					{
 						name: 'Client Review',
-						status: 'Open',
-						startDate: Date.now,
+						status: 'open',
+						startDate: now.toJSON(),
 						endDate: ''
 					},
 					{
 						name: 'Followup',
-						status: 'Open',
-						startDate: Date.now,
+						status: 'open',
+						startDate: now.toJSON(),
 						endDate: ''
 					},
 					{
 						name: 'Session Booked',
-						status: 'Open',
-						startDate: Date.now,
+						status: 'open',
+						startDate: now.toJSON(),
 						endDate: ''
 					},
 					{
 						name: 'Talent Booked',
-						status: 'Open',
-						startDate: Date.now,
+						status: 'open',
+						startDate: now.toJSON(),
 						endDate: ''
 					},
 					{
 						name: 'Session Produced',
-						status: 'Open',
-						startDate: Date.now,
+						status: 'open',
+						startDate: now.toJSON(),
 						endDate: ''
 					}
 				];
