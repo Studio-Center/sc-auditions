@@ -41,7 +41,8 @@
     "passport-local": "~1.0.0",
     "passport-twitter": "~1.0.2",
     "swig": "~1.4.1",
-    "connect-multiparty": "~1.2.5"
+    "connect-multiparty": "~1.2.5",
+    "mv": "~2.0.3"
   },
   "devDependencies": {
     "supertest": "~0.14.0",

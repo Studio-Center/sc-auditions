@@ -1,28 +1,207 @@
-<section data-ng-controller="ProjectsController" data-ng-init="findOne()">
+<section data-ng-controller="ProjectsController" data-ng-init="loadProject()">
 	<div class="page-header">
 		<h1 data-ng-bind="project.title"></h1>
-		<ul style="list-style-type:none;padding:0">
-			<li><strong>Estimated Completion Date:</strong></li>
-			<li data-ng-bind="project.estimatedCompletionDate"></li>
-			<li><strong>Estimated Time:</strong></li>
-			<li data-ng-bind="project.estimatedTime"></li>
-			<li><strong>Actual Time:</strong></li>
-			<li data-ng-bind="project.actualTime"></li>
-			<li><strong>Status:</strong></li>
-			<li data-ng-bind="project.status"></li>
-			<li><strong>Priority:</strong></li>
-			<li data-ng-bind="project.priority"></li>
-			<li><strong>Description:</strong></li>
-			<li data-ng-bind="project.description"></li>
+
+		<div class="panel panel-default">
+			<div class="panel-heading"><strong>Description</strong></div>
+			<div class="panel-body" data-ng-bind="project.description"></div>
+		</div>
+
+		<div class="panel panel-default">
+			<div class="panel-heading"><strong>Estimated Completion Date</strong></div>
+			<div class="panel-body" data-ng-bind="project.estimatedCompletionDate | date:'fullDate'"></div>
+		</div>
+
+		<div class="panel panel-default">
+			<div class="panel-heading"><strong>Estimated Time</strong></div>
+			<div class="panel-body" data-ng-bind="project.estimatedTime"></div>
+		</div>
+
+		<div class="panel panel-default">
+			<div class="panel-heading"><strong>Actual Time</strong></div>
+			<div class="panel-body" data-ng-bind="project.actualTime"></div>
+		</div>
+
+		<div class="panel panel-default">
+			<div class="panel-heading"><strong>Status</strong></div>
+			<div class="panel-body" data-ng-bind="project.status"></div>
+		</div>
+
+		<div class="panel panel-default">
+			<div class="panel-heading"><strong>Priority</strong></div>
+			<div class="panel-body" data-ng-bind="project.priority"></div>
+		</div>
+
+		<accordion close-others="oneAtATime">
+			<accordion-group heading="Phases">
+			<accordion close-others="oneAtATime">
+				<accordion-group heading="{{project.phases[key].name}}" ng-repeat="(key, phase) in project.phases">
+					<label>Status:</label>
+					<select ng-model="project.phases[key].status" class="form-control" ng-change="updateStatus(key)">
+			            <option ng-repeat="item in phaseStatusOpts" value="{{item}}">{{item}}</option>
+			        </select>
+			        <label>Start Date:</label>
+			        <input type="date" ng-model="project.phases[key].startDate" class="form-control" ng-blur="updateStartDate(key)">
+			        <label>End Date:</label>
+			        <input type="date" ng-model="project.phases[key].endDate" class="form-control" ng-blur="updateEndDate(key)">
+		        </accordion-group>
+		    </accordion>
+	    </accordion>
+
+		<accordion close-others="oneAtATime">
+			<accordion-group heading="Discussion">
+			<textarea ng-model="discussion" name="discussion" class="form-control"></textarea>
+			<button style="float:right" class="btn btn-default" ng-click="saveDiscussion()">Save</button>
+			<div style="max-height:200px;overflow-y:scroll">
+				<div ng-repeat="(key, ditem) in project.discussion.slice().reverse()">
+					<h5><strong>{{ditem.date | date:'fullDate'}} {{ditem.date | date:'mediumTime'}} - {{ditem.username}}</strong></h5>
+					<p data-ng-bind="ditem.item"></p>
+				</div>
+			</div>
+			</accordion-group>
+		</accordion>
+		
+		<accordion close-others="oneAtATime">
+			<accordion-group heading="Client Users">
+				<ul class="list-group">
+					<li class="list-group-item" ng-repeat="(key, member) in project.client">{{member.name}}</li>
+				</ul>
+				<accordion close-others="oneAtATime">
+					<accordion-group heading="Edit Client Users">
+						<script>
+			              var users = angular.module("users", []);
+			              users.controller("UsersController", function($scope) {
+			                  $scope.users = Users.query();
+			              });
+			            </script>
+			            <div class="controls" ng-module="users">
+			                <div ng-controller="UsersController" data-ng-init="find()">
+			                	<label>Search:</label> <input ng-model="filterTeam">
+								<ul class="list-group">
+									<li class="list-group-item" ng-repeat="(key, user) in users | filter:filterTeam"><input type="checkbox" value="{{user._id}}" ng-click="updateClient(user._id, user.firstName, user.lastName)"> {{user.firstName}} {{user.lastName}}</li>
+								</ul>
+							</div>
+						</div>
+					</accordion-group>
+				</accordion>
+			</accordion-group>
+		</accordion>
+
+		<accordion close-others="oneAtATime">
+			<accordion-group heading="Team">
+				<ul class="list-group">
+					<li class="list-group-item" ng-repeat="(key, member) in project.team">{{member.name}}</li>
+				</ul>
+				<accordion close-others="oneAtATime">
+					<accordion-group heading="Edit Team Members">
+						<script>
+			              var users = angular.module("users", []);
+			              users.controller("UsersController", function($scope) {
+			                  $scope.users = Users.query();
+			              });
+			            </script>
+			            <div class="controls" ng-module="users">
+			                <div ng-controller="UsersController" data-ng-init="find()">
+			                	<label>Search:</label> <input ng-model="filterTeam">
+								<ul class="list-group">
+									<li class="list-group-item" ng-repeat="(key, user) in users | filter:filterTeam"><input type="checkbox" value="{{user._id}}" ng-click="updateTeam(user._id, user.firstName, user.lastName)"> {{user.firstName}} {{user.lastName}}</li>
+								</ul>
+							</div>
+						</div>
+					</accordion-group>
+				</accordion>
+			</accordion-group>
+		</accordion>
+
+		<accordion close-others="oneAtATime">
+			<accordion-group heading="Talent">
+				<ul class="list-group">
+					<li class="list-group-item" ng-repeat="(key, member) in project.talent"> {{member.name}}</li>
+				</ul>
+				<accordion close-others="oneAtATime">
+					<accordion-group heading="Edit Talent">
+						<script>
+			              var talents = angular.module("talents", []);
+			              talents.controller("TalentsController", function($scope) {
+			                  $scope.talents = Users.query();
+			              });
+			            </script>
+			            <div class="controls" ng-module="talents">
+			                <div ng-controller="TalentsController" data-ng-init="find()">
+			                	<label>Search:</label> <input ng-model="filterTeam">
+								<ul class="list-group">
+									<li class="list-group-item" ng-repeat="(key, talent) in talents | filter:filterTeam"><input type="checkbox" value="{{talent._id}}" ng-click="updateTalent(talent._id, talent.name)"> {{talent.name}}</li>
+								</ul>
+							</div>
+						</div>
+					</accordion-group>
+				</accordion>
+			</accordion-group>
+		</accordion>
+		
+		<ul ng-show="rejFiles.length > 0" class="response">
+			<li class="sel-file" ng-repeat="f in rejFiles">
+				Rejected file: {{f.name}} - size: {{f.size}}B - type: {{f.type}}
+			</li>
 		</ul>
-		<input type="file" ng-file-select="onFileSelect($files)">
-		<input type="file" ng-file-select="onFileSelect($files)" multiple accept="image/*">
-		<div class="button" ng-file-select="onFileSelect($files)" data-multiple="true"></div>
-		<div ng-file-drop="onFileSelect($files)" ng-file-drag-over-class="optional-css-class-name-or-function"
-        ng-show="dropSupported">drop files here</div>
-		<div ng-file-drop-available="dropSupported=true" 
-		        ng-show="!dropSupported">HTML5 Drop File is not supported!</div>
-		<button ng-click="upload.abort()">Cancel Upload</button>
+		<ul ng-show="files.length > 0" class="response">
+			<li class="sel-file" ng-repeat="f in files">
+				<img ng-show="f.dataUrl" ng-src="{{f.dataUrl}}" class="thumb">
+				<span class="progress" ng-show="f.progress >= 0">						
+					<div style="width:{{f.progress}}%">{{f.progress}}%</div>
+				</span>				
+				<button class="button" ng-click="f.upload.abort();f.upload.aborted=true" 
+						ng-show="f.upload != null && f.progress < 100 && !f.upload.aborted">Abort</button>
+				{{f.name}} - size: {{f.size}}B - type: {{f.type}}
+				<a ng-show="f.result" href="javascript:void(0)" ng-click="f.showDetail = !f.showDetail">details</a>
+				<div ng-show="f.showDetail">
+					<br/>
+					<div data-ng-show="f.result.result == null">{{f.result}}</div>
+					<ul class="list-group">
+						<li class="list-group-item" ng-repeat="item in f.result.result">
+							<div data-ng-show="item.name">file name: {{item.name}}</div>
+							<div data-ng-show="item.fieldName">name: {{item.fieldName}}</div>
+							<div data-ng-show="item.size">size on the serve: {{item.size}}</div>
+							<div data-ng-show="item.value">value: {{item.value}}</div>
+						</li>
+					</ul>
+					<div data-ng-show="f.result.requestHeaders" class="reqh">request headers: {{f.result.requestHeaders}}</div>
+				</div>
+			</li>
+		</ul>
+		
+		<accordion close-others="oneAtATime">
+			<accordion-group heading="Scripts">
+				<ul class="list-group">
+					<li class="list-group-item" ng-repeat="(key, script) in project.scripts">
+						<a href="/res/scripts/{{project._id}}/{{script.file.name}}" target="_blank" data-ng-bind="script.file.name"></a> 
+						<a href="/res/scripts/{{project._id}}/{{script.file.name}}" target="_blank"><img src="/img/Adobe-Acrobat-icon.png" alt="download PDF"></a>
+						<button ng-click="delScript(key)" target="_blank"><img src="/img/delete.png" alt="delete"></button><br>
+						<label>Approved?<label> &nbsp;<input type="checkbox" ng-model="project.scripts[key].approved.selected" ng-click="scrApprov(key)">
+						<span data-ng-bind="project.scripts[key].approved.by.name"></span> <span>{{project.scripts[key].approved.by.date | date:'fullDate'}} {{project.scripts[key].approved.by.date | date:'mediumTime'}}</span>
+					</li>
+				</ul>
+				<h4>Upload Script:</h4>
+				<input type="file" ng-file-select="uploadScript($files)" ng-model="files" ng-accept="'*.pdf,*.doc,*.docx,*.txt'" ng-model-rejected="rejFiles">
+			</accordion-group>
+		</accordion>
+
+		<accordion close-others="oneAtATime">
+			<accordion-group heading="Auditions">
+		 		<ul class="list-group">
+					<li class="list-group-item" ng-repeat="(key, audition) in project.auditions">
+						<a href="/res/auditions/{{project._id}}/{{audition.file.name}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable">ngAudio</a> 
+						<button ng-click='audio[key].paused ? audio[key].play() : audio[key].pause()'>Play</button> 
+						<button ng-click='audio[key].stop()'>Stop</button>
+						<button ng-click="delAudition(key)" target="_blank"><img src="/img/delete.png" alt="delete"></button><br>
+						<label>Approved?<label> &nbsp;<input type="checkbox" ng-model="project.auditions[key].approved.selected" ng-click="audApprov(key)">
+						<span data-ng-bind="project.auditions[key].approved.by.name"></span> <span>{{project.auditions[key].approved.by.date | date:'fullDate'}} {{project.auditions[key].approved.by.date | date:'mediumTime'}}</span>
+					</li>
+				</ul>
+				<h4>Upload Audition Files:</h4>
+				<input type="file" ng-file-select="uploadAudition($files)" ng-model="files" ng-accept="'*.mp3,*.mp4,*.wav,*.ogg'" ng-model-rejected="rejFiles">
+		</accordion-group>
+		</accordion>
 	</div>
 	<div class="pull-right" data-ng-show="authentication.user._id == project.user._id">
 		<a class="btn btn-primary" href="/#!/projects/{{project._id}}/edit">
