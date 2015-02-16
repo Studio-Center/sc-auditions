@@ -1,8 +1,8 @@
 'use strict';
 
 // Projects controller
-angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$upload', 'ngAudio',
-	function($scope, $stateParams, $location, Authentication, Projects, $upload, ngAudio ) {
+angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$upload', 'ngAudio', '$http',
+	function($scope, $stateParams, $location, Authentication, Projects, $upload, ngAudio, $http ) {
 		$scope.authentication = Authentication;
 
 		// static project options
@@ -13,16 +13,16 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.audio = Array;
 
 		// check for user global variable then load from user me page
-		if(typeof user == 'undefined'){
+		if(typeof user === 'undefined'){
 			$http.get('/api/users/me') 
 			  .then(function(result) {
 			    user = result.data;
 			});
-		};
+		}
 
 		$scope.updateTalent = function(talentId, talentName){
 			// gen talent object
-			var talent = {"talentId": talentId, "name": talentName};
+			var talent = {'talentId': talentId, 'name': talentName};
 
 			// check for existing item
 			var found = 0;
@@ -30,13 +30,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				if($scope.project.talent[i].talentId === talentId){
 					$scope.project.talent.splice(i, 1);
 					found = 1;
-				};
-			};
+				}
+			}
 
 			// add talent if never found
 			if(found === 0){
 				$scope.project.talent.push(talent);
-			};
+			}
 
 			// update project store
 			$scope.update();
@@ -44,7 +44,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		$scope.updateTeam = function(userId, firstName, lastName){
 			// gen user object
-			var user = {"userId": userId, "name": firstName + ' ' + lastName};
+			var user = {'userId': userId, 'name': firstName + ' ' + lastName};
 
 			// check for existing item
 			var found = 0;
@@ -52,13 +52,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				if($scope.project.team[i].userId === userId){
 					$scope.project.team.splice(i, 1);
 					found = 1;
-				};
-			};
+				}
+			}
 
 			// add talent if never found
 			if(found === 0){
 				$scope.project.team.push(user);
-			};
+			}
 
 			// update project store
 			$scope.update();
@@ -66,7 +66,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		$scope.updateClient = function(userId, firstName, lastName){
 			// gen user object
-			var user = {"userId": userId, "name": firstName + ' ' + lastName};
+			var user = {'userId': userId, 'name': firstName + ' ' + lastName};
 
 			// check for existing item
 			var found = 0;
@@ -74,13 +74,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				if($scope.project.client[i].userId === userId){
 					$scope.project.client.splice(i, 1);
 					found = 1;
-				};
-			};
+				}
+			}
 
 			// add talent if never found
 			if(found === 0){
 				$scope.project.client.push(user);
-			};
+			}
 
 			// update project store
 			$scope.update();
@@ -90,7 +90,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.audApprov = function(key){
 
 			var now = new Date();
-			if(typeof $scope.project.auditions[key].approved == 'undefined'){
+			if(typeof $scope.project.auditions[key].approved === 'undefined'){
 				$scope.project.auditions[key] = {
 					file: $scope.project.auditions[key].file,
 					approved: {selected: true,
@@ -99,9 +99,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 									name: user.firstName + ' ' + user.lastName,
 									date: now.toJSON()
 								}}
-				}
+				};
 			} else {
-				if($scope.project.auditions[key].approved.selected == true){
+				if($scope.project.auditions[key].approved.selected === true){
 					$scope.project.auditions[key].approved.selected = false;
 					$scope.project.auditions[key].approved.by.userId = '';
 					$scope.project.auditions[key].approved.by.name = '';
@@ -116,13 +116,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 			// update project store
 			$scope.update();
-		}
+		};
 
 		// update auditions approval status
 		$scope.scrApprov = function(key){
 
 			var now = new Date();
-			if(typeof $scope.project.scripts[key].approved == 'undefined'){
+			if(typeof $scope.project.scripts[key].approved === 'undefined'){
 				$scope.project.scripts[key] = {
 					file: $scope.project.scripts[key].file,
 					approved: {selected: true,
@@ -131,9 +131,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 									name: user.firstName + ' ' + user.lastName,
 									date: now.toJSON()
 								}}
-				}
+				};
 			} else {
-				if($scope.project.scripts[key].approved.selected == true){
+				if($scope.project.scripts[key].approved.selected === true){
 					$scope.project.scripts[key].approved.selected = false;
 					$scope.project.scripts[key].approved.by.userId = '';
 					$scope.project.scripts[key].approved.by.name = '';
@@ -148,7 +148,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 			// update project store
 			$scope.update();
-		}
+		};
 
 		// Create new Project
 		$scope.create = function() {
@@ -236,19 +236,19 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		};
 
 		$scope.$watch('project.auditions', function(val){
-			if($scope.loadAudio == 1){
+			if($scope.loadAudio === 1){
 				$scope.loadAudioPlayer();	
 			}
 		});
 
 		$scope.loadAudioPlayer = function(){
-			if(typeof $scope.project.auditions != "undefined"){
+			if(typeof $scope.project.auditions !== 'undefined'){
 				for(var i = 0; i < $scope.project.auditions.length; ++i){
-					if($scope.project.auditions[i].file.type == "audio/mp3"){
+					if($scope.project.auditions[i].file.type === 'audio/mp3'){
 						$scope.audio[i] = ngAudio.load('/res/auditions/'+$scope.project._id+'/'+$scope.project.auditions[i].file.name);
 					}
-				};
-			};
+				}
+			}
 		};
 
 		// save discussion item
