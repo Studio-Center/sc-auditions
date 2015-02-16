@@ -11,7 +11,24 @@ var mongoose = require('mongoose'),
 	fs = require('fs'),
 	_ = require('lodash'),
 	path = require('path'),
-	mv = require('mv');
+	mv = require('mv'),
+	nodemailer = require('nodemailer');
+
+// process email submission
+var procEmail = function(project){
+	if(typeof project.email !== 'undefined' && project.email.length){
+		var transporter = nodemailer.createTransport();
+		transporter.sendMail({
+		    from: project.email.from,
+		    to: project.email.to,
+		    subject: project.email.subject,
+		    text: project.email.message
+		});
+	};
+
+	// reset email object
+	project.email = {};
+};
 
 /**
  * Create a Project
@@ -46,7 +63,10 @@ exports.update = function(req, res) {
 
 	project = _.extend(project , req.body);
 
-	exports.deleteFiles(project);
+	// delete any files no longer in use
+	deleteFiles(project);
+	// send required emails as needed
+	procEmail(project);
 
 	project.save(function(err) {
 		if (err) {
@@ -91,7 +111,7 @@ exports.delete = function(req, res) {
 };
 
 // remove file from local file system
-exports.deleteFiles = function(project){
+var deleteFiles = function(project){
 	
 	var appDir = path.dirname(require.main.filename);
 
