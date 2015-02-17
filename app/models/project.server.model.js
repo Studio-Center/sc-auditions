@@ -30,7 +30,68 @@ var ProjectSchema = new Schema({
 		type: Number
 	},
 	phases: {
-		type: Array
+		type: Array,
+		default: [{
+						name: 'Project Creation',
+						status: 'not started',
+						startDate: '',
+						endDate: ''
+					},
+					{
+						name: 'Casting',
+						status: 'not started',
+						startDate: '',
+						endDate: ''
+					},
+					{
+						name: 'Talent Notification',
+						status: 'not started',
+						startDate: '',
+						endDate: ''
+					},
+					{
+						name: 'Recording',
+						status: 'not started',
+						startDate: '',
+						endDate: ''
+					},
+					{
+						name: 'Posting and Publishing',
+						status: 'not started',
+						startDate: '',
+						endDate: ''
+					},
+					{
+						name: 'Client Review',
+						status: 'not started',
+						startDate: '',
+						endDate: ''
+					},
+					{
+						name: 'Followup',
+						status: 'open',
+						startDate: '',
+						endDate: ''
+					},
+					{
+						name: 'Session Booked',
+						status: 'not started',
+						startDate: '',
+						endDate: ''
+					},
+					{
+						name: 'Talent Booked',
+						status: 'not started',
+						startDate: '',
+						endDate: ''
+					},
+					{
+						name: 'Session Produced',
+						status: 'not started',
+						startDate: '',
+						endDate: ''
+					}
+				]
 	},
 	status: {
 		type: [{
@@ -88,71 +149,6 @@ var ProjectSchema = new Schema({
  * Hook append default project phases
  */
 ProjectSchema.pre('save', function(next) {
-
-	var now = new Date();
-
-	this.phases = [
-					{
-						name: 'Project Creation',
-						status: 'open',
-						startDate: now.toJSON(),
-						endDate: ''
-					},
-					{
-						name: 'Casting',
-						status: 'open',
-						startDate: now.toJSON(),
-						endDate: ''
-					},
-					{
-						name: 'Talent Notification',
-						status: 'open',
-						startDate: now.toJSON(),
-						endDate: ''
-					},
-					{
-						name: 'Recording',
-						status: 'open',
-						startDate: now.toJSON(),
-						endDate: ''
-					},
-					{
-						name: 'Posting and Publishing',
-						status: 'open',
-						startDate: now.toJSON(),
-						endDate: ''
-					},
-					{
-						name: 'Client Review',
-						status: 'open',
-						startDate: now.toJSON(),
-						endDate: ''
-					},
-					{
-						name: 'Followup',
-						status: 'open',
-						startDate: now.toJSON(),
-						endDate: ''
-					},
-					{
-						name: 'Session Booked',
-						status: 'open',
-						startDate: now.toJSON(),
-						endDate: ''
-					},
-					{
-						name: 'Talent Booked',
-						status: 'open',
-						startDate: now.toJSON(),
-						endDate: ''
-					},
-					{
-						name: 'Session Produced',
-						status: 'open',
-						startDate: now.toJSON(),
-						endDate: ''
-					}
-				];
 
 	next();
 });

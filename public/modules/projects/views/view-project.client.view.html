@@ -35,16 +35,18 @@
 		<accordion close-others="oneAtATime">
 			<accordion-group heading="Phases">
 			<accordion close-others="oneAtATime">
-				<accordion-group heading="{{project.phases[key].name}}" ng-repeat="(key, phase) in project.phases">
-					<label>Status:</label>
-					<select ng-model="project.phases[key].status" class="form-control" ng-change="updateStatus(key)">
-			            <option ng-repeat="item in phaseStatusOpts" value="{{item}}">{{item}}</option>
-			        </select>
-			        <label>Start Date:</label>
-			        <input type="date" ng-model="project.phases[key].startDate" class="form-control" ng-blur="updateStartDate(key)">
-			        <label>End Date:</label>
-			        <input type="date" ng-model="project.phases[key].endDate" class="form-control" ng-blur="updateEndDate(key)">
-		        </accordion-group>
+				<div class="panel panel-default" ng-repeat="(key, phase) in project.phases">
+					<div class="panel-heading"><strong>{{project.phases[key].name}}</strong></div>
+					<div class="panel-body">
+						<label>Status:</label>
+						<select ng-model="project.phases[key].status" class="form-control" ng-change="updateStatus(key)" ng-options="item for item in phaseStatusOpts">
+				        </select>
+				        <label>Start Date:</label>
+				        <input type="date" ng-model="project.phases[key].startDate" class="form-control" ng-change="updateStartDate(key)">
+				        <label>End Date:</label>
+				        <input type="date" ng-model="project.phases[key].endDate" class="form-control" ng-change="updateEndDate(key)">
+			        </div>
+				</div>
 		    </accordion>
 	    </accordion>
 

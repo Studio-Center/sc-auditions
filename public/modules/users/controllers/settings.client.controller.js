@@ -5,7 +5,7 @@ angular.module('users').controller('SettingsController', ['$scope', '$http', '$l
 		$scope.user = Authentication.user;
 
 		// custom arrays
-		$scope.roles = ['user', 'admin', 'producer', 'talent', 'client', 'agency'];
+		$scope.roleOpts = ['user', 'admin', 'producer', 'talent', 'client', 'agency'];
 
 		// If user is not signed in then redirect back home
 		if (!$scope.user) $location.path('/');

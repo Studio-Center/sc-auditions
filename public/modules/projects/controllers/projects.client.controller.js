@@ -192,7 +192,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		// Update existing Project
 		$scope.update = function() {
-			var project = $scope.project ;
+			var project = $scope.project;
 
 			project.$update(function() {
 				$location.path('projects/' + project._id);
@@ -235,12 +235,14 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			$scope.loadAudio = 1;
 		};
 
+		// load audio files into player after project object has finished loading
 		$scope.$watch('project.auditions', function(val){
 			if($scope.loadAudio === 1){
 				$scope.loadAudioPlayer();	
 			}
 		});
 
+		// load audio files
 		$scope.loadAudioPlayer = function(){
 			if(typeof $scope.project.auditions !== 'undefined'){
 				for(var i = 0; i < $scope.project.auditions.length; ++i){
