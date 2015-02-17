@@ -24,7 +24,7 @@ var procEmail = function(project){
 		    subject: project.email.subject,
 		    text: project.email.message
 		});
-	};
+	}
 
 	// reset email object
 	project.email = {};
@@ -53,6 +53,26 @@ exports.create = function(req, res) {
  */
 exports.read = function(req, res) {
 	res.jsonp(req.project);
+};
+
+
+// remove file from local file system
+var deleteFiles = function(project){
+	
+	var appDir = path.dirname(require.main.filename);
+
+	for(var i = 0; i < project.deleteFiles.length; ++i){
+		var file = appDir + '/public' + project.deleteFiles[i];
+		
+		// remove file is exists
+		if (fs.existsSync(file)) {
+			fs.unlinkSync(file);
+			console.log(file + ' removed');
+		}
+
+		// remove file from delete queue
+		project.deleteFiles.splice(i, 1);
+	}
 };
 
 /**
@@ -87,14 +107,15 @@ exports.delete = function(req, res) {
 
 	// generate delete files list
 	var delFilesLn = project.deleteFiles.length;
-	for(var i = 0; project.auditions.length; ++i){
+	var i;
+	for(i = 0; project.auditions.length; ++i){
 		project.deleteFiles[delFilesLn] = '/res/auditions/' + project._id + '/' + project.auditions[i].file.name;
 		delFilesLn++;
-	};
-	for(var i = 0; project.scripts.length; ++i){
+	}
+	for(i = 0; project.scripts.length; ++i){
 		project.deleteFiles[delFilesLn] = '/res/scripts/' + project._id + '/' + project.scripts[i].file.name;
 		delFilesLn++;
-	};
+	}
 
 	// delete found files
 	exports.deleteFiles(project);
@@ -108,25 +129,6 @@ exports.delete = function(req, res) {
 			res.jsonp(project);
 		}
 	});
-};
-
-// remove file from local file system
-var deleteFiles = function(project){
-	
-	var appDir = path.dirname(require.main.filename);
-
-	for(var i = 0; i < project.deleteFiles.length; ++i){
-		var file = appDir + '/public' + project.deleteFiles[i];
-		
-		// remove file is exists
-		if (fs.existsSync(file)) {
-			fs.unlinkSync(file);
-			console.log(file + ' removed');
-		}
-
-		// remove file from delete queue
-		project.deleteFiles.splice(i, 1);
-	};
 };
 
 /**
@@ -158,7 +160,8 @@ exports.projectByID = function(req, res, next, id) { Project.findById(id).popula
  * Project authorization middleware
  */
 exports.hasAuthorization = function(req, res, next) {
-	if (req.project.user.id !== req.user.id) {
+	// recon 2/17/2015 to allow admin and producer level users to edit all projects
+	if (req.user.role !== 'admin' && req.user.role !== 'producer') {
 		return res.status(403).send('User is not authorized');
 	}
 	next();
