@@ -15,15 +15,19 @@ exports.create = function(req, res) {
 	var typecast = new Typecast(req.body);
 	typecast.user = req.user;
 
-	typecast.save(function(err) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(typecast);
-		}
-	});
+	if (req.user.role === 'admin' || req.user.role === 'producer/auditions director'){
+		typecast.save(function(err) {
+			if (err) {
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
+			} else {
+				res.jsonp(typecast);
+			}
+		});
+	} else {
+		return res.status(403).send('User is not authorized');
+	}
 };
 
 /**
@@ -98,7 +102,9 @@ exports.typecastByID = function(req, res, next, id) { Typecast.findById(id).popu
  * Typecast authorization middleware
  */
 exports.hasAuthorization = function(req, res, next) {
-	if (req.typecast.user.id !== req.user.id) {
+	if (req.user.role === 'admin' || req.user.role === 'producer/auditions director' || req.typecast.user.id === req.user.id) {
+		// do nothing
+	} else {
 		return res.status(403).send('User is not authorized');
 	}
 	next();

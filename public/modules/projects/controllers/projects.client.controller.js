@@ -12,17 +12,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.loadAudio = 0;
 		$scope.audio = Array;
 
-		// check for user global variable then load from user me page
-		if(typeof user === 'undefined'){
-			$http.get('/api/users/me') 
-			  .then(function(result) {
-			    user = result.data;
-			});
-		}
-
-		$scope.updateTalent = function(talentId, talentName){
+		$scope.updateTalent = function(talentId, talentName, email){
 			// gen talent object
-			var talent = {'talentId': talentId, 'name': talentName};
+			var talent = {'talentId': talentId, 'name': talentName, 'email': email};
 
 			// check for existing item
 			var found = 0;
@@ -42,9 +34,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			$scope.update();
 		};
 
-		$scope.updateTeam = function(userId, firstName, lastName){
+		$scope.updateTeam = function(userId, displayName, email){
 			// gen user object
-			var user = {'userId': userId, 'name': firstName + ' ' + lastName};
+			var user = {'userId': userId, 'name': displayName, 'email': email};
 
 			// check for existing item
 			var found = 0;
@@ -64,9 +56,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			$scope.update();
 		};
 
-		$scope.updateClient = function(userId, firstName, lastName){
+		$scope.updateClient = function(userId, displayName){
 			// gen user object
-			var user = {'userId': userId, 'name': firstName + ' ' + lastName};
+			var user = {'userId': userId, 'name': fdisplayName};
 
 			// check for existing item
 			var found = 0;
@@ -95,8 +87,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					file: $scope.project.auditions[key].file,
 					approved: {selected: true,
 								by: {
-									userId: user._id,
-									name: user.firstName + ' ' + user.lastName,
+									userId: Authentication.user._id,
+									name: Authentication.user.displayName,
 									date: now.toJSON()
 								}}
 				};
@@ -108,11 +100,39 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					$scope.project.auditions[key].approved.by.date = '';
 				} else {
 					$scope.project.auditions[key].approved.selected = true;
-					$scope.project.auditions[key].approved.by.userId = user._id;
-					$scope.project.auditions[key].approved.by.name = user.firstName + ' ' + user.lastName;
+					$scope.project.auditions[key].approved.by.userId = Authentication.user._id;
+					$scope.project.auditions[key].approved.by.name = Authentication.user.displayName;
 					$scope.project.auditions[key].approved.by.date = now.toJSON();
 				}
 			}
+
+			// update project store
+			$scope.update();
+		};
+
+		// save audition note item
+		$scope.saveAudtionNote = function(key){
+
+			// update auditions object as needed
+			if(typeof $scope.project.auditions[key].discussion === 'undefined'){
+				if(typeof $scope.project.auditions[key].approved === 'undefined'){
+					$scope.project.auditions[key] = {
+						file: $scope.project.auditions[key].file,
+						discussion: []
+					}
+				} else {
+					$scope.project.auditions[key] = {
+						file: $scope.project.auditions[key].file,
+						approved: $scope.project.auditions[key].approved,
+						discussion: []
+					}
+				}
+			}
+
+			var now = new Date();
+			var item = {date: now.toJSON(), userid: Authentication.user._id, username: Authentication.user.displayName, item: this.auditions[key].discussion};
+
+			$scope.project.auditions[key].discussion.push(item);
 
 			// update project store
 			$scope.update();
@@ -140,11 +160,39 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					$scope.project.scripts[key].approved.by.date = '';
 				} else {
 					$scope.project.scripts[key].approved.selected = true;
-					$scope.project.scripts[key].approved.by.userId = user._id;
-					$scope.project.scripts[key].approved.by.name = user.firstName + ' ' + user.lastName;
+					$scope.project.scripts[key].approved.by.userId = Authentication.user._id;
+					$scope.project.scripts[key].approved.by.name = Authentication.user.fdisplayName;
 					$scope.project.scripts[key].approved.by.date = now.toJSON();
 				}
 			}
+
+			// update project store
+			$scope.update();
+		};
+
+		// save audition note item
+		$scope.saveScriptNote = function(key){
+
+			// update auditions object as needed
+			if(typeof $scope.project.scripts[key].discussion === 'undefined'){
+				if(typeof $scope.project.scripts[key].approved === 'undefined'){
+					$scope.project.scripts[key] = {
+						file: $scope.project.scripts[key].file,
+						discussion: []
+					}
+				} else {
+					$scope.project.scripts[key] = {
+						file: $scope.project.scripts[key].file,
+						approved: $scope.project.scripts[key].approved,
+						discussion: []
+					}
+				}
+			}
+
+			var now = new Date();
+			var item = {date: now.toJSON(), userid: Authentication.user._id, username: Authentication.user.displayName, item: this.scripts[key].discussion};
+
+			$scope.project.scripts[key].discussion.push(item);
 
 			// update project store
 			$scope.update();
@@ -242,6 +290,26 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}
 		});
 
+		// update progress bar
+		$scope.$watch('project.phases', function(val){
+			var phaseLngth = $scope.project.phases.length;
+			var complSteps = 0;
+
+			// determine completed steps
+			for(var i = 0; i < phaseLngth; ++i){
+				if($scope.project.phases[i].status === 'complete'){
+					complSteps++;
+				}
+			}
+
+			// configure progress bar values
+			var perc = Math.floor((100 / phaseLngth) * complSteps);
+
+			// set progress bar values
+			$scope.dynamic = perc;
+
+		});
+
 		// load audio files
 		$scope.loadAudioPlayer = function(){
 			if(typeof $scope.project.auditions !== 'undefined'){
@@ -256,7 +324,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		// save discussion item
 		$scope.saveDiscussion = function(){
 			var now = new Date();
-			var item = {date: now.toJSON(), userid: user._id, username: user.username, item: this.discussion};
+			var item = {date: now.toJSON(), userid: Authentication.user._id, username: Authentication.user.displayName, item: this.discussion};
 
 			$scope.project.discussion.push(item);
 
