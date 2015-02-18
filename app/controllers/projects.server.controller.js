@@ -8,6 +8,7 @@ var mongoose = require('mongoose'),
 	Project = mongoose.model('Project'),
 	User = mongoose.model('User'),
 	Talent = mongoose.model('Talent'),
+	Typecast = mongoose.model('Typecast'),
 	fs = require('fs'),
 	_ = require('lodash'),
 	path = require('path'),
@@ -37,15 +38,19 @@ exports.create = function(req, res) {
 	var project = new Project(req.body);
 	project.user = req.user;
 
-	project.save(function(err) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(project);
-		}
-	});
+	if (req.user.role === 'admin' || req.user.role === 'producer/auditions director'){
+		project.save(function(err) {
+			if (err) {
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
+			} else {
+				res.jsonp(project);
+			}
+		});
+	} else {
+		return res.status(403).send('User is not authorized');
+	}
 };
 
 /**
@@ -161,7 +166,9 @@ exports.projectByID = function(req, res, next, id) { Project.findById(id).popula
  */
 exports.hasAuthorization = function(req, res, next) {
 	// recon 2/17/2015 to allow admin and producer level users to edit all projects
-	if (req.user.role !== 'admin' && req.user.role !== 'producer') {
+	if (req.user.role === 'admin' || req.user.role === 'producer/auditions director' || req.project.user.id === req.user.id) {
+		// do nothing
+	} else {
 		return res.status(403).send('User is not authorized');
 	}
 	next();

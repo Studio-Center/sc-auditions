@@ -2,7 +2,7 @@
 	<div class="page-header">
 		<h1 data-ng-bind="agency.name"></h1>
 	</div>
-	<div class="pull-right" data-ng-show="authentication.user._id == agency.user._id">
+	<div class="pull-right" data-ng-show="authentication.user.role === 'admin' || authentication.user.role === 'producer/auditions director'">
 		<a class="btn btn-primary" href="/#!/agencies/{{agency._id}}/edit">
 			<i class="glyphicon glyphicon-edit"></i>
 		</a>

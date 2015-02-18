@@ -15,15 +15,19 @@ exports.create = function(req, res) {
 	var agency = new Agency(req.body);
 	agency.user = req.user;
 
-	agency.save(function(err) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(agency);
-		}
-	});
+	if (req.user.role === 'admin' || req.user.role === 'producer/auditions director'){
+		agency.save(function(err) {
+			if (err) {
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
+			} else {
+				res.jsonp(agency);
+			}
+		});
+	} else {
+		return res.status(403).send('User is not authorized');
+	} 
 };
 
 /**
@@ -98,7 +102,9 @@ exports.agencyByID = function(req, res, next, id) { Agency.findById(id).populate
  * Agency authorization middleware
  */
 exports.hasAuthorization = function(req, res, next) {
-	if (req.agency.user.id !== req.user.id) {
+	if (req.user.role === 'admin' || req.user.role === 'producer/auditions director' || req.agency.user.id === req.user.id) {
+		// do nothing
+	} else {
 		return res.status(403).send('User is not authorized');
 	}
 	next();

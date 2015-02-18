@@ -32,7 +32,14 @@
 			<div class="panel-body" data-ng-bind="project.priority"></div>
 		</div>
 
-		<accordion close-others="oneAtATime">
+		<div class="panel panel-default">
+			<div class="panel-heading"><strong>Progress</strong></div>
+			<div class="panel-body">
+				<progressbar value="dynamic" type="success" ng-model="progress"><b>{{dynamic}}%</b></progressbar>
+			</div>
+		</div>
+
+		<accordion close-others="oneAtATime" data-ng-show="authentication.user.role === 'admin' || authentication.user.role === 'producer/auditions director'">
 			<accordion-group heading="Phases">
 			<accordion close-others="oneAtATime">
 				<div class="panel panel-default" ng-repeat="(key, phase) in project.phases">
@@ -50,7 +57,7 @@
 		    </accordion>
 	    </accordion>
 
-		<accordion close-others="oneAtATime">
+		<accordion close-others="oneAtATime" data-ng-show="authentication.user.role === 'admin' || authentication.user.role === 'producer/auditions director'">
 			<accordion-group heading="Discussion">
 			<textarea ng-model="discussion" name="discussion" class="form-control"></textarea>
 			<button style="float:right" class="btn btn-default" ng-click="saveDiscussion()">Save</button>
@@ -63,7 +70,7 @@
 			</accordion-group>
 		</accordion>
 		
-		<accordion close-others="oneAtATime">
+		<accordion close-others="oneAtATime" data-ng-show="authentication.user.role === 'admin' || authentication.user.role === 'producer/auditions director'">
 			<accordion-group heading="Client Users">
 				<ul class="list-group">
 					<li class="list-group-item" ng-repeat="(key, member) in project.client">{{member.name}}</li>
@@ -80,7 +87,7 @@
 			                <div ng-controller="UsersController" data-ng-init="find()">
 			                	<label>Search:</label> <input ng-model="filterTeam">
 								<ul class="list-group">
-									<li class="list-group-item" ng-repeat="(key, user) in users | filter:filterTeam"><input type="checkbox" value="{{user._id}}" ng-click="updateClient(user._id, user.firstName, user.lastName)"> {{user.firstName}} {{user.lastName}}</li>
+									<li class="list-group-item" ng-repeat="(key, user) in users | filter:filterTeam"><input type="checkbox" value="{{user._id}}" ng-click="updateClient(user._id, user.displayName, user.email)"> {{user.firstName}} {{user.lastName}}</li>
 								</ul>
 							</div>
 						</div>
@@ -89,7 +96,7 @@
 			</accordion-group>
 		</accordion>
 
-		<accordion close-others="oneAtATime">
+		<accordion close-others="oneAtATime" data-ng-show="authentication.user.role === 'admin' || authentication.user.role === 'producer/auditions director'">
 			<accordion-group heading="Team">
 				<ul class="list-group">
 					<li class="list-group-item" ng-repeat="(key, member) in project.team">{{member.name}}</li>
@@ -106,7 +113,7 @@
 			                <div ng-controller="UsersController" data-ng-init="find()">
 			                	<label>Search:</label> <input ng-model="filterTeam">
 								<ul class="list-group">
-									<li class="list-group-item" ng-repeat="(key, user) in users | filter:filterTeam"><input type="checkbox" value="{{user._id}}" ng-click="updateTeam(user._id, user.firstName, user.lastName)"> {{user.firstName}} {{user.lastName}}</li>
+									<li class="list-group-item" ng-repeat="(key, user) in users | filter:filterTeam"><input type="checkbox" value="{{user._id}}" ng-click="updateTeam(user._id, user.displayName, user.email)"> {{user.firstName}} {{user.lastName}}</li>
 								</ul>
 							</div>
 						</div>
@@ -120,7 +127,7 @@
 				<ul class="list-group">
 					<li class="list-group-item" ng-repeat="(key, member) in project.talent"> {{member.name}}</li>
 				</ul>
-				<accordion close-others="oneAtATime">
+				<accordion close-others="oneAtATime" data-ng-show="authentication.user.role === 'admin' || authentication.user.role === 'producer/auditions director'">
 					<accordion-group heading="Edit Talent">
 						<script>
 			              var talents = angular.module("talents", []);
@@ -141,7 +148,7 @@
 			</accordion-group>
 		</accordion>
 		
-		<ul ng-show="rejFiles.length > 0" class="response">
+		<ul ng-show="rejFiles.length > 0" class="response" data-ng-show="authentication.user.role === 'admin' || authentication.user.role === 'producer/auditions director'">
 			<li class="sel-file" ng-repeat="f in rejFiles">
 				Rejected file: {{f.name}} - size: {{f.size}}B - type: {{f.type}}
 			</li>
@@ -176,15 +183,29 @@
 			<accordion-group heading="Scripts">
 				<ul class="list-group">
 					<li class="list-group-item" ng-repeat="(key, script) in project.scripts">
-						<a href="/res/scripts/{{project._id}}/{{script.file.name}}" target="_blank" data-ng-bind="script.file.name"></a> 
-						<a href="/res/scripts/{{project._id}}/{{script.file.name}}" target="_blank"><img src="/img/Adobe-Acrobat-icon.png" alt="download PDF"></a>
-						<button ng-click="delScript(key)" target="_blank"><img src="/img/delete.png" alt="delete"></button><br>
-						<label>Approved?<label> &nbsp;<input type="checkbox" ng-model="project.scripts[key].approved.selected" ng-click="scrApprov(key)">
-						<span data-ng-bind="project.scripts[key].approved.by.name"></span> <span>{{project.scripts[key].approved.by.date | date:'fullDate'}} {{project.scripts[key].approved.by.date | date:'mediumTime'}}</span>
+						<fieldset>
+							<a href="/res/scripts/{{project._id}}/{{script.file.name}}" target="_blank" data-ng-bind="script.file.name"></a> 
+							<a href="/res/scripts/{{project._id}}/{{script.file.name}}" target="_blank"><img src="/img/Adobe-Acrobat-icon.png" alt="download PDF"></a>
+							<button data-ng-show="authentication.user.role === 'admin' || authentication.user.role === 'producer/auditions director'" ng-click="delScript(key)" target="_blank"><img src="/img/delete.png" alt="delete"></button>
+						</fieldset>
+						<fieldset>
+							<label>Approved?<label> &nbsp;<input type="checkbox" ng-model="project.scripts[key].approved.selected" ng-click="scrApprov(key)">
+							<span data-ng-bind="project.scripts[key].approved.by.name"></span> <span>{{project.scripts[key].approved.by.date | date:'fullDate'}} {{project.scripts[key].approved.by.date | date:'mediumTime'}}</span>
+						</fieldset>
+						<fieldset>
+							<label>Notes:</label><textarea ng-model="scripts[key].discussion" class="form-control"></textarea>
+							<button style="float:right" class="btn btn-default" ng-click="saveScriptNote(key)">Save</button>
+						</fieldset>
+						<div ng-repeat="(key, ditem) in project.scripts[key].discussion.slice().reverse()">
+							<h5><strong>{{ditem.date | date:'fullDate'}} {{ditem.date | date:'mediumTime'}} - {{ditem.username}}</strong></h5>
+							<p data-ng-bind="ditem.item"></p>
+						</div>
 					</li>
 				</ul>
-				<h4>Upload Script:</h4>
-				<input type="file" ng-file-select="uploadScript($files)" ng-model="files" ng-accept="'*.pdf,*.doc,*.docx,*.txt'" ng-model-rejected="rejFiles">
+				<div data-ng-show="authentication.user.role === 'admin' || authentication.user.role === 'producer/auditions director'">
+					<h4>Upload Script:</h4>
+					<input type="file" ng-file-select="uploadScript($files)" ng-model="files" ng-accept="'*.pdf,*.doc,*.docx,*.txt'" ng-model-rejected="rejFiles">
+				</div>
 			</accordion-group>
 		</accordion>
 
@@ -192,20 +213,34 @@
 			<accordion-group heading="Auditions">
 		 		<ul class="list-group">
 					<li class="list-group-item" ng-repeat="(key, audition) in project.auditions">
-						<a href="/res/auditions/{{project._id}}/{{audition.file.name}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable">ngAudio</a> 
-						<button ng-click='audio[key].paused ? audio[key].play() : audio[key].pause()'>Play</button> 
-						<button ng-click='audio[key].stop()'>Stop</button>
-						<button ng-click="delAudition(key)" target="_blank"><img src="/img/delete.png" alt="delete"></button><br>
-						<label>Approved?<label> &nbsp;<input type="checkbox" ng-model="project.auditions[key].approved.selected" ng-click="audApprov(key)">
-						<span data-ng-bind="project.auditions[key].approved.by.name"></span> <span>{{project.auditions[key].approved.by.date | date:'fullDate'}} {{project.auditions[key].approved.by.date | date:'mediumTime'}}</span>
+						<fieldset>
+							<a href="/res/auditions/{{project._id}}/{{audition.file.name}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable">ngAudio</a> 
+							<button ng-click='audio[key].paused ? audio[key].play() : audio[key].pause()'>Play</button> 
+							<button ng-click='audio[key].stop()'>Stop</button>
+							<button data-ng-show="authentication.user.role === 'admin' || authentication.user.role === 'producer/auditions director'" ng-click="delAudition(key)" target="_blank"><img src="/img/delete.png" alt="delete"></button>
+						</fieldset>
+						<fieldset>
+							<label>Approved?<label> &nbsp;<input type="checkbox" ng-model="project.auditions[key].approved.selected" ng-click="audApprov(key)">
+							<span data-ng-bind="project.auditions[key].approved.by.name"></span> <span>{{project.auditions[key].approved.by.date | date:'fullDate'}} {{project.auditions[key].approved.by.date | date:'mediumTime'}}</span>
+						</fieldset>
+						<fieldset>
+							<label>Notes:</label><textarea ng-model="auditions[key].discussion" class="form-control"></textarea>
+							<button style="float:right" class="btn btn-default" ng-click="saveAudtionNote(key)">Save</button>
+						</fieldset>
+						<div ng-repeat="(key, ditem) in project.auditions[key].discussion.slice().reverse()">
+							<h5><strong>{{ditem.date | date:'fullDate'}} {{ditem.date | date:'mediumTime'}} - {{ditem.username}}</strong></h5>
+							<p data-ng-bind="ditem.item"></p>
+						</div>
 					</li>
 				</ul>
-				<h4>Upload Audition Files:</h4>
-				<input type="file" ng-file-select="uploadAudition($files)" ng-model="files" ng-accept="'*.mp3,*.mp4,*.wav,*.ogg'" ng-model-rejected="rejFiles">
+				<div data-ng-show="authentication.user.role === 'admin' || authentication.user.role === 'producer/auditions director'">
+					<h4>Upload Audition Files:</h4>
+					<input type="file" ng-file-select="uploadAudition($files)" ng-model="files" ng-accept="'*.mp3,*.mp4,*.wav,*.ogg'" ng-model-rejected="rejFiles">
+				</div>
 		</accordion-group>
 		</accordion>
 	</div>
-	<div class="pull-right" data-ng-show="authentication.user._id == project.user._id">
+	<div class="pull-right" data-ng-show="authentication.user.role === 'admin' || authentication.user.role === 'producer/auditions director'">
 		<a class="btn btn-primary" href="/#!/projects/{{project._id}}/edit">
 			<i class="glyphicon glyphicon-edit"></i>
 		</a>

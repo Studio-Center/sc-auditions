@@ -15,15 +15,19 @@ exports.create = function(req, res) {
 	var talent = new Talent(req.body);
 	talent.user = req.user;
 
-	talent.save(function(err) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(talent);
-		}
-	});
+	if (req.user.role === 'admin' || req.user.role === 'producer/auditions director'){
+		talent.save(function(err) {
+			if (err) {
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
+			} else {
+				res.jsonp(talent);
+			}
+		});
+	} else {
+		return res.status(403).send('User is not authorized');
+	}
 };
 
 /**
@@ -98,7 +102,9 @@ exports.talentByID = function(req, res, next, id) { Talent.findById(id).populate
  * Talent authorization middleware
  */
 exports.hasAuthorization = function(req, res, next) {
-	if (req.talent.user.id !== req.user.id) {
+	if (req.user.role === 'admin' || req.user.role === 'producer/auditions director' || req.talent.user.id === req.user.id) {
+		// do nothing
+	} else {
 		return res.status(403).send('User is not authorized');
 	}
 	next();
