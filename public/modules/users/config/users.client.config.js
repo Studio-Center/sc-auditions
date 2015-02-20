@@ -28,3 +28,13 @@ angular.module('users').config(['$httpProvider',
 		]);
 	}
 ]);
+
+angular.module('users').run(['Menus', 'Authentication',
+	function(Menus, Authentication) {
+		// Set top bar menu items
+		if(Authentication.user.role === 'admin' || Authentication.user.role === 'producer/auditions director'){
+			Menus.addMenuItem('topbar', 'Users', 'users', 'dropdown', '/users(/create)?');
+			Menus.addSubMenuItem('topbar', 'users', 'List Users', 'users');
+		}
+	}
+]);
