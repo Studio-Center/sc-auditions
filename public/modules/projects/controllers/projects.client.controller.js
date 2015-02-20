@@ -5,6 +5,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	function($scope, $stateParams, $location, Authentication, Projects, $upload, ngAudio, $http ) {
 		$scope.authentication = Authentication;
 
+		$scope.max = 10;
+		$scope.isReadonly = false;
+
 		// static project options
 		$scope.statusOpts = ['In Progress', 'On Hold', 'Booked', 'Canceled', 'ReAuditioned'];
 		$scope.priorityOpts = ['None', 'Very low', 'Low', 'Medium', 'High', 'Very high'];
@@ -12,9 +15,32 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.loadAudio = 0;
 		$scope.audio = Array;
 
+		// update group checkbox selectors
+		$scope.checkClientUsers = function(userId){
+			for(var i = 0; i < $scope.project.client.length; ++i){
+				if($scope.project.client[i].userId === userId){
+					return true
+				}
+			}
+		};
+		$scope.checkTeam = function(userId){
+			for(var i = 0; i < $scope.project.team.length; ++i){
+				if($scope.project.team[i].userId === userId){
+					return true
+				}
+			}
+		};
+		$scope.checkTalent = function(talentId){
+			for(var i = 0; i < $scope.project.talent.length; ++i){
+				if($scope.project.talent[i].talentId === talentId){
+					return true
+				}
+			}
+		};
+
 		$scope.updateTalent = function(talentId, talentName, email){
 			// gen talent object
-			var talent = {'talentId': talentId, 'name': talentName, 'email': email};
+			var talent = {'talentId': talentId, 'name': talentName, 'email': email, 'booked': false};
 
 			// check for existing item
 			var found = 0;
@@ -56,9 +82,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			$scope.update();
 		};
 
-		$scope.updateClient = function(userId, displayName){
+		$scope.updateClient = function(userId, displayName, email){
 			// gen user object
-			var user = {'userId': userId, 'name': fdisplayName};
+			var user = {'userId': userId, 'name': displayName, 'email': email};
 
 			// check for existing item
 			var found = 0;
@@ -78,32 +104,27 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			$scope.update();
 		};
 
+		$scope.toggleBooked = function(key){
+			$scope.project.talent[key].booked = !$scope.project.talent[key].booked;
+			// update project store
+			$scope.update();
+		};
+
 		// update auditions approval status
 		$scope.audApprov = function(key){
 
 			var now = new Date();
-			if(typeof $scope.project.auditions[key].approved === 'undefined'){
-				$scope.project.auditions[key] = {
-					file: $scope.project.auditions[key].file,
-					approved: {selected: true,
-								by: {
-									userId: Authentication.user._id,
-									name: Authentication.user.displayName,
-									date: now.toJSON()
-								}}
-				};
+
+			if($scope.project.auditions[key].approved.selected === true){
+				$scope.project.auditions[key].approved.selected = false;
+				$scope.project.auditions[key].approved.by.userId = '';
+				$scope.project.auditions[key].approved.by.name = '';
+				$scope.project.auditions[key].approved.by.date = '';
 			} else {
-				if($scope.project.auditions[key].approved.selected === true){
-					$scope.project.auditions[key].approved.selected = false;
-					$scope.project.auditions[key].approved.by.userId = '';
-					$scope.project.auditions[key].approved.by.name = '';
-					$scope.project.auditions[key].approved.by.date = '';
-				} else {
-					$scope.project.auditions[key].approved.selected = true;
-					$scope.project.auditions[key].approved.by.userId = Authentication.user._id;
-					$scope.project.auditions[key].approved.by.name = Authentication.user.displayName;
-					$scope.project.auditions[key].approved.by.date = now.toJSON();
-				}
+				$scope.project.auditions[key].approved.selected = true;
+				$scope.project.auditions[key].approved.by.userId = Authentication.user._id;
+				$scope.project.auditions[key].approved.by.name = Authentication.user.displayName;
+				$scope.project.auditions[key].approved.by.date = now.toJSON();
 			}
 
 			// update project store
@@ -112,22 +133,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		// save audition note item
 		$scope.saveAudtionNote = function(key){
-
-			// update auditions object as needed
-			if(typeof $scope.project.auditions[key].discussion === 'undefined'){
-				if(typeof $scope.project.auditions[key].approved === 'undefined'){
-					$scope.project.auditions[key] = {
-						file: $scope.project.auditions[key].file,
-						discussion: []
-					}
-				} else {
-					$scope.project.auditions[key] = {
-						file: $scope.project.auditions[key].file,
-						approved: $scope.project.auditions[key].approved,
-						discussion: []
-					}
-				}
-			}
 
 			var now = new Date();
 			var item = {date: now.toJSON(), userid: Authentication.user._id, username: Authentication.user.displayName, item: this.auditions[key].discussion};
@@ -142,28 +147,17 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.scrApprov = function(key){
 
 			var now = new Date();
-			if(typeof $scope.project.scripts[key].approved === 'undefined'){
-				$scope.project.scripts[key] = {
-					file: $scope.project.scripts[key].file,
-					approved: {selected: true,
-								by: {
-									userId: user._id,
-									name: user.firstName + ' ' + user.lastName,
-									date: now.toJSON()
-								}}
-				};
+
+			if($scope.project.scripts[key].approved.selected === true){
+				$scope.project.scripts[key].approved.selected = false;
+				$scope.project.scripts[key].approved.by.userId = '';
+				$scope.project.scripts[key].approved.by.name = '';
+				$scope.project.scripts[key].approved.by.date = '';
 			} else {
-				if($scope.project.scripts[key].approved.selected === true){
-					$scope.project.scripts[key].approved.selected = false;
-					$scope.project.scripts[key].approved.by.userId = '';
-					$scope.project.scripts[key].approved.by.name = '';
-					$scope.project.scripts[key].approved.by.date = '';
-				} else {
-					$scope.project.scripts[key].approved.selected = true;
-					$scope.project.scripts[key].approved.by.userId = Authentication.user._id;
-					$scope.project.scripts[key].approved.by.name = Authentication.user.fdisplayName;
-					$scope.project.scripts[key].approved.by.date = now.toJSON();
-				}
+				$scope.project.scripts[key].approved.selected = true;
+				$scope.project.scripts[key].approved.by.userId = Authentication.user._id;
+				$scope.project.scripts[key].approved.by.name = Authentication.user.fdisplayName;
+				$scope.project.scripts[key].approved.by.date = now.toJSON();
 			}
 
 			// update project store
@@ -172,22 +166,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		// save audition note item
 		$scope.saveScriptNote = function(key){
-
-			// update auditions object as needed
-			if(typeof $scope.project.scripts[key].discussion === 'undefined'){
-				if(typeof $scope.project.scripts[key].approved === 'undefined'){
-					$scope.project.scripts[key] = {
-						file: $scope.project.scripts[key].file,
-						discussion: []
-					}
-				} else {
-					$scope.project.scripts[key] = {
-						file: $scope.project.scripts[key].file,
-						approved: $scope.project.scripts[key].approved,
-						discussion: []
-					}
-				}
-			}
 
 			var now = new Date();
 			var item = {date: now.toJSON(), userid: Authentication.user._id, username: Authentication.user.displayName, item: this.scripts[key].discussion};
@@ -207,6 +185,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				estimatedTime: this.estimatedTime,
 				actualTime: this.actualTime,
 				status: this.status,
+				scripts: this.scripts,
 				description: this.description
 			});
 
@@ -291,21 +270,24 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		// update progress bar
 		$scope.$watch('project.phases', function(val){
-			var phaseLngth = $scope.project.phases.length;
-			var complSteps = 0;
 
-			// determine completed steps
-			for(var i = 0; i < phaseLngth; ++i){
-				if($scope.project.phases[i].status === 'complete'){
-					complSteps++;
+			if(typeof $scope.project.phases !== 'undefined'){
+				var phaseLngth = $scope.project.phases.length;
+				var complSteps = 0;
+
+				// determine completed steps
+				for(var i = 0; i < phaseLngth; ++i){
+					if($scope.project.phases[i].status === 'complete'){
+						complSteps++;
+					}
 				}
+
+				// configure progress bar values
+				var perc = Math.floor((100 / phaseLngth) * complSteps);
+
+				// set progress bar values
+				$scope.dynamic = perc;
 			}
-
-			// configure progress bar values
-			var perc = Math.floor((100 / phaseLngth) * complSteps);
-
-			// set progress bar values
-			$scope.dynamic = perc;
 
 		});
 
@@ -313,8 +295,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.loadAudioPlayer = function(){
 			if(typeof $scope.project.auditions !== 'undefined'){
 				for(var i = 0; i < $scope.project.auditions.length; ++i){
-					if($scope.project.auditions[i].file.type === 'audio/mp3'){
-						$scope.audio[i] = ngAudio.load('/res/auditions/'+$scope.project._id+'/'+$scope.project.auditions[i].file.name);
+					if($scope.project.auditions[i]){
+						if($scope.project.auditions[i].file.type === 'audio/mp3'){
+							$scope.audio[i] = ngAudio.load('/res/auditions/'+$scope.project._id+'/'+$scope.project.auditions[i].file.name);
+						}
 					}
 				}
 			}
@@ -333,7 +317,18 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		// update projects scripts list
 		$scope.updateScripts = function(file){
-			var script = {file: file};
+			var script = {
+							file: file, 
+							discussion: [], 
+							rating: '', 
+							approved: 
+									{
+										by: 
+										{
+											userId: '',date: '', name: ''
+										}
+									}
+							};
 			
 			// push new script object
 			$scope.project.scripts.push(script);
@@ -395,9 +390,44 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	    // $scope.upload = $upload.http({...})  see 88#issuecomment-31366487 for sample code. 
 	  	};
 
+	  	$scope.uploadTempScript = function($files) {
+	    //$files: an array of files selected, each file has name, size, and type. 
+	    for (var i = 0; i < $files.length; i++) {
+	      var file = $files[i];
+
+	      // add scripts to submitted object
+	      var script = {file: file};
+		  // push new script object
+		  $scope.scripts = [];
+		  $scope.scripts.push(script);
+
+	      $scope.upload = $upload.upload({
+	        url: 'projects/uploads/script/temp', //upload.php script, node.js route, or servlet url 
+	        data: {project: $scope.project},
+	        file: file, // or list of files ($files) for html5 only 
+	      }).progress(function(evt) {
+	        console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
+	      }).success(function(data, status, headers, config) {
+	        // file is uploaded successfully 
+	        console.log(data);
+	      });
+    	 }
+	  	};
+
 	  	// update projects scripts list
 		$scope.updateAuditions = function(file){
-			var audition = {file: file};
+			var audition = {
+							file: file, 
+							discussion: [], 
+							rating: '', 
+							approved: 
+									{
+										by: 
+										{
+											userId: '',date: '', name: ''
+										}
+									}
+							};
 			
 			// push new script object
 			$scope.project.auditions.push(audition);
@@ -432,31 +462,15 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		      $scope.updateAuditions(file);
 		      $scope.upload = $upload.upload({
 		        url: 'projects/uploads/audition', //upload.php script, node.js route, or servlet url 
-		        //method: 'POST' or 'PUT', 
-		        //headers: {'header-key': 'header-value'}, 
-		        //withCredentials: true, 
 		        data: {project: $scope.project},
 		        file: file, // or list of files ($files) for html5 only 
-		        //fileName: 'doc.jpg' or ['1.jpg', '2.jpg', ...] // to modify the name of the file(s) 
-		        // customize file formData name ('Content-Desposition'), server side file variable name.  
-		        //fileFormDataName: myFile, //or a list of names for multiple files (html5). Default is 'file'  
-		        // customize how data is added to formData. See #40#issuecomment-28612000 for sample code 
-		        //formDataAppender: function(formData, key, val){} 
 		      }).progress(function(evt) {
 		        console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
 		      }).success(function(data, status, headers, config) {
 		        // file is uploaded successfully 
 		        console.log(data);
 		      });
-		      //.error(...) 
-		      //.then(success, error, progress);  
-		      // access or attach event listeners to the underlying XMLHttpRequest. 
-		      //.xhr(function(xhr){xhr.upload.addEventListener(...)}) 
 		    }
-		    /* alternative way of uploading, send the file binary with the file's content-type.
-		       Could be used to upload files to CouchDB, imgur, etc... html5 FileReader is needed. 
-		       It could also be used to monitor the progress of a normal http post/put request with large data*/
-		    // $scope.upload = $upload.http({...})  see 88#issuecomment-31366487 for sample code. 
 		  };
 
 		}

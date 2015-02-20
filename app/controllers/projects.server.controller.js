@@ -46,6 +46,33 @@ exports.create = function(req, res) {
 				});
 			} else {
 				res.jsonp(project);
+
+				// move new saved files from temp to project id based directory
+				if(typeof project.scripts[0] !== 'undefined'){
+					var appDir = path.dirname(require.main.filename);
+				    var tempPath = appDir + '/public/res/scripts/temp/' + project.scripts[0].file.name;
+				    var relativePath =  'res/scripts/' + project._id + '/';
+				    var newPath = appDir + '/public/' + relativePath;
+
+				    // create project directory if not found
+				    if (!fs.existsSync(newPath)) {
+				    	fs.mkdirSync(newPath);
+				    }
+
+				    console.log(project.scripts[0].file.name);
+
+				    // add file path
+				    newPath += project.scripts[0].file.name;
+
+				    mv(tempPath, newPath, function(err) {
+				        console.log(err);
+				        if (err){
+				            res.status(500).end();
+				        }else{
+				            res.status(200).end();
+				        }
+				    });
+				}
 			}
 		});
 	} else {
@@ -68,7 +95,7 @@ var deleteFiles = function(project){
 
 	for(var i = 0; i < project.deleteFiles.length; ++i){
 		var file = appDir + '/public' + project.deleteFiles[i];
-		
+
 		// remove file is exists
 		if (fs.existsSync(file)) {
 			fs.unlinkSync(file);
@@ -78,6 +105,7 @@ var deleteFiles = function(project){
 		// remove file from delete queue
 		project.deleteFiles.splice(i, 1);
 	}
+
 };
 
 /**
@@ -111,19 +139,23 @@ exports.delete = function(req, res) {
 	var project = req.project;
 
 	// generate delete files list
-	var delFilesLn = project.deleteFiles.length;
+	var delFilesLn = project.deleteFiles.length || 0;
 	var i;
-	for(i = 0; project.auditions.length; ++i){
-		project.deleteFiles[delFilesLn] = '/res/auditions/' + project._id + '/' + project.auditions[i].file.name;
-		delFilesLn++;
+	for(i = 0; i < project.auditions.length; ++i){
+		if(typeof project.auditions[i] !== 'undefined'){
+			project.deleteFiles[delFilesLn] = '/res/auditions/' + project._id + '/' + project.auditions[i].file.name;
+			delFilesLn++;
+		}
 	}
-	for(i = 0; project.scripts.length; ++i){
-		project.deleteFiles[delFilesLn] = '/res/scripts/' + project._id + '/' + project.scripts[i].file.name;
-		delFilesLn++;
+	for(i = 0; i < project.scripts.length; ++i){
+		if(typeof project.scripts[i] !== 'undefined'){
+			project.deleteFiles[delFilesLn] = '/res/scripts/' + project._id + '/' + project.scripts[i].file.name;
+			delFilesLn++;
+		}
 	}
 
 	// delete found files
-	exports.deleteFiles(project);
+	deleteFiles(project);
 
 	project.remove(function(err) {
 		if (err) {
@@ -231,6 +263,37 @@ exports.uploadScript = function(req, res, next){
     if (!fs.existsSync(newPath)) {
     	fs.mkdirSync(newPath);
     }
+
+    // add file path
+    newPath += file.name;
+
+    //console.log(newPath);
+
+    mv(tempPath, newPath, function(err) {
+        console.log(err);
+        if (err){
+            res.status(500).end();
+        }else{
+            res.status(200).end();
+        }
+    });
+};
+
+// file upload
+exports.uploadTempScript = function(req, res, next){
+	// We are able to access req.files.file thanks to 
+    // the multiparty middleware
+    var file = req.files.file;
+    //console.log(file.name);
+    //console.log(file.type);
+
+    var project = JSON.parse(req.body.data);
+
+    //var file = req.files.file;
+    var appDir = path.dirname(require.main.filename);
+    var tempPath = file.path;
+    var relativePath =  'res' + '/' + 'scripts' + '/temp/';
+    var newPath = appDir + '/public/' + relativePath;
 
     // add file path
     newPath += file.name;

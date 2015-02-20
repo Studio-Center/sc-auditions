@@ -22,6 +22,9 @@ module.exports = function(app) {
 	app.route('/projects/uploads/script')
 		.post(users.requiresLogin, multipartyMiddleware, projects.uploadScript);
 
+	app.route('/projects/uploads/script/temp')
+		.post(users.requiresLogin, multipartyMiddleware, projects.uploadTempScript);
+
 	app.route('/projects/uploads/audition')
 		.post(users.requiresLogin, multipartyMiddleware, projects.uploadAudition);
 

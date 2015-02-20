@@ -34,48 +34,21 @@ var ProjectSchema = new Schema({
 		default: [{
 						name: 'Casting',
 						status: 'in progress',
+						options: ['in progress','complete'],
 						startDate: '',
 						endDate: ''
 					},
 					{
 						name: 'Talent Notification',
 						status: 'in progress',
+						options: ['in progress','complete'],
 						startDate: '',
 						endDate: ''
 					},
 					{
 						name: 'Posting and Publishing',
 						status: 'in progress',
-						startDate: '',
-						endDate: ''
-					},
-					{
-						name: 'Client Review',
-						status: 'not started',
-						startDate: '',
-						endDate: ''
-					},
-					{
-						name: 'Followup',
-						status: 'not started',
-						startDate: '',
-						endDate: ''
-					},
-					{
-						name: 'Session Booked',
-						status: 'not started',
-						startDate: '',
-						endDate: ''
-					},
-					{
-						name: 'Talent Booked',
-						status: 'not started',
-						startDate: '',
-						endDate: ''
-					},
-					{
-						name: 'Session Produced',
-						status: 'not started',
+						options: ['in progress','Holding for more talent','Holding For Requested Talent','complete'],
 						startDate: '',
 						endDate: ''
 					}
