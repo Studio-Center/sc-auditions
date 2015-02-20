@@ -6,9 +6,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.authentication = Authentication;
 
 		// static project options
-		$scope.statusOpts = ['Not started', 'Open', 'Client Completed', 'Completed', 'Suspended'];
+		$scope.statusOpts = ['In Progress', 'On Hold', 'Booked', 'Canceled', 'ReAuditioned'];
 		$scope.priorityOpts = ['None', 'Very low', 'Low', 'Medium', 'High', 'Very high'];
-		$scope.phaseStatusOpts = ['not started','open','complete','suspended'];
+		$scope.phaseStatusOpts = ['in progress','open','complete','suspended'];
 		$scope.loadAudio = 0;
 		$scope.audio = Array;
 
@@ -207,7 +207,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				estimatedTime: this.estimatedTime,
 				actualTime: this.actualTime,
 				status: this.status,
-				priority: this.priority,
 				description: this.description
 			});
 

@@ -7,6 +7,19 @@
 			<div class="panel-body" data-ng-bind="project.description"></div>
 		</div>
 
+		<accordion close-others="oneAtATime" data-ng-show="authentication.user.role === 'admin' || authentication.user.role === 'producer/auditions director'">
+			<accordion-group heading="Notes">
+			<textarea ng-model="discussion" name="discussion" class="form-control"></textarea>
+			<button style="float:right" class="btn btn-default" ng-click="saveDiscussion()">Save</button>
+			<div style="max-height:200px;overflow-y:scroll">
+				<div ng-repeat="(key, ditem) in project.discussion.slice().reverse()">
+					<h5><strong>{{ditem.date | date:'fullDate'}} {{ditem.date | date:'mediumTime'}} - {{ditem.username}}</strong></h5>
+					<p data-ng-bind="ditem.item"></p>
+				</div>
+			</div>
+			</accordion-group>
+		</accordion>
+
 		<div class="panel panel-default">
 			<div class="panel-heading"><strong>Estimated Completion Date</strong></div>
 			<div class="panel-body" data-ng-bind="project.estimatedCompletionDate | date:'fullDate'"></div>
@@ -25,11 +38,6 @@
 		<div class="panel panel-default">
 			<div class="panel-heading"><strong>Status</strong></div>
 			<div class="panel-body" data-ng-bind="project.status"></div>
-		</div>
-
-		<div class="panel panel-default">
-			<div class="panel-heading"><strong>Priority</strong></div>
-			<div class="panel-body" data-ng-bind="project.priority"></div>
 		</div>
 
 		<div class="panel panel-default">
@@ -56,19 +64,6 @@
 				</div>
 		    </accordion>
 	    </accordion>
-
-		<accordion close-others="oneAtATime" data-ng-show="authentication.user.role === 'admin' || authentication.user.role === 'producer/auditions director'">
-			<accordion-group heading="Discussion">
-			<textarea ng-model="discussion" name="discussion" class="form-control"></textarea>
-			<button style="float:right" class="btn btn-default" ng-click="saveDiscussion()">Save</button>
-			<div style="max-height:200px;overflow-y:scroll">
-				<div ng-repeat="(key, ditem) in project.discussion.slice().reverse()">
-					<h5><strong>{{ditem.date | date:'fullDate'}} {{ditem.date | date:'mediumTime'}} - {{ditem.username}}</strong></h5>
-					<p data-ng-bind="ditem.item"></p>
-				</div>
-			</div>
-			</accordion-group>
-		</accordion>
 		
 		<accordion close-others="oneAtATime" data-ng-show="authentication.user.role === 'admin' || authentication.user.role === 'producer/auditions director'">
 			<accordion-group heading="Client Users">
@@ -203,8 +198,8 @@
 					</li>
 				</ul>
 				<div data-ng-show="authentication.user.role === 'admin' || authentication.user.role === 'producer/auditions director'">
-					<h4>Upload Script:</h4>
-					<input type="file" ng-file-select="uploadScript($files)" ng-model="files" ng-accept="'*.pdf,*.doc,*.docx,*.txt'" ng-model-rejected="rejFiles">
+					<h4>Upload Script: PDF only!</h4>
+					<input type="file" ng-file-select="uploadScript($files)" ng-model="files" ng-accept="'*.pdf'" ng-model-rejected="rejFiles">
 				</div>
 			</accordion-group>
 		</accordion>

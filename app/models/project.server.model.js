@@ -32,32 +32,20 @@ var ProjectSchema = new Schema({
 	phases: {
 		type: Array,
 		default: [{
-						name: 'Project Creation',
-						status: 'not started',
-						startDate: '',
-						endDate: ''
-					},
-					{
 						name: 'Casting',
-						status: 'not started',
+						status: 'in progress',
 						startDate: '',
 						endDate: ''
 					},
 					{
 						name: 'Talent Notification',
-						status: 'not started',
-						startDate: '',
-						endDate: ''
-					},
-					{
-						name: 'Recording',
-						status: 'not started',
+						status: 'in progress',
 						startDate: '',
 						endDate: ''
 					},
 					{
 						name: 'Posting and Publishing',
-						status: 'not started',
+						status: 'in progress',
 						startDate: '',
 						endDate: ''
 					},
@@ -69,7 +57,7 @@ var ProjectSchema = new Schema({
 					},
 					{
 						name: 'Followup',
-						status: 'open',
+						status: 'not started',
 						startDate: '',
 						endDate: ''
 					},
@@ -96,16 +84,9 @@ var ProjectSchema = new Schema({
 	status: {
 		type: [{
 			type: String,
-			enum: ['Not started', 'Open', 'Client Completed', 'Completed', 'Suspended']
+			enum: ['In Progress', 'On Hold', 'Booked', 'Canceled', 'ReAuditioned']
 		}],
 		default: ['Not started']
-	},
-	priority: {
-		type: [{
-			type: String,
-			enum: ['None', 'Very low', 'Low', 'Medium', 'High', 'Very high']
-		}],
-		default: ['None']
 	},
 	title: {
 		type: String,
