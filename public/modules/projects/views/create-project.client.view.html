@@ -37,20 +37,47 @@
                         </select>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="control-label" for="name">Priority</label>
-                    <div class="controls">
-                        <select ng-model="priority" required>
-                            <option ng-repeat="item in priorityOpts" value="{{item}}">{{item}}</option>
-                        </select>
-                    </div>
-                </div>
+
                 <div class="form-group">
                     <label class="control-label" for="name">Description</label>
                     <div class="controls">
                         <textarea type="date" data-ng-model="description" id="description" class="form-control" ></textarea>
                     </div>
                 </div>
+
+                <ul ng-show="files.length > 0" class="response">
+                    <li class="sel-file" ng-repeat="f in files">
+                        <img ng-show="f.dataUrl" ng-src="{{f.dataUrl}}" class="thumb">
+                        <span class="progress" ng-show="f.progress >= 0">                       
+                            <div style="width:{{f.progress}}%">{{f.progress}}%</div>
+                        </span>             
+                        <button class="button" ng-click="f.upload.abort();f.upload.aborted=true" 
+                                ng-show="f.upload != null && f.progress < 100 && !f.upload.aborted">Abort</button>
+                        {{f.name}} - size: {{f.size}}B - type: {{f.type}}
+                        <a ng-show="f.result" href="javascript:void(0)" ng-click="f.showDetail = !f.showDetail">details</a>
+                        <div ng-show="f.showDetail">
+                            <br/>
+                            <div data-ng-show="f.result.result == null">{{f.result}}</div>
+                            <ul class="list-group">
+                                <li class="list-group-item" ng-repeat="item in f.result.result">
+                                    <div data-ng-show="item.name">file name: {{item.name}}</div>
+                                    <div data-ng-show="item.fieldName">name: {{item.fieldName}}</div>
+                                    <div data-ng-show="item.size">size on the serve: {{item.size}}</div>
+                                    <div data-ng-show="item.value">value: {{item.value}}</div>
+                                </li>
+                            </ul>
+                            <div data-ng-show="f.result.requestHeaders" class="reqh">request headers: {{f.result.requestHeaders}}</div>
+                        </div>
+                    </li>
+                </ul>
+                
+                <div class="form-group">
+                    <label class="control-label" for="name">Script (PDF only!)</label>
+                    <div class="controls">
+                        <input type="file" ng-file-select="uploadTempScript($files)" ng-model="files" ng-accept="'*.pdf'" ng-model-rejected="rejFiles" required>
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <input type="submit" class="btn btn-default">
                 </div>

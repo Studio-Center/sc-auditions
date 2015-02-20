@@ -54,7 +54,7 @@
 					<div class="panel-heading"><strong>{{project.phases[key].name}}</strong></div>
 					<div class="panel-body">
 						<label>Status:</label>
-						<select ng-model="project.phases[key].status" class="form-control" ng-change="updateStatus(key)" ng-options="item for item in phaseStatusOpts">
+						<select ng-model="project.phases[key].status" class="form-control" ng-change="updateStatus(key)" ng-options="item for item in project.phases[key].options">
 				        </select>
 				        <label>Start Date:</label>
 				        <input type="date" ng-model="project.phases[key].startDate" class="form-control" ng-change="updateStartDate(key)">
@@ -82,7 +82,7 @@
 			                <div ng-controller="UsersController" data-ng-init="find()">
 			                	<label>Search:</label> <input ng-model="filterTeam">
 								<ul class="list-group">
-									<li class="list-group-item" ng-repeat="(key, user) in users | filter:filterTeam"><input type="checkbox" value="{{user._id}}" ng-click="updateClient(user._id, user.displayName, user.email)"> {{user.firstName}} {{user.lastName}}</li>
+									<li class="list-group-item" ng-repeat="(key, user) in users | filter:filterTeam"><input type="checkbox" value="{{user._id}}" ng-click="updateClient(user._id, user.displayName, user.email)" ng-checked="checkClientUsers(user._id)"> {{user.firstName}} {{user.lastName}}</li>
 								</ul>
 							</div>
 						</div>
@@ -108,7 +108,7 @@
 			                <div ng-controller="UsersController" data-ng-init="find()">
 			                	<label>Search:</label> <input ng-model="filterTeam">
 								<ul class="list-group">
-									<li class="list-group-item" ng-repeat="(key, user) in users | filter:filterTeam"><input type="checkbox" value="{{user._id}}" ng-click="updateTeam(user._id, user.displayName, user.email)"> {{user.firstName}} {{user.lastName}}</li>
+									<li class="list-group-item" ng-repeat="(key, user) in users | filter:filterTeam"><input type="checkbox" value="{{user._id}}" ng-click="updateTeam(user._id, user.displayName, user.email)" ng-checked="checkTeam(user._id)"> {{user.firstName}} {{user.lastName}}</li>
 								</ul>
 							</div>
 						</div>
@@ -120,7 +120,7 @@
 		<accordion close-others="oneAtATime">
 			<accordion-group heading="Talent">
 				<ul class="list-group">
-					<li class="list-group-item" ng-repeat="(key, member) in project.talent"> {{member.name}}</li>
+					<li class="list-group-item" ng-repeat="(key, member) in project.talent"> {{member.name}} <input type="checkbox" data-ng-model="project.talent[key].booked" ng-checked="project.talent[key].booked" ng-click="toggleBooked(key)"> Booked </li>
 				</ul>
 				<accordion close-others="oneAtATime" data-ng-show="authentication.user.role === 'admin' || authentication.user.role === 'producer/auditions director'">
 					<accordion-group heading="Edit Talent">
@@ -134,7 +134,7 @@
 			                <div ng-controller="TalentsController" data-ng-init="find()">
 			                	<label>Search:</label> <input ng-model="filterTeam">
 								<ul class="list-group">
-									<li class="list-group-item" ng-repeat="(key, talent) in talents | filter:filterTeam"><input type="checkbox" value="{{talent._id}}" ng-click="updateTalent(talent._id, talent.name)"> {{talent.name}}</li>
+									<li class="list-group-item" ng-repeat="(key, talent) in talents | filter:filterTeam"><input type="checkbox" value="{{talent._id}}" ng-click="updateTalent(talent._id, talent.name)" ng-checked="checkTalent(talent._id)"> {{talent.name}}</li>
 								</ul>
 							</div>
 						</div>
@@ -215,14 +215,18 @@
 							<button data-ng-show="authentication.user.role === 'admin' || authentication.user.role === 'producer/auditions director'" ng-click="delAudition(key)" target="_blank"><img src="/img/delete.png" alt="delete"></button>
 						</fieldset>
 						<fieldset>
+							<label>Rating</label>
+							<rating ng-model="project.auditions[key].rating" max="max" on-leave="overStar = project.auditions[key].rating" ></rating>
+						</fieldset>
+						<fieldset>
 							<label>Approved?<label> &nbsp;<input type="checkbox" ng-model="project.auditions[key].approved.selected" ng-click="audApprov(key)">
 							<span data-ng-bind="project.auditions[key].approved.by.name"></span> <span>{{project.auditions[key].approved.by.date | date:'fullDate'}} {{project.auditions[key].approved.by.date | date:'mediumTime'}}</span>
 						</fieldset>
-						<fieldset>
+						<fieldset data-ng-show="authentication.user.role === 'admin' || authentication.user.role === 'producer/auditions director'">
 							<label>Notes:</label><textarea ng-model="auditions[key].discussion" class="form-control"></textarea>
 							<button style="float:right" class="btn btn-default" ng-click="saveAudtionNote(key)">Save</button>
 						</fieldset>
-						<div ng-repeat="(key, ditem) in project.auditions[key].discussion.slice().reverse()">
+						<div  data-ng-show="authentication.user.role === 'admin' || authentication.user.role === 'producer/auditions director'" ng-repeat="(key, ditem) in project.auditions[key].discussion.slice().reverse()">
 							<h5><strong>{{ditem.date | date:'fullDate'}} {{ditem.date | date:'mediumTime'}} - {{ditem.username}}</strong></h5>
 							<p data-ng-bind="ditem.item"></p>
 						</div>
