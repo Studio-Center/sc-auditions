@@ -7,7 +7,8 @@ var _ = require('lodash'),
 	errorHandler = require('../errors'),
 	mongoose = require('mongoose'),
 	passport = require('passport'),
-	User = mongoose.model('User');
+	User = mongoose.model('User'),
+	nodemailer = require('nodemailer');
 
 /**
  * Update user details
@@ -73,6 +74,23 @@ exports.updateAdmin = function(req, res) {
 						message: errorHandler.getErrorMessage(err)
 					});
 				} else {
+
+					var transporter = nodemailer.createTransport();
+					
+					// configure email body
+					var emailBody = 'First Name: ' + user.firstName + '\n';
+					emailBody += 'Last Name: ' + user.lastName + '\n';
+					emailBody += 'Email: ' + user.email + '\n';
+					emailBody += 'Username: ' + user.username + '\n';
+
+					// send email notification of update
+					transporter.sendMail({
+					    from: 'noreply@studiocenterauditions.com',
+					    to: user.email,
+					    subject: 'SC Auditions ' + user.displayName + ' account update',
+					    text: emailBody
+					});
+
 					// reload admin user data
 					User.findById(adminUserId).populate('user', 'displayName').exec(function(err, user) {
 						req.login(user, function(err) {
