@@ -21,6 +21,14 @@ exports.userByID = function(req, res, next, id) {
 	});
 };
 
+exports.userByIDEdit = function(req, res, next, id) { User.findById(id).populate('user', 'displayName').exec(function(err, user) {
+		if (err) return next(err);
+		if (! user) return next(new Error('Failed to load User ' + id));
+		req.useredit = user ;
+		next();
+	});
+};
+
 /**
  * Require login routing middleware
  */
@@ -40,7 +48,7 @@ exports.requiresLogin = function(req, res, next) {
 exports.hasAuthorization = function(roles) {
 	var _this = this;
 
-	return function(req, res, next) {
+	return function(req, res, next) {	
 		_this.requiresLogin(req, res, function() {
 			if (_.intersection(req.user.roles, roles).length) {
 				return next();

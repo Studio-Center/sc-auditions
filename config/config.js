@@ -13,7 +13,6 @@ module.exports = _.extend(
 	require('./env/all'),
 	require('./env/' + process.env.NODE_ENV) || {}
 );
-
 /**
  * Get files by glob patterns
  */

@@ -42,8 +42,16 @@ angular.module('users').config(['$stateProvider',
 			templateUrl: 'modules/users/views/password/reset-password.client.view.html'
 		}).
 		state('users', {
-			url: '/users',
+			url: '/usersedit',
 			templateUrl: 'modules/users/views/list-users.client.view.html'
+		}).
+		state('viewUser', {
+			url: '/usersedit/:userIdEdit',
+			templateUrl: 'modules/users/views/view-user.client.view.html'
+		}).
+		state('editUser', {
+			url: '/usersedit/:userIdEdit/edit',
+			templateUrl: 'modules/users/views/edit-user.client.view.html'
 		});
 	}
 ]);

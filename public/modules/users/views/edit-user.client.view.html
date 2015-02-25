@@ -1,27 +1,27 @@
-<section class="row" data-ng-controller="SettingsController">
+<section class="row" data-ng-controller="UsersController" data-ng-init="findOne()">
 	<h3 class="col-md-12 text-center">Edit your profile</h3>
 	<div class="col-xs-offset-2 col-xs-8 col-md-offset-5 col-md-2">
-		<form name="userForm" data-ng-submit="updateUserProfile(userForm.$valid)" class="signin form-horizontal" autocomplete="off">
+		<form name="userForm" data-ng-submit="update(userForm.$valid)" class="signin form-horizontal" autocomplete="off">
 			<fieldset>
 				<div class="form-group">
 					<label for="firstName">First Name</label>
-					<input type="text" id="firstName" name="firstName" class="form-control" data-ng-model="user.firstName" placeholder="First Name">
+					<input type="text" id="firstName" name="firstName" class="form-control" data-ng-model="useredit.firstName" placeholder="First Name">
 				</div>
 				<div class="form-group">
 					<label for="lastName">Last Name</label>
-					<input type="text" id="lastName" name="lastName" class="form-control" data-ng-model="user.lastName" placeholder="Last Name">
+					<input type="text" id="lastName" name="lastName" class="form-control" data-ng-model="useredit.lastName" placeholder="Last Name">
 				</div>
 				<div class="form-group">
 					<label for="email">Email</label>
-					<input type="email" id="email" name="email" class="form-control" data-ng-model="user.email" placeholder="Email">
+					<input type="email" id="email" name="email" class="form-control" data-ng-model="useredit.email" placeholder="Email">
 				</div>
 				<div class="form-group">
 					<label for="username">Username</label>
-					<input type="text" id="username" name="username" class="form-control" data-ng-model="user.username" placeholder="Username">
+					<input type="text" id="username" name="username" class="form-control" data-ng-model="useredit.username" placeholder="Username">
 				</div>
-				<div class="form-group" ng-if="user.role === 'admin'">
+				<div class="form-group">
 					<label for="roles">User Role</label>
-					<select id="roles" name="roles" data-ng-model="user.roles" class="form-control" ng-options="item for item in roleOpts"></select>
+					<select id="roles" name="roles" data-ng-model="useredit.roles" class="form-control" ng-options="item for item in roleOpts"></select>
 				</div>
 				<div class="text-center form-group">
 					<button type="submit" class="btn btn-large btn-primary">Save Profile</button>
