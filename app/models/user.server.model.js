@@ -71,7 +71,7 @@ var UserSchema = new Schema({
 	},
 	providerData: {},
 	additionalProvidersData: {},
-	role: {
+	roles: {
 		type: String,
 		default: 'user'
 	},
@@ -91,7 +91,10 @@ var UserSchema = new Schema({
 	},
   	resetPasswordExpires: {
   		type: Date
-  	}
+  	},
+  	edited: {
+		type: Object
+	}
 });
 
 /**

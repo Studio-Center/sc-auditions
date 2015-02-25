@@ -19,21 +19,21 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.checkClientUsers = function(userId){
 			for(var i = 0; i < $scope.project.client.length; ++i){
 				if($scope.project.client[i].userId === userId){
-					return true
+					return true;
 				}
 			}
 		};
 		$scope.checkTeam = function(userId){
 			for(var i = 0; i < $scope.project.team.length; ++i){
 				if($scope.project.team[i].userId === userId){
-					return true
+					return true;
 				}
 			}
 		};
 		$scope.checkTalent = function(talentId){
 			for(var i = 0; i < $scope.project.talent.length; ++i){
 				if($scope.project.talent[i].talentId === talentId){
-					return true
+					return true;
 				}
 			}
 		};
@@ -375,9 +375,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	        //formDataAppender: function(formData, key, val){} 
 	      }).progress(function(evt) {
 	        console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
-	      }).success(function(data, status, headers, config) {
+	      //}).success(function(data, status, headers, config) {
 	        // file is uploaded successfully 
-	        console.log(data);
+	        //console.log(data);
 	      });
 	      //.error(...) 
 	      //.then(success, error, progress);  
@@ -407,9 +407,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	        file: file, // or list of files ($files) for html5 only 
 	      }).progress(function(evt) {
 	        console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
-	      }).success(function(data, status, headers, config) {
+	      //}).success(function(data, status, headers, config) {
 	        // file is uploaded successfully 
-	        console.log(data);
+	        //console.log(data);
 	      });
     	 }
 	  	};
@@ -466,9 +466,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		        file: file, // or list of files ($files) for html5 only 
 		      }).progress(function(evt) {
 		        console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
-		      }).success(function(data, status, headers, config) {
+		      //}).success(function(data, status, headers, config) {
 		        // file is uploaded successfully 
-		        console.log(data);
+		        //console.log(data);
 		      });
 		    }
 		  };

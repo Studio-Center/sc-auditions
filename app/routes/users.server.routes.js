@@ -11,9 +11,19 @@ module.exports = function(app) {
 
 	// Setting up the users profile api
 	app.route('/users/me').get(users.me);
-	app.route('/users')
+
+	app.route('/users/:userId')
+		.put(users.update);
+
+	app.route('/usersedit')
 		.get(users.list)
 		.put(users.update);
+
+	app.route('/usersedit/:userIdEdit')
+		.get(users.readAdmin)
+		.put(users.requiresLogin, users.updateAdmin)
+		.delete(users.requiresLogin, users.hasAuthorization, users.delete);
+
 	app.route('/users/accounts').delete(users.removeOAuthProvider);
 
 	// Setting up the users password api
@@ -51,5 +61,6 @@ module.exports = function(app) {
 	app.route('/auth/linkedin/callback').get(users.oauthCallback('linkedin'));
 
 	// Finish by binding the user middleware
+	app.param('userIdEdit', users.userByIDEdit)
 	app.param('userId', users.userByID);
 };
