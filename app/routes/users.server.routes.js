@@ -61,6 +61,6 @@ module.exports = function(app) {
 	app.route('/auth/linkedin/callback').get(users.oauthCallback('linkedin'));
 
 	// Finish by binding the user middleware
-	app.param('userIdEdit', users.userByIDEdit)
+	app.param('userIdEdit', users.userByIDEdit);
 	app.param('userId', users.userByID);
 };

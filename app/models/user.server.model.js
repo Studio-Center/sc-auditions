@@ -71,8 +71,11 @@ var UserSchema = new Schema({
 	providerData: {},
 	additionalProvidersData: {},
 	roles: {
-		type: String,
-		default: 'user'
+		type: [{
+			type: String,
+			enum: ['user', 'admin', 'producer/auditions director', 'talent', 'talent director', 'client', 'agency']
+		}],
+		default: ['user']
 	},
 	notes: {
 		type: String
