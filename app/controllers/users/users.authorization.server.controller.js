@@ -45,18 +45,24 @@ exports.requiresLogin = function(req, res, next) {
 /**
  * User authorizations routing middleware
  */
-exports.hasAuthorization = function(roles) {
+exports.hasAuthorization = function(roles, res, next) {
 	var _this = this;
 
-	return function(req, res, next) {	
-		_this.requiresLogin(req, res, function() {
-			if (_.intersection(req.user.roles, roles).length) {
-				return next();
-			} else {
-				return res.status(403).send({
-					message: 'User is not authorized'
-				});
-			}
-		});
-	};
+	var allowedRoles = ['admin'];
+
+	if (_.intersection(roles.user.roles, allowedRoles).length) {
+		return next();
+	} else {
+		return function(req, res, next) {	
+			_this.requiresLogin(req, res, function() {
+				if (_.intersection(req.user.roles, roles).length) {
+					return next();
+				} else {
+					return res.status(403).send({
+						message: 'User is not authorized'
+					});
+				}
+			});
+		};
+	}
 };

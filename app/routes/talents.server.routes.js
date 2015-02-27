@@ -6,11 +6,11 @@ module.exports = function(app) {
 
 	// Talents Routes
 	app.route('/talents')
-		.get(talents.list)
-		.post(users.requiresLogin, talents.create);
+		.get(users.requiresLogin, talents.list)
+		.post(users.requiresLogin, talents.hasAuthorization, talents.create);
 
 	app.route('/talents/:talentId')
-		.get(talents.read)
+		.get(users.requiresLogin, talents.hasAuthorization, talents.read)
 		.put(users.requiresLogin, talents.hasAuthorization, talents.update)
 		.delete(users.requiresLogin, talents.hasAuthorization, talents.delete);
 

@@ -6,11 +6,11 @@ module.exports = function(app) {
 
 	// Agencies Routes
 	app.route('/agencies')
-		.get(agencies.list)
+		.get(users.requiresLogin, agencies.list)
 		.post(users.requiresLogin, agencies.create);
 
 	app.route('/agencies/:agencyId')
-		.get(agencies.read)
+		.get(users.requiresLogin, agencies.read)
 		.put(users.requiresLogin, agencies.hasAuthorization, agencies.update)
 		.delete(users.requiresLogin, agencies.hasAuthorization, agencies.delete);
 

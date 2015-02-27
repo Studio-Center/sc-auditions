@@ -15,6 +15,19 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.loadAudio = 0;
 		$scope.audio = Array;
 
+		// verify users
+		$scope.permitAdminDirector = function(){
+			var allowRoles = ['admin', 'producer/auditions director'];
+
+			for(var i = 0; i < Authentication.user.roles.length; ++i){
+				for(var j = 0; j < allowRoles.length; ++j){
+					if(Authentication.user.roles[i] === allowRoles[j]) {
+						return true;
+					}
+				}
+			}
+		};
+
 		// update group checkbox selectors
 		$scope.checkClientUsers = function(userId){
 			for(var i = 0; i < $scope.project.client.length; ++i){
@@ -262,33 +275,35 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		};
 
 		// load audio files into player after project object has finished loading
-		$scope.$watch('project.auditions', function(val){
-			if($scope.loadAudio === 1){
-				$scope.loadAudioPlayer();	
-			}
-		});
+		$scope.$watch('project', function(val){
+			$scope.$watch('project.auditions', function(val){
+				if($scope.loadAudio === 1){
+					$scope.loadAudioPlayer();	
+				}
+			});
 
-		// update progress bar
-		$scope.$watch('project.phases', function(val){
+			// update progress bar
+			$scope.$watch('project.phases', function(val){
 
-			if(typeof $scope.project.phases !== 'undefined'){
-				var phaseLngth = $scope.project.phases.length;
-				var complSteps = 0;
+				if(typeof $scope.project.phases !== 'undefined'){
+					var phaseLngth = $scope.project.phases.length;
+					var complSteps = 0;
 
-				// determine completed steps
-				for(var i = 0; i < phaseLngth; ++i){
-					if($scope.project.phases[i].status === 'complete'){
-						complSteps++;
+					// determine completed steps
+					for(var i = 0; i < phaseLngth; ++i){
+						if($scope.project.phases[i].status === 'complete'){
+							complSteps++;
+						}
 					}
+
+					// configure progress bar values
+					var perc = Math.floor((100 / phaseLngth) * complSteps);
+
+					// set progress bar values
+					$scope.dynamic = perc;
 				}
 
-				// configure progress bar values
-				var perc = Math.floor((100 / phaseLngth) * complSteps);
-
-				// set progress bar values
-				$scope.dynamic = perc;
-			}
-
+			});
 		});
 
 		// load audio files

@@ -15,7 +15,9 @@ exports.create = function(req, res) {
 	var typecast = new Typecast(req.body);
 	typecast.user = req.user;
 
-	if (req.user.role === 'admin' || req.user.role === 'producer/auditions director'){
+	var allowedRoles = ['admin','producer/auditions director','talent director'];
+
+	if (_.intersection(req.user.roles, allowedRoles).length) {
 		typecast.save(function(err) {
 			if (err) {
 				return res.status(400).send({
@@ -102,7 +104,9 @@ exports.typecastByID = function(req, res, next, id) { Typecast.findById(id).popu
  * Typecast authorization middleware
  */
 exports.hasAuthorization = function(req, res, next) {
-	if (req.user.role === 'admin' || req.user.role === 'producer/auditions director' || req.typecast.user.id === req.user.id) {
+	var allowedRoles = ['admin','producer/auditions director','talent director'];
+
+	if (_.intersection(req.user.roles, allowedRoles).length) {
 		// do nothing
 	} else {
 		return res.status(403).send('User is not authorized');

@@ -6,11 +6,11 @@ module.exports = function(app) {
 
 	// Typecasts Routes
 	app.route('/typecasts')
-		.get(typecasts.list)
-		.post(users.requiresLogin, typecasts.create);
+		.get(users.requiresLogin, typecasts.list)
+		.post(users.requiresLogin, typecasts.hasAuthorization, typecasts.create);
 
 	app.route('/typecasts/:typecastId')
-		.get(typecasts.read)
+		.get(users.requiresLogin, typecasts.hasAuthorization, typecasts.read)
 		.put(users.requiresLogin, typecasts.hasAuthorization, typecasts.update)
 		.delete(users.requiresLogin, typecasts.hasAuthorization, typecasts.delete);
 
