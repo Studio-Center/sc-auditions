@@ -201,7 +201,7 @@ exports.list = function(req, res) {
 
 					switch(allowedRoles[j]){
 						case 'user':
-							Project.find({'user.id': req.user._id}).sort('-created').populate('user', 'displayName').exec(function(err, projects) {
+							Project.find({'user._id': req.user._id}).sort('-created').populate('user', 'displayName').exec(function(err, projects) {
 								if (err) {
 									return res.status(400).send({
 										message: errorHandler.getErrorMessage(err)
