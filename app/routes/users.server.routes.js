@@ -16,12 +16,12 @@ module.exports = function(app) {
 		.put(users.update);
 
 	app.route('/usersedit')
-		.get(users.list)
-		.put(users.update);
+		.get(users.list, users.hasAuthorization)
+		.put(users.update, users.hasAuthorization);
 
 	app.route('/usersedit/:userIdEdit')
-		.get(users.readAdmin)
-		.put(users.requiresLogin, users.updateAdmin)
+		.get(users.readAdmin, users.hasAuthorization)
+		.put(users.requiresLogin, users.hasAuthorization, users.updateAdmin)
 		.delete(users.requiresLogin, users.hasAuthorization, users.delete);
 
 	app.route('/users/accounts').delete(users.removeOAuthProvider);
