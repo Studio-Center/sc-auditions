@@ -173,15 +173,48 @@ exports.delete = function(req, res) {
 /**
  * List of Projects
  */
-exports.list = function(req, res) { Project.find().sort('-created').populate('user', 'displayName').exec(function(err, projects) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(projects);
+exports.list = function(req, res) { 
+
+	// permit certain user roles full access
+	var allowedRoles = ['admin','producer/auditions director','talent director'];
+
+	if (_.intersection(req.user.roles, allowedRoles).length) {
+
+		Project.find().sort('-created').populate('user', 'displayName').exec(function(err, projects) {
+			if (err) {
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
+			} else {
+				res.jsonp(projects);
+			}
+		});
+
+	// filter results as required for remaning uer roles
+	} else {
+
+		var allowedRoles = ['user', 'talent', 'client', 'agency'];
+
+		for(var i = 0; i < req.user.roles.length; ++i){
+			for(var j = 0; j < allowedRoles.length; ++j){
+				if(req.user.roles[i] === allowedRoles[j]){
+
+					switch(allowedRoles[j]){
+						case 'user':
+						break;
+						case 'talent':
+						break;
+						case 'client':
+						break;
+						case 'agency':
+						break;
+					}
+
+				}
+			}
 		}
-	});
+
+	}
 };
 
 /**
