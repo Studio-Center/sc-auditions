@@ -212,8 +212,26 @@ exports.list = function(req, res) {
 							});
 						break;
 						case 'talent':
+							Project.find().elemMatch('talent', { talentId: req.user._id}).sort('-created').populate('user', 'displayName').exec(function(err, projects) {
+								if (err) {
+									return res.status(400).send({
+										message: errorHandler.getErrorMessage(err)
+									});
+								} else {
+									res.jsonp(projects);
+								}
+							});
 						break;
 						case 'client':
+							Project.find().elemMatch('client', { userId: req.user._id}).sort('-created').populate('user', 'displayName').exec(function(err, projects) {
+								if (err) {
+									return res.status(400).send({
+										message: errorHandler.getErrorMessage(err)
+									});
+								} else {
+									res.jsonp(projects);
+								}
+							});
 						break;
 						case 'agency':
 						break;
