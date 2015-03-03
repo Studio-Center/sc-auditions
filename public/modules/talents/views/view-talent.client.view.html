@@ -1,6 +1,24 @@
 <section data-ng-controller="TalentsController" data-ng-init="findOne()">
 	<div class="page-header">
 		<h1 data-ng-bind="talent.name"></h1>
+		<h4>Gender</h4>
+		<p data-ng-bind="talent.gender"></p>
+		<h4>Email</h4>
+		<p data-ng-bind="talent.email"></p>
+		<h4>Phone Number</h4>
+		<p data-ng-bind="talent.phone"></p>
+		<h4>Type</h4>
+		<p data-ng-bind="talent.type"></p>
+		<h4>Union Status</h4>
+		<p ng-repeat="(key, usval) in talent.unionStatus">{{usval}}</p>
+		<h4>Last Name Code</h4>
+		<p data-ng-bind="talent.lastNameCode"></p>
+		<h4>Outage Times</h4>
+		<p data-ng-bind="talent.outageTimes"></p>
+		<h4>Location/ISDN</h4>
+		<p data-ng-bind="talent.locationISDN"></p>
+		<h4>Typecasts</h4>
+		<p ng-repeat="(key, usval) in talent.typeCasts">{{usval}}</p>
 	</div>
 	<div class="pull-right">
 		<a class="btn btn-primary" href="/#!/talents/{{talent._id}}/edit">

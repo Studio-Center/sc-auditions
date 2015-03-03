@@ -25,17 +25,19 @@ angular.module('typecasts').controller('TypecastsController', ['$scope', '$state
 
 		// Remove existing Typecast
 		$scope.remove = function( typecast ) {
-			if ( typecast ) { typecast.$remove();
+			if(confirm('Are you sure?')){
+				if ( typecast ) { typecast.$remove();
 
-				for (var i in $scope.typecasts ) {
-					if ($scope.typecasts [i] === typecast ) {
-						$scope.typecasts.splice(i, 1);
+					for (var i in $scope.typecasts ) {
+						if ($scope.typecasts [i] === typecast ) {
+							$scope.typecasts.splice(i, 1);
+						}
 					}
+				} else {
+					$scope.typecast.$remove(function() {
+						$location.path('typecasts');
+					});
 				}
-			} else {
-				$scope.typecast.$remove(function() {
-					$location.path('typecasts');
-				});
 			}
 		};
 

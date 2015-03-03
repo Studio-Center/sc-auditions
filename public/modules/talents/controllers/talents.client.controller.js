@@ -53,6 +53,7 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 				phone: this.phone,
 				type: this.type,
 				gender: this.gender,
+				company: this.company,
 				unionStatus: this.unionSelected,
 				lastNameCode: this.lastNameCode,
 				outageTimes: this.outageTimes,
@@ -73,17 +74,19 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 
 		// Remove existing Talent
 		$scope.remove = function( talent ) {
-			if ( talent ) { talent.$remove();
+			if(confirm('Are you sure?')){
+				if ( talent ) { talent.$remove();
 
-				for (var i in $scope.talents ) {
-					if ($scope.talents [i] === talent ) {
-						$scope.talents.splice(i, 1);
+					for (var i in $scope.talents ) {
+						if ($scope.talents [i] === talent ) {
+							$scope.talents.splice(i, 1);
+						}
 					}
+				} else {
+					$scope.talent.$remove(function() {
+						$location.path('talents');
+					});
 				}
-			} else {
-				$scope.talent.$remove(function() {
-					$location.path('talents');
-				});
 			}
 		};
 

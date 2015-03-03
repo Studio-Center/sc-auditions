@@ -50,7 +50,7 @@
 			</div>
 		</div>
 
-		<accordion close-others="oneAtATime" data-ng-show="permitAdminDirector()">
+		<accordion close-others="oneAtATime" data-ng-show="permitAdminDirector() || permitClient() || permitClientClient()">
 			<accordion-group is-open="status.open">
 			<accordion-heading>
             	Phases<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
@@ -59,18 +59,57 @@
 				<div class="panel panel-default" ng-repeat="(key, phase) in project.phases">
 					<div class="panel-heading"><strong>{{project.phases[key].name}}</strong></div>
 					<div class="panel-body">
-						<label>Status:</label>
-						<select ng-model="project.phases[key].status" class="form-control" ng-change="updateStatus(key)" ng-options="item for item in project.phases[key].options">
-				        </select>
-				        <label>Start Date:</label>
-				        <input type="date" ng-model="project.phases[key].startDate" class="form-control" ng-change="updateStartDate(key)">
-				        <label>End Date:</label>
-				        <input type="date" ng-model="project.phases[key].endDate" class="form-control" ng-change="updateEndDate(key)">
+						<span data-ng-show="permitAdminDirector()">
+							<label>Status:</label>
+							<select ng-model="project.phases[key].status" class="form-control" ng-change="updateStatus(key)" ng-options="item for item in project.phases[key].options">
+					        </select>
+					        <label>Start Date:</label>
+					        <input type="date" ng-model="project.phases[key].startDate" class="form-control" ng-change="updateStartDate(key)">
+					        <label>End Date:</label>
+					        <input type="date" ng-model="project.phases[key].endDate" class="form-control" ng-change="updateEndDate(key)">
+			    		</span>
+			    		<span data-ng-show="permitClient() || permitClientClient()">
+			    			<label>Status:</label>
+							<p>{{project.phases[key].status}}</p>
+					        <label>Start Date:</label>
+					        <p>{{project.phases[key].startDate}}</p>
+					        <label>End Date:</label>
+					        <p>{{project.phases[key].endDate}}</p>
+			    		</span>
 			        </div>
 				</div>
 		    </accordion>
 	    </accordion>
 		
+		<accordion close-others="oneAtATime" data-ng-show="permitAdminDirector() || permitClient()">
+			<accordion-group is-open="status.open">
+			<accordion-heading>
+            	Client Client Users<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+        	</accordion-heading>
+				<ul class="list-group">
+					<li class="list-group-item" ng-repeat="(key, member) in project.clientClient">{{member.name}}</li>
+				</ul>
+				<accordion close-others="oneAtATime">
+					<accordion-group heading="Edit Client Client Users">
+						<script>
+			              var users = angular.module("users", []);
+			              users.controller("UsersController", function($scope) {
+			                  $scope.users = Users.query();
+			              });
+			            </script>
+			            <div class="controls" ng-module="users">
+			                <div ng-controller="UsersController" data-ng-init="find()">
+			                	<label>Search:</label> <input ng-model="filterClientClient">
+								<ul class="list-group">
+									<li class="list-group-item" ng-repeat="(key, user) in users | filter:filterClientClient"><input type="checkbox" value="{{user._id}}" ng-click="updateClientClient(user._id, user.displayName, user.email)" ng-checked="checkClientClientUsers(user._id)"> {{user.firstName}} {{user.lastName}}</li>
+								</ul>
+							</div>
+						</div>
+					</accordion-group>
+				</accordion>
+			</accordion-group>
+		</accordion>
+
 		<accordion close-others="oneAtATime" data-ng-show="permitAdminDirector()">
 			<accordion-group is-open="status.open">
 			<accordion-heading>
@@ -89,9 +128,9 @@
 			            </script>
 			            <div class="controls" ng-module="users">
 			                <div ng-controller="UsersController" data-ng-init="find()">
-			                	<label>Search:</label> <input ng-model="filterTeam">
+			                	<label>Search:</label> <input ng-model="filterClient">
 								<ul class="list-group">
-									<li class="list-group-item" ng-repeat="(key, user) in users | filter:filterTeam"><input type="checkbox" value="{{user._id}}" ng-click="updateClient(user._id, user.displayName, user.email)" ng-checked="checkClientUsers(user._id)"> {{user.firstName}} {{user.lastName}}</li>
+									<li class="list-group-item" ng-repeat="(key, user) in users | filter:filterClient"><input type="checkbox" value="{{user._id}}" ng-click="updateClient(user._id, user.displayName, user.email)" ng-checked="checkClientUsers(user._id)"> {{user.firstName}} {{user.lastName}}</li>
 								</ul>
 							</div>
 						</div>
@@ -135,7 +174,7 @@
             	Talent<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
         	</accordion-heading>
 				<ul class="list-group">
-					<li class="list-group-item" ng-repeat="(key, member) in project.talent"> {{member.name}} <span data-ng-show="permitAdminDirector()"><input type="checkbox" data-ng-model="project.talent[key].booked" ng-checked="project.talent[key].booked" ng-click="toggleBooked(key)"> Booked </span></li>
+					<li class="list-group-item" ng-repeat="(key, member) in project.talent"> <a target="_blank" href="/#!/talents/{{member.talentId}}">{{member.name}}</a> <span data-ng-show="permitAdminDirector()"><input type="checkbox" data-ng-model="project.talent[key].booked" ng-checked="project.talent[key].booked" ng-click="toggleBooked(key)"> Booked </span></li>
 				</ul>
 				<accordion close-others="oneAtATime" data-ng-show="permitAdminDirector()">
 					<accordion-group heading="Edit Talent">
@@ -209,9 +248,11 @@
 							<label>Notes:</label><textarea ng-model="scripts[key].discussion" class="form-control"></textarea>
 							<button style="float:right" class="btn btn-default" ng-click="saveScriptNote(key)">Save</button>
 						</fieldset>
-						<div ng-repeat="(key, ditem) in project.scripts[key].discussion.slice().reverse()">
-							<h5><strong>{{ditem.date | date:'fullDate'}} {{ditem.date | date:'mediumTime'}} - {{ditem.username}}</strong></h5>
-							<p data-ng-bind="ditem.item"></p>
+						<div style="max-height:200px;overflow-y:scroll">
+							<div ng-repeat="(key, ditem) in project.scripts[key].discussion.slice().reverse()">
+								<h5><strong>{{ditem.date | date:'fullDate'}} {{ditem.date | date:'mediumTime'}} - {{ditem.username}}</strong></h5>
+								<p data-ng-bind="ditem.item"></p>
+							</div>
 						</div>
 					</li>
 				</ul>
@@ -236,6 +277,16 @@
 							<button data-ng-show="permitAdminDirector()" ng-click="delAudition(key)" target="_blank"><img src="/img/delete.png" alt="delete"></button>
 						</fieldset>
 						<fieldset>
+							<label>Description</label><br>
+							<span data-ng-show="permitAdminDirector()">
+								<textarea ng-model="project.auditions[key].description" class="form-control">{{project.auditions[key].description}}</textarea>
+								<button style="float:right" class="btn btn-default" ng-click="saveAudtionDescription(key)">Save</button>
+							<span>
+							<span ng-if="!permitAdminDirector()">
+								{{project.auditions[key].description}}
+							</span>
+						</fieldset>
+						<fieldset>
 							<label>Rating</label>
 							<rating ng-model="project.auditions[key].rating" max="max" on-leave="overStar = project.auditions[key].rating" ></rating>
 						</fieldset>
@@ -247,9 +298,11 @@
 							<label>Notes:</label><textarea ng-model="auditions[key].discussion" class="form-control"></textarea>
 							<button style="float:right" class="btn btn-default" ng-click="saveAudtionNote(key)">Save</button>
 						</fieldset>
-						<div  data-ng-show="permitAdminDirector()" ng-repeat="(key, ditem) in project.auditions[key].discussion.slice().reverse()">
-							<h5><strong>{{ditem.date | date:'fullDate'}} {{ditem.date | date:'mediumTime'}} - {{ditem.username}}</strong></h5>
-							<p data-ng-bind="ditem.item"></p>
+						<div style="max-height:200px;overflow-y:scroll">
+							<div data-ng-show="permitAdminDirector()" ng-repeat="(key, ditem) in project.auditions[key].discussion.slice().reverse()">
+								<h5><strong>{{ditem.date | date:'fullDate'}} {{ditem.date | date:'mediumTime'}} - {{ditem.username}}</strong></h5>
+								<p data-ng-bind="ditem.item"></p>
+							</div>
 						</div>
 					</li>
 				</ul>
@@ -268,12 +321,4 @@
 			<i class="glyphicon glyphicon-trash"></i>
 		</a>
 	</div>
-	<small>
-		<em class="text-muted">
-			Posted on
-			<span data-ng-bind="project.created | date:'mediumDate'"></span>
-			by
-			<span data-ng-bind="project.user.displayName"></span>
-		</em>
-	</small>
 </section>

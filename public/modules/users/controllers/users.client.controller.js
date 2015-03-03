@@ -5,7 +5,7 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
 	function($scope, $stateParams, $location, Authentication, UsersEdit ) {
 		$scope.authentication = Authentication;
 
-		$scope.roleOpts = ['user', 'admin', 'producer/auditions director', 'talent', 'talent director', 'client', 'agency'];
+		$scope.roleOpts = ['user', 'admin', 'producer/auditions director', 'talent', 'talent director', 'client', 'client-client'];
 
 		// Find a list of Users
 		$scope.find = function() {
@@ -35,6 +35,24 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
 				});
 			} else {
 				$scope.submitted = true;
+			}
+		};
+
+		$scope.remove = function( useredit ) {
+			console.log(useredit);
+			if(confirm('Are you sure?')){
+				if ( useredit ) { useredit.$remove();
+
+					for (var i in $scope.users ) {
+						if ($scope.users [i] === user ) {
+							$scope.users.splice(i, 1);
+						}
+					}
+				} else {
+					$scope.useredit.$remove(function() {
+						$location.path('usersedit');
+					});
+				}
 			}
 		};
 	}
