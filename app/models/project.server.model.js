@@ -94,6 +94,9 @@ var ProjectSchema = new Schema({
 	client: {
 		type: Array
 	},
+	clientClient: {
+		type: Array
+	},
 	deleteFiles: {
 		type: Array
 	}

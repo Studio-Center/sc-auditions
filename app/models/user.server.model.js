@@ -41,6 +41,10 @@ var UserSchema = new Schema({
 		type: String,
 		trim: true
 	},
+	company: {
+		type: String,
+		trim: true
+	},
 	email: {
 		type: String,
 		trim: true,
@@ -73,7 +77,7 @@ var UserSchema = new Schema({
 	roles: {
 		type: [{
 			type: String,
-			enum: ['user', 'admin', 'producer/auditions director', 'talent', 'talent director', 'client', 'agency']
+			enum: ['user', 'admin', 'producer/auditions director', 'talent', 'talent director', 'client', 'client-client']
 		}],
 		default: ['user']
 	},

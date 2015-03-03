@@ -19,6 +19,12 @@ var TalentSchema = new Schema({
 	type: {
 		type: String
 	},
+	email: {
+		type: String
+	},
+	phone: {
+		type: String
+	},
 	gender: {
 		type: String,
 		trim: true

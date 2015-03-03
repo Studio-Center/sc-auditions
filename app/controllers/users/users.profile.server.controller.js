@@ -8,6 +8,7 @@ var _ = require('lodash'),
 	mongoose = require('mongoose'),
 	passport = require('passport'),
 	User = mongoose.model('User'),
+	config = require('../../../config/config'),
 	nodemailer = require('nodemailer');
 
 /**
@@ -75,7 +76,7 @@ exports.updateAdmin = function(req, res) {
 					});
 				} else {
 
-					var transporter = nodemailer.createTransport();
+					var transporter = nodemailer.createTransport(config.mailer.options);
 					
 					// configure email body
 					var emailBody = 'First Name: ' + user.firstName + '\n';
@@ -85,7 +86,7 @@ exports.updateAdmin = function(req, res) {
 
 					// send email notification of update
 					transporter.sendMail({
-					    from: 'noreply@studiocenterauditions.com',
+					    from: config.mailer.from,
 					    to: user.email,
 					    subject: 'SC Auditions ' + user.displayName + ' account update',
 					    text: emailBody
@@ -137,7 +138,7 @@ exports.readAdmin = function(req, res) {
 };
 
 exports.delete = function(req, res) {
-	var user = req.user ;
+	var user = req.useredit ;
 
 	user.remove(function(err) {
 		if (err) {

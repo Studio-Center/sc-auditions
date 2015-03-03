@@ -10,17 +10,25 @@ var mongoose = require('mongoose'),
 	Talent = mongoose.model('Talent'),
 	Typecast = mongoose.model('Typecast'),
 	fs = require('fs'),
+	config = require('../../config/config'),
 	_ = require('lodash'),
 	path = require('path'),
 	mv = require('mv'),
 	nodemailer = require('nodemailer');
 
 // process email submission
-var procEmail = function(project){
-	if(typeof project.email !== 'undefined' && project.email.length){
-		var transporter = nodemailer.createTransport();
+var procEmail = function(project, req){
+	console.log(project.email.length);
+	if(typeof project.email !== 'undefined'){
+		// append default footer to email
+		project.email.message += '\n' + 'The ' + config.app.title + ' Support Team' + '\n';
+		project.email.message += '\n' + 'To view your StudioCenterAuditions.com Home Page, visit:' + '\n';
+		project.email.message += 'http://' + req.headers.host + '\n';
+
+		// send email
+		var transporter = nodemailer.createTransport(config.mailer.options);
 		transporter.sendMail({
-		    from: project.email.from,
+		    from: config.mailer.from,
 		    to: project.email.to,
 		    subject: project.email.subject,
 		    text: project.email.message
@@ -28,7 +36,7 @@ var procEmail = function(project){
 	}
 
 	// reset email object
-	project.email = {};
+	delete project.email;
 };
 
 /**
@@ -121,7 +129,7 @@ exports.update = function(req, res) {
 	// delete any files no longer in use
 	deleteFiles(project);
 	// send required emails as needed
-	procEmail(project);
+	procEmail(project, req);
 
 	project.save(function(err) {
 		if (err) {
@@ -194,6 +202,7 @@ exports.list = function(req, res) {
 	} else {
 
 		var allowedRoles = ['user', 'talent', 'client', 'agency'];
+		var curUserId = String(req.user._id);
 
 		for(var i = 0; i < req.user.roles.length; ++i){
 			for(var j = 0; j < allowedRoles.length; ++j){
@@ -201,7 +210,7 @@ exports.list = function(req, res) {
 
 					switch(allowedRoles[j]){
 						case 'user':
-							Project.find({'user._id': req.user._id}).sort('-created').populate('user', 'displayName').exec(function(err, projects) {
+							Project.find({'user._id': curUserId}).sort('-created').populate('user', 'displayName').exec(function(err, projects) {
 								if (err) {
 									return res.status(400).send({
 										message: errorHandler.getErrorMessage(err)
@@ -212,7 +221,8 @@ exports.list = function(req, res) {
 							});
 						break;
 						case 'talent':
-							Project.find().elemMatch('talent', { talentId: req.user._id}).sort('-created').populate('user', 'displayName').exec(function(err, projects) {
+						// talent does not currently have access, added to permit later access
+							Project.find({'talent': { $elemMatch: { 'talentId': rcurUserId}}}).sort('-created').populate('user', 'displayName').exec(function(err, projects) {
 								if (err) {
 									return res.status(400).send({
 										message: errorHandler.getErrorMessage(err)
@@ -223,7 +233,19 @@ exports.list = function(req, res) {
 							});
 						break;
 						case 'client':
-							Project.find().elemMatch('client', { userId: req.user._id}).sort('-created').populate('user', 'displayName').exec(function(err, projects) {
+							Project.find({'client': { $elemMatch: { 'userId': curUserId}}}).sort('-created').populate('user', 'displayName').exec(function(err, projects) {
+								if (err) {
+									return res.status(400).send({
+										message: errorHandler.getErrorMessage(err)
+									});
+								} else {
+									console.log(projects);
+									res.jsonp(projects);
+								}
+							});
+						break;
+						case 'client-client':
+							Project.find({'clientClient': { $elemMatch: { 'userId': curUserId}}}).sort('-created').populate('user', 'displayName').exec(function(err, projects) {
 								if (err) {
 									return res.status(400).send({
 										message: errorHandler.getErrorMessage(err)
@@ -231,9 +253,7 @@ exports.list = function(req, res) {
 								} else {
 									res.jsonp(projects);
 								}
-							});
-						break;
-						case 'agency':
+							});						
 						break;
 					}
 
