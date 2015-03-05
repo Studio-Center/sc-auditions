@@ -5,8 +5,18 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	function($scope, $stateParams, $location, Authentication, Projects, $upload, ngAudio, $http ) {
 		$scope.authentication = Authentication;
 
+		// rating
 		$scope.max = 10;
 		$scope.isReadonly = false;
+		$scope.ratings = [];
+		$scope.selCheckVal = 0;
+
+		$scope.hoveringOver = function(value,key,object) {
+	        $scope.overStar = value;
+	        $scope.percent = 100 * (value / $scope.max);
+	        $scope.selCheckVal = value;
+      	};
+
 
 		// static project options
 		$scope.statusOpts = ['In Progress', 'On Hold', 'Booked', 'Canceled', 'ReAuditioned'];
@@ -308,51 +318,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			$scope.update();
 		};
 
-		// update auditions approval status
-		$scope.audApprov = function(key){
-
-			var now = new Date();
-
-			if($scope.project.auditions[key].approved.selected === true){
-				$scope.project.auditions[key].approved.selected = false;
-				$scope.project.auditions[key].approved.by.userId = '';
-				$scope.project.auditions[key].approved.by.name = '';
-				$scope.project.auditions[key].approved.by.date = '';
-			} else {
-				$scope.project.auditions[key].approved.selected = true;
-				$scope.project.auditions[key].approved.by.userId = Authentication.user._id;
-				$scope.project.auditions[key].approved.by.name = Authentication.user.displayName;
-				$scope.project.auditions[key].approved.by.date = now.toJSON();
-				
-				// send update email
-				$scope.gatherToAddresses('audApprov');
-			    $scope.project.email.subject = $scope.project.title + ' audition ' + $scope.project.auditions[key].file.name + ' approved';
-			    $scope.project.email.message = 'Project: ' + $scope.project.title + '\n';
-			    $scope.project.email.message += 'File: ' + $scope.project.auditions[key].file.name + '\n';
-			    $scope.project.email.message += 'Approved by: ' + Authentication.user.displayName + '\n';
-			    $scope.project.email.message += '\n' + 'For more information, please visit: ' + 'http://' + $location.host() + '/#!/projects/' + $scope.project._id + '\n';
-			}
-
-			// update project store
-			$scope.update();
-		};
-
-		// save audition note item
-		$scope.saveAudtionDescription = function(key){
-
-			// send update email
-			$scope.gatherToAddresses('saveAudtionDescription');
-		    $scope.project.email.subject = $scope.project.title + ' audition description added';
-		    $scope.project.email.message = 'Audition: ' + $scope.project.auditions[key].file.name + '\n';
-		    $scope.project.email.message += 'Description: ' + $scope.project.auditions[key].description + '\n';
-		    $scope.project.email.message += 'Project: ' + $scope.project.title + '\n';
-		    $scope.project.email.message += 'Added by: ' + Authentication.user.displayName + '\n';
-		    $scope.project.email.message += '\n' + 'For more information, please visit: ' + 'http://' + $location.host() + '/#!/projects/' + $scope.project._id + '\n';
-
-			// update project store
-			$scope.update();
-		};
-
 		// save audition note item
 		$scope.saveAudtionNote = function(key){
 
@@ -477,6 +442,29 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			});
 		};
 
+		// update audition rating
+		$scope.updateRating = function(key){
+
+			// console.log($scope.rate[key]);
+			var rating = {
+				userId: Authentication.user._id,
+				value: $scope.selCheckVal
+			};
+
+			// walk through existing ratings
+			for(var i = 0; i < $scope.project.auditions[key].rating.length; ++i){
+				if($scope.project.auditions[key].rating[i].userId === Authentication.user._id){
+					$scope.project.auditions[key].rating.splice(i,1);
+				}
+			}
+
+			// push new rating
+			$scope.project.auditions[key].rating.push(rating);
+
+			// update project store
+			$scope.update();
+		};
+
 		// update phase options
 		$scope.updateStatus = function(key){
 
@@ -491,37 +479,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		    $scope.project.email.message += 'Added by: ' + Authentication.user.displayName + '\n';
 		    $scope.project.email.message += '\n' + 'For more information, please visit: ' + 'http://' + $location.host() + '/#!/projects/' + $scope.project._id + '\n';
 
-			// update project store
-			$scope.update();
-		};
-		$scope.updateStartDate = function(key){
-
-			// send update email
-			$scope.gatherToAddresses('updateStartDate');
-		    $scope.project.email.subject = $scope.project.title + ' phase ' + $scope.project.phases[key].name + ' status update';
-		    $scope.project.email.message += 'Project: ' + $scope.project.title + '\n';
-		    $scope.project.email.message += 'Phase: ' + $scope.project.phases[key].name + '\n';
-		    $scope.project.email.message += 'Status: ' + $scope.project.phases[key].status + '\n';
-		    $scope.project.email.message += 'Start Date: ' + $scope.project.phases[key].startDate + '\n';
-		    $scope.project.email.message += 'End Date: ' + $scope.project.phases[key].endDate + '\n';
-		    $scope.project.email.message += 'Added by: ' + Authentication.user.displayName + '\n';
-		    $scope.project.email.message += '\n' + 'For more information, please visit: ' + 'http://' + $location.host() + '/#!/projects/' + $scope.project._id + '\n';
-
-			// update project store
-			$scope.update();
-		};
-		$scope.updateEndDate = function(key){
-
-			// send update email
-			$scope.gatherToAddresses('updateEndDate');
-		    $scope.project.email.subject = $scope.project.title + ' phase ' + $scope.project.phases[key].name + ' status update';
-		    $scope.project.email.message += 'Project: ' + $scope.project.title + '\n';
-		    $scope.project.email.message += 'Phase: ' + $scope.project.phases[key].name + '\n';
-		    $scope.project.email.message += 'Status: ' + $scope.project.phases[key].status + '\n';
-		    $scope.project.email.message += 'Start Date: ' + $scope.project.phases[key].startDate + '\n';
-		    $scope.project.email.message += 'End Date: ' + $scope.project.phases[key].endDate + '\n';
-		    $scope.project.email.message += 'Added by: ' + Authentication.user.displayName + '\n';
-		    $scope.project.email.message += '\n' + 'For more information, please visit: ' + 'http://' + $location.host() + '/#!/projects/' + $scope.project._id + '\n';
+		    if($scope.project.phases[key].status === 'complete'){
+		    	var now = new Date();
+		    	$scope.project.phases[key].endDate = now.toJSON();
+		    }
 
 			// update project store
 			$scope.update();
@@ -550,10 +511,21 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		// load audio files into player after project object has finished loading
 		$scope.$watch('project', function(val){
 
-			if(typeof $scope.project == 'object'){
+			if(typeof $scope.project === 'object'){
 				$scope.$watch('project.auditions', function(val){
 					if($scope.loadAudio === 1){
 						$scope.loadAudioPlayer();	
+					}
+
+					if(typeof $scope.project.auditions === 'object'){
+						// load audition ratings
+						for(var i = 0; i < $scope.project.auditions.length; ++i){
+							for(var j = 0; j < $scope.project.auditions[i].rating.length; ++j){
+								if($scope.project.auditions[i].rating[j].userId === String(Authentication.user._id)){
+									$scope.ratings[i] = $scope.project.auditions[i].rating[j].value;
+								}
+							}
+						}
 					}
 				});
 
@@ -573,6 +545,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 						// configure progress bar values
 						var perc = Math.floor((100 / phaseLngth) * complSteps);
+
+						if(perc >= 100){
+							$scope.project.status = 'complete';
+						}
 
 						// set progress bar values
 						$scope.dynamic = perc;
@@ -740,7 +716,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 							file: file, 
 							discussion: [], 
 							description: '',
-							rating: '', 
+							rating: [], 
 							approved: 
 									{
 										by: 

@@ -13,7 +13,9 @@
 				by
 				<span data-ng-bind="project.user.displayName"></span>
 			</small>
-			<h4 class="list-group-item-heading" data-ng-bind="project.title"></h4>
+            <h4 class="list-group-item-heading" data-ng-bind="project.title"></h4>
+            <h4 class="list-group-item-heading">Due Date & Time</h4>
+            <p data-ng-bind="project.estimatedCompletionDate | date:'fullDate'"></p>
         </a>
     </div>
     <div class="alert alert-warning text-center" data-ng-hide="!projects.$resolved || projects.length">

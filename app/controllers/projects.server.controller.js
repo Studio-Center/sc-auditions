@@ -18,7 +18,6 @@ var mongoose = require('mongoose'),
 
 // process email submission
 var procEmail = function(project, req){
-	console.log(project.email.length);
 	if(typeof project.email !== 'undefined'){
 		// append default footer to email
 		project.email.message += '\n' + 'The ' + config.app.title + ' Support Team' + '\n';
@@ -90,8 +89,6 @@ exports.create = function(req, res) {
 				    if (!fs.existsSync(newPath)) {
 				    	fs.mkdirSync(newPath);
 				    }
-
-				    console.log(project.scripts[0].file.name);
 
 				    // add file path
 				    newPath += project.scripts[0].file.name;
