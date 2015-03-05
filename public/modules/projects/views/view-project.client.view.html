@@ -3,15 +3,19 @@
 		<h1 data-ng-bind="project.title"></h1>
 
 		<div class="panel panel-default">
+			<div class="panel-heading"><strong>Due Date/time</strong></div>
+			<div class="panel-body" data-ng-bind="project.estimatedCompletionDate | date:'fullDate'"></div>
+		</div>
+
+		<div class="panel panel-default">
 			<div class="panel-heading"><strong>Description</strong></div>
 			<div class="panel-body" data-ng-bind="project.description"></div>
 		</div>
 
-		<accordion close-others="oneAtATime" data-ng-show="permitAdminDirector()">
-			<accordion-group is-open="status.open">
-			<accordion-heading>
-            	Notes<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
-        	</accordion-heading>
+		<div class="panel panel-default" data-ng-show="permitAdminDirector()">
+			<div class="panel-heading">
+            	<strong>Notes</strong>
+        	</div>
 			<textarea ng-model="discussion" name="discussion" class="form-control"></textarea>
 			<button style="float:right" class="btn btn-default" ng-click="saveDiscussion()">Save</button>
 			<div style="max-height:200px;overflow-y:scroll">
@@ -20,12 +24,6 @@
 					<p data-ng-bind="ditem.item"></p>
 				</div>
 			</div>
-			</accordion-group>
-		</accordion>
-
-		<div class="panel panel-default">
-			<div class="panel-heading"><strong>Estimated Completion Date</strong></div>
-			<div class="panel-body" data-ng-bind="project.estimatedCompletionDate | date:'fullDate'"></div>
 		</div>
 
 		<div class="panel panel-default">
@@ -64,17 +62,17 @@
 							<select ng-model="project.phases[key].status" class="form-control" ng-change="updateStatus(key)" ng-options="item for item in project.phases[key].options">
 					        </select>
 					        <label>Start Date:</label>
-					        <input type="date" ng-model="project.phases[key].startDate" class="form-control" ng-change="updateStartDate(key)">
+					        <p>{{project.phases[key].startDate | date:'fullDate'}}</p>
 					        <label>End Date:</label>
-					        <input type="date" ng-model="project.phases[key].endDate" class="form-control" ng-change="updateEndDate(key)">
+					        <p>{{project.phases[key].endDate | date:'fullDate'}}</p>
 			    		</span>
 			    		<span data-ng-show="permitClient() || permitClientClient()">
 			    			<label>Status:</label>
 							<p>{{project.phases[key].status}}</p>
 					        <label>Start Date:</label>
-					        <p>{{project.phases[key].startDate}}</p>
+					        <p>{{project.phases[key].startDate | date:'fullDate'}}</p>
 					        <label>End Date:</label>
-					        <p>{{project.phases[key].endDate}}</p>
+					        <p>{{project.phases[key].endDate | date:'fullDate'}}</p>
 			    		</span>
 			        </div>
 				</div>
@@ -277,20 +275,8 @@
 							<button data-ng-show="permitAdminDirector()" ng-click="delAudition(key)" target="_blank"><img src="/img/delete.png" alt="delete"></button>
 						</fieldset>
 						<fieldset>
-							<label>Description</label><br>
-							<div data-ng-show="permitClient()" data-ng-bind="project.auditions[key].description"></div>
-							<span data-ng-show="permitAdminDirector()">
-								<textarea ng-model="project.auditions[key].description" class="form-control">{{project.auditions[key].description}}</textarea>
-								<button style="float:right" class="btn btn-default" ng-click="saveAudtionDescription(key)">Save</button>
-							<span>
-						</fieldset>
-						<fieldset>
-							<label>Rating</label>
-							<rating ng-model="project.auditions[key].rating" max="max" on-leave="overStar = project.auditions[key].rating" ></rating>
-						</fieldset>
-						<fieldset>
-							<label>Approved?<label> &nbsp;<input type="checkbox" ng-model="project.auditions[key].approved.selected" ng-click="audApprov(key)">
-							<span data-ng-bind="project.auditions[key].approved.by.name"></span> <span>{{project.auditions[key].approved.by.date | date:'fullDate'}} {{project.auditions[key].approved.by.date | date:'mediumTime'}}</span>
+							<label>Rating {{project.auditions[key].rating[authentication.user._id]}}</label>
+							<rating ng-model="ratings[key]" readonly="false" ng-click="updateRating(key)" max="max" on-leave="overStar = null" on-hover="hoveringOver(value,key)"></rating>
 						</fieldset>
 						<fieldset data-ng-show="permitAdminDirector() || permitClient()">
 							<label>Notes:</label><textarea ng-model="auditions[key].discussion" class="form-control"></textarea>

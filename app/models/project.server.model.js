@@ -4,7 +4,8 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-	Schema = mongoose.Schema;
+	Schema = mongoose.Schema,
+	now = new Date();
 
 /**
  * Project Schema
@@ -35,21 +36,21 @@ var ProjectSchema = new Schema({
 						name: 'Casting',
 						status: 'in progress',
 						options: ['in progress','complete'],
-						startDate: '',
+						startDate: now.toJSON(),
 						endDate: ''
 					},
 					{
 						name: 'Talent Notification',
 						status: 'in progress',
 						options: ['in progress','complete'],
-						startDate: '',
+						startDate: now.toJSON(),
 						endDate: ''
 					},
 					{
 						name: 'Posting and Publishing',
 						status: 'in progress',
 						options: ['in progress','Holding for more talent','Holding For Requested Talent','complete'],
-						startDate: '',
+						startDate: now.toJSON(),
 						endDate: ''
 					}
 				]

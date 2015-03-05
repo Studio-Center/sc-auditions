@@ -18,6 +18,7 @@ exports.create = function(req, res) {
 	var allowedRoles = ['admin','producer/auditions director','talent director'];
 
 	if (_.intersection(req.user.roles, allowedRoles).length) {
+		console.log(talent);
 		talent.save(function(err) {
 			if (err) {
 				return res.status(400).send({
