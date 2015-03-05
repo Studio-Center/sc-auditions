@@ -1,15 +1,18 @@
 'use strict';
 
 // Users controller
-angular.module('users').controller('UsersController', ['$scope', '$stateParams', '$location', 'Authentication', 'UsersEdit',
-	function($scope, $stateParams, $location, Authentication, UsersEdit ) {
+angular.module('users').controller('UsersController', ['$scope', '$stateParams', '$location', 'Authentication', 'UsersEdit', 'UsersFind',
+	function($scope, $stateParams, $location, Authentication, UsersEdit, UsersFind ) {
 		$scope.authentication = Authentication;
 
-		$scope.roleOpts = ['user', 'admin', 'producer/auditions director', 'talent', 'talent director', 'client', 'client-client'];
+		$scope.roleOpts = ['user', 'admin', 'producer/auditions director', 'talent director', 'client', 'client-client'];
 
 		// Find a list of Users
 		$scope.find = function() {
 			$scope.users = UsersEdit.query();
+		};
+		$scope.findFilter = function(selUserLevel) {
+			$scope.users = UsersFind.query({userLevel: selUserLevel});
 		};
 
 		// Find existing Users
@@ -39,12 +42,12 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
 		};
 
 		$scope.remove = function( useredit ) {
-			console.log(useredit);
+
 			if(confirm('Are you sure?')){
 				if ( useredit ) { useredit.$remove();
 
 					for (var i in $scope.users ) {
-						if ($scope.users [i] === user ) {
+						if ($scope.users[i] === useredit ) {
 							$scope.users.splice(i, 1);
 						}
 					}

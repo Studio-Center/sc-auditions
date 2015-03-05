@@ -14,6 +14,33 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.phaseStatusOpts = ['in progress','open','complete','suspended'];
 		$scope.loadAudio = 0;
 		$scope.audio = Array;
+		$scope.newLead = {};
+
+		// new project form 
+		$scope.lead = function(){
+
+			// Trigger validation flag.
+		    $scope.submitted = true;
+
+			$http.post('/projects/lead', {
+			        firstName: $scope.newLead.firstName,
+			        lastName: $scope.newLead.lastName,
+			        company: $scope.newLead.company,
+			        phone: $scope.newLead.phone,
+			        email: $scope.newLead.email,
+			        describe: $scope.newLead.describe
+			    })
+            $location.path('/projects/new-audition-form/thanks');
+		};
+		$scope.leadFormPop = function(){
+			if(typeof Authentication.user === 'object'){
+				$scope.newLead.firstName = Authentication.user.firstName;
+		        $scope.newLead.lastName = Authentication.user.lastName;
+		        $scope.newLead.company = Authentication.user.company;
+		        $scope.newLead.phone = Authentication.user.phone;
+		        $scope.newLead.email = Authentication.user.email;
+			}
+		};
 
 		// gathers to field addresses for emails
 		$scope.gatherToAddresses = function(type){
@@ -24,7 +51,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					subject: '',
 					message: ''
 				}
-			}
+			};
 			angular.extend($scope.project, emailObj);
 
 			// send update email
@@ -38,7 +65,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 			// attach client clients to email chain
 			if(type !== 'updateTeam' && type !== 'updateClient' && type !== 'saveDiscussion'){
-				for(var i; i < $scope.project.clientClient.length; ++i){
+				for(var i = 0; i < $scope.project.clientClient.length; ++i){
 					if($scope.project.clientClient[i].email !== '' && re.test($scope.project.clientClient[i].email)){
 						emailCnt += 1;
 						toEmails[emailCnt] = $scope.project.clientClient[i].email;
@@ -48,7 +75,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 			// attach clients to email chain
 			if(type !== 'updateTeam' && type !== 'updateClient' && type !== 'saveDiscussion'){
-				for(var j; j < $scope.project.client.length; ++j){
+				for(var j = 0; j < $scope.project.client.length; ++j){
 					if($scope.project.client[j].email !== '' && re.test($scope.project.client[j].email)){
 						emailCnt += 1;
 						toEmails[emailCnt] = $scope.project.client[j].email;
@@ -58,17 +85,17 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 			// attach talents to email chain
 			if(type !== 'updateTalent' && type !== 'updateTeam' && type !== 'updateClientClient' && type !== 'updateClient' && type !== 'saveAudtionNote' && type !== 'saveScriptNote' && type !== 'saveDiscussion'){
-				for(var j; j < $scope.project.talent.length; ++j){
-					if($scope.project.talent[j].email !== '' && re.test($scope.project.talent[j].email)){
+				for(var l = 0; l < $scope.project.talent.length; ++l){
+					if($scope.project.talent[l].email !== '' && re.test($scope.project.talent[l].email)){
 						emailCnt += 1;
-						toEmails[emailCnt] = $scope.project.talent[j].email;
+						toEmails[emailCnt] = $scope.project.talent[l].email;
 					}
 				}
 			}
 
 			// attach team to email chain
 			// grant all team members access to all email communications
-			for(var k; k < $scope.project.team.length; ++k){
+			for(var k = 0; k < $scope.project.team.length; ++k){
 				if($scope.project.team[k].email !== '' && re.test($scope.project.team[k].email)){
 					emailCnt += 1;
 					toEmails[emailCnt] = $scope.project.team[k].email;
@@ -76,7 +103,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}
 			// check for accounts associated 
 			$scope.project.email.to = toEmails;
-		}
+		};
 
 		// verify users
 		$scope.permitAdminDirector = function(){
@@ -91,7 +118,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}
 		};
 		$scope.permitClient = function(){
-			var allowRoles = ['client'];
+			var allowRoles = ['client','client-client'];
 
 			for(var i = 0; i < Authentication.user.roles.length; ++i){
 				for(var j = 0; j < allowRoles.length; ++j){
@@ -162,8 +189,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 				// send update email
 				$scope.gatherToAddresses('updateTalent');
-			    $scope.project.email.subject = $scope.project.title + ' talent ' + displayName + ' added';
-			    $scope.project.email.message = 'Talent: ' + displayName + '\n';
+			    $scope.project.email.subject = $scope.project.title + ' talent ' + talentName + ' added';
+			    $scope.project.email.message = 'Talent: ' + talentName + '\n';
 			    $scope.project.email.message += 'Project: ' + $scope.project.title + '\n';
 			    $scope.project.email.message += 'Added by: ' + Authentication.user.displayName + '\n';
 			    $scope.project.email.message += '\n' + 'For more information, please visit: ' + 'http://' + $location.host() + '/#!/projects/' + $scope.project._id + '\n';
@@ -467,7 +494,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			// update project store
 			$scope.update();
 		};
-		$scope.updateStartDate = function(idx){
+		$scope.updateStartDate = function(key){
 
 			// send update email
 			$scope.gatherToAddresses('updateStartDate');
@@ -483,7 +510,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			// update project store
 			$scope.update();
 		};
-		$scope.updateEndDate = function(idx){
+		$scope.updateEndDate = function(key){
 
 			// send update email
 			$scope.gatherToAddresses('updateEndDate');
@@ -522,34 +549,37 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		// load audio files into player after project object has finished loading
 		$scope.$watch('project', function(val){
-			$scope.$watch('project.auditions', function(val){
-				if($scope.loadAudio === 1){
-					$scope.loadAudioPlayer();	
-				}
-			});
 
-			// update progress bar
-			$scope.$watch('project.phases', function(val){
+			if(typeof $scope.project == 'object'){
+				$scope.$watch('project.auditions', function(val){
+					if($scope.loadAudio === 1){
+						$scope.loadAudioPlayer();	
+					}
+				});
 
-				if(typeof $scope.project.phases !== 'undefined'){
-					var phaseLngth = $scope.project.phases.length;
-					var complSteps = 0;
+				// update progress bar
+				$scope.$watch('project.phases', function(val){
 
-					// determine completed steps
-					for(var i = 0; i < phaseLngth; ++i){
-						if($scope.project.phases[i].status === 'complete'){
-							complSteps++;
+					if(typeof $scope.project.phases !== 'undefined'){
+						var phaseLngth = $scope.project.phases.length;
+						var complSteps = 0;
+
+						// determine completed steps
+						for(var i = 0; i < phaseLngth; ++i){
+							if($scope.project.phases[i].status === 'complete'){
+								complSteps++;
+							}
 						}
+
+						// configure progress bar values
+						var perc = Math.floor((100 / phaseLngth) * complSteps);
+
+						// set progress bar values
+						$scope.dynamic = perc;
 					}
 
-					// configure progress bar values
-					var perc = Math.floor((100 / phaseLngth) * complSteps);
-
-					// set progress bar values
-					$scope.dynamic = perc;
-				}
-
-			});
+				});
+			}
 		});
 
 		// load audio files
@@ -640,8 +670,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.gatherToAddresses('uploadScript');
 	    $scope.project.email.subject = $scope.project.title + ' script deleted';
 	    $scope.project.email.message = 'Project: ' + $scope.project.title + '\n';
-	    for (var i = 0; i < $files.length; i++) {
-	    	$scope.project.email.message += 'File: ' + $files[i].name + '\n';
+	    for (var j = 0; j < $files.length; j++) {
+	    	$scope.project.email.message += 'File: ' + $files[j].name + '\n';
 		}
 	    $scope.project.email.message += 'By: ' + Authentication.user.displayName + '\n';
 	    $scope.project.email.message += '\n' + 'For more information, please visit: ' + 'http://' + $location.host() + '/#!/projects/' + $scope.project._id + '\n';
@@ -663,8 +693,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	        //fileFormDataName: myFile, //or a list of names for multiple files (html5). Default is 'file'  
 	        // customize how data is added to formData. See #40#issuecomment-28612000 for sample code 
 	        //formDataAppender: function(formData, key, val){} 
-	      }).progress(function(evt) {
-	        console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
+	      //}).progress(function(evt) {
+	        //console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
 	      //}).success(function(data, status, headers, config) {
 	        // file is uploaded successfully 
 	        //console.log(data);
@@ -695,8 +725,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	        url: 'projects/uploads/script/temp', //upload.php script, node.js route, or servlet url 
 	        data: {project: $scope.project},
 	        file: file, // or list of files ($files) for html5 only 
-	      }).progress(function(evt) {
-	        console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
+	      //}).progress(function(evt) {
+	        //console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
 	      //}).success(function(data, status, headers, config) {
 	        // file is uploaded successfully 
 	        //console.log(data);
@@ -760,8 +790,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			$scope.gatherToAddresses('uploadAudition');
 		    $scope.project.email.subject = $scope.project.title + ' auditions uploaded';
 		    $scope.project.email.message = 'Project: ' + $scope.project.title + '\n';
-		    for (var i = 0; i < $files.length; i++) {
-		    	$scope.project.email.message += 'File: ' + $files[i].name + '\n';
+		    for (var j = 0; j < $files.length; j++) {
+		    	$scope.project.email.message += 'File: ' + $files[j].name + '\n';
 			}
 		    $scope.project.email.message += 'By: ' + Authentication.user.displayName + '\n';
 		    $scope.project.email.message += '\n' + 'For more information, please visit: ' + 'http://' + $location.host() + '/#!/projects/' + $scope.project._id + '\n';
@@ -774,8 +804,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		        url: 'projects/uploads/audition', //upload.php script, node.js route, or servlet url 
 		        data: {project: $scope.project},
 		        file: file, // or list of files ($files) for html5 only 
-		      }).progress(function(evt) {
-		        console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
+		      //}).progress(function(evt) {
+		        //console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
 		      //}).success(function(data, status, headers, config) {
 		        // file is uploaded successfully 
 		        //console.log(data);

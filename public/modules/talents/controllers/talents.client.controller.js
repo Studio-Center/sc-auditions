@@ -9,7 +9,18 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 		$scope.unionOptions = ['union','non-union'];
 		$scope.unionSelected = [];
 		$scope.selTypecasts = [];
+		
+		$scope.permitAdminDirector = function(){
+			var allowRoles = ['admin', 'producer/auditions director','talent director'];
 
+			for(var i = 0; i < Authentication.user.roles.length; ++i){
+				for(var j = 0; j < allowRoles.length; ++j){
+					if(Authentication.user.roles[i] === allowRoles[j]) {
+						return true;
+					}
+				}
+			}
+		};
 		// toggle checkbox options
 		$scope.toggleUnion = function(union){
 			  var idx = $scope.talent.unionStatus.indexOf(union);

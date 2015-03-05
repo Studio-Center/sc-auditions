@@ -13,8 +13,11 @@ module.exports = function(app) {
 
 	app.route('/projects/:projectId')
 		.get(users.requiresLogin, projects.read)
-		.put(users.requiresLogin, projects.hasAuthorization, projects.update)
+		.put(users.requiresLogin, projects.update)
 		.delete(users.requiresLogin, projects.hasAuthorization, projects.delete);
+
+	app.route('/projects/lead')
+		.post(users.requiresLogin, projects.lead);
 
 	app.route('/projects/uploads')
 		.post(users.requiresLogin, multipartyMiddleware, projects.uploadFile);

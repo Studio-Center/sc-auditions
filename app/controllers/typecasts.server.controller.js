@@ -106,9 +106,7 @@ exports.typecastByID = function(req, res, next, id) { Typecast.findById(id).popu
 exports.hasAuthorization = function(req, res, next) {
 	var allowedRoles = ['admin','producer/auditions director','talent director'];
 
-	if (_.intersection(req.user.roles, allowedRoles).length) {
-		// do nothing
-	} else {
+	if (!_.intersection(req.user.roles, allowedRoles).length) {
 		return res.status(403).send('User is not authorized');
 	}
 	next();

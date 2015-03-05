@@ -20,7 +20,7 @@
 		<h4>Typecasts</h4>
 		<p ng-repeat="(key, usval) in talent.typeCasts">{{usval}}</p>
 	</div>
-	<div class="pull-right">
+	<div class="pull-right" data-ng-show="permitAdminDirector()">
 		<a class="btn btn-primary" href="/#!/talents/{{talent._id}}/edit">
 			<i class="glyphicon glyphicon-edit"></i>
 		</a>
@@ -28,12 +28,4 @@
 			<i class="glyphicon glyphicon-trash"></i>
 		</a>
 	</div>
-	<small>
-		<em class="text-muted">
-			Posted on
-			<span data-ng-bind="talent.created | date:'mediumDate'"></span>
-			by
-			<span data-ng-bind="talent.user.displayName"></span>
-		</em>
-	</small>
 </section>

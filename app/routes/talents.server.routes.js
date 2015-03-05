@@ -10,7 +10,7 @@ module.exports = function(app) {
 		.post(users.requiresLogin, talents.hasAuthorization, talents.create);
 
 	app.route('/talents/:talentId')
-		.get(users.requiresLogin, talents.hasAuthorization, talents.read)
+		.get(users.requiresLogin, talents.read)
 		.put(users.requiresLogin, talents.hasAuthorization, talents.update)
 		.delete(users.requiresLogin, talents.hasAuthorization, talents.delete);
 
