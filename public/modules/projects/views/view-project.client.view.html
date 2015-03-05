@@ -98,7 +98,7 @@
 			              });
 			            </script>
 			            <div class="controls" ng-module="users">
-			                <div ng-controller="UsersController" data-ng-init="find()">
+			                <div ng-controller="UsersController" data-ng-init="findFilter('client-client')">
 			                	<label>Search:</label> <input ng-model="filterClientClient">
 								<ul class="list-group">
 									<li class="list-group-item" ng-repeat="(key, user) in users | filter:filterClientClient"><input type="checkbox" value="{{user._id}}" ng-click="updateClientClient(user._id, user.displayName, user.email)" ng-checked="checkClientClientUsers(user._id)"> {{user.firstName}} {{user.lastName}}</li>
@@ -127,7 +127,7 @@
 			              });
 			            </script>
 			            <div class="controls" ng-module="users">
-			                <div ng-controller="UsersController" data-ng-init="find()">
+			                <div ng-controller="UsersController" data-ng-init="findFilter('client')">
 			                	<label>Search:</label> <input ng-model="filterClient">
 								<ul class="list-group">
 									<li class="list-group-item" ng-repeat="(key, user) in users | filter:filterClient"><input type="checkbox" value="{{user._id}}" ng-click="updateClient(user._id, user.displayName, user.email)" ng-checked="checkClientUsers(user._id)"> {{user.firstName}} {{user.lastName}}</li>
@@ -258,7 +258,7 @@
 				</ul>
 				<div data-ng-show="permitAdminDirector()">
 					<h4>Upload Script: PDF only!</h4>
-					<input type="file" ng-file-select="uploadScript($files)" ng-model="files" ng-accept="'*.pdf'" ng-model-rejected="rejFiles">
+					<input type="file" ng-file-select="uploadScript($files)" ng-model="files" ng-accept="'*.pdf'" ng-multiple="true" ng-model-rejected="rejFiles">
 				</div>
 			</accordion-group>
 		</accordion>
@@ -278,13 +278,11 @@
 						</fieldset>
 						<fieldset>
 							<label>Description</label><br>
+							<div data-ng-show="permitClient()" data-ng-bind="project.auditions[key].description"></div>
 							<span data-ng-show="permitAdminDirector()">
 								<textarea ng-model="project.auditions[key].description" class="form-control">{{project.auditions[key].description}}</textarea>
 								<button style="float:right" class="btn btn-default" ng-click="saveAudtionDescription(key)">Save</button>
 							<span>
-							<span ng-if="!permitAdminDirector()">
-								{{project.auditions[key].description}}
-							</span>
 						</fieldset>
 						<fieldset>
 							<label>Rating</label>
@@ -294,12 +292,12 @@
 							<label>Approved?<label> &nbsp;<input type="checkbox" ng-model="project.auditions[key].approved.selected" ng-click="audApprov(key)">
 							<span data-ng-bind="project.auditions[key].approved.by.name"></span> <span>{{project.auditions[key].approved.by.date | date:'fullDate'}} {{project.auditions[key].approved.by.date | date:'mediumTime'}}</span>
 						</fieldset>
-						<fieldset data-ng-show="permitAdminDirector()">
+						<fieldset data-ng-show="permitAdminDirector() || permitClient()">
 							<label>Notes:</label><textarea ng-model="auditions[key].discussion" class="form-control"></textarea>
 							<button style="float:right" class="btn btn-default" ng-click="saveAudtionNote(key)">Save</button>
 						</fieldset>
 						<div style="max-height:200px;overflow-y:scroll">
-							<div data-ng-show="permitAdminDirector()" ng-repeat="(key, ditem) in project.auditions[key].discussion.slice().reverse()">
+							<div data-ng-show="permitAdminDirector() || permitClient()" ng-repeat="(key, ditem) in project.auditions[key].discussion.slice().reverse()">
 								<h5><strong>{{ditem.date | date:'fullDate'}} {{ditem.date | date:'mediumTime'}} - {{ditem.username}}</strong></h5>
 								<p data-ng-bind="ditem.item"></p>
 							</div>
@@ -308,7 +306,7 @@
 				</ul>
 				<div data-ng-show="permitAdminDirector()">
 					<h4>Upload Audition Files:</h4>
-					<input type="file" ng-file-select="uploadAudition($files)" ng-model="files" ng-accept="'*.mp3,*.mp4,*.wav,*.ogg'" ng-model-rejected="rejFiles">
+					<input type="file" ng-file-select="uploadAudition($files)" ng-model="files" ng-accept="'*.mp3,*.mp4,*.wav,*.ogg'" ng-multiple="true" ng-model-rejected="rejFiles">
 				</div>
 		</accordion-group>
 		</accordion>

@@ -39,6 +39,28 @@ var procEmail = function(project, req){
 	delete project.email;
 };
 
+// send emails from lead form
+exports.lead = function(req, res){
+
+	// build email
+	var emailBody = 'First Name: ' + req.body.firstName + '\n';
+	emailBody += 'Last Name: ' + req.body.lastName + '\n';
+	emailBody += 'Company: ' + req.body.company + '\n';
+	emailBody += 'Phone: ' + req.body.phone + '\n';
+	emailBody += 'Email: ' + req.body.email + '\n';
+	emailBody += 'Description: ' + req.body.describe + '\n';
+
+	// send email
+	var transporter = nodemailer.createTransport(config.mailer.options);
+	transporter.sendMail({
+	    from: config.mailer.from,
+	    to: 'rob@studiocenter.com',
+	    subject: 'Start a new Audition Project Form Submission',
+	    text: emailBody
+	});
+
+};
+
 /**
  * Create a Project
  */
@@ -124,22 +146,28 @@ var deleteFiles = function(project){
 exports.update = function(req, res) {
 	var project = req.project ;
 
-	project = _.extend(project , req.body);
+	var allowedRoles = ['admin','producer/auditions director','client','client-client'];
 
-	// delete any files no longer in use
-	deleteFiles(project);
-	// send required emails as needed
-	procEmail(project, req);
+	// validate user interaction
+	if (_.intersection(req.user.roles, allowedRoles).length) {
 
-	project.save(function(err) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(project);
-		}
-	});
+		project = _.extend(project , req.body);
+
+		// delete any files no longer in use
+		deleteFiles(project);
+		// send required emails as needed
+		procEmail(project, req);
+
+		project.save(function(err) {
+			if (err) {
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
+			} else {
+				res.jsonp(project);
+			}
+		});
+	}
 };
 
 /**
@@ -201,7 +229,7 @@ exports.list = function(req, res) {
 	// filter results as required for remaning uer roles
 	} else {
 
-		var allowedRoles = ['user', 'talent', 'client', 'agency'];
+		allowedRoles = ['user', 'talent', 'client', 'client-client'];
 		var curUserId = String(req.user._id);
 
 		for(var i = 0; i < req.user.roles.length; ++i){
@@ -222,7 +250,7 @@ exports.list = function(req, res) {
 						break;
 						case 'talent':
 						// talent does not currently have access, added to permit later access
-							Project.find({'talent': { $elemMatch: { 'talentId': rcurUserId}}}).sort('-created').populate('user', 'displayName').exec(function(err, projects) {
+							Project.find({'talent': { $elemMatch: { 'talentId': curUserId}}}).sort('-created').populate('user', 'displayName').exec(function(err, projects) {
 								if (err) {
 									return res.status(400).send({
 										message: errorHandler.getErrorMessage(err)
@@ -245,6 +273,7 @@ exports.list = function(req, res) {
 							});
 						break;
 						case 'client-client':
+							console.log(curUserId);
 							Project.find({'clientClient': { $elemMatch: { 'userId': curUserId}}}).sort('-created').populate('user', 'displayName').exec(function(err, projects) {
 								if (err) {
 									return res.status(400).send({
@@ -282,9 +311,7 @@ exports.hasAuthorization = function(req, res, next) {
 	// recon 2/17/2015 to allow admin and producer level users to edit all projects
 	var allowedRoles = ['admin','producer/auditions director'];
 
-	if (_.intersection(req.user.roles, allowedRoles).length) {
-		// do nothing
-	} else {
+	if (!_.intersection(req.user.roles, allowedRoles).length) {
 		return res.status(403).send('User is not authorized');
 	}
 	next();

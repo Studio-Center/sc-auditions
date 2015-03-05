@@ -126,6 +126,17 @@ exports.list = function(req, res) { User.find().sort('-created').populate('user'
 		}
 	});
 };
+exports.getListLevel = function(req, res, next, id) { 
+	User.find({'roles':id}).sort('-created').populate('user', 'displayName').exec(function(err, users) {
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			res.jsonp(users);
+		}
+	});
+};
 
 /**
  * Show the current user

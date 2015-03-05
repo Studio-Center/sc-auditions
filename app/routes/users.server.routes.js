@@ -15,6 +15,9 @@ module.exports = function(app) {
 	app.route('/users/:userId')
 		.put(users.update);
 
+	app.route('/usersfind/:userLevel')
+		.get(users.getListLevel, users.hasAuthorization);
+
 	app.route('/usersedit')
 		.get(users.list, users.hasAuthorization)
 		.put(users.update, users.hasAuthorization);
@@ -61,6 +64,7 @@ module.exports = function(app) {
 	app.route('/auth/linkedin/callback').get(users.oauthCallback('linkedin'));
 
 	// Finish by binding the user middleware
+	app.param('userLevel', users.getListLevel);
 	app.param('userIdEdit', users.userByIDEdit);
 	app.param('userId', users.userByID);
 };
