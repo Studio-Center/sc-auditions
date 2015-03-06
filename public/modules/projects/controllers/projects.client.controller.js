@@ -6,7 +6,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.authentication = Authentication;
 
 		// rating
-		$scope.max = 10;
+		$scope.max = 5;
 		$scope.isReadonly = false;
 		$scope.ratings = [];
 		$scope.selCheckVal = 0;
