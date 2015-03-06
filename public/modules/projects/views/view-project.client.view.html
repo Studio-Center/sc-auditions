@@ -272,7 +272,7 @@
 							<a href="/res/auditions/{{project._id}}/{{audition.file.name}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable">ngAudio</a> 
 							<button ng-click='audio[key].paused ? audio[key].play() : audio[key].pause()'>Play</button> 
 							<button ng-click='audio[key].stop()'>Stop</button>
-							<button data-ng-show="permitAdminDirector()" ng-click="delAudition(key)" target="_blank"><img src="/img/delete.png" alt="delete"></button>
+							<button data-ng-show="permitAdminDirector()" ng-click="delAudition(key)"><img src="/img/delete.png" alt="delete"></button>
 						</fieldset>
 						<fieldset>
 							<label>Rating {{project.auditions[key].rating[authentication.user._id]}}</label>
