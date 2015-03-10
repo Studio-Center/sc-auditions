@@ -9,6 +9,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.max = 5;
 		$scope.isReadonly = false;
 		$scope.ratings = [];
+		$scope.ratingsAvg = [];
 		$scope.selCheckVal = 0;
 
 		$scope.hoveringOver = function(value,key,object) {
@@ -520,11 +521,16 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					if(typeof $scope.project.auditions === 'object'){
 						// load audition ratings
 						for(var i = 0; i < $scope.project.auditions.length; ++i){
+							// gather average value 
+							$scope.ratingsAvg[i] = 0;
+							// gather per user rating
 							for(var j = 0; j < $scope.project.auditions[i].rating.length; ++j){
 								if($scope.project.auditions[i].rating[j].userId === String(Authentication.user._id)){
 									$scope.ratings[i] = $scope.project.auditions[i].rating[j].value;
 								}
+								$scope.ratingsAvg[i] += $scope.project.auditions[i].rating[j].value;
 							}
+							$scope.ratingsAvg[i] = $scope.ratingsAvg[i] / $scope.project.auditions[i].rating.length;
 						}
 					}
 				});
