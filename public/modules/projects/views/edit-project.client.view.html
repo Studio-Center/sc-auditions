@@ -14,7 +14,17 @@
                  <div class="form-group">
                     <label class="control-label" for="name">Estimated Completion Date</label>
                     <div class="controls">
-                        <input type="date" data-ng-model="project.estimatedCompletionDate" id="estimatedCompletionDate" class="form-control" placeholder="Estimated Completion Date" required>
+                        <div class="dropdown">
+                            <a class="dropdown-toggle my-toggle-select" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="">
+                                <div class="input-append"><input type="text" class="input-large" data-ng-model="project.estimatedCompletionDate"><span class="add-on"><i
+                                        class="icon-calendar"></i></span>
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                <datetimepicker data-ng-model="project.estimatedCompletionDate"
+                                                data-datetimepicker-config="{ dropdownSelector: '.my-toggle-select' }"></datetimepicker>
+                            </ul>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
