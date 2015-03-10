@@ -1,11 +1,6 @@
 <section data-ng-controller="ProjectsController" data-ng-init="loadProject()">
 	<div class="page-header">
-		<h1 data-ng-bind="project.title"></h1>
-
-		<div class="panel panel-default">
-			<div class="panel-heading"><strong>Due Date/time</strong></div>
-			<div class="panel-body" data-ng-bind="project.estimatedCompletionDate | date:'fullDate'"></div>
-		</div>
+		<h1>{{project.title}} <small>Due {{project.estimatedCompletionDate | date:'fullDate'}} {{project.estimatedCompletionDate | date:'mediumTime'}}</small></h1>
 
 		<div class="panel panel-default">
 			<div class="panel-heading"><strong>Description</strong></div>
@@ -16,9 +11,11 @@
 			<div class="panel-heading">
             	<strong>Notes</strong>
         	</div>
-			<textarea ng-model="discussion" name="discussion" class="form-control"></textarea>
-			<button style="float:right" class="btn btn-default" ng-click="saveDiscussion()">Save</button>
-			<div style="max-height:200px;overflow-y:scroll">
+        	<fieldset>
+				<textarea ng-model="discussion" name="discussion" class="form-control"></textarea>
+				<button style="float:right" class="btn btn-default" ng-click="saveDiscussion()">Save</button>
+			</fieldset>
+			<div style="max-height:200px;padding:10px;border-top:1px solid #e8e8e8;overflow-y:scroll">
 				<div ng-repeat="(key, ditem) in project.discussion.slice().reverse()">
 					<h5><strong>{{ditem.date | date:'fullDate'}} {{ditem.date | date:'mediumTime'}} - {{ditem.username}}</strong></h5>
 					<p data-ng-bind="ditem.item"></p>
@@ -27,12 +24,7 @@
 		</div>
 
 		<div class="panel panel-default">
-			<div class="panel-heading"><strong>Estimated Time</strong></div>
-			<div class="panel-body" data-ng-bind="project.estimatedTime"></div>
-		</div>
-
-		<div class="panel panel-default">
-			<div class="panel-heading"><strong>Actual Time</strong></div>
+			<div class="panel-heading"><strong>Time</strong></div>
 			<div class="panel-body" data-ng-bind="project.actualTime"></div>
 		</div>
 
