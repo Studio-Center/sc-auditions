@@ -12,289 +12,315 @@
 			<div class="panel-heading"><strong>Description</strong></div>
 			<div class="panel-body" data-ng-bind="project.description"></div>
 		</div>
-
-		<div class="panel panel-default" data-ng-show="permitAdminDirector()">
-			<div class="panel-heading">
-            	<strong>Notes</strong>
-        	</div>
-        	<fieldset>
-				<textarea ng-model="discussion" name="discussion" class="form-control"></textarea>
-				<button style="float:right" class="btn btn-default" ng-click="saveDiscussion()">Save</button>
-			</fieldset>
-			<div style="max-height:200px;padding:10px;border-top:1px solid #e8e8e8;overflow-y:scroll">
-				<div ng-repeat="(key, ditem) in project.discussion.slice().reverse()">
-					<h5><strong>{{ditem.date | date:'medium'}} - {{ditem.username}}</strong></h5>
-					<p data-ng-bind="ditem.item"></p>
+		<div class="row">
+			<div class="col-lg-4 col-md-4 col-sm-4">
+				<div class="panel panel-default">
+					<div class="panel-heading"><strong>Time</strong></div>
+					<div class="panel-body" data-ng-bind="project.actualTime"></div>
 				</div>
 			</div>
-		</div>
-
-		<div class="panel panel-default">
-			<div class="panel-heading"><strong>Time</strong></div>
-			<div class="panel-body" data-ng-bind="project.actualTime"></div>
-		</div>
-
-		<div class="panel panel-default">
-			<div class="panel-heading"><strong>Status</strong></div>
-			<div class="panel-body" data-ng-bind="project.status"></div>
-		</div>
-
-		<div class="panel panel-default">
-			<div class="panel-heading"><strong>Progress</strong></div>
-			<div class="panel-body">
-				<progressbar value="dynamic" type="success" ng-model="progress"><b>{{dynamic}}%</b></progressbar>
+			
+			<div class="col-lg-4 col-md-4 col-sm-4">
+				<div class="panel panel-default">
+					<div class="panel-heading"><strong>Status</strong></div>
+					<div class="panel-body" data-ng-bind="project.status"></div>
+				</div>
 			</div>
-		</div>
-
-		<accordion close-others="oneAtATime" data-ng-show="permitAdminDirector() || permitClient() || permitClientClient()">
-			<accordion-group is-open="status.open">
-			<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
-				<h4 class="panel-title accordion-toggle">
-            	Phases<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
-            	</h4>
-        	</accordion-heading>
-			<accordion close-others="oneAtATime">
-				<div class="panel panel-default" ng-repeat="(key, phase) in project.phases">
-					<div class="panel-heading"><strong>{{project.phases[key].name}}</strong></div>
+			
+			<div class="col-lg-4 col-md-4 col-sm-4">
+				<div class="panel panel-default">
+					<div class="panel-heading"><strong>Progress</strong></div>
 					<div class="panel-body">
-						<span data-ng-show="permitAdminDirector()">
-							<label>Status:</label>
-							<select ng-model="project.phases[key].status" class="form-control" ng-change="updateStatus(key)" ng-options="item for item in project.phases[key].options">
-					        </select>
-					        <label>Start Date:</label>
-					        <p>{{project.phases[key].startDate | date:'fullDate'}}</p>
-					        <label>End Date:</label>
-					        <p>{{project.phases[key].endDate | date:'fullDate'}}</p>
-			    		</span>
-			    		<span data-ng-show="permitClient() || permitClientClient()">
-			    			<label>Status:</label>
-							<p>{{project.phases[key].status}}</p>
-					        <label>Start Date:</label>
-					        <p>{{project.phases[key].startDate | date:'fullDate'}}</p>
-					        <label>End Date:</label>
-					        <p>{{project.phases[key].endDate | date:'fullDate'}}</p>
-			    		</span>
-			        </div>
+						<progressbar value="dynamic" type="success" ng-model="progress"><b>{{dynamic}}%</b></progressbar>
+					</div>
 				</div>
-		    </accordion>
-	    </accordion>
+			</div>
+		</div>
+		<div class="row">
+			<ul ng-show="rejFiles.length > 0" class="response" data-ng-show="permitAdminDirector()">
+				<li class="sel-file" ng-repeat="f in rejFiles">
+					Rejected file: {{f.name}} - size: {{f.size}}B - type: {{f.type}}
+				</li>
+			</ul>
+			<ul ng-show="files.length > 0" class="response">
+				<li class="sel-file" ng-repeat="f in files">
+					<img ng-show="f.dataUrl" ng-src="{{f.dataUrl}}" class="thumb">
+					<span class="progress" ng-show="f.progress >= 0">						
+						<div style="width:{{f.progress}}%">{{f.progress}}%</div>
+					</span>				
+					<button class="button" ng-click="f.upload.abort();f.upload.aborted=true" 
+							ng-show="f.upload != null && f.progress < 100 && !f.upload.aborted">Abort</button>
+					{{f.name}} - size: {{f.size}}B - type: {{f.type}}
+					<a ng-show="f.result" href="javascript:void(0)" ng-click="f.showDetail = !f.showDetail">details</a>
+					<div ng-show="f.showDetail">
+						<br/>
+						<div data-ng-show="f.result.result == null">{{f.result}}</div>
+						<ul class="list-group">
+							<li class="list-group-item" ng-repeat="item in f.result.result">
+								<div data-ng-show="item.name">file name: {{item.name}}</div>
+								<div data-ng-show="item.fieldName">name: {{item.fieldName}}</div>
+								<div data-ng-show="item.size">size on the serve: {{item.size}}</div>
+								<div data-ng-show="item.value">value: {{item.value}}</div>
+							</li>
+						</ul>
+						<div data-ng-show="f.result.requestHeaders" class="reqh">request headers: {{f.result.requestHeaders}}</div>
+					</div>
+				</li>
+			</ul>
+
+			<div class="col-lg-6 col-md-6 col-sm-6">
+				<accordion close-others="oneAtATime">
+					<accordion-group is-open="status.open">
+					<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
+						<h4 class="panel-title accordion-toggle">
+			            	Scripts<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+			            </h4>
+		        	</accordion-heading>
+						<ul class="list-group">
+							<li class="list-group-item" ng-repeat="(key, script) in project.scripts">
+								<fieldset>
+									<a href="/res/scripts/{{project._id}}/{{script.file.name}}" target="_blank" data-ng-bind="script.file.name"></a> 
+									<a href="/res/scripts/{{project._id}}/{{script.file.name}}" target="_blank"><img src="/img/Adobe-Acrobat-icon.png" alt="download PDF"></a>
+									<button data-ng-show="permitAdminDirector()" ng-click="delScript(key)" target="_blank"><img src="/img/delete.png" alt="delete"></button>
+								</fieldset>
+								<fieldset>
+									<label>Approved?<label> &nbsp;<input type="checkbox" ng-model="project.scripts[key].approved.selected" ng-click="scrApprov(key)">
+									<span data-ng-bind="project.scripts[key].approved.by.name"></span> <span>{{project.scripts[key].approved.by.date | date:'medium'}}</span>
+								</fieldset>
+								<fieldset>
+									<label>Notes:</label><textarea ng-model="scripts[key].discussion" class="form-control"></textarea>
+									<button style="float:right" class="btn btn-default" ng-click="saveScriptNote(key)">Save</button>
+								</fieldset>
+								<div style="max-height:200px;overflow-y:scroll">
+									<div ng-repeat="(key, ditem) in project.scripts[key].discussion.slice().reverse()">
+										<h5><strong>{{ditem.date | date:'medium'}} - {{ditem.username}}</strong></h5>
+										<p data-ng-bind="ditem.item"></p>
+									</div>
+								</div>
+							</li>
+						</ul>
+						<div data-ng-show="permitAdminDirector()">
+							<h4>Upload Script: PDF only!</h4>
+							<input type="file" ng-file-select="uploadScript($files)" ng-model="files" ng-accept="'*.pdf'" ng-multiple="true" ng-model-rejected="rejFiles">
+						</div>
+					</accordion-group>
+				</accordion>
+			</div>
+
+			<div class="col-lg-6 col-md-6 col-sm-6">		
+				<accordion close-others="oneAtATime">
+					<accordion-group is-open="status.open">
+					<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
+						<h4 class="panel-title accordion-toggle">
+			            	Auditions<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+			            </h4>
+		        	</accordion-heading>
+				 		<ul class="list-group">
+							<li class="list-group-item" ng-repeat="(key, audition) in project.auditions">
+								<fieldset>
+									<a href="/res/auditions/{{project._id}}/{{audition.file.name}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable">ngAudio</a> 
+									<button ng-click='audio[key].paused ? audio[key].play() : audio[key].pause()'>Play</button> 
+									<button ng-click='audio[key].stop()'>Stop</button>
+									<button data-ng-show="permitAdminDirector()" ng-click="delAudition(key)"><img src="/img/delete.png" alt="delete"></button>
+								</fieldset>
+								<fieldset>
+									<label>Rating {{project.auditions[key].rating[authentication.user._id]}}</label>
+									<rating ng-model="ratings[key]" readonly="false" ng-click="updateRating(key)" max="max" on-leave="overStar = ratings[key]" on-hover="hoveringOver(value,key)"></rating>
+									<p data-ng-show="ratingsAvg[key]">Average: 
+										<rating ng-model="ratingsAvg[key]" readonly="true" max="max" on-leave="overStar = ratingsAvg[key]" ></rating>
+									</p>
+								</fieldset>
+								<fieldset data-ng-show="permitAdminDirector() || permitClient()">
+									<label>Notes:</label><textarea ng-model="auditions[key].discussion" class="form-control"></textarea>
+									<button style="float:right" class="btn btn-default" ng-click="saveAudtionNote(key)">Save</button>
+								</fieldset>
+								<div style="max-height:200px;overflow-y:scroll">
+									<div data-ng-show="permitAdminDirector() || permitClient()" ng-repeat="(key, ditem) in project.auditions[key].discussion.slice().reverse()">
+										<h5><strong>{{ditem.date | date:'medium'}} - {{ditem.username}}</strong></h5>
+										<p data-ng-bind="ditem.item"></p>
+									</div>
+								</div>
+							</li>
+						</ul>
+						<div data-ng-show="permitAdminDirector()">
+							<h4>Upload Audition Files:</h4>
+							<input type="file" ng-file-select="uploadAudition($files)" ng-model="files" ng-accept="'*.mp3,*.mp4,*.wav,*.ogg'" ng-multiple="true" ng-model-rejected="rejFiles">
+						</div>
+				</accordion-group>
+				</accordion>
+			</div>
+		</div>
 		
-		<accordion close-others="oneAtATime" data-ng-show="permitAdminDirector() || permitClient()">
-			<accordion-group is-open="status.open">
-			<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
-				<h4 class="panel-title accordion-toggle">
-            		Client Client Users<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
-            	</h4>
-        	</accordion-heading>
-				<ul class="list-group">
-					<li class="list-group-item" ng-repeat="(key, member) in project.clientClient">{{member.name}}</li>
-				</ul>
-				<accordion close-others="oneAtATime">
-					<accordion-group is-open="statusInt.open">
+		<div class="row">
+			<div class="col-lg-6 col-md-6 col-sm-6">
+				<div class="panel panel-default" data-ng-show="permitAdminDirector()">
+					<div class="panel-heading">
+		            	<strong>Notes</strong>
+		        	</div>
+		        	<fieldset>
+						<textarea ng-model="discussion" name="discussion" class="form-control"></textarea>
+						<button style="float:right" class="btn btn-default" ng-click="saveDiscussion()">Save</button>
+					</fieldset>
+					<div style="max-height:200px;padding:10px;border-top:1px solid #e8e8e8;overflow-y:scroll">
+						<div ng-repeat="(key, ditem) in project.discussion.slice().reverse()">
+							<h5><strong>{{ditem.date | date:'medium'}} - {{ditem.username}}</strong></h5>
+							<p data-ng-bind="ditem.item"></p>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="col-lg-6 col-md-6 col-sm-6">
+				<accordion close-others="oneAtATime" data-ng-show="permitAdminDirector() || permitClient() || permitClientClient()">
+					<accordion-group is-open="status.open">
 					<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
 						<h4 class="panel-title accordion-toggle">
-							Edit Client Client Users
-						</h4>
-					</accordion-heading>
-						<script>
-			              var users = angular.module("users", []);
-			              users.controller("UsersController", function($scope) {
-			                  $scope.users = Users.query();
-			              });
-			            </script>
-			            <div class="controls" ng-module="users">
-			                <div ng-controller="UsersController" data-ng-init="findFilter('client-client')">
-			                	<label>Search:</label> <input ng-model="filterClientClient">
-								<ul class="list-group">
-									<li class="list-group-item" ng-repeat="(key, user) in users | filter:filterClientClient"><input type="checkbox" value="{{user._id}}" ng-click="updateClientClient(user._id, user.displayName, user.email)" ng-checked="checkClientClientUsers(user._id)"> {{user.firstName}} {{user.lastName}}</li>
-								</ul>
-							</div>
+		            	Phases<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+		            	</h4>
+		        	</accordion-heading>
+					<accordion close-others="oneAtATime">
+						<div class="panel panel-default" ng-repeat="(key, phase) in project.phases">
+							<div class="panel-heading"><strong>{{project.phases[key].name}}</strong></div>
+							<div class="panel-body">
+								<span data-ng-show="permitAdminDirector()">
+									<label>Status:</label>
+									<select ng-model="project.phases[key].status" class="form-control" ng-change="updateStatus(key)" ng-options="item for item in project.phases[key].options">
+							        </select>
+							        <label>Start Date:</label>
+							        <p>{{project.phases[key].startDate | date:'fullDate'}}</p>
+							        <label>End Date:</label>
+							        <p>{{project.phases[key].endDate | date:'fullDate'}}</p>
+					    		</span>
+					    		<span data-ng-show="permitClient() || permitClientClient()">
+					    			<label>Status:</label>
+									<p>{{project.phases[key].status}}</p>
+							        <label>Start Date:</label>
+							        <p>{{project.phases[key].startDate | date:'fullDate'}}</p>
+							        <label>End Date:</label>
+							        <p>{{project.phases[key].endDate | date:'fullDate'}}</p>
+					    		</span>
+					        </div>
 						</div>
-					</accordion-group>
-				</accordion>
-			</accordion-group>
-		</accordion>
-
-		<accordion close-others="oneAtATime" data-ng-show="permitAdminDirector()">
-			<accordion-group is-open="status.open">
-			<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
-				<h4 class="panel-title accordion-toggle">
-            		Client Users<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
-            	</h4>
-        	</accordion-heading>
-				<ul class="list-group">
-					<li class="list-group-item" ng-repeat="(key, member) in project.client">{{member.name}}</li>
-				</ul>
-				<accordion close-others="oneAtATime">
-					<accordion-group is-open="statusInt.open">
+				    </accordion>
+			    </accordion>
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-lg-4 col-md-4 col-sm-4">
+				<accordion close-others="oneAtATime" data-ng-show="permitAdminDirector() || permitClient()">
+					<accordion-group is-open="status.open">
 					<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
 						<h4 class="panel-title accordion-toggle">
-							Edit Client Users
-						</h4>
-					</accordion-heading>
-						<script>
-			              var users = angular.module("users", []);
-			              users.controller("UsersController", function($scope) {
-			                  $scope.users = Users.query();
-			              });
-			            </script>
-			            <div class="controls" ng-module="users">
-			                <div ng-controller="UsersController" data-ng-init="findFilter('client')">
-			                	<label>Search:</label> <input ng-model="filterClient">
-								<ul class="list-group">
-									<li class="list-group-item" ng-repeat="(key, user) in users | filter:filterClient"><input type="checkbox" value="{{user._id}}" ng-click="updateClient(user._id, user.displayName, user.email)" ng-checked="checkClientUsers(user._id)"> {{user.firstName}} {{user.lastName}}</li>
-								</ul>
-							</div>
-						</div>
+		            		Client Client Users<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+		            	</h4>
+		        	</accordion-heading>
+						<ul class="list-group">
+							<li class="list-group-item" ng-repeat="(key, member) in project.clientClient">{{member.name}}</li>
+						</ul>
+						<accordion close-others="oneAtATime">
+							<accordion-group is-open="statusInt.open">
+							<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
+								<h4 class="panel-title accordion-toggle">
+									Edit Client Client Users
+								</h4>
+							</accordion-heading>
+								<script>
+					              var users = angular.module("users", []);
+					              users.controller("UsersController", function($scope) {
+					                  $scope.users = Users.query();
+					              });
+					            </script>
+					            <div class="controls" ng-module="users">
+					                <div ng-controller="UsersController" data-ng-init="findFilter('client-client')">
+					                	<label>Search:</label> <input ng-model="filterClientClient">
+										<ul class="list-group">
+											<li class="list-group-item" ng-repeat="(key, user) in users | filter:filterClientClient"><input type="checkbox" value="{{user._id}}" ng-click="updateClientClient(user._id, user.displayName, user.email)" ng-checked="checkClientClientUsers(user._id)"> {{user.firstName}} {{user.lastName}}</li>
+										</ul>
+									</div>
+								</div>
+							</accordion-group>
+						</accordion>
 					</accordion-group>
 				</accordion>
-			</accordion-group>
-		</accordion>
+			</div>
 
-		<accordion close-others="oneAtATime">
-			<accordion-group is-open="status.open">
-			<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
-				<h4 class="panel-title accordion-toggle">
-     	       		Talent<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
-     	       	</h4>
-        	</accordion-heading>
-				<ul class="list-group">
-					<li class="list-group-item" ng-repeat="(key, member) in project.talent"> <a target="_blank" href="/#!/talents/{{member.talentId}}">{{member.name}}</a> <span data-ng-show="permitAdminDirector()"><input type="checkbox" data-ng-model="project.talent[key].booked" ng-checked="project.talent[key].booked" ng-click="toggleBooked(key)"> Booked </span></li>
-				</ul>
+			<div class="col-lg-4 col-md-4 col-sm-4">
 				<accordion close-others="oneAtATime" data-ng-show="permitAdminDirector()">
-					<accordion-group is-open="statusInt.open">
+					<accordion-group is-open="status.open">
 					<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
 						<h4 class="panel-title accordion-toggle">
-							Edit Talent
-						</h4>
-					</accordion-heading>
-						<script>
-			              var talents = angular.module("talents", []);
-			              talents.controller("TalentsController", function($scope) {
-			                  $scope.talents = Users.query();
-			              });
-			            </script>
-			            <div class="controls" ng-module="talents">
-			                <div ng-controller="TalentsController" data-ng-init="find()">
-			                	<label>Search:</label> <input ng-model="filterTeam">
-								<ul class="list-group">
-									<li class="list-group-item" ng-repeat="(key, talent) in talents | filter:filterTeam"><input type="checkbox" value="{{talent._id}}" ng-click="updateTalent(talent._id, talent.name)" ng-checked="checkTalent(talent._id)"> {{talent.name}}</li>
-								</ul>
-							</div>
-						</div>
+		            		Client Users<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+		            	</h4>
+		        	</accordion-heading>
+						<ul class="list-group">
+							<li class="list-group-item" ng-repeat="(key, member) in project.client">{{member.name}}</li>
+						</ul>
+						<accordion close-others="oneAtATime">
+							<accordion-group is-open="statusInt.open">
+							<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
+								<h4 class="panel-title accordion-toggle">
+									Edit Client Users
+								</h4>
+							</accordion-heading>
+								<script>
+					              var users = angular.module("users", []);
+					              users.controller("UsersController", function($scope) {
+					                  $scope.users = Users.query();
+					              });
+					            </script>
+					            <div class="controls" ng-module="users">
+					                <div ng-controller="UsersController" data-ng-init="findFilter('client')">
+					                	<label>Search:</label> <input ng-model="filterClient">
+										<ul class="list-group">
+											<li class="list-group-item" ng-repeat="(key, user) in users | filter:filterClient"><input type="checkbox" value="{{user._id}}" ng-click="updateClient(user._id, user.displayName, user.email)" ng-checked="checkClientUsers(user._id)"> {{user.firstName}} {{user.lastName}}</li>
+										</ul>
+									</div>
+								</div>
+							</accordion-group>
+						</accordion>
 					</accordion-group>
 				</accordion>
-			</accordion-group>
-		</accordion>
-		
-		<ul ng-show="rejFiles.length > 0" class="response" data-ng-show="permitAdminDirector()">
-			<li class="sel-file" ng-repeat="f in rejFiles">
-				Rejected file: {{f.name}} - size: {{f.size}}B - type: {{f.type}}
-			</li>
-		</ul>
-		<ul ng-show="files.length > 0" class="response">
-			<li class="sel-file" ng-repeat="f in files">
-				<img ng-show="f.dataUrl" ng-src="{{f.dataUrl}}" class="thumb">
-				<span class="progress" ng-show="f.progress >= 0">						
-					<div style="width:{{f.progress}}%">{{f.progress}}%</div>
-				</span>				
-				<button class="button" ng-click="f.upload.abort();f.upload.aborted=true" 
-						ng-show="f.upload != null && f.progress < 100 && !f.upload.aborted">Abort</button>
-				{{f.name}} - size: {{f.size}}B - type: {{f.type}}
-				<a ng-show="f.result" href="javascript:void(0)" ng-click="f.showDetail = !f.showDetail">details</a>
-				<div ng-show="f.showDetail">
-					<br/>
-					<div data-ng-show="f.result.result == null">{{f.result}}</div>
-					<ul class="list-group">
-						<li class="list-group-item" ng-repeat="item in f.result.result">
-							<div data-ng-show="item.name">file name: {{item.name}}</div>
-							<div data-ng-show="item.fieldName">name: {{item.fieldName}}</div>
-							<div data-ng-show="item.size">size on the serve: {{item.size}}</div>
-							<div data-ng-show="item.value">value: {{item.value}}</div>
-						</li>
-					</ul>
-					<div data-ng-show="f.result.requestHeaders" class="reqh">request headers: {{f.result.requestHeaders}}</div>
-				</div>
-			</li>
-		</ul>
-		
-		<accordion close-others="oneAtATime">
-			<accordion-group is-open="status.open">
-			<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
-				<h4 class="panel-title accordion-toggle">
-	            	Scripts<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
-	            </h4>
-        	</accordion-heading>
-				<ul class="list-group">
-					<li class="list-group-item" ng-repeat="(key, script) in project.scripts">
-						<fieldset>
-							<a href="/res/scripts/{{project._id}}/{{script.file.name}}" target="_blank" data-ng-bind="script.file.name"></a> 
-							<a href="/res/scripts/{{project._id}}/{{script.file.name}}" target="_blank"><img src="/img/Adobe-Acrobat-icon.png" alt="download PDF"></a>
-							<button data-ng-show="permitAdminDirector()" ng-click="delScript(key)" target="_blank"><img src="/img/delete.png" alt="delete"></button>
-						</fieldset>
-						<fieldset>
-							<label>Approved?<label> &nbsp;<input type="checkbox" ng-model="project.scripts[key].approved.selected" ng-click="scrApprov(key)">
-							<span data-ng-bind="project.scripts[key].approved.by.name"></span> <span>{{project.scripts[key].approved.by.date | date:'fullDate'}} {{project.scripts[key].approved.by.date | date:'mediumTime'}}</span>
-						</fieldset>
-						<fieldset>
-							<label>Notes:</label><textarea ng-model="scripts[key].discussion" class="form-control"></textarea>
-							<button style="float:right" class="btn btn-default" ng-click="saveScriptNote(key)">Save</button>
-						</fieldset>
-						<div style="max-height:200px;overflow-y:scroll">
-							<div ng-repeat="(key, ditem) in project.scripts[key].discussion.slice().reverse()">
-								<h5><strong>{{ditem.date | date:'medium'}} - {{ditem.username}}</strong></h5>
-								<p data-ng-bind="ditem.item"></p>
-							</div>
-						</div>
-					</li>
-				</ul>
-				<div data-ng-show="permitAdminDirector()">
-					<h4>Upload Script: PDF only!</h4>
-					<input type="file" ng-file-select="uploadScript($files)" ng-model="files" ng-accept="'*.pdf'" ng-multiple="true" ng-model-rejected="rejFiles">
-				</div>
-			</accordion-group>
-		</accordion>
+			</div>
 
-		<accordion close-others="oneAtATime">
-			<accordion-group is-open="status.open">
-			<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
-				<h4 class="panel-title accordion-toggle">
-	            	Auditions<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
-	            </h4>
-        	</accordion-heading>
-		 		<ul class="list-group">
-					<li class="list-group-item" ng-repeat="(key, audition) in project.auditions">
-						<fieldset>
-							<a href="/res/auditions/{{project._id}}/{{audition.file.name}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable">ngAudio</a> 
-							<button ng-click='audio[key].paused ? audio[key].play() : audio[key].pause()'>Play</button> 
-							<button ng-click='audio[key].stop()'>Stop</button>
-							<button data-ng-show="permitAdminDirector()" ng-click="delAudition(key)"><img src="/img/delete.png" alt="delete"></button>
-						</fieldset>
-						<fieldset>
-							<label>Rating {{project.auditions[key].rating[authentication.user._id]}}</label>
-							<rating ng-model="ratings[key]" readonly="false" ng-click="updateRating(key)" max="max" on-leave="overStar = ratings[key]" on-hover="hoveringOver(value,key)"></rating>
-							<p data-ng-show="ratingsAvg[key]">Average: 
-								<rating ng-model="ratingsAvg[key]" readonly="true" max="max" on-leave="overStar = ratingsAvg[key]" ></rating>
-							</p>
-						</fieldset>
-						<fieldset data-ng-show="permitAdminDirector() || permitClient()">
-							<label>Notes:</label><textarea ng-model="auditions[key].discussion" class="form-control"></textarea>
-							<button style="float:right" class="btn btn-default" ng-click="saveAudtionNote(key)">Save</button>
-						</fieldset>
-						<div style="max-height:200px;overflow-y:scroll">
-							<div data-ng-show="permitAdminDirector() || permitClient()" ng-repeat="(key, ditem) in project.auditions[key].discussion.slice().reverse()">
-								<h5><strong>{{ditem.date | date:'medium'}} - {{ditem.username}}</strong></h5>
-								<p data-ng-bind="ditem.item"></p>
-							</div>
-						</div>
-					</li>
-				</ul>
-				<div data-ng-show="permitAdminDirector()">
-					<h4>Upload Audition Files:</h4>
-					<input type="file" ng-file-select="uploadAudition($files)" ng-model="files" ng-accept="'*.mp3,*.mp4,*.wav,*.ogg'" ng-multiple="true" ng-model-rejected="rejFiles">
-				</div>
-		</accordion-group>
-		</accordion>
+			<div class="col-lg-4 col-md-4 col-sm-4">
+				<accordion close-others="oneAtATime">
+					<accordion-group is-open="status.open">
+					<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
+						<h4 class="panel-title accordion-toggle">
+		     	       		Talent<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+		     	       	</h4>
+		        	</accordion-heading>
+						<ul class="list-group">
+							<li class="list-group-item" ng-repeat="(key, member) in project.talent"> <a target="_blank" href="/#!/talents/{{member.talentId}}">{{member.name}}</a> <span data-ng-show="permitAdminDirector()"><input type="checkbox" data-ng-model="project.talent[key].booked" ng-checked="project.talent[key].booked" ng-click="toggleBooked(key)"> Booked </span></li>
+						</ul>
+						<accordion close-others="oneAtATime" data-ng-show="permitAdminDirector()">
+							<accordion-group is-open="statusInt.open">
+							<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
+								<h4 class="panel-title accordion-toggle">
+									Edit Talent
+								</h4>
+							</accordion-heading>
+								<script>
+					              var talents = angular.module("talents", []);
+					              talents.controller("TalentsController", function($scope) {
+					                  $scope.talents = Users.query();
+					              });
+					            </script>
+					            <div class="controls" ng-module="talents">
+					                <div ng-controller="TalentsController" data-ng-init="find()">
+					                	<label>Search:</label> <input ng-model="filterTeam">
+										<ul class="list-group">
+											<li class="list-group-item" ng-repeat="(key, talent) in talents | filter:filterTeam"><input type="checkbox" value="{{talent._id}}" ng-click="updateTalent(talent._id, talent.name)" ng-checked="checkTalent(talent._id)"> {{talent.name}}</li>
+										</ul>
+									</div>
+								</div>
+							</accordion-group>
+						</accordion>
+					</accordion-group>
+				</accordion>
+			</div>
+		</div>
 	</div>
 	<div class="pull-right" data-ng-show="permitAdminDirector()">
 		<a class="btn btn-primary" href="/#!/projects/{{project._id}}/edit">
