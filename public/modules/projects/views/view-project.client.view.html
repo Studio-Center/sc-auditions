@@ -1,6 +1,7 @@
 <section data-ng-controller="ProjectsController" data-ng-init="loadProject()">
 	<div class="page-header">
 		<h1>{{project.title}} <small>Due {{project.estimatedCompletionDate | date:'fullDate'}} {{project.estimatedCompletionDate | date:'mediumTime'}}</small></h1>
+		<h4>Origin Date/Time {{project.created | date:'fullDate'}} {{project.created | date:'mediumTime'}}</h4>
 
 		<div class="panel panel-default">
 			<div class="panel-heading"><strong>Description</strong></div>
