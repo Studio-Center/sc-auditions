@@ -1,3 +1,8 @@
+<style>
+.panel-heading {
+    cursor: pointer;
+}
+</style>
 <section data-ng-controller="ProjectsController" data-ng-init="loadProject()">
 	<div class="page-header">
 		<h1>{{project.title}} <small>Due {{project.estimatedCompletionDate | date:'medium'}}</small></h1>
@@ -43,8 +48,10 @@
 
 		<accordion close-others="oneAtATime" data-ng-show="permitAdminDirector() || permitClient() || permitClientClient()">
 			<accordion-group is-open="status.open">
-			<accordion-heading>
+			<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
+				<h4 class="panel-title accordion-toggle">
             	Phases<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+            	</h4>
         	</accordion-heading>
 			<accordion close-others="oneAtATime">
 				<div class="panel panel-default" ng-repeat="(key, phase) in project.phases">
@@ -74,8 +81,10 @@
 		
 		<accordion close-others="oneAtATime" data-ng-show="permitAdminDirector() || permitClient()">
 			<accordion-group is-open="status.open">
-			<accordion-heading>
-            	Client Client Users<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+			<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
+				<h4 class="panel-title accordion-toggle">
+            		Client Client Users<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+            	</h4>
         	</accordion-heading>
 				<ul class="list-group">
 					<li class="list-group-item" ng-repeat="(key, member) in project.clientClient">{{member.name}}</li>
@@ -103,8 +112,10 @@
 
 		<accordion close-others="oneAtATime" data-ng-show="permitAdminDirector()">
 			<accordion-group is-open="status.open">
-			<accordion-heading>
-            	Client Users<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+			<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
+				<h4 class="panel-title accordion-toggle">
+            		Client Users<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+            	</h4>
         	</accordion-heading>
 				<ul class="list-group">
 					<li class="list-group-item" ng-repeat="(key, member) in project.client">{{member.name}}</li>
@@ -130,39 +141,12 @@
 			</accordion-group>
 		</accordion>
 
-		<accordion close-others="oneAtATime" data-ng-show="permitAdminDirector()">
-			<accordion-group is-open="status.open">
-			<accordion-heading>
-            	Team<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
-        	</accordion-heading>
-				<ul class="list-group">
-					<li class="list-group-item" ng-repeat="(key, member) in project.team">{{member.name}}</li>
-				</ul>
-				<accordion close-others="oneAtATime">
-					<accordion-group heading="Edit Team Members">
-						<script>
-			              var users = angular.module("users", []);
-			              users.controller("UsersController", function($scope) {
-			                  $scope.users = Users.query();
-			              });
-			            </script>
-			            <div class="controls" ng-module="users">
-			                <div ng-controller="UsersController" data-ng-init="find()">
-			                	<label>Search:</label> <input ng-model="filterTeam">
-								<ul class="list-group">
-									<li class="list-group-item" ng-repeat="(key, user) in users | filter:filterTeam"><input type="checkbox" value="{{user._id}}" ng-click="updateTeam(user._id, user.displayName, user.email)" ng-checked="checkTeam(user._id)"> {{user.firstName}} {{user.lastName}}</li>
-								</ul>
-							</div>
-						</div>
-					</accordion-group>
-				</accordion>
-			</accordion-group>
-		</accordion>
-
 		<accordion close-others="oneAtATime">
 			<accordion-group is-open="status.open">
-			<accordion-heading>
-            	Talent<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+			<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
+				<h4 class="panel-title accordion-toggle">
+     	       		Talent<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+     	       	</h4>
         	</accordion-heading>
 				<ul class="list-group">
 					<li class="list-group-item" ng-repeat="(key, member) in project.talent"> <a target="_blank" href="/#!/talents/{{member.talentId}}">{{member.name}}</a> <span data-ng-show="permitAdminDirector()"><input type="checkbox" data-ng-model="project.talent[key].booked" ng-checked="project.talent[key].booked" ng-click="toggleBooked(key)"> Booked </span></li>
@@ -221,8 +205,10 @@
 		
 		<accordion close-others="oneAtATime">
 			<accordion-group is-open="status.open">
-			<accordion-heading>
-            	Scripts<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+			<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
+				<h4 class="panel-title accordion-toggle">
+	            	Scripts<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+	            </h4>
         	</accordion-heading>
 				<ul class="list-group">
 					<li class="list-group-item" ng-repeat="(key, script) in project.scripts">
@@ -256,8 +242,10 @@
 
 		<accordion close-others="oneAtATime">
 			<accordion-group is-open="status.open">
-			<accordion-heading>
-            	Auditions<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+			<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
+				<h4 class="panel-title accordion-toggle">
+	            	Auditions<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+	            </h4>
         	</accordion-heading>
 		 		<ul class="list-group">
 					<li class="list-group-item" ng-repeat="(key, audition) in project.auditions">
@@ -269,7 +257,7 @@
 						</fieldset>
 						<fieldset>
 							<label>Rating {{project.auditions[key].rating[authentication.user._id]}}</label>
-							<rating ng-model="ratings[key]" readonly="false" ng-click="updateRating(key)" max="max" on-leave="overStar = null" on-hover="hoveringOver(value,key)"></rating>
+							<rating ng-model="ratings[key]" readonly="false" ng-click="updateRating(key)" max="max" on-leave="overStar = ratings[key]" on-hover="hoveringOver(value,key)"></rating>
 							<p data-ng-show="ratingsAvg[key]">Average: 
 								<rating ng-model="ratingsAvg[key]" readonly="true" max="max" on-leave="overStar = ratingsAvg[key]" ></rating>
 							</p>
