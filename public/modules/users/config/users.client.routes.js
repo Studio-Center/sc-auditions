@@ -45,6 +45,10 @@ angular.module('users').config(['$stateProvider',
 			url: '/usersedit',
 			templateUrl: 'modules/users/views/list-users.client.view.html'
 		}).
+		state('newUser', {
+			url: '/usersedit/create',
+			templateUrl: 'modules/users/views/create.client.view.html'
+		}).
 		state('viewUser', {
 			url: '/usersedit/:userIdEdit',
 			templateUrl: 'modules/users/views/view-user.client.view.html'

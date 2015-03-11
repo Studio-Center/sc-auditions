@@ -34,5 +34,6 @@ angular.module('users').run(['Menus', 'Authentication',
 		// Set top bar menu items
 		Menus.addMenuItem('topbar', 'Users', 'users', 'dropdown', '/usersedit(/create)?', false, ['admin']);
 		Menus.addSubMenuItem('topbar', 'users', 'List Users', 'usersedit', false, ['admin']);
+		Menus.addSubMenuItem('topbar', 'users', 'Create New User', 'usersedit/create', false, ['admin']);
 	}
 ]);
