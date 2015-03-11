@@ -1,8 +1,8 @@
 'use strict';
 
 // Users controller
-angular.module('users').controller('UsersController', ['$scope', '$stateParams', '$location', 'Authentication', 'UsersEdit', 'UsersFind',
-	function($scope, $stateParams, $location, Authentication, UsersEdit, UsersFind ) {
+angular.module('users').controller('UsersController', ['$scope', '$stateParams', '$location', 'Authentication', 'UsersEdit', 'UsersFind', '$http',
+	function($scope, $stateParams, $location, Authentication, UsersEdit, UsersFind, $http ) {
 		$scope.authentication = Authentication;
 
 		$scope.roleOpts = ['user', 'admin', 'producer/auditions director', 'talent director', 'client', 'client-client'];
@@ -57,6 +57,26 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
 					});
 				}
 			}
+		};
+
+		$scope.create = function() {
+			var useredit = {
+				firstName: this.firstName,
+				lastName: this.lastName,
+				displayName: this.displayName,
+				company: this.company,
+				email: this.email,
+				username: this.username,
+				phone: this.phone,
+				password: this.password,
+				roles: this.roles
+			};
+
+			// Redirect after save
+			$http.post('/usersedit/create', useredit).
+			success(function(data, status, headers, config) {
+				$location.path('/usersedit');
+			});
 		};
 	}
 ]);

@@ -41,7 +41,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			        phone: $scope.newLead.phone,
 			        email: $scope.newLead.email,
 			        describe: $scope.newLead.describe
-			    })
+			    });
             $location.path('/projects/new-audition-form/thanks');
 		};
 		$scope.leadFormPop = function(){
@@ -225,7 +225,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 			// update project store
 			$scope.update();
-		}
+		};
 
 		$scope.updateTeam = function(userId, displayName, email){
 			// gen user object

@@ -161,3 +161,48 @@ exports.delete = function(req, res) {
 		}
 	});
 };
+
+// allow admin user to create account 
+exports.create = function(req, res) {
+	// For security measurement we remove the roles from the req.body object
+
+	var adminUserId = req.user._id;
+
+	// Init Variables
+	var user = new User(req.body);
+	var message = null;
+
+	// Add missing user fields
+	user.provider = 'local';
+	user.displayName = user.firstName + ' ' + user.lastName;
+
+	// Then save the user 
+	user.save(function(err) {
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			// Remove sensitive data before login
+			user.password = undefined;
+			user.salt = undefined;
+
+			req.login(user, function(err) {
+				if (err) {
+					res.status(400).send(err);
+				} else {
+					// reload admin user data
+					User.findById(adminUserId).populate('user', 'displayName').exec(function(err, user) {
+						req.login(user, function(err) {
+							if (err) {
+								res.status(400).send(err);
+							} else {
+								res.jsonp(user);
+							}
+						});
+					});
+				}
+			});
+		}
+	});
+};

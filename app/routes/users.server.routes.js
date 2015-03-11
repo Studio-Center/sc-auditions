@@ -19,13 +19,17 @@ module.exports = function(app) {
 		.get(users.getListLevel, users.hasAuthorization);
 
 	app.route('/usersedit')
-		.get(users.list, users.hasAuthorization)
-		.put(users.update, users.hasAuthorization);
+		.get(users.requiresLogin, users.list, users.hasAuthorization)
+		.put(users.requiresLogin, users.update, users.hasAuthorization);
 
 	app.route('/usersedit/:userIdEdit')
 		.get(users.readAdmin, users.hasAuthorization)
 		.put(users.requiresLogin, users.hasAuthorization, users.updateAdmin)
 		.delete(users.requiresLogin, users.hasAuthorization, users.delete);
+
+	app.route('/usersedit/create')
+		.get(users.requiresLogin, users.hasAuthorization)
+		.post(users.requiresLogin, users.hasAuthorization, users.create);
 
 	app.route('/users/accounts').delete(users.removeOAuthProvider);
 
