@@ -9,25 +9,19 @@
 		<h4>Origin Date/Time {{project.created | date:'medium'}}</h4>
 
 		<div class="panel panel-default">
-			<div class="panel-heading"><strong>Description</strong></div>
+			<div class="panel-heading"><strong>Description & Specs</strong></div>
 			<div class="panel-body" data-ng-bind="project.description"></div>
 		</div>
 		<div class="row">
-			<div class="col-lg-4 col-md-4 col-sm-4">
-				<div class="panel panel-default">
-					<div class="panel-heading"><strong>Time</strong></div>
-					<div class="panel-body" data-ng-bind="project.actualTime"></div>
-				</div>
-			</div>
 			
-			<div class="col-lg-4 col-md-4 col-sm-4">
+			<div class="col-lg-6 col-md-6 col-sm-6">
 				<div class="panel panel-default">
 					<div class="panel-heading"><strong>Status</strong></div>
 					<div class="panel-body" data-ng-bind="project.status"></div>
 				</div>
 			</div>
 			
-			<div class="col-lg-4 col-md-4 col-sm-4">
+			<div class="col-lg-6 col-md-6 col-sm-6">
 				<div class="panel panel-default">
 					<div class="panel-heading"><strong>Progress</strong></div>
 					<div class="panel-body">
