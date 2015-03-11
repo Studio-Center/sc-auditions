@@ -16,6 +16,9 @@ module.exports = function(app) {
 		.put(users.requiresLogin, projects.update)
 		.delete(users.requiresLogin, projects.hasAuthorization, projects.delete);
 
+	app.route('/projects/create')
+		.get(users.requiresLogin, projects.hasAuthorization);
+
 	app.route('/projects/lead')
 		.post(users.requiresLogin, projects.lead);
 
