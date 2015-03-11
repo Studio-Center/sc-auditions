@@ -177,13 +177,13 @@ exports.delete = function(req, res) {
 	var delFilesLn = project.deleteFiles.length || 0;
 	var i;
 	for(i = 0; i < project.auditions.length; ++i){
-		if(typeof project.auditions[i] !== 'undefined'){
+		if(typeof project.auditions[i] !== 'undefined' && typeof project.auditions[i].file !== 'undefined'){
 			project.deleteFiles[delFilesLn] = '/res/auditions/' + project._id + '/' + project.auditions[i].file.name;
 			delFilesLn++;
 		}
 	}
 	for(i = 0; i < project.scripts.length; ++i){
-		if(typeof project.scripts[i] !== 'undefined'){
+		if(typeof project.scripts[i] !== 'undefined' && typeof project.scripts[i].file !== 'undefined'){
 			project.deleteFiles[delFilesLn] = '/res/scripts/' + project._id + '/' + project.scripts[i].file.name;
 			delFilesLn++;
 		}
