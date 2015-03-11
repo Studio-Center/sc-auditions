@@ -12,7 +12,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label" for="name">Estimated Completion Date</label>
+                    <label class="control-label" for="name">Estimated Completion Date (Click to select date and time)</label>
                     <div class="controls">
                         <div class="dropdown">
                             <a class="dropdown-toggle my-toggle-select" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="">
@@ -36,7 +36,7 @@
                 <div class="form-group">
                     <label class="control-label" for="name">Status</label>
                     <div class="controls">
-                        <select ng-model="status" required>
+                        <select ng-model="status" ng-init="status = statusOpts[0]" required>
                             <option ng-repeat="item in statusOpts" value="{{item}}">{{item}}</option>
                         </select>
                     </div>
