@@ -28,6 +28,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.audio = Array;
 		$scope.newLead = {};
 
+		// verify create access
+		$scope.userCheck = function(){
+			if(Authentication.user.roles[0] !== 'admin' && Authentication.user.roles[0] !== 'producer/auditions director'){
+				$location.path('/projects');
+			}
+		};
+
 		// new project form 
 		$scope.lead = function(){
 
@@ -41,8 +48,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			        phone: $scope.newLead.phone,
 			        email: $scope.newLead.email,
 			        describe: $scope.newLead.describe
-			    });
-            $location.path('/projects/new-audition-form/thanks');
+			    }).
+			success(function(data, status, headers, config) {
+            	$location.path('/projects/new-audition-form/thanks');
+        	});
 		};
 		$scope.leadFormPop = function(){
 			if(typeof Authentication.user === 'object'){
