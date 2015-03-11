@@ -18,7 +18,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	        $scope.selCheckVal = value;
       	};
 
-
 		// static project options
 		$scope.statusOpts = ['In Progress', 'On Hold', 'Booked', 'Canceled', 'ReAuditioned'];
 		$scope.priorityOpts = ['None', 'Very low', 'Low', 'Medium', 'High', 'Very high'];
@@ -700,9 +699,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	        //fileFormDataName: myFile, //or a list of names for multiple files (html5). Default is 'file'  
 	        // customize how data is added to formData. See #40#issuecomment-28612000 for sample code 
 	        //formDataAppender: function(formData, key, val){} 
-	      //}).progress(function(evt) {
-	        //console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
-	      //}).success(function(data, status, headers, config) {
+	      }).progress(function(evt) {
+	        $scope.uploadStatus = i + ' of ' + $files.length + ' files uploaded';
+	      	$scope.uploadfile = evt.config.file.name;
+	        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
+	      }).success(function(data, status, headers, config) {
 	        // file is uploaded successfully 
 	        //console.log(data);
 	      });
@@ -732,9 +733,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	        url: 'projects/uploads/script/temp', //upload.php script, node.js route, or servlet url 
 	        data: {project: $scope.project},
 	        file: file, // or list of files ($files) for html5 only 
-	      //}).progress(function(evt) {
-	        //console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
-	      //}).success(function(data, status, headers, config) {
+	      }).progress(function(evt) {
+	        $scope.uploadStatus = i + ' of ' + $files.length + ' files uploaded';
+	      	$scope.uploadfile = evt.config.file.name;
+	        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
+	      }).success(function(data, status, headers, config) {
 	        // file is uploaded successfully 
 	        //console.log(data);
 	      });
@@ -811,11 +814,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		        url: 'projects/uploads/audition', //upload.php script, node.js route, or servlet url 
 		        data: {project: $scope.project},
 		        file: file, // or list of files ($files) for html5 only 
-		      //}).progress(function(evt) {
-		        //console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
-		      //}).success(function(data, status, headers, config) {
+		      }).progress(function(evt) {
+		      	$scope.uploadStatus = i + ' of ' + $files.length + ' files uploaded';
+		      	$scope.uploadfile = evt.config.file.name;
+		        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
+		      }).success(function(data, status, headers, config) {
 		        // file is uploaded successfully 
-		        //console.log(data);
+		        console.log(data);
 		      });
 		    }
 		  };

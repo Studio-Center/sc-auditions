@@ -94,7 +94,7 @@ exports.create = function(req, res) {
 				    newPath += project.scripts[0].file.name;
 
 				    mv(tempPath, newPath, function(err) {
-				        console.log(err);
+				        //console.log(err);
 				        if (err){
 				            res.status(500).end();
 				        }else{
@@ -264,13 +264,13 @@ exports.list = function(req, res) {
 										message: errorHandler.getErrorMessage(err)
 									});
 								} else {
-									console.log(projects);
+									//console.log(projects);
 									res.jsonp(projects);
 								}
 							});
 						break;
 						case 'client-client':
-							console.log(curUserId);
+							//console.log(curUserId);
 							Project.find({'clientClient': { $elemMatch: { 'userId': curUserId}}}).sort('-created').populate('user', 'displayName').exec(function(err, projects) {
 								if (err) {
 									return res.status(400).send({
@@ -342,7 +342,7 @@ exports.uploadFile = function(req, res, next){
     //console.log(newPath);
 
     mv(tempPath, newPath, function(err) {
-        console.log(err);
+        //console.log(err);
         if (err){
             res.status(500).end();
         }else{
@@ -378,7 +378,7 @@ exports.uploadScript = function(req, res, next){
     //console.log(newPath);
 
     mv(tempPath, newPath, function(err) {
-        console.log(err);
+        //console.log(err);
         if (err){
             res.status(500).end();
         }else{
