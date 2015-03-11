@@ -286,7 +286,16 @@
 		     	       	</h4>
 		        	</accordion-heading>
 						<ul class="list-group">
-							<li class="list-group-item" ng-repeat="(key, member) in project.talent"> <a target="_blank" href="/#!/talents/{{member.talentId}}">{{member.name}}</a> <span data-ng-show="permitAdminDirector()"><input type="checkbox" data-ng-model="project.talent[key].booked" ng-checked="project.talent[key].booked" ng-click="toggleBooked(key)"> Booked </span></li>
+							<li class="list-group-item" ng-repeat="(key, member) in project.talent"> <a target="_blank" href="/#!/talents/{{member.talentId}}">{{member.name}}</a></span>
+							<fieldset>
+								<label>Booked</label>
+								<span data-ng-show="permitAdminDirector()"><input type="checkbox" data-ng-model="project.talent[key].booked" ng-checked="project.talent[key].booked" ng-click="toggleBooked(key)"> 
+							</fieldset>
+							<fieldset>
+								<label>Status</label>
+								<select ng-model="project.talent[key].status" ng-init="project.talent[key].status = project.talent[key].status || talentStatus[0]" class="form-control" ng-change="updateTalentStatus(key)" ng-options="item for item in talentStatus"></select>
+							</fieldset>
+							</li>
 						</ul>
 						<accordion close-others="oneAtATime" data-ng-show="permitAdminDirector()">
 							<accordion-group is-open="statusInt.open">
