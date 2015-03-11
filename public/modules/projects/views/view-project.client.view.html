@@ -293,7 +293,8 @@
 							</fieldset>
 							<fieldset>
 								<label>Status</label>
-								<select ng-model="project.talent[key].status" ng-init="project.talent[key].status = project.talent[key].status || talentStatus[0]" class="form-control" ng-change="updateTalentStatus(key)" ng-options="item for item in talentStatus"></select>
+								<select data-ng-show="permitAdminDirector()" ng-model="project.talent[key].status" ng-init="project.talent[key].status = project.talent[key].status || talentStatus[0]" class="form-control" ng-change="updateTalentStatus(key)" ng-options="item for item in talentStatus"></select>
+								<p data-ng-show="permitAdminDirector() !== true">{{project.talent[key].status}}</p>
 							</fieldset>
 							</li>
 						</ul>
