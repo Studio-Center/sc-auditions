@@ -23,6 +23,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.statusOpts = ['In Progress', 'On Hold', 'Booked', 'Canceled', 'ReAuditioned'];
 		$scope.priorityOpts = ['None', 'Very low', 'Low', 'Medium', 'High', 'Very high'];
 		$scope.phaseStatusOpts = ['in progress','open','complete','suspended'];
+		$scope.talentStatus = ['Cast', 'Emailed', 'Scheduled', 'Message left', 'Out', 'Posted', 'Not Posted (Bad Read)'];
 		$scope.loadAudio = 0;
 		$scope.audio = Array;
 		$scope.newLead = {};
@@ -183,7 +184,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		$scope.updateTalent = function(talentId, talentName, email){
 			// gen talent object
-			var talent = {'talentId': talentId, 'name': talentName, 'email': email, 'booked': false};
+			var talent = {'talentId': talentId, 'name': talentName, 'email': email, 'booked': false, 'status': ''};
 
 			// check for existing item
 			var found = 0;
@@ -210,6 +211,21 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			// update project store
 			$scope.update();
 		};
+
+		$scope.updateTalentStatus = function(key){
+
+			// send update email
+			$scope.gatherToAddresses('updateTalent');
+		    $scope.project.email.subject = $scope.project.title + ' talent ' + $scope.project.talent[key].name + ' status change';
+		    $scope.project.email.message = 'Talent: ' + $scope.project.talent[key].name + '\n';
+		    $scope.project.email.message += 'Status: ' + $scope.project.talent[key].status + '\n';
+		    $scope.project.email.message += 'Project: ' + $scope.project.title + '\n';
+		    $scope.project.email.message += 'Added by: ' + Authentication.user.displayName + '\n';
+		    $scope.project.email.message += '\n' + 'For more information, please visit: ' + 'http://' + $location.host() + '/#!/projects/' + $scope.project._id + '\n';
+
+			// update project store
+			$scope.update();
+		}
 
 		$scope.updateTeam = function(userId, displayName, email){
 			// gen user object
