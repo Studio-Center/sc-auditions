@@ -32,8 +32,8 @@ angular.module('users').config(['$httpProvider',
 angular.module('users').run(['Menus', 'Authentication',
 	function(Menus, Authentication) {
 		// Set top bar menu items
-		Menus.addMenuItem('topbar', 'Users', 'users', 'dropdown', '/usersedit(/create)?', false, ['admin']);
-		Menus.addSubMenuItem('topbar', 'users', 'List Users', 'usersedit', false, ['admin']);
-		Menus.addSubMenuItem('topbar', 'users', 'Create New User', 'usersedit/create', false, ['admin']);
+		Menus.addMenuItem('topbar', 'Users', 'users', 'dropdown', '/usersedit(/create)?', false, ['admin','producer/auditions director']);
+		Menus.addSubMenuItem('topbar', 'users', 'List Users', 'usersedit', false, false, ['admin','producer/auditions director']);
+		Menus.addSubMenuItem('topbar', 'users', 'Create New User', 'usersedit/create', false, false, ['admin']);
 	}
 ]);
