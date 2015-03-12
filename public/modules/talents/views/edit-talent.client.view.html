@@ -12,15 +12,33 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label class="control-label" for="name">Last Name</label>
+                    <div class="controls">
+                        <input type="text" data-ng-model="talent.lastName" id="lastName" class="form-control" placeholder="LastName" required>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="control-label" for="type">Email</label>
                     <div class="controls">
                         <input type="email" data-ng-model="talent.email" id="email" class="form-control" placeholder="Email" required>
                     </div>
                 </div>
                 <div class="form-group">
+                    <label class="control-label" for="type">Email Alt</label>
+                    <div class="controls">
+                        <input type="email" data-ng-model="talent.email2" id="email2" class="form-control" placeholder="Email Alt" required>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="control-label" for="type">Phone Number</label>
                     <div class="controls">
-                        <input type="tel" data-ng-model="talent.phone" id="phone" class="form-control" placeholder="Phone" required>
+                        <input type="tel" data-ng-model="talent.phone" id="phone" class="form-control" ui-mask="999-999-9999" placeholder="xxx-xxx-xxxx" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="type">Phone Number Alt</label>
+                    <div class="controls">
+                        <input type="tel" data-ng-model="talent.phone2" id="phone2" class="form-control" ui-mask="999-999-9999" placeholder="xxx-xxx-xxxx" required>
                     </div>
                 </div>
                 <div class="form-group">
@@ -45,6 +63,13 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <div class="btn-group" data-toggle="buttons">
+                        <label class="btn btn-primary" ng-model="talent.ageRange" btn-radio="'kid'">Kid</label>
+                        <label class="btn btn-primary" ng-model="talent.ageRange" btn-radio="'teen'">Teen</label>
+                        <label class="btn btn-primary" ng-model="talent.ageRange" btn-radio="'adult'">Adult</label>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="control-label" for="lastNameCode">Last Name Code</label>
                     <div class="controls">
                         <input type="text" data-ng-model="talent.lastNameCode" id="lastNameCode" class="form-control" placeholder="lastNameCode" required>
@@ -59,7 +84,9 @@
                 <div class="form-group">
                     <label class="control-label" for="locationISDN">Location/ISDN</label>
                     <div class="controls">
-                        <input type="text" data-ng-model="talent.locationISDN" id="locationISDN" class="form-control" placeholder="locationISDN" required>
+                        <select ng-model="talent.locationISDN" required>
+                            <option ng-repeat="item in locations" value="{{item}}">{{item}}</option>
+                        </select>
                     </div>
                 </div>
                 <div class="form-group">
