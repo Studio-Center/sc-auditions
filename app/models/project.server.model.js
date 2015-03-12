@@ -19,7 +19,8 @@ var ProjectSchema = new Schema({
 		type: Date
 	},
 	estimatedCompletionDate: {
-		type: Date
+		type: Date,
+		required: 'Please fill an estimated completion date',
 	},
 	estimatedTime: {
 		type: Number
