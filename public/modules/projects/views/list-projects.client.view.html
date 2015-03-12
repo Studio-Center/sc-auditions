@@ -4,9 +4,22 @@
         <a data-ng-show="permitAdminDirector()" class="btn btn-default" href="#!/projects/create">New Project</a>
         <a class="btn btn-default" href="#!/projects/new-audition-form">Start A New Audition Project</a>
     </div>
-    <label>Search:</label> <input ng-model="searchText"> 
+    <label>Search:</label> <input ng-model="searchText">
+
+    <label>Sort:</label> <select ng-model="sortText" ng-init="sortText = 'created'">
+                            <option value="created">Origin Time</option>
+                            <option value="title">Name</option>
+                            <option value="estimatedCompletionDate">Due Time</option>
+                            <option value="user">Project Creator</option>
+                            <option value="status">Status</option>
+                        </select>
+
+    <label>Order:</label> <select ng-model="sortTextOrder">
+                            <option value="">Asc</option>
+                            <option value="reverse">Desc</option>
+                        </select>
     <div class="list-group">
-        <a data-ng-repeat="project in projects | filter:searchText" data-ng-href="#!/projects/{{project._id}}" class="list-group-item">
+        <a data-ng-repeat="project in projects | filter:searchText | orderBy: sortText : sortTextOrder" data-ng-href="#!/projects/{{project._id}}" class="list-group-item">
 			<small class="list-group-item-text">
 				Origin Date/Time
 				<span>{{project.created | date:'medium'}}</span>
