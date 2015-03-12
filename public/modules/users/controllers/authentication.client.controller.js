@@ -24,8 +24,12 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 				// If successful we assign the response to the global user model
 				$scope.authentication.user = response;
 
-				// And redirect to the index page
-				$location.path('/');
+				// And redirect based on user role
+				if($scope.authentication.user.roles[0] === 'admin' || $scope.authentication.user.roles[0] === 'producer/auditions director'){
+					$location.path('/projects');
+				} else {
+					$location.path('/');
+				}
 			}).error(function(response) {
 				$scope.error = response.message;
 			});
