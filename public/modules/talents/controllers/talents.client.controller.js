@@ -12,7 +12,7 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 		$scope.selTypecasts = [];
 		
 		$scope.permitAdminDirector = function(){
-			var allowRoles = ['admin', 'producer/auditions director','talent director'];
+			var allowRoles = ['admin','talent director'];
 
 			for(var i = 0; i < Authentication.user.roles.length; ++i){
 				for(var j = 0; j < allowRoles.length; ++j){

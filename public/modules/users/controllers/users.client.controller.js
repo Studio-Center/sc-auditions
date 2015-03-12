@@ -5,7 +5,7 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
 	function($scope, $stateParams, $location, Authentication, UsersEdit, UsersFind, $http ) {
 		$scope.authentication = Authentication;
 
-		$scope.roleOpts = ['user', 'admin', 'producer/auditions director', 'talent director', 'client', 'client-client'];
+		$scope.roleOpts = ['user', 'admin', 'producer/auditions director', 'production coordinator', 'talent director', 'client', 'client-client'];
 
 		// Find a list of Users
 		$scope.find = function() {
