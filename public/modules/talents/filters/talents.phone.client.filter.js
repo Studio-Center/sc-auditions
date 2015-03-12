@@ -1,3 +1,4 @@
+'use strict';
 angular.module('talents').filter('tel', function () {
     return function (tel) {
         if (!tel) { return ''; }
@@ -33,13 +34,13 @@ angular.module('talents').filter('tel', function () {
                 return tel;
         }
 
-        if (country == 1) {
-            country = "";
+        if (country === 1) {
+            country = '';
         }
 
         number = number.slice(0, 3) + '-' + number.slice(3);
 
-        return ((country !== '' ? country + "-" : '') + city + "-" + number).trim();
+        return ((country !== '' ? country + '-' : '') + city + '-' + number).trim();
     };
 });
 
