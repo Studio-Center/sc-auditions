@@ -7,6 +7,7 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 
 		// talent static options
 		$scope.unionOptions = ['union','non-union'];
+		$scope.locations = ['Offsite', 'Las Vegas', 'New York', 'Richmond', 'Santa Monica', 'Virginia Beach', 'Washington DC'];
 		$scope.unionSelected = [];
 		$scope.selTypecasts = [];
 		
@@ -62,7 +63,9 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 			var talent = new Talents ({
 				name: this.name,
 				email: this.email,
+				email2: this.email2,
 				phone: this.phone,
+				phone2: this.phone2,
 				type: this.type,
 				gender: this.gender,
 				company: this.company,

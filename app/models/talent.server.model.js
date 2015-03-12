@@ -16,16 +16,32 @@ var TalentSchema = new Schema({
 		required: 'Please fill Talent name',
 		trim: true
 	},
+	lastName: {
+		type: String,
+		default: '',
+		required: 'Please fill Talent last name',
+		trim: true
+	},
 	type: {
 		type: String
 	},
 	email: {
 		type: String
 	},
+	email2: {
+		type: String
+	},
 	phone: {
 		type: String
 	},
+	phone2: {
+		type: String
+	},
 	gender: {
+		type: String,
+		trim: true
+	},
+	ageRange: {
 		type: String,
 		trim: true
 	},

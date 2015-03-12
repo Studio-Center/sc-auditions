@@ -1,12 +1,19 @@
 <section data-ng-controller="TalentsController" data-ng-init="findOne()">
 	<div class="page-header">
-		<h1 data-ng-bind="talent.name"></h1>
+		<h4>Name</h4>
+		<h4 data-ng-bind="talent.name"></h4>
+		<h4>Last Name</h4>
+		<h4 data-ng-bind="talent.lastName"></h4>
 		<h4>Gender</h4>
 		<p data-ng-bind="talent.gender"></p>
 		<h4>Email</h4>
 		<p data-ng-bind="talent.email"></p>
+		<h4>Email Alt</h4>
+		<p data-ng-bind="talent.email2"></p>
 		<h4>Phone Number</h4>
-		<p data-ng-bind="talent.phone"></p>
+		<p>{{talent.phone | tel}}</p>
+		<h4>Phone Number Alt</h4>
+		<p>{{talent.phone2 | tel}}</p>
 		<h4>Type</h4>
 		<p data-ng-bind="talent.type"></p>
 		<h4>Union Status</h4>
