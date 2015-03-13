@@ -265,6 +265,34 @@ exports.update = function(req, res) {
 	}
 };
 
+var removeFolder = function(location, next) {
+    fs.readdir(location, function (err, files) {
+        async.each(files, function (file, cb) {
+            file = location + '/' + file
+            fs.stat(file, function (err, stat) {
+                if (err) {
+                    return cb(err);
+                }
+                if (stat.isDirectory()) {
+                    removeFolder(file, cb);
+                } else {
+                    fs.unlink(file, function (err) {
+                        if (err) {
+                            return cb(err);
+                        }
+                        return cb();
+                    })
+                }
+            })
+        }, function (err) {
+            if (err) return next(err)
+            fs.rmdir(location, function (err) {
+                return next(err)
+            })
+        })
+    })
+}
+
 /**
  * Delete an Project
  */
@@ -296,10 +324,10 @@ exports.delete = function(req, res) {
 
 	// remove auditions and scripts directories is exists
 	if (fs.existsSync(appDir + auditionsDir)) {
-		fs.rmdirSync(appDir + auditionsDir);
+		removeFolder(appDir + auditionsDir);
 	}
 		if (fs.existsSync(appDir + scriptsDir)) {
-		fs.rmdirSync(appDir + scriptsDir);
+		removeFolder(appDir + scriptsDir);
 	}
 
 
