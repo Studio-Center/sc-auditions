@@ -744,6 +744,18 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     	 }
 	  	};
 
+	  	// set published status
+	  	$scope.updatePublished = function(key){
+	  		if(this.project.auditions[key].published === false){
+	  			$scope.project.auditions[key].published = true;
+	  		} else {
+	  			$scope.project.auditions[key].published = false;
+	  		}
+
+	  		// update project store
+			$scope.update();
+	  	};
+
 	  	// update projects scripts list
 		$scope.updateAuditions = function(file){
 			var audition = {
@@ -751,6 +763,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 							discussion: [], 
 							description: '',
 							rating: [], 
+							published: false,
+							rename: '',
 							approved: 
 									{
 										by: 

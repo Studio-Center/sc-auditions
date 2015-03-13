@@ -13,6 +13,7 @@ var mongoose = require('mongoose'),
 	config = require('../../config/config'),
 	_ = require('lodash'),
 	path = require('path'),
+	async = require('async'),
 	mv = require('mv'),
 	nodemailer = require('nodemailer');
 
@@ -128,11 +129,38 @@ var deleteFiles = function(project){
 		// remove file is exists
 		if (fs.existsSync(file)) {
 			fs.unlinkSync(file);
-			console.log(file + ' removed');
 		}
 
 		// remove file from delete queue
 		project.deleteFiles.splice(i, 1);
+	}
+
+};
+
+// rename file from local file system
+var renameFiles = function(project,res){
+	
+	var appDir = path.dirname(require.main.filename);
+
+	for(var i = 0; i < project.auditions.length; ++i){
+		var file = appDir + '/public/res/auditions/' + project._id + '/' + project.auditions[i].file.name;
+		var newFile = appDir + '/public/res/auditions/' + project._id + '/' + project.auditions[i].rename;
+
+		// move file is exists
+		if (fs.existsSync(file) && project.auditions[i].rename !== '') {
+			mv(file, newFile, function(err) {
+		        if (err){
+		            res.status(500).end();
+		        }else{
+		            res.status(200).end();
+		        }
+		    });
+
+			// change stored file name
+			project.auditions[i].file.name = project.auditions[i].rename;
+			project.auditions[i].rename = '';
+
+		}
 	}
 
 };
@@ -143,27 +171,97 @@ var deleteFiles = function(project){
 exports.update = function(req, res) {
 	var project = req.project ;
 
-	var allowedRoles = ['admin','producer/auditions director','client','client-client'];
+	var allowedRoles = ['admin','producer/auditions director', 'production coordinator','client','client-client'];
 
 	// validate user interaction
 	if (_.intersection(req.user.roles, allowedRoles).length) {
 
 		project = _.extend(project , req.body);
 
-		// delete any files no longer in use
-		deleteFiles(project);
-		// send required emails as needed
-		procEmail(project, req);
+		async.waterfall([
+			// rename files as requested
+			function(done) {
 
-		project.save(function(err) {
-			if (err) {
-				return res.status(400).send({
-					message: errorHandler.getErrorMessage(err)
+				var appDir = path.dirname(require.main.filename);
+
+				for(var i = 0; i < project.auditions.length; ++i){
+					var file = appDir + '/public/res/auditions/' + project._id + '/' + project.auditions[i].file.name;
+					var newFile = appDir + '/public/res/auditions/' + project._id + '/' + project.auditions[i].rename;
+
+					// move file is exists
+					if (fs.existsSync(file) && project.auditions[i].rename !== '') {
+
+						// change stored file name
+						project.auditions[i].file.name = project.auditions[i].rename;
+						project.auditions[i].rename = '';
+
+						mv(file, newFile, function(err) {
+							if (err){
+					            done(err);
+					        }
+					    });
+
+					}
+				}
+
+				done();
+			},
+			// delete any files no longer in use
+			function(done) {
+
+				var appDir = path.dirname(require.main.filename);
+
+				for(var i = 0; i < project.deleteFiles.length; ++i){
+					var file = appDir + '/public' + project.deleteFiles[i];
+
+					// remove file is exists
+					if (fs.existsSync(file)) {
+						fs.unlinkSync(file);
+					}
+
+					// remove file from delete queue
+					project.deleteFiles.splice(i, 1);
+				}
+
+				done();
+			},
+			// send required emails as needed
+			function(done) {
+				if(typeof project.email !== 'undefined'){
+					// append default footer to email
+					project.email.message += '\n' + 'The ' + config.app.title + ' Support Team' + '\n';
+					project.email.message += '\n' + 'To view your StudioCenterAuditions.com Home Page, visit:' + '\n';
+					project.email.message += 'http://' + req.headers.host + '\n';
+
+					// send email
+					var transporter = nodemailer.createTransport(config.mailer.options);
+					transporter.sendMail({
+					    from: config.mailer.from,
+					    to: project.email.to,
+					    subject: project.email.subject,
+					    text: project.email.message
+					});
+				}
+
+				// reset email object
+				delete project.email;
+				done();
+			},
+			function(done) {
+				project.save(function(err) {
+					if (err) {
+						done(err);
+					} else {
+						res.jsonp(project);
+					}
 				});
-			} else {
-				res.jsonp(project);
 			}
-		});
+			], function(err) {
+				if (err) return res.status(400).send({
+							message: errorHandler.getErrorMessage(err)
+						});
+			});
+
 	}
 };
 
@@ -176,21 +274,34 @@ exports.delete = function(req, res) {
 	// generate delete files list
 	var delFilesLn = project.deleteFiles.length || 0;
 	var i;
+	var appDir = path.dirname(require.main.filename) + '/public';
+	var auditionsDir = '/res/auditions/' + project._id + '/';
+	var scriptsDir = '/res/scripts/' + project._id + '/';
+
 	for(i = 0; i < project.auditions.length; ++i){
 		if(typeof project.auditions[i] !== 'undefined' && typeof project.auditions[i].file !== 'undefined'){
-			project.deleteFiles[delFilesLn] = '/res/auditions/' + project._id + '/' + project.auditions[i].file.name;
+			project.deleteFiles[delFilesLn] = auditionsDir + project.auditions[i].file.name;
 			delFilesLn++;
 		}
 	}
 	for(i = 0; i < project.scripts.length; ++i){
 		if(typeof project.scripts[i] !== 'undefined' && typeof project.scripts[i].file !== 'undefined'){
-			project.deleteFiles[delFilesLn] = '/res/scripts/' + project._id + '/' + project.scripts[i].file.name;
+			project.deleteFiles[delFilesLn] = scriptsDir + project.scripts[i].file.name;
 			delFilesLn++;
 		}
 	}
 
 	// delete found files
 	deleteFiles(project);
+
+	// remove auditions and scripts directories is exists
+	if (fs.existsSync(appDir + auditionsDir)) {
+		fs.unlinkSync(appDir + auditionsDir);
+	}
+		if (fs.existsSync(appDir + scriptsDir)) {
+		fs.unlinkSync(appDir + scriptsDir);
+	}
+
 
 	project.remove(function(err) {
 		if (err) {
@@ -209,7 +320,7 @@ exports.delete = function(req, res) {
 exports.list = function(req, res) { 
 
 	// permit certain user roles full access
-	var allowedRoles = ['admin','producer/auditions director','talent director'];
+	var allowedRoles = ['admin','producer/auditions director', 'production coordinator','talent director'];
 
 	if (_.intersection(req.user.roles, allowedRoles).length) {
 
@@ -306,7 +417,7 @@ exports.projectByID = function(req, res, next, id) { Project.findById(id).popula
  */
 exports.hasAuthorization = function(req, res, next) {
 	// recon 2/17/2015 to allow admin and producer level users to edit all projects
-	var allowedRoles = ['admin','producer/auditions director'];
+	var allowedRoles = ['admin','producer/auditions director', 'production coordinator'];
 
 	if (!_.intersection(req.user.roles, allowedRoles).length) {
 		return res.status(403).send('User is not authorized');
@@ -445,7 +556,7 @@ exports.uploadAudition = function(req, res, next){
     //console.log(newPath);
 
     mv(tempPath, newPath, function(err) {
-        console.log(err);
+        //console.log(err);
         if (err){
             res.status(500).end();
         }else{
