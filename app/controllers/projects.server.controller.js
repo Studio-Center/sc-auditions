@@ -281,10 +281,10 @@ var removeFolder = function(location) {
                             return cb(err);
                         }
                         return cb();
-                    })
+                    });
                 }
-            })
-        }
+            });
+        });
     })
 }
 
