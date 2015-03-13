@@ -98,6 +98,14 @@
 									<button ng-click='audio[key].paused ? audio[key].play() : audio[key].pause()'>Play</button> 
 									<button ng-click='audio[key].stop()'>Stop</button>
 									<button data-ng-show="permitAdminDirector()" ng-click="delAudition(key)"><img src="/img/delete.png" alt="delete"></button>
+									<a href="javascript:null" ng-click="showRename = 1">rename</a>
+								</fieldset>
+								<fieldset ng-show="showRename">
+									<input type="text" ng-model="project.auditions[key].rename" placeholder="Enter new filename" class="form-control"><button ng-click="update();showRename = 0;">Update</button>
+								</fieldset>
+								<fieldset>
+									<label>Published</label>
+									<input type="checkbox" value="true" ng-click="updatePublished(key)" ng-model="project.auditions[key].published">
 								</fieldset>
 								<fieldset>
 									<label>Rating {{project.auditions[key].rating[authentication.user._id]}}</label>
