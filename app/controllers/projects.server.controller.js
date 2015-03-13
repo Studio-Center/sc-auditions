@@ -296,10 +296,10 @@ exports.delete = function(req, res) {
 
 	// remove auditions and scripts directories is exists
 	if (fs.existsSync(appDir + auditionsDir)) {
-		fs.unlinkSync(appDir + auditionsDir);
+		fs.rmdirSync(appDir + auditionsDir);
 	}
 		if (fs.existsSync(appDir + scriptsDir)) {
-		fs.unlinkSync(appDir + scriptsDir);
+		fs.rmdirSync(appDir + scriptsDir);
 	}
 
 
