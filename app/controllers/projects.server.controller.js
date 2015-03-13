@@ -307,7 +307,7 @@ exports.delete = function(req, res) {
 	var scriptsDir = '/res/scripts/' + project._id + '/';
 
 	for(i = 0; i < project.auditions.length; ++i){
-		if(typeof project.auditions[i] !== 'undefined'){
+		if(typeof project.auditions[i] !== 'undefined' && project.auditions[i] !== null){
 			if(typeof project.auditions[i].file !== 'undefined'){
 				project.deleteFiles[delFilesLn] = auditionsDir + project.auditions[i].file.name;
 				delFilesLn++;
@@ -315,7 +315,7 @@ exports.delete = function(req, res) {
 		}
 	}
 	for(i = 0; i < project.scripts.length; ++i){
-		if(typeof project.scripts[i] !== 'undefined'){
+		if(typeof project.scripts[i] !== 'undefined' && project.scripts[i] !== null){
 			if(typeof project.scripts[i].file !== 'undefined'){
 				project.deleteFiles[delFilesLn] = scriptsDir + project.scripts[i].file.name;
 				delFilesLn++;
