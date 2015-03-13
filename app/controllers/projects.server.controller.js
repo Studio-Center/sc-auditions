@@ -306,23 +306,7 @@ exports.delete = function(req, res) {
 	var auditionsDir = '/res/auditions/' + project._id + '/';
 	var scriptsDir = '/res/scripts/' + project._id + '/';
 
-	for(i = 0; i < project.auditions.length; ++i){
-		if(typeof project.auditions[i] !== 'undefined' && typeof project.auditions[i].file !== 'undefined'){
-			project.deleteFiles[delFilesLn] = auditionsDir + project.auditions[i].file.name;
-			delFilesLn++;
-		}
-	}
-	for(i = 0; i < project.scripts.length; ++i){
-		if(typeof project.scripts[i] !== 'undefined' && typeof project.scripts[i].file !== 'undefined'){
-			project.deleteFiles[delFilesLn] = scriptsDir + project.scripts[i].file.name;
-			delFilesLn++;
-		}
-	}
-
-	// delete found files
-	deleteFiles(project);
-
-	// remove auditions and scripts directories is exists
+	// remove auditions and scripts directories if exists
 	if (fs.existsSync(appDir + auditionsDir)) {
 		removeFolder(appDir + auditionsDir);
 	}
@@ -330,7 +314,7 @@ exports.delete = function(req, res) {
 		removeFolder(appDir + scriptsDir);
 	}
 
-
+	// delete projecr
 	project.remove(function(err) {
 		if (err) {
 			return res.status(400).send({
