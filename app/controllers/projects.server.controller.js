@@ -659,7 +659,7 @@ exports.uploadAudition = function(req, res, next){
 										}
 									}
 							};
-				console.log(audition);
+				//console.log(audition);
 				// assign script object to body
 				project.auditions.push(audition);
 
