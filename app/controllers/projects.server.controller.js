@@ -265,7 +265,7 @@ exports.update = function(req, res) {
 	}
 };
 
-var removeFolder = function(location, next) {
+var removeFolder = function(location) {
     fs.readdir(location, function (err, files) {
         async.each(files, function (file, cb) {
             file = location + '/' + file
@@ -284,12 +284,7 @@ var removeFolder = function(location, next) {
                     })
                 }
             })
-        }, function (err) {
-            if (err) return next(err)
-            fs.rmdir(location, function (err) {
-                return next(err)
-            })
-        })
+        }
     })
 }
 
