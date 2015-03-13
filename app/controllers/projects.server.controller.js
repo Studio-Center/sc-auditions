@@ -15,7 +15,8 @@ var mongoose = require('mongoose'),
 	path = require('path'),
 	async = require('async'),
 	mv = require('mv'),
-	nodemailer = require('nodemailer');
+	nodemailer = require('nodemailer'),
+	now = new Date();
 
 // process email submission
 var procEmail = function(project, req){
@@ -185,22 +186,24 @@ exports.update = function(req, res) {
 				var appDir = path.dirname(require.main.filename);
 
 				for(var i = 0; i < project.auditions.length; ++i){
-					var file = appDir + '/public/res/auditions/' + project._id + '/' + project.auditions[i].file.name;
-					var newFile = appDir + '/public/res/auditions/' + project._id + '/' + project.auditions[i].rename;
+					if(typeof project.auditions[i].file !== 'undefined'){
+						var file = appDir + '/public/res/auditions/' + project._id + '/' + project.auditions[i].file.name;
+						var newFile = appDir + '/public/res/auditions/' + project._id + '/' + project.auditions[i].rename;
 
-					// move file is exists
-					if (fs.existsSync(file) && project.auditions[i].rename !== '') {
+						// move file is exists
+						if (fs.existsSync(file) && project.auditions[i].rename !== '') {
 
-						// change stored file name
-						project.auditions[i].file.name = project.auditions[i].rename;
-						project.auditions[i].rename = '';
+							// change stored file name
+							project.auditions[i].file.name = project.auditions[i].rename;
+							project.auditions[i].rename = '';
 
-						mv(file, newFile, function(err) {
-							if (err){
-					            done(err);
-					        }
-					    });
+							mv(file, newFile, function(err) {
+								if (err){
+						            done(err);
+						        }
+						    });
 
+						}
 					}
 				}
 
@@ -459,7 +462,6 @@ exports.uploadFile = function(req, res, next){
     var file = req.files.file;
     //console.log(file.name);
     //console.log(file.type);
-
     var project = JSON.parse(req.body.data);
 
     //var file = req.files.file;
@@ -494,15 +496,17 @@ exports.uploadScript = function(req, res, next){
 	// We are able to access req.files.file thanks to 
     // the multiparty middleware
     var file = req.files.file;
+    //console.log(req.files);
     //console.log(file.name);
     //console.log(file.type);
 
     var project = JSON.parse(req.body.data);
+    project = project.project;
 
     //var file = req.files.file;
     var appDir = path.dirname(require.main.filename);
     var tempPath = file.path;
-    var relativePath =  'res' + '/' + 'scripts' + '/' + project.project._id + '/';
+    var relativePath =  'res' + '/' + 'scripts' + '/' + project._id + '/';
     var newPath = appDir + '/public/' + relativePath;
 
     // create project directory if not found
@@ -511,16 +515,50 @@ exports.uploadScript = function(req, res, next){
     }
 
     // add file path
+    //console.log(file.name);
     newPath += file.name;
 
     //console.log(newPath);
-
+    
     mv(tempPath, newPath, function(err) {
         //console.log(err);
         if (err){
             res.status(500).end();
         }else{
-            res.status(200).end();
+        	Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
+				if (err) return next(err);
+				if (! project) return next(new Error('Failed to load Project ' + id));
+				req.project = project ;
+
+				var script = {
+							file: req.files.file, 
+							discussion: [], 
+							rating: '', 
+							approved: 
+									{
+										by: 
+										{
+											userId: req.user._id,date: now.toJSON(), name: req.user.displayName
+										}
+									}
+							};
+
+				// assign script object to body
+				project.scripts.push(script);
+
+				project = _.extend(req.project, project);
+
+				project.save(function(err) {
+					if (err) {
+						return res.status(400).send({
+							message: errorHandler.getErrorMessage(err)
+						})
+					} else {
+						res.jsonp(project);
+					}
+				});
+			});
+            //res.status(200).end();
         }
     });
 };
@@ -533,7 +571,7 @@ exports.uploadTempScript = function(req, res, next){
     //console.log(file.name);
     //console.log(file.type);
 
-    var project = JSON.parse(req.body.data);
+    var scripts = [];
 
     //var file = req.files.file;
     var appDir = path.dirname(require.main.filename);
@@ -545,13 +583,26 @@ exports.uploadTempScript = function(req, res, next){
     newPath += file.name;
 
     //console.log(newPath);
+    var script = {
+				file: req.files.file, 
+				discussion: [], 
+				rating: '', 
+				approved: 
+						{
+							by: 
+							{
+								userId: req.user._id,date: now.toJSON(), name: req.user.displayName
+							}
+						}
+				};
+
+	scripts.push(script);
 
     mv(tempPath, newPath, function(err) {
-        console.log(err);
         if (err){
             res.status(500).end();
         }else{
-            res.status(200).end();
+            res.jsonp(scripts);
         }
     });
 };
@@ -565,11 +616,12 @@ exports.uploadAudition = function(req, res, next){
     //console.log(file.type);
 
     var project = JSON.parse(req.body.data);
+    project = project.project;
 
     //var file = req.files.file;
     var appDir = path.dirname(require.main.filename);
     var tempPath = file.path;
-    var relativePath =  'res' + '/' + 'auditions' + '/' + project.project._id + '/';
+    var relativePath =  'res' + '/' + 'auditions' + '/' + project._id + '/';
     var newPath = appDir + '/public/' + relativePath;
 
     // create project directory if not found
@@ -587,7 +639,43 @@ exports.uploadAudition = function(req, res, next){
         if (err){
             res.status(500).end();
         }else{
-            res.status(200).end();
+            Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
+				if (err) return next(err);
+				if (! project) return next(new Error('Failed to load Project ' + id));
+				req.project = project ;
+
+				var audition = {
+							file: req.files.file, 
+							discussion: [], 
+							description: '',
+							rating: [], 
+							published: false,
+							rename: '',
+							approved: 
+									{
+										by: 
+										{
+											userId: req.user._id,date: now.toJSON(), name: req.user.displayName
+										}
+									}
+							};
+				console.log(audition);
+				// assign script object to body
+				project.auditions.push(audition);
+
+				project = _.extend(req.project, project);
+
+				project.save(function(err) {
+					if (err) {
+						return res.status(400).send({
+							message: errorHandler.getErrorMessage(err)
+						})
+					} else {
+						res.jsonp(project);
+					}
+				});
+			});
+            //res.status(200).end();
         }
     });
 };
