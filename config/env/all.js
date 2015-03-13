@@ -21,8 +21,8 @@ module.exports = {
 			],
 			js: [
 				'public/lib/moment/moment.js',
-				'public/lib/ng-file-upload-shim/angular-file-upload-shim.min.js',
 				'public/lib/angular/angular.js',
+				'public/lib/ng-file-upload-shim/angular-file-upload-shim.min.js',
 				'public/lib/ng-file-upload/angular-file-upload.min.js',
 				'public/lib/jquery/dist/jquery.min.js',
 				'public/lib/angular-resource/angular-resource.js', 

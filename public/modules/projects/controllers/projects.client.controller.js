@@ -593,8 +593,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			if(typeof $scope.project.auditions !== 'undefined'){
 				for(var i = 0; i < $scope.project.auditions.length; ++i){
 					if($scope.project.auditions[i]){
-						if($scope.project.auditions[i].file.type === 'audio/mp3'){
-							$scope.audio[i] = ngAudio.load('/res/auditions/'+$scope.project._id+'/'+$scope.project.auditions[i].file.name);
+						if(typeof $scope.project.auditions[i].file !== 'undefined'){
+							if($scope.project.auditions[i].file.type === 'audio/mp3'){
+								$scope.audio[i] = ngAudio.load('/res/auditions/'+$scope.project._id+'/'+$scope.project.auditions[i].file.name);
+							}
 						}
 					}
 				}
@@ -674,7 +676,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		// send update email
 		$scope.gatherToAddresses('uploadScript');
-	    $scope.project.email.subject = $scope.project.title + ' script deleted';
+	    $scope.project.email.subject = $scope.project.title + ' script uploaded';
 	    $scope.project.email.message = 'Project: ' + $scope.project.title + '\n';
 	    for (var j = 0; j < $files.length; j++) {
 	    	$scope.project.email.message += 'File: ' + $files[j].name + '\n';
@@ -684,7 +686,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 	    for (var i = 0; i < $files.length; i++) {
 	      var file = $files[i];
-	      $scope.updateScripts(file);
+	      //$scope.updateScripts(file);
 
 
 	      $scope.upload = $upload.upload({
@@ -705,7 +707,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
 	      }).success(function(data, status, headers, config) {
 	        // file is uploaded successfully 
-	        //console.log(data);
+	        //console.log(data)
+	        // update project store
+			$scope.project = angular.extend($scope.project, data);
 	      });
 	      //.error(...) 
 	      //.then(success, error, progress);  
@@ -723,11 +727,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	    for (var i = 0; i < $files.length; i++) {
 	      var file = $files[i];
 
-	      // add scripts to submitted object
-	      var script = {file: file};
-		  // push new script object
 		  $scope.scripts = [];
-		  $scope.scripts.push(script);
 
 	      $scope.upload = $upload.upload({
 	        url: 'projects/uploads/script/temp', //upload.php script, node.js route, or servlet url 
@@ -740,6 +740,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	      }).success(function(data, status, headers, config) {
 	        // file is uploaded successfully 
 	        //console.log(data);
+	        $scope.scripts = angular.extend($scope.scripts, data);
 	      });
     	 }
 	  	};
@@ -823,7 +824,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		    //$files: an array of files selected, each file has name, size, and type. 
 		    for (var i = 0; i < $files.length; i++) {
 		      var file = $files[i];
-		      $scope.updateAuditions(file);
 		      $scope.upload = $upload.upload({
 		        url: 'projects/uploads/audition', //upload.php script, node.js route, or servlet url 
 		        data: {project: $scope.project},
@@ -834,7 +834,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
 		      }).success(function(data, status, headers, config) {
 		        // file is uploaded successfully 
-		        console.log(data);
+		        $scope.project = angular.extend($scope.project, data);
 		      });
 		    }
 		  };
