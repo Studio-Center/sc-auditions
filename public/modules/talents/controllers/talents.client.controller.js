@@ -62,6 +62,7 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 			// Create new Talent object
 			var talent = new Talents ({
 				name: this.name,
+				lastName: this.lastName,
 				email: this.email,
 				email2: this.email2,
 				phone: this.phone,
