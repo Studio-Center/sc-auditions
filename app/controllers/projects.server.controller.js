@@ -271,7 +271,7 @@ exports.update = function(req, res) {
 var removeFolder = function(location) {
     fs.readdir(location, function (err, files) {
         async.each(files, function (file, cb) {
-            file = location + '/' + file
+            file = location + '/' + file;
             fs.stat(file, function (err, stat) {
                 if (err) {
                     return cb(err);
@@ -288,8 +288,8 @@ var removeFolder = function(location) {
                 }
             });
         });
-    })
-}
+    });
+};
 
 /**
  * Delete an Project
@@ -552,7 +552,7 @@ exports.uploadScript = function(req, res, next){
 					if (err) {
 						return res.status(400).send({
 							message: errorHandler.getErrorMessage(err)
-						})
+						});
 					} else {
 						res.jsonp(project);
 					}
@@ -669,7 +669,7 @@ exports.uploadAudition = function(req, res, next){
 					if (err) {
 						return res.status(400).send({
 							message: errorHandler.getErrorMessage(err)
-						})
+						});
 					} else {
 						res.jsonp(project);
 					}
