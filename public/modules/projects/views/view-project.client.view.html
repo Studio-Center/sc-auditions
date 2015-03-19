@@ -53,8 +53,8 @@
 			            </h4>
 		        	</accordion-heading>
 						<div data-ng-show="permitAdminDirector()">
-							<h4>Upload Script: PDF only!</h4>
-							<input type="file" ng-file-select="uploadScript($files)" ng-model="files" ng-accept="'*.pdf'" ng-multiple="true" ng-model-rejected="rejFiles">
+							<h4>Upload Script or Reference: </h4>
+							<input type="file" ng-file-select="uploadScript($files)" ng-model="files" ng-accept="'*'" ng-multiple="true" ng-model-rejected="rejFiles">
 						</div>
 						<ul class="list-group">
 							<li class="list-group-item" ng-repeat="(key, script) in project.scripts">
@@ -184,7 +184,7 @@
 							<accordion-group is-open="statusInt.open">
 							<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
 								<h4 class="panel-title accordion-toggle">
-									Edit Client Client Users
+									Edit Client Client Users<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': statusInt.open, 'glyphicon-chevron-right': !statusInt.open}"></i>
 								</h4>
 							</accordion-heading>
 								<script>
@@ -222,7 +222,7 @@
 							<accordion-group is-open="statusInt.open">
 							<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
 								<h4 class="panel-title accordion-toggle">
-									Edit Client Users
+									Edit Client Users<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': statusInt.open, 'glyphicon-chevron-right': !statusInt.open}"></i>
 								</h4>
 							</accordion-heading>
 								<script>
@@ -270,7 +270,7 @@
 							<accordion-group is-open="statusInt.open">
 							<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
 								<h4 class="panel-title accordion-toggle">
-									Edit Talent
+									Edit Talent<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': statusInt.open, 'glyphicon-chevron-right': !statusInt.open}"></i>
 								</h4>
 							</accordion-heading>
 								<script>
