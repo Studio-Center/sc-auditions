@@ -69,6 +69,7 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 				phone2: this.phone2,
 				type: this.type,
 				gender: this.gender,
+				ageRange: this.ageRange,
 				company: this.company,
 				unionStatus: this.unionSelected,
 				lastNameCode: this.lastNameCode,
