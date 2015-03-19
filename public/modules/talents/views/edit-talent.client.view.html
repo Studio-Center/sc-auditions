@@ -26,7 +26,7 @@
                 <div class="form-group">
                     <label class="control-label" for="type">Email Alt</label>
                     <div class="controls">
-                        <input type="email" data-ng-model="talent.email2" id="email2" class="form-control" placeholder="Email Alt" required>
+                        <input type="email" data-ng-model="talent.email2" id="email2" class="form-control" placeholder="Email Alt">
                     </div>
                 </div>
                 <div class="form-group">
@@ -38,13 +38,16 @@
                 <div class="form-group">
                     <label class="control-label" for="type">Phone Number Alt</label>
                     <div class="controls">
-                        <input type="tel" data-ng-model="talent.phone2" id="phone2" class="form-control" ui-mask="999-999-9999" placeholder="xxx-xxx-xxxx" required>
+                        <input type="tel" data-ng-model="talent.phone2" id="phone2" class="form-control" ui-mask="999-999-9999" placeholder="xxx-xxx-xxxx">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label" for="type">Type</label>
                     <div class="controls">
-                        <input type="text" data-ng-model="talent.type" id="type" class="form-control" placeholder="Type" required>
+                        <div class="btn-group" data-toggle="buttons">
+                            <label class="btn btn-primary" ng-model="talent.type" btn-radio="'Email'">Email</label>
+                            <label class="btn btn-primary" ng-model="talent.type" btn-radio="'Phone'">Phone</label>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
