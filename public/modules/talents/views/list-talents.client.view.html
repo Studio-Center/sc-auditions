@@ -8,7 +8,7 @@
         <a data-ng-repeat="talent in talents | filter:searchText" data-ng-href="#!/talents/{{talent._id}}" class="list-group-item">
 			<small class="list-group-item-text">
 				Added
-				<span data-ng-bind="talent.created | date:'medium'"></span>
+				<span data-ng-bind="talent.created | date:'short'"></span>
 			</small>
 			<h4 class="list-group-item-heading">{{talent.name}} {{talent.lastName}}</h4>
             <p><strong>Phone Number</strong> {{talent.phone | tel}} <strong>Phone Number Alt</strong> {{talent.phone2 | tel}}<br>

@@ -8,7 +8,7 @@
         <a data-ng-repeat="user in users | filter:searchText" data-ng-href="#!/usersedit/{{user._id}}" class="list-group-item">
 			<small class="list-group-item-text">
 				Created
-				<span data-ng-bind="user.created | date:'medium'"></span>
+				<span data-ng-bind="user.created | date:'short'"></span>
 				by
 				<span data-ng-bind="user.displayName"></span>
 			</small>
