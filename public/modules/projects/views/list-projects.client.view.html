@@ -21,7 +21,7 @@
     <div class="list-group">
         <a data-ng-repeat="project in projects | filter:searchText | orderBy: sortText : sortTextOrder" data-ng-href="#!/projects/{{project._id}}" class="list-group-item">
 			<small class="list-group-item-text">
-				Origin Date/Time
+				Created Date/Time
 				<span>{{project.created | date:'short'}}</span>
 			</small>
             <h4 class="list-group-item-heading" data-ng-bind="project.title"></h4>

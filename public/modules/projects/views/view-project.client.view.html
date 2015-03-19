@@ -6,7 +6,7 @@
 <section data-ng-controller="ProjectsController" data-ng-init="loadProject()">
 	<div class="page-header">
 		<h1>{{project.title}} <small>Due {{project.estimatedCompletionDate | date:'short'}}</small></h1>
-		<h4>Origin Date/Time {{project.created | date:'short'}}</h4>
+		<h4>Created Date/Time {{project.created | date:'short'}}</h4>
 
 		<div class="panel panel-default">
 			<div class="panel-heading"><strong>Description & Specs</strong></div>
@@ -49,9 +49,13 @@
 					<accordion-group is-open="status.open">
 					<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
 						<h4 class="panel-title accordion-toggle">
-			            	Scripts<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+			            	Scripts &amp; References<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
 			            </h4>
 		        	</accordion-heading>
+						<div data-ng-show="permitAdminDirector()">
+							<h4>Upload Script: PDF only!</h4>
+							<input type="file" ng-file-select="uploadScript($files)" ng-model="files" ng-accept="'*.pdf'" ng-multiple="true" ng-model-rejected="rejFiles">
+						</div>
 						<ul class="list-group">
 							<li class="list-group-item" ng-repeat="(key, script) in project.scripts">
 								<fieldset>
@@ -59,26 +63,9 @@
 									<a href="/res/scripts/{{project._id}}/{{script.file.name}}" target="_blank"><img src="/img/Adobe-Acrobat-icon.png" alt="download PDF"></a>
 									<button data-ng-show="permitAdminDirector()" ng-click="delScript(key)" target="_blank"><img src="/img/delete.png" alt="delete"></button>
 								</fieldset>
-								<fieldset>
-									<label>Approved?<label> &nbsp;<input type="checkbox" ng-model="project.scripts[key].approved.selected" ng-click="scrApprov(key)">
-									<span data-ng-bind="project.scripts[key].approved.by.name"></span> <span>{{project.scripts[key].approved.by.date | date:'short'}}</span>
-								</fieldset>
-								<fieldset>
-									<label>Notes:</label><textarea ng-model="scripts[key].discussion" class="form-control"></textarea>
-									<button style="float:right" class="btn btn-default" ng-click="saveScriptNote(key)">Save</button>
-								</fieldset>
-								<div style="max-height:200px;overflow-y:scroll">
-									<div ng-repeat="(key, ditem) in project.scripts[key].discussion.slice().reverse()">
-										<h5><strong>{{ditem.date | date:'short'}} - {{ditem.username}}</strong></h5>
-										<p data-ng-bind="ditem.item"></p>
-									</div>
-								</div>
 							</li>
 						</ul>
-						<div data-ng-show="permitAdminDirector()">
-							<h4>Upload Script: PDF only!</h4>
-							<input type="file" ng-file-select="uploadScript($files)" ng-model="files" ng-accept="'*.pdf'" ng-multiple="true" ng-model-rejected="rejFiles">
-						</div>
+						
 					</accordion-group>
 				</accordion>
 			</div>
@@ -91,7 +78,11 @@
 			            	Auditions<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
 			            </h4>
 		        	</accordion-heading>
-				 		<ul class="list-group">
+				 		<div data-ng-show="permitAdminDirector()">
+							<h4>Upload Audition Files: (*.mp3,*.mp4,*.wav,*.ogg files only!)</h4>
+							<input type="file" ng-file-select="uploadAudition($files)" ng-model="files" ng-accept="'*.mp3,*.mp4,*.wav,*.ogg'" ng-multiple="true" ng-model-rejected="rejFiles">
+						</div>
+						<ul class="list-group">
 							<li class="list-group-item" ng-repeat="(key, audition) in project.auditions">
 								<fieldset>
 									<a href="/res/auditions/{{project._id}}/{{audition.file.name}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable">ngAudio</a> 
@@ -114,22 +105,9 @@
 										<rating ng-model="ratingsAvg[key]" readonly="true" max="max" on-leave="overStar = ratingsAvg[key]" ></rating>
 									</p>
 								</fieldset>
-								<fieldset data-ng-show="permitAdminDirector() || permitClient()">
-									<label>Notes:</label><textarea ng-model="auditions[key].discussion" class="form-control"></textarea>
-									<button style="float:right" class="btn btn-default" ng-click="saveAudtionNote(key)">Save</button>
-								</fieldset>
-								<div style="max-height:200px;overflow-y:scroll">
-									<div data-ng-show="permitAdminDirector() || permitClient()" ng-repeat="(key, ditem) in project.auditions[key].discussion.slice().reverse()">
-										<h5><strong>{{ditem.date | date:'short'}} - {{ditem.username}}</strong></h5>
-										<p data-ng-bind="ditem.item"></p>
-									</div>
-								</div>
 							</li>
 						</ul>
-						<div data-ng-show="permitAdminDirector()">
-							<h4>Upload Audition Files: (*.mp3,*.mp4,*.wav,*.ogg files only!)</h4>
-							<input type="file" ng-file-select="uploadAudition($files)" ng-model="files" ng-accept="'*.mp3,*.mp4,*.wav,*.ogg'" ng-multiple="true" ng-model-rejected="rejFiles">
-						</div>
+						
 				</accordion-group>
 				</accordion>
 			</div>
