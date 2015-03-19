@@ -22,10 +22,10 @@
         <a data-ng-repeat="project in projects | filter:searchText | orderBy: sortText : sortTextOrder" data-ng-href="#!/projects/{{project._id}}" class="list-group-item">
 			<small class="list-group-item-text">
 				Origin Date/Time
-				<span>{{project.created | date:'medium'}}</span>
+				<span>{{project.created | date:'short'}}</span>
 			</small>
             <h4 class="list-group-item-heading" data-ng-bind="project.title"></h4>
-            <h5 class="list-group-item-heading">Due Date & Time <small>{{project.estimatedCompletionDate | date:'medium'}}</small></h5>
+            <h5 class="list-group-item-heading">Due Date & Time <small>{{project.estimatedCompletionDate | date:'short'}}</small></h5>
         </a>
     </div>
     <div class="alert alert-warning text-center" data-ng-hide="!projects.$resolved || projects.length">
