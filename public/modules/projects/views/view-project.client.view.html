@@ -126,9 +126,19 @@
 						<button style="float:right" class="btn btn-default" ng-click="saveDiscussion()">Save</button>
 					</fieldset>
 					<div style="max-height:200px;padding:10px;border-top:1px solid #e8e8e8;overflow-y:scroll">
+						<style>
+						.strike-if{
+							text-decoration:line-through;
+						}
+						</style>
 						<div ng-repeat="(key, ditem) in project.discussion.slice().reverse()">
-							<h5><strong>{{ditem.date | date:'short'}} - {{ditem.username}}</strong></h5>
-							<p data-ng-bind="ditem.item"></p>
+							<h5 ng-if="ditem.deleted === true" class="strike-if"><strong>{{ditem.date | date:'short'}} - {{ditem.username}}</strong></h5>
+							<h5 ng-if="ditem.deleted === false"><strong>{{ditem.date | date:'short'}} - {{ditem.username}}</strong></h5>
+							<div class="clearfix">
+								<button ng-show="authentication.user._id === ditem.userid && ditem.deleted === false" style="float:right" class="btn btn-default" ng-click="deleteDiscussion(key)">Delete</button>
+								<p ng-if="ditem.deleted === true" class="strike-if" data-ng-bind="ditem.item"></p>
+								<p ng-if="ditem.deleted === false" data-ng-bind="ditem.item"></p>
+							</div>
 						</div>
 					</div>
 				</div>
