@@ -25,6 +25,9 @@ module.exports = function(app) {
 	app.route('/projects/uploads')
 		.post(users.requiresLogin, multipartyMiddleware, projects.uploadFile);
 
+	app.route('/projects/uploads/referenceFile')
+		.post(users.requiresLogin, multipartyMiddleware, projects.uploadReferenceFile);
+
 	app.route('/projects/uploads/script')
 		.post(users.requiresLogin, multipartyMiddleware, projects.uploadScript);
 

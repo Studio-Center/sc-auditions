@@ -745,6 +745,62 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			$scope.update();
 	  	};
 
+		$scope.uploadReferenceFile = function($files) {
+	    //$files: an array of files selected, each file has name, size, and type.
+
+		// send update email
+		$scope.gatherToAddresses('uploadReferenceFile');
+	    $scope.project.email.subject = $scope.project.title + ' reference file uploaded';
+	    $scope.project.email.message = 'Project: ' + $scope.project.title + '\n';
+	    for (var j = 0; j < $files.length; j++) {
+	    	$scope.project.email.message += 'File: ' + $files[j].name + '\n';
+		}
+	    $scope.project.email.message += 'By: ' + Authentication.user.displayName + '\n';
+	    $scope.project.email.message += '\n' + 'For more information, please visit: ' + 'http://' + $location.host() + '/#!/projects/' + $scope.project._id + '\n';
+
+	    for (var i = 0; i < $files.length; i++) {
+	      var file = $files[i];
+
+	      $scope.upload = $upload.upload({
+	        url: 'projects/uploads/referenceFile', //upload.php script, node.js route, or servlet url 
+	        data: {project: $scope.project},
+	        file: file, // or list of files ($files) for html5 only 
+	      }).progress(function(evt) {
+	        $scope.uploadStatus = i + ' of ' + $files.length + ' files uploaded';
+	      	$scope.uploadfile = evt.config.file.name;
+	        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
+	      }).success(function(data, status, headers, config) {
+			$scope.project = angular.extend($scope.project, data);
+	      });
+    	 }
+	  	};
+
+	  	$scope.delReferenceFile = function(idx){
+			// verify user wants to delete file
+			if (confirm('Are you sure?')) {
+
+				var file = '/res/referenceFiles/' + $scope.project._id + '/' + $scope.project.referenceFiles[idx].file.name;
+
+				// send update email
+				$scope.gatherToAddresses('delReferenceFile');
+			    $scope.project.email.subject = $scope.project.title + ' reference file deleted';
+			    $scope.project.email.message = 'Project: ' + $scope.project.title + '\n';
+			    $scope.project.email.message += 'File: ' + $scope.project.referenceFiles[idx].file.name + '\n';
+			    $scope.project.email.message += 'By: ' + Authentication.user.displayName + '\n';
+			    $scope.project.email.message += '\n' + 'For more information, please visit: ' + 'http://' + $location.host() + '/#!/projects/' + $scope.project._id + '\n';
+
+				var delFileCnt = $scope.project.deleteFiles.length;
+
+				$scope.project.deleteFiles[delFileCnt] = file;
+
+				$scope.project.auditions.splice(idx, 1);
+
+				// update project store
+				$scope.update();
+				
+			}
+		};
+
 		$scope.delAudition = function(idx){
 			// verify user wants to delete file
 			if (confirm('Are you sure?')) {
