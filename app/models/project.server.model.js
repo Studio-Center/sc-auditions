@@ -95,7 +95,8 @@ var ProjectSchema = new Schema({
 		type: Array
 	},
 	talent: {
-		type: Array
+		type: Array,
+		required: 'You must assign a talent'
 	},
 	client: {
 		type: Array,
