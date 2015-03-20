@@ -138,7 +138,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}
 		};
 		$scope.permitClient = function(){
-			var allowRoles = ['client','client-client'];
+			var allowRoles = ['client'];
 
 			for(var i = 0; i < Authentication.user.roles.length; ++i){
 				for(var j = 0; j < allowRoles.length; ++j){
