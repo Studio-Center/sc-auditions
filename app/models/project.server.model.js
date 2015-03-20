@@ -97,7 +97,8 @@ var ProjectSchema = new Schema({
 		type: Array
 	},
 	client: {
-		type: Array
+		type: Array,
+		required: 'Please select main clients for the project!',
 	},
 	clientClient: {
 		type: Array

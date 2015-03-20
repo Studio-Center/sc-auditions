@@ -29,6 +29,26 @@
                 </div>
 
                 <div class="form-group">
+                    <label class="control-label" for="name">Clients for the project</label>
+                    <div class="controls">
+                        <script>
+                          var users = angular.module("users", []);
+                          users.controller("UsersController", function($scope) {
+                              $scope.users = Users.query();
+                          });
+                        </script>
+                        <div class="controls" ng-module="users">
+                            <div ng-controller="UsersController" data-ng-init="findFilter('client')">
+                                <label>Search:</label> <input ng-model="filterClient">
+                                <ul class="list-group">
+                                    <li class="list-group-item" ng-repeat="(key, user) in users | filter:filterClient"><input type="checkbox" value="{{user._id}}" ng-click="updateClient(user._id, user.displayName, user.email)" ng-checked="checkClientUsers(user._id)"> {{user.firstName}} {{user.lastName}}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
                     <label class="control-label" for="name">Status</label>
                     <div class="controls">
                         <select ng-model="project.status" required>
@@ -81,13 +101,13 @@
                         <input type="file" ng-file-select="uploadScript($files)" ng-model="files" ng-accept="'*.pdf'" ng-model-rejected="rejFiles" required>
                     </div>
                 </div>
-
+                <div data-ng-show="error" class="text-danger">
+                    <strong data-ng-bind="error"></strong>
+                </div>
                 <div class="form-group">
                     <input type="submit" value="Update" class="btn btn-default">
                 </div>
-				<div data-ng-show="error" class="text-danger">
-					<strong data-ng-bind="error"></strong>
-				</div>
+				
             </fieldset>
         </form>
     </div>

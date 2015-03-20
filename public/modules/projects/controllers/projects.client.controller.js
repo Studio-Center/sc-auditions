@@ -11,6 +11,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.ratings = [];
 		$scope.ratingsAvg = [];
 		$scope.selCheckVal = 0;
+		$scope.client = [];
 
 		$scope.hoveringOver = function(value,key,object) {
 	        $scope.overStar = value;
@@ -175,6 +176,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				}
 			}
 		};
+		$scope.checkClientUsersCreate = function(userId){
+			for(var i = 0; i < $scope.client.length; ++i){
+				if($scope.client[i].userId === userId){
+					return true;
+				}
+			}
+		};
 		$scope.checkTeam = function(userId){
 			for(var i = 0; i < $scope.project.team.length; ++i){
 				if($scope.project.team[i].userId === userId){
@@ -324,6 +332,21 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 			// update project store
 			$scope.update();
+		};
+
+		$scope.updateCreateClient = function(userId, displayName, email){
+			// gen user object
+			var user = {'userId': userId, 'name': displayName, 'email': email};
+
+			// check for existing item
+			var found = 0;
+			for(var i = 0; i < $scope.client.length; ++i){
+				if($scope.client[i].userId === userId){
+					$scope.client.splice(i, 1);
+					found = 1;
+				}
+			}
+
 		};
 
 		$scope.toggleBooked = function(key){
