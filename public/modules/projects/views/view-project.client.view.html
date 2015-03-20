@@ -12,11 +12,13 @@
 			</div>
 			<div class="col-lg-4 col-md-4 col-sm-4">
 					<progressbar value="dynamic" type="success" ng-model="progress"><b>{{dynamic}}%</b></progressbar>
-					<div class="panel-body" data-ng-bind="project.status" style="text-align:center"></div>
+					<div ng-if="permitAdminDirector() === false" class="panel-body" data-ng-bind="project.status" style="text-align:center"></div>
+					<select class="form-control" style="display:block;margin:0 auto" ng-if="permitAdminDirector()" ng-model="project.status" ng-change="updateProjectStatus()">
+                        <option ng-repeat="item in statusOpts" value="{{item}}">{{item}}</option>
+                    </select>
 				</div>
 			</div>
 		</div>
-
 
 		<div class="row">
 			<div class="col-lg-6 col-md-6 col-sm-6">
