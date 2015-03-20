@@ -637,6 +637,17 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}
 		};
 
+		$scope.playAudio = function(key){
+			// disable all existing audio playback
+			for(var i = 0; i < $scope.project.auditions.length; ++i){
+				if(key !== i) {
+					$scope.audio[i].pause();
+				}
+			}
+
+			$scope.audio[key].play();
+		};
+
 		// save discussion item
 		$scope.saveDiscussion = function(){
 			var now = new Date();
