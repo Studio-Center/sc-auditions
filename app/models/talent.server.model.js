@@ -23,7 +23,7 @@ var TalentSchema = new Schema({
 		trim: true
 	},
 	type: {
-		type: String,
+		type: Array,
 		required: 'Please select a Talent type',
 	},
 	email: {

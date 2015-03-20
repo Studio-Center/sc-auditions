@@ -6,9 +6,11 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 		$scope.authentication = Authentication;
 
 		// talent static options
+		$scope.typeOptions = ['Email','Phone'];
 		$scope.unionOptions = ['union','non-union'];
 		$scope.locations = ['Offsite', 'Las Vegas', 'New York', 'Richmond', 'Santa Monica', 'Virginia Beach', 'Washington DC'];
 		$scope.unionSelected = [];
+		$scope.typeSelected = [];
 		$scope.selTypecasts = [];
 		
 		$scope.permitAdminDirector = function(){
@@ -31,6 +33,14 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 			    $scope.talent.unionStatus.push(union);
 			}
 		};
+		$scope.toggleType = function(type){
+			  var idx = $scope.talent.type.indexOf(type);
+			  if (idx > -1){
+			    $scope.talent.type.splice(idx, 1);
+			  }else{
+			    $scope.talent.type.push(type);
+			}
+		};
 		$scope.toggleTypecast = function(typeCast){
 			  var idx = $scope.talent.typeCasts.indexOf(typeCast);
 			  if (idx > -1){
@@ -46,6 +56,14 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 			    $scope.unionSelected.splice(idx, 1);
 			  }else{
 			    $scope.unionSelected.push(union);
+			}
+		};
+		$scope.toggleNewType = function(type){
+			  var idx = $scope.typeSelected.indexOf(type);
+			  if (idx > -1){
+			    $scope.typeSelected.splice(idx, 1);
+			  }else{
+			    $scope.typeSelected.push(type);
 			}
 		};
 		$scope.toggleNewTypecast = function(typeCast){
@@ -67,7 +85,7 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 				email2: this.email2,
 				phone: this.phone,
 				phone2: this.phone2,
-				type: this.type,
+				type: this.typeSelected,
 				gender: this.gender,
 				ageRange: this.ageRange,
 				company: this.company,

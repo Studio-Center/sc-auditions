@@ -45,8 +45,9 @@
                     <label class="control-label" for="type">Type</label>
                     <div class="controls">
                         <div class="btn-group" data-toggle="buttons">
-                            <label class="btn btn-primary" ng-model="talent.type" btn-radio="'Email'">Email</label>
-                            <label class="btn btn-primary" ng-model="talent.type" btn-radio="'Phone'">Phone</label>
+                        <typeOptions ng-repeat="type in typeOptions">
+                            <input type="checkbox" class="btn btn-primary" ng-model="talent.type[type]" ng-click="toggleType(type)" ng-checked="talent.type.indexOf(type) > -1" btn-checkbox> {{type}}<br>
+                        </typeOptions>
                         </div>
                     </div>
                 </div>
