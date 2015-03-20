@@ -28,6 +28,41 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.audio = Array;
 		$scope.newLead = {};
 
+		// verify users
+		$scope.permitAdminDirector = function(){
+			var allowRoles = ['admin', 'producer/auditions director'];
+
+			for(var i = 0; i < Authentication.user.roles.length; ++i){
+				for(var j = 0; j < allowRoles.length; ++j){
+					if(Authentication.user.roles[i] === allowRoles[j]) {
+						return true;
+					}
+				}
+			}
+		};
+		$scope.permitClient = function(){
+			var allowRoles = ['client'];
+
+			for(var i = 0; i < Authentication.user.roles.length; ++i){
+				for(var j = 0; j < allowRoles.length; ++j){
+					if(Authentication.user.roles[i] === allowRoles[j]) {
+						return true;
+					}
+				}
+			}
+		};
+		$scope.permitClientClient = function(){
+			var allowRoles = ['client-client'];
+
+			for(var i = 0; i < Authentication.user.roles.length; ++i){
+				for(var j = 0; j < allowRoles.length; ++j){
+					if(Authentication.user.roles[i] === allowRoles[j]) {
+						return true;
+					}
+				}
+			}
+		};
+
 		// verify create access
 		$scope.userCheck = function(){
 			if(Authentication.user.roles[0] !== 'admin' && Authentication.user.roles[0] !== 'producer/auditions director'){
@@ -124,41 +159,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}
 			// check for accounts associated 
 			$scope.project.email.to = toEmails;
-		};
-
-		// verify users
-		$scope.permitAdminDirector = function(){
-			var allowRoles = ['admin', 'producer/auditions director'];
-
-			for(var i = 0; i < Authentication.user.roles.length; ++i){
-				for(var j = 0; j < allowRoles.length; ++j){
-					if(Authentication.user.roles[i] === allowRoles[j]) {
-						return true;
-					}
-				}
-			}
-		};
-		$scope.permitClient = function(){
-			var allowRoles = ['client'];
-
-			for(var i = 0; i < Authentication.user.roles.length; ++i){
-				for(var j = 0; j < allowRoles.length; ++j){
-					if(Authentication.user.roles[i] === allowRoles[j]) {
-						return true;
-					}
-				}
-			}
-		};
-		$scope.permitClientClient = function(){
-			var allowRoles = ['client-client'];
-
-			for(var i = 0; i < Authentication.user.roles.length; ++i){
-				for(var j = 0; j < allowRoles.length; ++j){
-					if(Authentication.user.roles[i] === allowRoles[j]) {
-						return true;
-					}
-				}
-			}
 		};
 
 		// update group checkbox selectors
@@ -541,6 +541,18 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			$scope.update();
 		};
 
+		$scope.updateProjectStatus = function(){
+
+			$scope.gatherToAddresses('updateStatus');
+		    $scope.project.email.subject = $scope.project.title + ' status update';
+		    $scope.project.email.message += 'Project: ' + $scope.project.title + '\n';
+		    $scope.project.email.message += 'Status: ' + $scope.project.status + '\n';
+		    $scope.project.email.message += 'Added by: ' + Authentication.user.displayName + '\n';
+		    $scope.project.email.message += '\n' + 'For more information, please visit: ' + 'http://' + $location.host() + '/#!/projects/' + $scope.project._id + '\n';
+
+			// update project store
+			$scope.update();
+		}
 		// Find a list of Projects
 		$scope.find = function() {
 			$scope.projects = Projects.query();
