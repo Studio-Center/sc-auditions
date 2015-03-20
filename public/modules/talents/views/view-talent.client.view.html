@@ -7,7 +7,8 @@
 		<p><strong>Email Alt</strong> {{talent.email2}}</p>
 		<p><strong>Phone Number</strong> {{talent.phone | tel}}</p>
 		<p><strong>Phone Number Alt</strong> {{talent.phone2 | tel}}</p>
-		<p><strong>Type</strong> {{talent.type}}</p>
+		<p><strong>Type</strong> 
+		<span ng-repeat="(key, usval) in talent.type">{{usval}} </span> </p>
 		<p><strong>Union Status</strong> 
 		<span ng-repeat="(key, usval) in talent.unionStatus">{{usval}} </span> </p>
 		<p><strong>Last Name Code</strong> {{talent.lastNameCode}}</p>
