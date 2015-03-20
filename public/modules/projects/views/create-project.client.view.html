@@ -49,15 +49,6 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="control-label" for="name">Status</label>
-                    <div class="controls">
-                        <select ng-model="status" ng-init="status = statusOpts[0]" required>
-                            <option ng-repeat="item in statusOpts" value="{{item}}">{{item}}</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group">
                     <label class="control-label" for="name">Description</label>
                     <div class="controls">
                         <textarea type="date" data-ng-model="description" id="description" class="form-control" ></textarea>
@@ -73,7 +64,20 @@
                         <input type="file" ng-file-select="uploadTempScript($files)" ng-model="files" ng-accept="'*.pdf'" ng-model-rejected="rejFiles" required>
                     </div>
                 </div>
-s
+
+                <div class="form-group">
+                    <label class="control-label" for="name">Status</label>
+                    <div class="controls">
+                        <select ng-model="status" ng-init="status = statusOpts[0]" required>
+                            <option ng-repeat="item in statusOpts" value="{{item}}">{{item}}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div data-ng-show="error" class="text-danger">
+                    <strong data-ng-bind="error"></strong>
+                </div>
+
                 <div class="form-group">
                     <input type="submit" class="btn btn-default">
                 </div>

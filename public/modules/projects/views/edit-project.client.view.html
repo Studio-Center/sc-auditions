@@ -49,14 +49,6 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="control-label" for="name">Status</label>
-                    <div class="controls">
-                        <select ng-model="project.status" required>
-                            <option ng-repeat="item in statusOpts" value="{{item}}">{{item}}</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
                     <label class="control-label" for="name">Description</label>
                     <div class="controls">
                         <textarea data-ng-model="project.description" id="description" class="form-control" ></textarea>
@@ -101,6 +93,16 @@
                         <input type="file" ng-file-select="uploadScript($files)" ng-model="files" ng-accept="'*.pdf'" ng-model-rejected="rejFiles" required>
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <label class="control-label" for="name">Status</label>
+                    <div class="controls">
+                        <select ng-model="project.status" required>
+                            <option ng-repeat="item in statusOpts" value="{{item}}">{{item}}</option>
+                        </select>
+                    </div>
+                </div>
+                
                 <div data-ng-show="error" class="text-danger">
                     <strong data-ng-bind="error"></strong>
                 </div>
