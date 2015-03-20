@@ -347,6 +347,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				}
 			}
 
+			if(found === 0){
+				$scope.client.push(user);
+			}
+
 		};
 
 		$scope.toggleBooked = function(key){
@@ -447,7 +451,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				actualTime: this.actualTime,
 				status: this.status,
 				scripts: this.scripts,
-				description: this.description
+				description: this.description,
+				client: this.client
 			});
 
 			// Redirect after save
