@@ -622,29 +622,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			$scope.update();
 		};
 
-		// update projects scripts list
-		$scope.updateScripts = function(file){
-			var script = {
-							file: file, 
-							discussion: [], 
-							rating: '', 
-							approved: 
-									{
-										by: 
-										{
-											userId: '',date: '', name: ''
-										}
-									}
-							};
-			
-			// push new script object
-			$scope.project.scripts.push(script);
-
-			// update project store
-			$scope.update();
-
-		};
-
 		$scope.delScript = function(idx){
 			// verify user wants to delete file
 			if (confirm('Are you sure?')) {
@@ -686,8 +663,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 	    for (var i = 0; i < $files.length; i++) {
 	      var file = $files[i];
-	      //$scope.updateScripts(file);
-
 
 	      $scope.upload = $upload.upload({
 	        url: 'projects/uploads/script', //upload.php script, node.js route, or servlet url 
@@ -756,32 +731,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	  		// update project store
 			$scope.update();
 	  	};
-
-	  	// update projects scripts list
-		$scope.updateAuditions = function(file){
-			var audition = {
-							file: file, 
-							discussion: [], 
-							description: '',
-							rating: [], 
-							published: false,
-							rename: '',
-							approved: 
-									{
-										by: 
-										{
-											userId: '',date: '', name: ''
-										}
-									}
-							};
-			
-			// push new script object
-			$scope.project.auditions.push(audition);
-
-			// update project store
-			$scope.update();
-
-		};
 
 		$scope.delAudition = function(idx){
 			// verify user wants to delete file
