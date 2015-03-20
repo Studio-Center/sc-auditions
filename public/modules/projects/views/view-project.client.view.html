@@ -8,7 +8,7 @@
 		<div class="row">
 			<div class="col-lg-8 col-md-8 col-sm-8">
 				<h2 style="margin:0">{{project.title}} <small>Due {{project.estimatedCompletionDate | date:'short'}}</small></h2>
-				<h4>Created {{project.created | date:'short'}} by {{project.user.displayName}}</h4>
+				<h4>Created by {{project.user.displayName}} {{project.created | date:'short'}}</h4>
 			</div>
 			<div class="col-lg-4 col-md-4 col-sm-4">
 					<progressbar value="dynamic" type="success" ng-model="progress"><b>{{dynamic}}%</b></progressbar>
