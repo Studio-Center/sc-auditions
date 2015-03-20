@@ -75,7 +75,8 @@ var ProjectSchema = new Schema({
 		trim: true
 	},
 	scripts: {
-		type: Array
+		type: Array,
+		required: 'You must assign a script'
 	},
 	referenceFiles: {
 		type: Array
