@@ -20,12 +20,10 @@
                         </select>
     <div class="list-group">
         <a data-ng-repeat="project in projects | filter:searchText | orderBy: sortText : sortTextOrder" data-ng-href="#!/projects/{{project._id}}" class="list-group-item">
-			<small class="list-group-item-text">
-				Created Date/Time
-				<span>{{project.created | date:'short'}}</span>
-			</small>
-            <h4 class="list-group-item-heading" data-ng-bind="project.title"></h4>
-            <h5 class="list-group-item-heading">Due Date & Time <small>{{project.estimatedCompletionDate | date:'short'}}</small></h5>
+            <div class="row">
+                <div class="col-lg-8 col-md-8 col-sm-8"><h4 class="list-group-item-heading">{{project.title}} <small>Due Date & Time {{project.estimatedCompletionDate | date:'short'}}</small> </h4></div>
+                <div class="col-lg-4 col-md-4 col-sm-4"><h4><small>Created Date/Time {{project.created | date:'short'}}</small></h4></div>
+            </div>
         </a>
     </div>
     <div class="alert alert-warning text-center" data-ng-hide="!projects.$resolved || projects.length">
