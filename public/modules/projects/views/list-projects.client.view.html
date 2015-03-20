@@ -14,7 +14,7 @@
                             <option value="status">Status</option>
                         </select>
 
-    <label>Order:</label> <select ng-model="sortTextOrder">
+    <label>Order:</label> <select ng-init="sortTextOrder = 'reverse'" ng-model="sortTextOrder">
                             <option value="">Asc</option>
                             <option value="reverse">Desc</option>
                         </select>
