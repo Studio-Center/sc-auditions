@@ -12,6 +12,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.ratingsAvg = [];
 		$scope.selCheckVal = 0;
 		$scope.client = [];
+		$scope.talent = [];
 
 		$scope.hoveringOver = function(value,key,object) {
 	        $scope.overStar = value;
@@ -197,6 +198,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				}
 			}
 		};
+		$scope.checkCreateTalent = function(talentId){
+			for(var i = 0; i < $scope.talent.length; ++i){
+				if($scope.talent[i].talentId === talentId){
+					return true;
+				}
+			}
+		};
 
 		$scope.updateTalent = function(talentId, talentName, email){
 			// gen talent object
@@ -226,6 +234,25 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 			// update project store
 			$scope.update();
+		};
+		$scope.updateCreateTalent = function(talentId, talentName, email){
+			// gen talent object
+			var talent = {'talentId': talentId, 'name': talentName, 'email': email, 'booked': false, 'status': ''};
+
+			// check for existing item
+			var found = 0;
+			for(var i = 0; i < $scope.talent.length; ++i){
+				if($scope.talent[i].talentId === talentId){
+					$scope.talent.splice(i, 1);
+					found = 1;
+				}
+			}
+
+			// add talent if never found
+			if(found === 0){
+				$scope.talent.push(talent);
+			}
+
 		};
 
 		$scope.updateTalentStatus = function(key){
@@ -452,7 +479,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				status: this.status,
 				scripts: this.scripts,
 				description: this.description,
-				client: this.client
+				client: this.client,
+				talent: this.talent
 			});
 
 			// Redirect after save
