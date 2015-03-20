@@ -77,6 +77,9 @@ var ProjectSchema = new Schema({
 	scripts: {
 		type: Array
 	},
+	referenceFiles: {
+		type: Array
+	},
 	auditions: {
 		type: Array
 	},

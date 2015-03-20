@@ -564,6 +564,69 @@ exports.uploadScript = function(req, res, next){
 };
 
 // file upload
+exports.uploadReferenceFile = function(req, res, next){
+	// We are able to access req.files.file thanks to 
+    // the multiparty middleware
+    var file = req.files.file;
+    //console.log(req.files);
+    //console.log(file.name);
+    //console.log(file.type);
+
+    var project = JSON.parse(req.body.data);
+    project = project.project;
+
+    //var file = req.files.file;
+    var appDir = path.dirname(require.main.filename);
+    var tempPath = file.path;
+    var relativePath =  'res' + '/' + 'referenceFiles' + '/' + project._id + '/';
+    var newPath = appDir + '/public/' + relativePath;
+
+    // create project directory if not found
+    if (!fs.existsSync(newPath)) {
+    	fs.mkdirSync(newPath);
+    }
+
+    // add file path
+    //console.log(file.name);
+    newPath += file.name;
+
+    //console.log(newPath);
+    
+    mv(tempPath, newPath, function(err) {
+        //console.log(err);
+        if (err){
+            res.status(500).end();
+        }else{
+        	Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
+				if (err) return next(err);
+				if (! project) return next(new Error('Failed to load Project ' + id));
+				req.project = project ;
+
+				var referenceFile = {
+							file: req.files.file
+							};
+
+				// assign script object to body
+				project.referenceFiles.push(referenceFile);
+
+				project = _.extend(req.project, project);
+
+				project.save(function(err) {
+					if (err) {
+						return res.status(400).send({
+							message: errorHandler.getErrorMessage(err)
+						});
+					} else {
+						res.jsonp(project);
+					}
+				});
+			});
+            //res.status(200).end();
+        }
+    });
+};
+
+// file upload
 exports.uploadTempScript = function(req, res, next){
 	// We are able to access req.files.file thanks to 
     // the multiparty middleware
