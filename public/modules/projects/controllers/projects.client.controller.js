@@ -22,7 +22,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.statusOpts = ['In Progress', 'On Hold', 'Booked', 'Canceled', 'ReAuditioned'];
 		$scope.priorityOpts = ['None', 'Very low', 'Low', 'Medium', 'High', 'Very high'];
 		$scope.phaseStatusOpts = ['in progress','open','complete','suspended'];
-		$scope.talentStatus = ['Cast', 'Emailed', 'Received needs to be posted', 'Scheduled', 'Message left', 'Out', 'Posted', 'Not Posted (Bad Read)'];
+		$scope.talentStatus = ['Cast', 'Emailed', 'Scheduled', 'Message left', 'Out', 'Received needs to be posted', 'Posted', 'Not Posted (Bad Read)'];
 		$scope.loadAudio = 0;
 		$scope.audio = Array;
 		$scope.newLead = {};
