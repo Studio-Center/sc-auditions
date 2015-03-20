@@ -606,9 +606,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		// save discussion item
 		$scope.saveDiscussion = function(){
 			var now = new Date();
-			var item = {date: now.toJSON(), userid: Authentication.user._id, username: Authentication.user.displayName, item: this.discussion};
+			var item = {date: now.toJSON(), userid: Authentication.user._id, username: Authentication.user.displayName, item: this.discussion, deleted: false};
 
 			$scope.project.discussion.push(item);
+
+			$scope.discussion = '';
 
 			// send update email
 			$scope.gatherToAddresses('saveDiscussion');
@@ -617,6 +619,17 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		    $scope.project.email.message += 'Project: ' + $scope.project.title + '\n';
 		    $scope.project.email.message += 'Added by: ' + Authentication.user.displayName + '\n';
 		    $scope.project.email.message += '\n' + 'For more information, please visit: ' + 'http://' + $location.host() + '/#!/projects/' + $scope.project._id + '\n';
+
+			// update project store
+			$scope.update();
+		};
+
+		$scope.deleteDiscussion = function(key){
+			// reverse selction id 
+			var selVal = ($scope.project.discussion.length - 1) - key;
+
+			// apply to reverse index
+			$scope.project.discussion[selVal].deleted = true;
 
 			// update project store
 			$scope.update();
