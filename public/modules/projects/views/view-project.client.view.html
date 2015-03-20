@@ -30,7 +30,8 @@
 				</div>
 			</div>
 		</div>
-
+		
+		<div class="container" style="position:fixed;bottom:0;background:#fff;z-index:999;padding-top:5px">
 		<div class="row" data-ng-show="permitAdminDirector()">
 			<div class="col-lg-12 col-md-12 col-sm-12">
 				<ul style="clear:both" ng-show="rejFiles.length > 0" class="response">
@@ -41,6 +42,7 @@
 				<div data-ng-bind="uploadStatus"></div>
 				<progressbar value="uploadprogress" type="success" ng-model="upload"><b>{{uploadfile}}</b></progressbar>
 			</div>
+		</div>
 		</div>
 
 		<div class="row">
@@ -294,7 +296,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="pull-right" data-ng-show="permitAdminDirector()">
+	<div class="pull-right" data-ng-show="permitAdminDirector()" style="padding-bottom:75px">
 		<a class="btn btn-primary" href="/#!/projects/{{project._id}}/edit">
 			<i class="glyphicon glyphicon-edit"></i>
 		</a>
