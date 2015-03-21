@@ -686,7 +686,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			// disable all existing audio playback
 			for(var i = 0; i < $scope.project.auditions.length; ++i){
 				if(key !== i) {
-					$scope.audio[i].pause();
+					if(typeof $scope.audio[i] === 'object'){
+						$scope.audio[i].pause();
+					}
 				}
 			}
 
