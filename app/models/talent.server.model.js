@@ -67,6 +67,12 @@ var TalentSchema = new Schema({
 	locationISDN: {
 		type: String
 	},
+	ISDNLine1: {
+		type: String
+	},
+	ISDNLine2: {
+		type: String
+	},
 	typeCasts: {
 		type: Array
 	},

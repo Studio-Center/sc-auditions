@@ -14,6 +14,8 @@
 		<p><strong>Last Name Code</strong> {{talent.lastNameCode}}</p>
 		<p><strong>Outage Times</strong> {{talent.outageTimes}}</p>
 		<p><strong>Location/ISDN</strong> {{talent.locationISDN}}</p>
+		<p><strong>ISDN Line 1</strong> {{talent.ISDNLine1 | tel}}</p>
+		<p><strong>ISDN Line 2</strong> {{talent.ISDNLine2 | tel}}</p>
 		<p><strong>Typecasts</strong>
 		<span ng-repeat="(key, usval) in talent.typeCasts"> {{usval}} </span> </p>
 	</div>
