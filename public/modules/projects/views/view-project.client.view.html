@@ -218,7 +218,7 @@
 		            	</h4>
 		        	</accordion-heading>
 						<ul class="list-group">
-							<li class="list-group-item" ng-repeat="(key, member) in project.client">{{member.name}}</li>
+							<li class="list-group-item" ng-repeat="(key, member) in project.client"><a target="_blank" href="/#!/usersedit/{{member.userId}}">{{member.name}}</a></li>
 						</ul>
 						<accordion close-others="oneAtATime">
 							<accordion-group is-open="statusInt.open">
@@ -237,7 +237,7 @@
 					                <div ng-controller="UsersController" data-ng-init="findFilter('client')">
 					                	<label>Search:</label> <input ng-model="filterClient">
 										<ul class="list-group">
-											<li class="list-group-item" ng-repeat="(key, user) in users | filter:filterClient"><input type="checkbox" value="{{user._id}}" ng-click="updateClient(user._id, user.displayName, user.email)" ng-checked="checkClientUsers(user._id)"> {{user.firstName}} {{user.lastName}}</li>
+											<li class="list-group-item" ng-repeat="(key, user) in users | filter:filterClient"><input type="checkbox" value="{{user._id}}" ng-click="updateClient(user._id, user.displayName, user.email)" ng-checked="checkClientUsers(user._id)"> <a target="_blank" href="/#!/usersedit/{{user._id}}">{{user.displayName}}</a></li>
 										</ul>
 									</div>
 								</div>
@@ -254,7 +254,7 @@
 		            	</h4>
 		        	</accordion-heading>
 						<ul class="list-group">
-							<li class="list-group-item" ng-repeat="(key, member) in project.clientClient">{{member.name}}</li>
+							<li class="list-group-item" ng-repeat="(key, member) in project.clientClient"><a target="_blank" href="/#!/usersedit/{{member.userId}}">{{member.name}}</a></li>
 						</ul>
 						<accordion close-others="oneAtATime">
 							<accordion-group is-open="statusInt.open">
@@ -273,7 +273,7 @@
 					                <div ng-controller="UsersController" data-ng-init="findFilter('client-client')">
 					                	<label>Search:</label> <input ng-model="filterClientClient">
 										<ul class="list-group">
-											<li class="list-group-item" ng-repeat="(key, user) in users | filter:filterClientClient"><input type="checkbox" value="{{user._id}}" ng-click="updateClientClient(user._id, user.displayName, user.email)" ng-checked="checkClientClientUsers(user._id)"> {{user.firstName}} {{user.lastName}}</li>
+											<li class="list-group-item" ng-repeat="(key, user) in users | filter:filterClientClient"><input type="checkbox" value="{{user._id}}" ng-click="updateClientClient(user._id, user.displayName, user.email)" ng-checked="checkClientClientUsers(user._id)"> <a target="_blank" href="/#!/usersedit/{{user._id}}">{{user.displayName}}</a></li>
 										</ul>
 									</div>
 								</div>

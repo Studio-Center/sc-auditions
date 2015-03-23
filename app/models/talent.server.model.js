@@ -73,6 +73,9 @@ var TalentSchema = new Schema({
 	ISDNLine2: {
 		type: String
 	},
+	sourceConnectUsername: {
+		type: String
+	},
 	typeCasts: {
 		type: Array
 	},
