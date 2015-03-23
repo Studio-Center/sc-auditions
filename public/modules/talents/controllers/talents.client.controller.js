@@ -93,6 +93,8 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 				lastNameCode: this.lastNameCode,
 				outageTimes: this.outageTimes,
 				locationISDN: this.locationISDN,
+				ISDNLine1: this.ISDNLine1,
+				ISDNLine2: this.ISDNLine2,
 				typeCasts: this.selTypecasts
 			});
 
