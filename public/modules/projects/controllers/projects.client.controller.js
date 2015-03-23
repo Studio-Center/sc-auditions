@@ -26,7 +26,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.phaseStatusOpts = ['in progress','open','complete','suspended'];
 		$scope.talentStatus = ['Cast', 'Emailed', 'Scheduled', 'Message left', 'Out', 'Received needs to be posted', 'Posted', 'Not Posted (Bad Read)'];
 		$scope.loadAudio = 0;
-		$scope.audio = Array;
+		$scope.audio = [];
 		$scope.newLead = {};
 
 		// verify users
@@ -610,7 +610,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			this.findOne();
 
 			// enable audio load after watch
-			$scope.loadAudio = 1;
+			//$scope.loadAudio = 1;
 		};
 
 		// load audio files into player after project object has finished loading
@@ -629,9 +629,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 			if(typeof $scope.project === 'object'){
 				$scope.$watch('project.auditions', function(val){
-					if($scope.loadAudio === 1){
+					//if($scope.loadAudio === 1){
 						$scope.loadAudioPlayer();	
-					}
+					//}
 
 					if(typeof $scope.project.auditions === 'object'){
 						// load audition ratings
@@ -692,6 +692,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					}
 				}
 			}
+		};
+
+		$scope.verifyAudio = function(key){
+			if(typeof $scope.audio[key] === 'object'){
+				return true;
+			}
+			return false;
 		};
 
 		$scope.playAudio = function(key){
