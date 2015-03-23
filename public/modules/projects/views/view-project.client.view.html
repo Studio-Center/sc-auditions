@@ -179,10 +179,12 @@
 							<li class="list-group-item" ng-repeat="(key, audition) in project.auditions">
 								<fieldset>
 									<a href="/res/auditions/{{project._id}}/{{audition.file.name}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable">ngAudio</a> 
-									<button ng-click='audio[key].paused ? playAudio(key) : audio[key].pause()'>Play</button> 
-									<button ng-click='audio[key].stop()'>Stop</button>
-									<button data-ng-show="permitAdminDirector()" ng-click="delAudition(key)"><img src="/img/delete.png" alt="delete"></button>
-									<a href="javascript:null" ng-click="showRename = 1">rename</a>
+									<span ng-show="verifyAudio(key)">
+										<button ng-click='audio[key].paused ? playAudio(key) : audio[key].pause()'>Play</button> 
+										<button ng-click='audio[key].stop()'>Stop</button>
+										<button data-ng-show="permitAdminDirector()" ng-click="delAudition(key)"><img src="/img/delete.png" alt="delete"></button>
+										<a href="javascript:null" ng-click="showRename = 1">rename</a>
+									</span>
 								</fieldset>
 								<fieldset ng-show="showRename">
 									<input type="text" ng-model="project.auditions[key].rename" placeholder="Enter new filename" class="form-control"><button ng-click="update();showRename = 0;">Update</button>
