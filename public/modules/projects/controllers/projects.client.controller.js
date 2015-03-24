@@ -596,7 +596,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		// Find a list of Projects
 		$scope.find = function() {
 			$scope.projects = Projects.query();
-			$scope.loadAudioPlayer();	
 		};
 
 		// Find existing Project
@@ -629,6 +628,30 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.$watch('project', function(val){
 
 			if(typeof $scope.project === 'object'){
+				// load auditions
+				$scope.$watch('project.auditions', function(val){
+
+					if(typeof $scope.project.auditions === 'object'){
+						//if($scope.loadAudio === 1){
+							$scope.loadAudioPlayer();	
+						//}
+
+						// load audition ratings
+						for(var i = 0; i < $scope.project.auditions.length; ++i){
+							// gather average value 
+							$scope.ratingsAvg[i] = 0;
+							// gather per user rating
+							for(var j = 0; j < $scope.project.auditions[i].rating.length; ++j){
+								if($scope.project.auditions[i].rating[j].userId === String(Authentication.user._id)){
+									$scope.ratings[i] = $scope.project.auditions[i].rating[j].value;
+								}
+								$scope.ratingsAvg[i] += $scope.project.auditions[i].rating[j].value;
+							}
+							$scope.ratingsAvg[i] = $scope.ratingsAvg[i] / $scope.project.auditions[i].rating.length;
+						}
+					}
+				});
+
 				// update progress bar
 				$scope.$watch('project.phases', function(val){
 
@@ -658,37 +681,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}
 		});
 
-		$scope.$watch('project.auditions', function(val){
-
-			if(typeof $scope.project.auditions === 'object'){
-				//if($scope.loadAudio === 1){
-					$scope.loadAudioPlayer();	
-				//}
-
-				// load audition ratings
-				for(var i = 0; i < $scope.project.auditions.length; ++i){
-					// gather average value 
-					$scope.ratingsAvg[i] = 0;
-					// gather per user rating
-					for(var j = 0; j < $scope.project.auditions[i].rating.length; ++j){
-						if($scope.project.auditions[i].rating[j].userId === String(Authentication.user._id)){
-							$scope.ratings[i] = $scope.project.auditions[i].rating[j].value;
-						}
-						$scope.ratingsAvg[i] += $scope.project.auditions[i].rating[j].value;
-					}
-					$scope.ratingsAvg[i] = $scope.ratingsAvg[i] / $scope.project.auditions[i].rating.length;
-				}
-			}
-		});
-
 		// load audio files
 		$scope.loadAudioPlayer = function(){
 			if(typeof $scope.project.auditions !== 'undefined'){
 				for(var i = 0; i < $scope.project.auditions.length; ++i){
 					if($scope.project.auditions[i]){
-						console.log($scope.project.auditions[i]);
 						if(typeof $scope.project.auditions[i].file !== 'undefined'){
-							if($scope.project.auditions[i].file.type === 'audio/mp3'){
+							if($scope.project.auditions[i].file.type === 'audio/mp3' || $scope.project.auditions[i].file.type === 'audio/mpeg'){
 								$scope.audio[i] = ngAudio.load('/res/auditions/'+$scope.project._id+'/'+$scope.project.auditions[i].file.name);
 							}
 						}
