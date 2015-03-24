@@ -182,9 +182,9 @@
 									<span ng-show="verifyAudio(key)">
 										<button ng-click='audio[key].paused ? playAudio(key) : audio[key].pause()'>Play</button> 
 										<button ng-click='audio[key].stop()'>Stop</button>
-										<button data-ng-show="permitAdminDirector()" ng-click="delAudition(key)"><img src="/img/delete.png" alt="delete"></button>
-										<a href="javascript:null" ng-click="showRename = 1">rename</a>
 									</span>
+										<button data-ng-show="permitAdminDirector()" ng-click="delAudition(key)"><img src="/img/delete.png" alt="delete"></button>
+										<button ng-show="showRename === 0" ng-click="showRename = 1">rename</button>
 								</fieldset>
 								<fieldset ng-show="showRename">
 									<input type="text" ng-model="project.auditions[key].rename" placeholder="Enter new filename" class="form-control"><button ng-click="update();showRename = 0;">Update</button>
