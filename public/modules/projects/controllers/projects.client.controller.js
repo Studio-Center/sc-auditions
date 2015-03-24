@@ -164,9 +164,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		// update group checkbox selectors
 		$scope.checkClientClientUsers = function(userId){
-			for(var i = 0; i < $scope.project.clientClient.length; ++i){
-				if($scope.project.clientClient[i].userId === userId){
-					return true;
+			if(typeof $scope.project === 'object'){
+				if(typeof $scope.project.clientClient === 'object'){
+					for(var i = 0; i < $scope.project.clientClient.length; ++i){
+						if($scope.project.clientClient[i].userId === userId){
+							return true;
+						}
+					}
 				}
 			}
 		};
@@ -701,7 +705,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 								}
 								$scope.uploadfile = 'loading audio ' + parseInt(100.0 * curVal / loadCnt) + '%';
 								$scope.uploadprogress = parseInt(100.0 * curVal / loadCnt);
-								console.log($scope.uploadprogress);
 							}
 						}
 					}
