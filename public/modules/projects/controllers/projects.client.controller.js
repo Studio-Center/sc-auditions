@@ -698,8 +698,15 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					if(value){
 						if(typeof value.file !== 'undefined'){
 							if(value.file.type === 'audio/mp3' || value.file.type === 'audio/mpeg'){
-								var fileName = $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/res/auditions/'+$scope.project._id+'/'+value.file.name;
-								$scope.audio[key] = ngAudio.load(fileName);
+								var fileName = '/res/auditions/'+$scope.project._id+'/'+value.file.name;
+								// only load audio file if needed
+								if(typeof $scope.audio[key] === 'object'){
+									if($scope.audio[key].id !== fileName){
+										$scope.audio[key] = ngAudio.load(fileName);
+									}
+								} else {
+									$scope.audio[key] = ngAudio.load(fileName);
+								}
 								if($scope.project.auditions.length === 1){
 									curVal = 1;
 								} else {
