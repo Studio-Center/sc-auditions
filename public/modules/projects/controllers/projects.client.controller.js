@@ -1,8 +1,8 @@
 'use strict';
 
 // Projects controller
-angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$upload', 'ngAudio', '$http', 'AudioService',
-	function($scope, $stateParams, $location, Authentication, Projects, $upload, ngAudio, $http, AudioService ) {
+angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$upload', 'ngAudio', '$http',
+	function($scope, $stateParams, $location, Authentication, Projects, $upload, ngAudio, $http ) {
 		$scope.authentication = Authentication;
 
 		// rating
@@ -22,12 +22,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.loadAudio = 0;
 		$scope.audio = [];
 		$scope.newLead = {};
-
-		$scope.playerParams = {
-		    swf_path:'lib/audio5js/audio5js.swf',
-		    throw_errors:true,
-		    format_time:true
-		};
 
 		$scope.hoveringOver = function(value,key,object) {
 	        $scope.overStar = value;
@@ -704,8 +698,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 						if(typeof value.file !== 'undefined'){
 							if(value.file.type === 'audio/mp3' || value.file.type === 'audio/mpeg'){
 								var fileName = $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/res/auditions/'+$scope.project._id+'/'+value.file.name;
-								$scope.audio[key] = new Audio5js($scope.playerParams);
-								$scope.audio[key].load(fileName);
+								$scope.audio[key] = ngAudio.load(fileName);
 								if($scope.project.auditions.length === 1){
 									curVal = 1;
 								} else {
@@ -718,7 +711,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					}
 				});
 			}
-
 		};
 
 		$scope.verifyAudio = function(key){
@@ -730,7 +722,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		};
 
 		$scope.playAudio = function(key){
-
 			// disable all existing audio playback
 			for(var i = 0; i < $scope.project.auditions.length; ++i){
 				if(key !== i) {
@@ -739,6 +730,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					}
 				}
 			}
+
 			$scope.audio[key].play();
 		};
 
