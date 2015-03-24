@@ -1,8 +1,8 @@
 'use strict';
 
 // Projects controller
-angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$upload', 'ngAudio', '$http',
-	function($scope, $stateParams, $location, Authentication, Projects, $upload, ngAudio, $http ) {
+angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$upload', 'ngAudio', '$http', 'AudioService',
+	function($scope, $stateParams, $location, Authentication, Projects, $upload, ngAudio, $http, AudioService ) {
 		$scope.authentication = Authentication;
 
 		// rating
@@ -245,7 +245,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			    $scope.project.email.message = 'Talent: ' + talentName + '\n';
 			    $scope.project.email.message += 'Project: ' + $scope.project.title + '\n';
 			    $scope.project.email.message += 'Added by: ' + Authentication.user.displayName + '\n';
-			    $scope.project.email.message += '\n' + 'For more information, please visit: ' + 'http://' + $location.host() + '/#!/projects/' + $scope.project._id + '\n';
+			    $scope.project.email.message += '\n' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '\n';
 			}
 
 			// update project store
@@ -280,7 +280,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		    $scope.project.email.message += 'Status: ' + $scope.project.talent[key].status + '\n';
 		    $scope.project.email.message += 'Project: ' + $scope.project.title + '\n';
 		    $scope.project.email.message += 'Added by: ' + Authentication.user.displayName + '\n';
-		    $scope.project.email.message += '\n' + 'For more information, please visit: ' + 'http://' + $location.host() + '/#!/projects/' + $scope.project._id + '\n';
+		    $scope.project.email.message += '\n' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '\n';
 
 			// update project store
 			$scope.update();
@@ -309,7 +309,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			    $scope.project.email.message = 'Member: ' + displayName + '\n';
 			    $scope.project.email.message += 'Project: ' + $scope.project.title + '\n';
 			    $scope.project.email.message += 'Added by: ' + Authentication.user.displayName + '\n';
-			    $scope.project.email.message += '\n' + 'For more information, please visit: ' + 'http://' + $location.host() + '/#!/projects/' + $scope.project._id + '\n';
+			    $scope.project.email.message += '\n' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '\n';
 
 			}
 
@@ -340,7 +340,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			    $scope.project.email.message = 'Client Client: ' + displayName + '\n';
 			    $scope.project.email.message += 'Project: ' + $scope.project.title + '\n';
 			    $scope.project.email.message += 'Added by: ' + Authentication.user.displayName + '\n';
-			    $scope.project.email.message += '\n' + 'For more information, please visit: ' + 'http://' + $location.host() + '/#!/projects/' + $scope.project._id + '\n';
+			    $scope.project.email.message += '\n' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '\n';
 			}
 
 			// update project store
@@ -370,7 +370,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			    $scope.project.email.message = 'Client: ' + displayName + '\n';
 			    $scope.project.email.message += 'Project: ' + $scope.project.title + '\n';
 			    $scope.project.email.message += 'Added by: ' + Authentication.user.displayName + '\n';
-			    $scope.project.email.message += '\n' + 'For more information, please visit: ' + 'http://' + $location.host() + '/#!/projects/' + $scope.project._id + '\n';
+			    $scope.project.email.message += '\n' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '\n';
 			}
 
 			// update project store
@@ -406,7 +406,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			    $scope.project.email.message = 'Talent: ' + $scope.project.talent[key].name + '\n';
 			    $scope.project.email.message += 'Project: ' + $scope.project.title + '\n';
 			    $scope.project.email.message += 'Added by: ' + Authentication.user.displayName + '\n';
-			    $scope.project.email.message += '\n' + 'For more information, please visit: ' + 'http://' + $location.host() + '/#!/projects/' + $scope.project._id + '\n';
+			    $scope.project.email.message += '\n' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '\n';
 			}
 
 			// update project store
@@ -428,7 +428,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		    $scope.project.email.message += 'Note: ' + this.auditions[key].discussion + '\n';
 		    $scope.project.email.message += 'Project: ' + $scope.project.title + '\n';
 		    $scope.project.email.message += 'Added by: ' + Authentication.user.displayName + '\n';
-		    $scope.project.email.message += '\n' + 'For more information, please visit: ' + 'http://' + $location.host() + '/#!/projects/' + $scope.project._id + '\n';
+		    $scope.project.email.message += '\n' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '\n';
 
 			// update project store
 			$scope.update();
@@ -456,7 +456,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			    $scope.project.email.message = 'Project: ' + $scope.project.title + '\n';
 			    $scope.project.email.message += 'File: ' + $scope.project.scripts[key].file.name + '\n';
 			    $scope.project.email.message += 'Approved by: ' + Authentication.user.displayName + '\n';
-			    $scope.project.email.message += '\n' + 'For more information, please visit: ' + 'http://' + $location.host() + '/#!/projects/' + $scope.project._id + '\n';
+			    $scope.project.email.message += '\n' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '\n';
 			}
 
 			// update project store
@@ -478,7 +478,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		    $scope.project.email.message += 'Note: ' + this.scripts[key].discussion + '\n';
 		    $scope.project.email.message += 'Project: ' + $scope.project.title + '\n';
 		    $scope.project.email.message += 'Added by: ' + Authentication.user.displayName + '\n';
-		    $scope.project.email.message += '\n' + 'For more information, please visit: ' + 'http://' + $location.host() + '/#!/projects/' + $scope.project._id + '\n';
+		    $scope.project.email.message += '\n' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '\n';
 
 			// update project store
 			$scope.update();
@@ -574,7 +574,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		    $scope.project.email.message += 'Start Date: ' + $scope.project.phases[key].startDate + '\n';
 		    $scope.project.email.message += 'End Date: ' + $scope.project.phases[key].endDate + '\n' + '\n';
 		    $scope.project.email.message += 'Added by: ' + Authentication.user.displayName + '\n';
-		    $scope.project.email.message += '\n' + 'For more information, please visit: ' + 'http://' + $location.host() + '/#!/projects/' + $scope.project._id + '\n';
+		    $scope.project.email.message += '\n' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '\n';
 
 		    if($scope.project.phases[key].status === 'complete'){
 		    	var now = new Date();
@@ -592,7 +592,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		    $scope.project.email.message += 'Project: ' + $scope.project.title + '\n';
 		    $scope.project.email.message += 'Status: ' + $scope.project.status + '\n';
 		    $scope.project.email.message += 'Added by: ' + Authentication.user.displayName + '\n';
-		    $scope.project.email.message += '\n' + 'For more information, please visit: ' + 'http://' + $location.host() + '/#!/projects/' + $scope.project._id + '\n';
+		    $scope.project.email.message += '\n' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '\n';
 
 			// update project store
 			$scope.update();
@@ -749,7 +749,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		    $scope.project.email.message = 'Discussion Item: ' + this.discussion + '\n';
 		    $scope.project.email.message += 'Project: ' + $scope.project.title + '\n';
 		    $scope.project.email.message += 'Added by: ' + Authentication.user.displayName + '\n';
-		    $scope.project.email.message += '\n' + 'For more information, please visit: ' + 'http://' + $location.host() + '/#!/projects/' + $scope.project._id + '\n';
+		    $scope.project.email.message += '\n' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '\n';
 
 			// update project store
 			$scope.update();
@@ -778,7 +778,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			    $scope.project.email.message = 'Project: ' + $scope.project.title + '\n';
 			    $scope.project.email.message += 'File: ' + $scope.project.scripts[idx].file.name + '\n';
 			    $scope.project.email.message += 'By: ' + Authentication.user.displayName + '\n';
-			    $scope.project.email.message += '\n' + 'For more information, please visit: ' + 'http://' + $location.host() + '/#!/projects/' + $scope.project._id + '\n';
+			    $scope.project.email.message += '\n' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '\n';
 
 				var delFileCnt = $scope.project.deleteFiles.length;
 
@@ -803,7 +803,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	    	$scope.project.email.message += 'File: ' + $files[j].name + '\n';
 		}
 	    $scope.project.email.message += 'By: ' + Authentication.user.displayName + '\n';
-	    $scope.project.email.message += '\n' + 'For more information, please visit: ' + 'http://' + $location.host() + '/#!/projects/' + $scope.project._id + '\n';
+	    $scope.project.email.message += '\n' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '\n';
 
 	    for (var i = 0; i < $files.length; i++) {
 	      var file = $files[i];
@@ -887,7 +887,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	    	$scope.project.email.message += 'File: ' + $files[j].name + '\n';
 		}
 	    $scope.project.email.message += 'By: ' + Authentication.user.displayName + '\n';
-	    $scope.project.email.message += '\n' + 'For more information, please visit: ' + 'http://' + $location.host() + '/#!/projects/' + $scope.project._id + '\n';
+	    $scope.project.email.message += '\n' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '\n';
 
 	    for (var i = 0; i < $files.length; i++) {
 	      var file = $files[i];
@@ -918,7 +918,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			    $scope.project.email.message = 'Project: ' + $scope.project.title + '\n';
 			    $scope.project.email.message += 'File: ' + $scope.project.referenceFiles[idx].file.name + '\n';
 			    $scope.project.email.message += 'By: ' + Authentication.user.displayName + '\n';
-			    $scope.project.email.message += '\n' + 'For more information, please visit: ' + 'http://' + $location.host() + '/#!/projects/' + $scope.project._id + '\n';
+			    $scope.project.email.message += '\n' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '\n';
 
 				var delFileCnt = $scope.project.deleteFiles.length;
 
@@ -944,7 +944,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			    $scope.project.email.message = 'Project: ' + $scope.project.title + '\n';
 			    $scope.project.email.message += 'File: ' + $scope.project.auditions[idx].file.name + '\n';
 			    $scope.project.email.message += 'By: ' + Authentication.user.displayName + '\n';
-			    $scope.project.email.message += '\n' + 'For more information, please visit: ' + 'http://' + $location.host() + '/#!/projects/' + $scope.project._id + '\n';
+			    $scope.project.email.message += '\n' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '\n';
 
 				var delFileCnt = $scope.project.deleteFiles.length;
 
@@ -968,7 +968,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		    	$scope.project.email.message += 'File: ' + $files[j].name + '\n';
 			}
 		    $scope.project.email.message += 'By: ' + Authentication.user.displayName + '\n';
-		    $scope.project.email.message += '\n' + 'For more information, please visit: ' + 'http://' + $location.host() + '/#!/projects/' + $scope.project._id + '\n';
+		    $scope.project.email.message += '\n' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '\n';
 
 		    //$files: an array of files selected, each file has name, size, and type. 
 		    for (var i = 0; i < $files.length; i++) {
