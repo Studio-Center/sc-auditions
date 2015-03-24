@@ -2,6 +2,23 @@
 .panel-heading {
     cursor: pointer;
 }
+.drop-box {
+	background: #F8F8F8;
+	border: 5px dashed #DDD;
+	width: 100%;
+	height: 100px;
+	text-align: center;
+	padding-top: 25px;
+	float: left;
+	margin-left: 10px;
+}
+.drop-box.dragover {
+	border: 5px dashed blue;
+}
+
+.drop-box.dragover-err {
+	border: 5px dashed red;
+}
 </style>
 <section data-ng-controller="ProjectsController" data-ng-init="loadProject()">
 	<div class="page-header">
@@ -66,9 +83,18 @@
 			            	Scripts<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
 			            </h4>
 		        	</accordion-heading>
-						<div data-ng-show="permitAdminDirector()">
+						<div data-ng-show="permitAdminDirector()" class="clearfix" style="padding-bottom:5px">
 							<h4>Upload Script: </h4>
-							<input type="file" ng-file-select="uploadScript($files)" ng-model="files" ng-accept="'*.pdf'" ng-multiple="true" ng-model-rejected="rejFiles">
+
+							<div ng-file-drop ng-file-select="uploadScript($files)" ng-model="files" ng-model-rejected="rejFiles"
+	                         drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}" class="drop-box"
+	                         ng-multiple="true" allow-dir="true" ng-accept="'*.pdf'"
+	                         drop-available="dropAvailable">
+	                            <div ng-hide="dropAvailable">File Drop not available</div>
+	                            <div ng-show="dropAvailable">Drop PDFs</div>
+	                            <div>or click to select</div>
+	                        </div>
+
 						</div>
 						<ul class="list-group">
 							<li class="list-group-item" ng-repeat="(key, script) in project.scripts">
@@ -92,9 +118,18 @@
 			            	Reference Files<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
 			            </h4>
 		        	</accordion-heading>
-						<div data-ng-show="permitAdminDirector()">
+						<div data-ng-show="permitAdminDirector()" class="clearfix" style="padding-bottom:5px">
 							<h4>Upload Reference: </h4>
-							<input type="file" ng-file-select="uploadReferenceFile($files)" ng-model="files" ng-accept="'*'" ng-multiple="true" ng-model-rejected="rejFiles">
+
+							<div ng-file-drop ng-file-select="uploadReferenceFile($files)" ng-model="files" ng-model-rejected="rejFiles"
+	                         drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}" class="drop-box"
+	                         ng-multiple="true" allow-dir="true" ng-accept="'*'"
+	                         drop-available="dropAvailable">
+	                            <div ng-hide="dropAvailable">File Drop not available</div>
+	                            <div ng-show="dropAvailable">Drop Anything you would like.</div>
+	                            <div>or click to select</div>
+	                        </div>
+
 						</div>
 						<ul class="list-group">
 							<li class="list-group-item" ng-repeat="(key, referenceFile) in project.referenceFiles">
@@ -171,9 +206,18 @@
 			            	Auditions<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
 			            </h4>
 		        	</accordion-heading>
-				 		<div data-ng-show="permitAdminDirector()">
+				 		<div data-ng-show="permitAdminDirector()" class="clearfix" style="padding-bottom:5px">
 							<h4>Upload Audition Files: (*.mp3,*.mp4,*.wav,*.ogg files only!)</h4>
-							<input type="file" ng-file-select="uploadAudition($files)" ng-model="files" ng-accept="'*.mp3,*.mp4,*.wav,*.ogg'" ng-multiple="true" ng-model-rejected="rejFiles">
+
+							<div ng-file-drop ng-file-select="uploadAudition($files)" ng-model="files" ng-model-rejected="rejFiles"
+	                         drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}" class="drop-box"
+	                         ng-multiple="true" allow-dir="true" ng-accept="'*.mp3,*.mp4,*.wav,*.ogg'"
+	                         drop-available="dropAvailable">
+	                            <div ng-hide="dropAvailable">File Drop not available</div>
+	                            <div ng-show="dropAvailable">Drop *.mp3,*.mp4,*.wav,*.ogg files..</div>
+	                            <div>or click to select</div>
+	                        </div>
+
 						</div>
 						<ul class="list-group">
 							<li class="list-group-item" ng-repeat="(key, audition) in project.auditions">
