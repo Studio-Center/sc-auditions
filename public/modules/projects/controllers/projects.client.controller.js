@@ -23,6 +23,12 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.audio = [];
 		$scope.newLead = {};
 
+		$scope.playerParams = {
+		    swf_path:'lib/audio5js/audio5js.swf',
+		    throw_errors:true,
+		    format_time:true
+		};
+
 		$scope.hoveringOver = function(value,key,object) {
 	        $scope.overStar = value;
 	        $scope.percent = 100 * (value / $scope.max);
@@ -698,7 +704,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 						if(typeof value.file !== 'undefined'){
 							if(value.file.type === 'audio/mp3' || value.file.type === 'audio/mpeg'){
 								var fileName = $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/res/auditions/'+$scope.project._id+'/'+value.file.name;
-								$scope.audio[key] = ngAudio.load(fileName);
+								$scope.audio[key] = new Audio5js($scope.playerParams);
+								$scope.audio[key].load(fileName);
 								if($scope.project.auditions.length === 1){
 									curVal = 1;
 								} else {
@@ -711,6 +718,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					}
 				});
 			}
+
 		};
 
 		$scope.verifyAudio = function(key){
@@ -722,6 +730,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		};
 
 		$scope.playAudio = function(key){
+
 			// disable all existing audio playback
 			for(var i = 0; i < $scope.project.auditions.length; ++i){
 				if(key !== i) {
@@ -730,7 +739,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					}
 				}
 			}
-
 			$scope.audio[key].play();
 		};
 

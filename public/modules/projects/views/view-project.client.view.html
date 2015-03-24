@@ -224,8 +224,8 @@
 								<fieldset>
 									<a href="/res/auditions/{{project._id}}/{{audition.file.name}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable">ngAudio</a> 
 									<span ng-show="verifyAudio(key)">
-										<button ng-click='audio[key].paused ? playAudio(key) : audio[key].pause()'>Play</button> 
-										<button ng-click='audio[key].stop()'>Stop</button>
+										<button ng-click='playAudio(key)'>Play</button> 
+										<button ng-click='audio[key].pause()'>Stop</button>
 									</span>
 										<button data-ng-show="permitAdminDirector()" ng-click="delAudition(key)"><img src="/img/delete.png" alt="delete"></button>
 										<button ng-show="showRename === 0" ng-click="showRename = 1">rename</button>
