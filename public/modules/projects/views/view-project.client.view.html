@@ -68,7 +68,7 @@
 		        	</accordion-heading>
 						<div data-ng-show="permitAdminDirector()">
 							<h4>Upload Script: </h4>
-							<input type="file" ng-file-select="uploadScript($files)" ng-model="files" ng-accept="'*'" ng-multiple="true" ng-model-rejected="rejFiles">
+							<input type="file" ng-file-select="uploadScript($files)" ng-model="files" ng-accept="'*.pdf'" ng-multiple="true" ng-model-rejected="rejFiles">
 						</div>
 						<ul class="list-group">
 							<li class="list-group-item" ng-repeat="(key, script) in project.scripts">
@@ -94,7 +94,7 @@
 		        	</accordion-heading>
 						<div data-ng-show="permitAdminDirector()">
 							<h4>Upload Reference: </h4>
-							<input type="file" ng-file-select="uploadReferenceFile($files)" ng-model="files" ng-accept="'*.pdf'" ng-multiple="true" ng-model-rejected="rejFiles">
+							<input type="file" ng-file-select="uploadReferenceFile($files)" ng-model="files" ng-accept="'*'" ng-multiple="true" ng-model-rejected="rejFiles">
 						</div>
 						<ul class="list-group">
 							<li class="list-group-item" ng-repeat="(key, referenceFile) in project.referenceFiles">
