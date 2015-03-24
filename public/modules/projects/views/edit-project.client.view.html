@@ -71,6 +71,16 @@
                 <div class="form-group">
                     <label class="control-label" for="name">Script (PDF only!)</label>
                     <div class="controls">
+
+                        <div ng-file-drop ng-file-select="uploadScript($files)" ng-model="files" ng-model-rejected="rejFiles"
+                         drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}" class="drop-box"
+                         ng-multiple="true" allow-dir="true" ng-accept="'*.pdf'"
+                         drop-available="dropAvailable">
+                            <div ng-hide="dropAvailable">File Drop not available</div>
+                            <div ng-show="dropAvailable">Drop Images or PDFs</div>
+                            <div>click to select</div>
+                        </div>
+
                         <input type="file" ng-file-select="uploadScript($files)" ng-model="files" ng-accept="'*.pdf'" ng-model-rejected="rejFiles" required>
                     </div>
                 </div>
