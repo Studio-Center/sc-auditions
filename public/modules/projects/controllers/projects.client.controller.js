@@ -614,7 +614,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			this.findOne();
 
 			// enable audio load after watch
-			//$scope.loadAudio = 1;
+			$scope.loadAudio = 0;
 		};
 
 		// load audio files into player after project object has finished loading
@@ -636,9 +636,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				$scope.$watch('project.auditions', function(val){
 
 					if(typeof $scope.project.auditions === 'object'){
-						//if($scope.loadAudio === 1){
+						if($scope.loadAudio === 0){
 							$scope.loadAudioPlayer();	
-						//}
+							$scope.loadAudio = 1;
+						}
 
 						// load audition ratings
 						for(var i = 0; i < $scope.project.auditions.length; ++i){
@@ -936,6 +937,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			// verify user wants to delete file
 			if (confirm('Are you sure?')) {
 
+				// tell audio system to reload files
+				$scope.loadAudio = 0;
+
 				var file = '/res/auditions/' + $scope.project._id + '/' + $scope.project.auditions[idx].file.name;
 
 				// send update email
@@ -959,6 +963,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		};
 
 		$scope.uploadAudition = function($files) {
+
+			// tell audio system to reload files
+			$scope.loadAudio = 0;
 	     
 			// send update email
 			$scope.gatherToAddresses('uploadAudition');
