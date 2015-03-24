@@ -10,17 +10,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.isReadonly = false;
 		$scope.ratings = [];
 		$scope.ratingsAvg = [];
+		// static project options
 		$scope.selCheckVal = 0;
 		$scope.client = [];
 		$scope.talent = [];
-
-		$scope.hoveringOver = function(value,key,object) {
-	        $scope.overStar = value;
-	        $scope.percent = 100 * (value / $scope.max);
-	        $scope.selCheckVal = value;
-      	};
-
-		// static project options
+		$scope.showRename = 0;
 		$scope.statusOpts = ['In Progress', 'On Hold', 'Booked', 'Canceled', 'ReAuditioned', 'Dead'];
 		$scope.priorityOpts = ['None', 'Very low', 'Low', 'Medium', 'High', 'Very high'];
 		$scope.phaseStatusOpts = ['in progress','open','complete','suspended'];
@@ -28,6 +22,12 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.loadAudio = 0;
 		$scope.audio = [];
 		$scope.newLead = {};
+
+		$scope.hoveringOver = function(value,key,object) {
+	        $scope.overStar = value;
+	        $scope.percent = 100 * (value / $scope.max);
+	        $scope.selCheckVal = value;
+      	};
 
 		// verify users
 		$scope.permitAdminDirector = function(){
@@ -629,29 +629,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.$watch('project', function(val){
 
 			if(typeof $scope.project === 'object'){
-				$scope.$watch('project.auditions', function(val){
-
-					if(typeof $scope.project.auditions === 'object'){
-						//if($scope.loadAudio === 1){
-							$scope.loadAudioPlayer();	
-						//}
-
-						// load audition ratings
-						for(var i = 0; i < $scope.project.auditions.length; ++i){
-							// gather average value 
-							$scope.ratingsAvg[i] = 0;
-							// gather per user rating
-							for(var j = 0; j < $scope.project.auditions[i].rating.length; ++j){
-								if($scope.project.auditions[i].rating[j].userId === String(Authentication.user._id)){
-									$scope.ratings[i] = $scope.project.auditions[i].rating[j].value;
-								}
-								$scope.ratingsAvg[i] += $scope.project.auditions[i].rating[j].value;
-							}
-							$scope.ratingsAvg[i] = $scope.ratingsAvg[i] / $scope.project.auditions[i].rating.length;
-						}
-					}
-				});
-
 				// update progress bar
 				$scope.$watch('project.phases', function(val){
 
@@ -678,6 +655,29 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					}
 
 				});
+			}
+		});
+
+		$scope.$watch('project.auditions', function(val){
+
+			if(typeof $scope.project.auditions === 'object'){
+				//if($scope.loadAudio === 1){
+					$scope.loadAudioPlayer();	
+				//}
+
+				// load audition ratings
+				for(var i = 0; i < $scope.project.auditions.length; ++i){
+					// gather average value 
+					$scope.ratingsAvg[i] = 0;
+					// gather per user rating
+					for(var j = 0; j < $scope.project.auditions[i].rating.length; ++j){
+						if($scope.project.auditions[i].rating[j].userId === String(Authentication.user._id)){
+							$scope.ratings[i] = $scope.project.auditions[i].rating[j].value;
+						}
+						$scope.ratingsAvg[i] += $scope.project.auditions[i].rating[j].value;
+					}
+					$scope.ratingsAvg[i] = $scope.ratingsAvg[i] / $scope.project.auditions[i].rating.length;
+				}
 			}
 		});
 
