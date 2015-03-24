@@ -10,7 +10,7 @@
                             <option value="created">Created</option>
                             <option value="title">Name</option>
                             <option value="estimatedCompletionDate">Due Time</option>
-                            <option value="user">Project Creator</option>
+                            <option value="user._id">Project Creator</option>
                             <option value="status">Status</option>
                         </select>
 
@@ -18,6 +18,9 @@
                             <option value="">Asc</option>
                             <option value="reverse">Desc</option>
                         </select>
+
+    <label>My Projects:</label> <input type="checkbox" name="userProjFilter" id="userProjFilter" ng-model="searchText" ng-true-value="{{authentication.user._id}}" ng-false-value="">
+
     <div class="list-group">
         <a data-ng-repeat="project in projects | filter:searchText | orderBy: sortText : sortTextOrder" data-ng-href="#!/projects/{{project._id}}" class="list-group-item">
             <div class="row">
