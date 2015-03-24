@@ -686,6 +686,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			if(typeof $scope.project.auditions !== 'undefined'){
 				for(var i = 0; i < $scope.project.auditions.length; ++i){
 					if($scope.project.auditions[i]){
+						console.log($scope.project.auditions[i]);
 						if(typeof $scope.project.auditions[i].file !== 'undefined'){
 							if($scope.project.auditions[i].file.type === 'audio/mp3'){
 								$scope.audio[i] = ngAudio.load('/res/auditions/'+$scope.project._id+'/'+$scope.project.auditions[i].file.name);
