@@ -596,6 +596,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		// Find a list of Projects
 		$scope.find = function() {
 			$scope.projects = Projects.query();
+			$scope.loadAudioPlayer();	
 		};
 
 		// Find existing Project
@@ -629,11 +630,12 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 			if(typeof $scope.project === 'object'){
 				$scope.$watch('project.auditions', function(val){
-					//if($scope.loadAudio === 1){
-						$scope.loadAudioPlayer();	
-					//}
 
 					if(typeof $scope.project.auditions === 'object'){
+						//if($scope.loadAudio === 1){
+							$scope.loadAudioPlayer();	
+						//}
+
 						// load audition ratings
 						for(var i = 0; i < $scope.project.auditions.length; ++i){
 							// gather average value 
@@ -697,6 +699,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.verifyAudio = function(key){
 			if(typeof $scope.audio[key] === 'object'){
 				return true;
+
 			}
 			return false;
 		};
