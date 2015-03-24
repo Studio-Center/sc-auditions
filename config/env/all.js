@@ -34,8 +34,6 @@ module.exports = {
 				'public/lib/angular-ui-router/release/angular-ui-router.js',
 				'public/lib/angular-ui-utils/ui-utils.js',
 				'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
-				'public/lib/audio5js/audio5.min.js',
-				'public/modules/ngAudio5.js',
 				'public/lib/ngAudio/app/angular.audio.js',
 				'public/lib/angular-bootstrap-datetimepicker/src/js/datetimepicker.js'
 			]
