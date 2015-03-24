@@ -689,15 +689,15 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				if($scope.project.auditions.length > 1){
 					loadCnt = loadCnt - 1;
 				}
-				for(var i = 0; i < $scope.project.auditions.length; ++i){
-					if($scope.project.auditions[i]){
-						if(typeof $scope.project.auditions[i].file !== 'undefined'){
-							if($scope.project.auditions[i].file.type === 'audio/mp3' || $scope.project.auditions[i].file.type === 'audio/mpeg'){
-								$scope.audio[i] = ngAudio.load('/res/auditions/'+$scope.project._id+'/'+$scope.project.auditions[i].file.name);
+				angular.forEach($scope.project.auditions, function(value, key){
+					if(value){
+						if(typeof value.file !== 'undefined'){
+							if(value.file.type === 'audio/mp3' || value.file.type === 'audio/mpeg'){
+								$scope.audio[key] = ngAudio.load('/res/auditions/'+$scope.project._id+'/'+value.file.name);
 								if($scope.project.auditions.length === 1){
 									curVal = 1;
 								} else {
-									curVal = i;
+									curVal = key;
 								}
 								$scope.uploadfile = 'loading audio ' + parseInt(100.0 * curVal / loadCnt) + '%';
 								$scope.uploadprogress = parseInt(100.0 * curVal / loadCnt);
@@ -705,7 +705,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 							}
 						}
 					}
-				}
+				});
 			}
 		};
 
