@@ -73,7 +73,7 @@
 						<ul class="list-group">
 							<li class="list-group-item" ng-repeat="(key, script) in project.scripts">
 								<fieldset>
-									<a href="/res/scripts/{{project._id}}/{{script.file.name}}" target="_blank" data-ng-bind="script.file.name"></a> 
+									<strong>{{key+1}}.</strong> <a href="/res/scripts/{{project._id}}/{{script.file.name}}" target="_blank" data-ng-bind="script.file.name"></a> 
 									<a href="/res/scripts/{{project._id}}/{{script.file.name}}" target="_blank"><img src="/img/Adobe-Acrobat-icon.png" alt="download PDF"></a>
 									<button data-ng-show="permitAdminDirector()" ng-click="delScript(key)" target="_blank"><img src="/img/delete.png" alt="delete"></button>
 								</fieldset>
@@ -108,7 +108,7 @@
 						<ul class="list-group">
 							<li class="list-group-item" ng-repeat="(key, referenceFile) in project.referenceFiles">
 								<fieldset>
-									<a href="/res/referenceFiles/{{project._id}}/{{referenceFile.file.name}}" target="_blank" data-ng-bind="referenceFile.file.name"></a> 
+									<strong>{{key+1}}.</strong> <a href="/res/referenceFiles/{{project._id}}/{{referenceFile.file.name}}" target="_blank" data-ng-bind="referenceFile.file.name"></a> 
 									<a href="/res/referenceFiles/{{project._id}}/{{referenceFile.file.name}}" target="_blank"></a>
 									<button data-ng-show="permitAdminDirector()" ng-click="delReferenceFile(key)" target="_blank"><img src="/img/delete.png" alt="delete"></button>
 								</fieldset>
@@ -196,7 +196,7 @@
 						<ul class="list-group">
 							<li class="list-group-item" ng-repeat="(key, audition) in project.auditions">
 								<fieldset>
-									<a href="/res/auditions/{{project._id}}/{{audition.file.name}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable">ngAudio</a> 
+									<strong>{{key+1}}.</strong> <a href="/res/auditions/{{project._id}}/{{audition.file.name}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable">ngAudio</a> 
 									<span ng-show="verifyAudio(key)">
 										<button ng-click='playAudio(key);audio[key].play()'>Play</button> 
 										<button ng-click='stopAudio()'>Stop</button>

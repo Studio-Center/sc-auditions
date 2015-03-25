@@ -4,7 +4,7 @@
         <a class="btn btn-default" href="#!/usersedit/create">Create New User</a>
     </div>
     <label>Search:</label> <input ng-model="searchText" class="form-control">
-    <div class="list-group">
+    <div class="list-group item-list">
         <a data-ng-repeat="user in users | filter:searchText" data-ng-href="#!/usersedit/{{user._id}}" class="list-group-item">
 			<small class="list-group-item-text">
 				Created

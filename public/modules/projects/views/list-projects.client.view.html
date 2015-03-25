@@ -34,7 +34,7 @@
     </div>
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
-            <div class="list-group">
+            <div class="list-group item-list">
                 <a data-ng-repeat="project in projects | filter:searchText | orderBy: sortText : sortTextOrder" data-ng-href="#!/projects/{{project._id}}" class="list-group-item">
                     <div class="row">
                         <div class="col-lg-8 col-md-8 col-sm-8"><h4 class="list-group-item-heading">{{project.title}} <small>Due {{project.estimatedCompletionDate | date:'short'}}</small> </h4></div>
