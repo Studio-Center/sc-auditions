@@ -160,9 +160,34 @@
 					            </script>
 					            <div class="controls" ng-module="talents">
 					                <div ng-controller="TalentsController" data-ng-init="find()">
-					                	<label>Search:</label> <input ng-model="filterTeam">
+					                	<label>Search:</label> <input ng-model="filterTeam" class="form-control">
 										<ul class="list-group">
-											<li class="list-group-item" ng-repeat="(key, talent) in talents | filter:filterTeam"><input type="checkbox" value="{{talent._id}}" ng-click="updateTalent(talent._id, talent.name)" ng-checked="checkTalent(talent._id)"> {{talent.name}}</li>
+											<li class="list-group-item">
+												<div class="row">
+													<div class="col-lg-1 col-md-1 col-sm-1">
+														<b>C</b>
+													</div>
+													<div class="col-lg-1 col-md-1 col-sm-1">
+														<b>R</b>
+													</div>
+													<div class="col-lg-10 col-md-10 col-sm-10">
+														<b>Info</b>
+													</div>
+												</div>
+											</li>
+											<li class="list-group-item" ng-repeat="(key, talent) in talents | filter:filterTeam"> 
+												<div class="row">
+													<div class="col-lg-1 col-md-1 col-sm-1">
+														<input type="checkbox" value="{{talent._id}}" ng-click="updateTalent(talent._id, talent.name)" ng-checked="checkTalent(talent._id)">
+													</div>
+													<div class="col-lg-1 col-md-1 col-sm-1">
+														<input type="checkbox" value="{{talent._id}}" ng-click="updateTalent(talent._id, talent.name)" ng-checked="checkTalent(talent._id)">
+													</div>
+													<div class="col-lg-10 col-md-10 col-sm-10">
+														{{talent.name}} {{talent.lastName}} {{talent.locationISDN}} {{talent.outageTimes}}
+													</div>
+												</div>
+											</li>
 										</ul>
 									</div>
 								</div>
@@ -258,7 +283,7 @@
 					            </script>
 					            <div class="controls" ng-module="users">
 					                <div ng-controller="UsersController" data-ng-init="findFilter('client')">
-					                	<label>Search:</label> <input ng-model="filterClient">
+					                	<label>Search:</label> <input ng-model="filterClient" class="form-control">
 										<ul class="list-group">
 											<li class="list-group-item" ng-repeat="(key, user) in users | filter:filterClient"><input type="checkbox" value="{{user._id}}" ng-click="updateClient(user._id, user.displayName, user.email)" ng-checked="checkClientUsers(user._id)"> <a target="_blank" href="/#!/usersedit/{{user._id}}">{{user.displayName}}</a></li>
 										</ul>
@@ -294,7 +319,7 @@
 					            </script>
 					            <div class="controls" ng-module="users">
 					                <div ng-controller="UsersController" data-ng-init="findFilter('client-client')">
-					                	<label>Search:</label> <input ng-model="filterClientClient">
+					                	<label>Search:</label> <input ng-model="filterClientClient" class="form-control">
 										<ul class="list-group">
 											<li class="list-group-item" ng-repeat="(key, user) in users | filter:filterClientClient"><input type="checkbox" value="{{user._id}}" ng-click="updateClientClient(user._id, user.displayName, user.email)" ng-checked="checkClientClientUsers(user._id)"> <a target="_blank" href="/#!/usersedit/{{user._id}}">{{user.displayName}}</a></li>
 										</ul>
