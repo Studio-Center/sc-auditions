@@ -21,6 +21,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.talentStatus = ['Cast', 'Emailed', 'Scheduled', 'Message left', 'Out', 'Received needs to be posted', 'Posted', 'Not Posted (Bad Read)'];
 		$scope.loadAudio = 0;
 		$scope.audio = [];
+		$scope.lastAudioID = 0;
 		$scope.newLead = {};
 
 		$scope.hoveringOver = function(value,key,object) {
@@ -636,10 +637,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				$scope.$watch('project.auditions', function(val){
 
 					if(typeof $scope.project.auditions === 'object'){
-						if($scope.loadAudio === 0){
-							$scope.loadAudioPlayer();	
-							$scope.loadAudio = 1;
-						}
+						// if($scope.loadAudio === 0){
+						// 	$scope.loadAudioPlayer();	
+						// 	$scope.loadAudio = 1;
+						// }
 
 						// load audition ratings
 						for(var i = 0; i < $scope.project.auditions.length; ++i){
@@ -703,9 +704,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 								if(typeof $scope.audio[key] === 'object'){
 									if($scope.audio[key].id !== fileName){
 										$scope.audio[key] = ngAudio.load(fileName);
+										$scope.audio[key].unbind();
 									}
 								} else {
 									$scope.audio[key] = ngAudio.load(fileName);
+									$scope.audio[key].unbind();
 								}
 								if($scope.project.auditions.length === 1){
 									curVal = 1;
@@ -722,24 +725,42 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		};
 
 		$scope.verifyAudio = function(key){
-			if(typeof $scope.audio[key] === 'object'){
-				return true;
-
+			if(typeof $scope.project.auditions[key] === 'object'){
+				if(typeof $scope.project.auditions[key].file === 'object'){
+					return true;
+				}
 			}
 			return false;
 		};
 
+		$scope.stopAudio = function(){
+			if(typeof $scope.audio[$scope.lastAudioID] === 'object'){
+				$scope.audio[$scope.lastAudioID].stop();
+			}
+		}
+
 		$scope.playAudio = function(key){
-			// disable all existing audio playback
-			for(var i = 0; i < $scope.project.auditions.length; ++i){
-				if(key !== i) {
-					if(typeof $scope.audio[i] === 'object'){
-						$scope.audio[i].pause();
-					}
+			// disable previous
+			if(typeof $scope.audio[$scope.lastAudioID] === 'object'){
+				if(key !== $scope.lastAudioID){
+					$scope.audio[$scope.lastAudioID].stop();
 				}
 			}
 
+			// assign file name
+			var fileName = '/res/auditions/' + $scope.project._id + '/' + $scope.project.auditions[key].file.name;
+
+			if(typeof $scope.audio[key] === 'object'){
+				if($scope.audio[key].id !== fileName){
+					$scope.audio[key] = ngAudio.load(fileName);
+					$scope.audio[key].unbind();
+				}
+			} else {
+				$scope.audio[key] = ngAudio.load(fileName);
+				$scope.audio[key].unbind();
+			}
 			$scope.audio[key].play();
+			$scope.lastAudioID = key;
 		};
 
 		// save discussion item
