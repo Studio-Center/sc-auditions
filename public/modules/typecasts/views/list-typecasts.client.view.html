@@ -4,7 +4,7 @@
         <a class="btn btn-default" href="#!/typecasts/create">Create New Typecast</a>
     </div>
     <label>Search:</label> <input ng-model="searchText" class="form-control">
-    <div class="list-group">
+    <div class="list-group item-list">
         <a data-ng-repeat="typecast in typecasts | filter:searchText" data-ng-href="#!/typecasts/{{typecast._id}}" class="list-group-item">
 			<small class="list-group-item-text">
 				Posted on

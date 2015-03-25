@@ -4,7 +4,7 @@
         <a class="btn btn-default" href="#!/talents/create">Create New Talent</a>
     </div>
     <label>Search:</label> <input ng-model="searchText" class="form-control">
-    <div class="list-group">
+    <div class="list-group item-list">
         <a data-ng-repeat="talent in talents | filter:searchText" data-ng-href="#!/talents/{{talent._id}}" class="list-group-item">
 			<small class="list-group-item-text">
 				Added
