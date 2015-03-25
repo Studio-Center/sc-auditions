@@ -1,35 +1,50 @@
 <section data-ng-controller="ProjectsController" data-ng-init="find()">
     <div class="page-header">
         <h1>Projects</h1>
-        <a data-ng-show="permitAdminDirector()" class="btn btn-default" href="#!/projects/create">New Project</a>
+        <a data-ng-show="permitAdminDirector()" class="btn btn-default" href="#!/projects/create">Create New Project</a>
         <a ng-show="permitClient() === true" class="btn btn-default" href="#!/projects/new-audition-form">Start A New Audition Project</a>
     </div>
-    <label>Search:</label> <input ng-model="searchText">
-
-    <label>Sort:</label> <select ng-model="sortText" ng-init="sortText = 'created'">
-                            <option value="created">Created</option>
-                            <option value="title">Name</option>
-                            <option value="estimatedCompletionDate">Due Time</option>
-                            <option value="user._id">Project Creator</option>
-                            <option value="status">Status</option>
-                        </select>
-
-    <label>Order:</label> <select ng-init="sortTextOrder = 'reverse'" ng-model="sortTextOrder">
-                            <option value="">Asc</option>
-                            <option value="reverse">Desc</option>
-                        </select>
-
-    <label>My Projects:</label> <input type="checkbox" name="userProjFilter" id="userProjFilter" ng-model="searchText" ng-true-value="{{authentication.user._id}}" ng-false-value="">
-
-    <div class="list-group">
-        <a data-ng-repeat="project in projects | filter:searchText | orderBy: sortText : sortTextOrder" data-ng-href="#!/projects/{{project._id}}" class="list-group-item">
-            <div class="row">
-                <div class="col-lg-8 col-md-8 col-sm-8"><h4 class="list-group-item-heading">{{project.title}} <small>Due {{project.estimatedCompletionDate | date:'short'}}</small> </h4></div>
-                <div class="col-lg-4 col-md-4 col-sm-4"><h4><small>Created {{project.created | date:'short'}} by {{project.user.displayName}}</small></h4></div>
-            </div>
-        </a>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <h4>Filter Options</h4>
+        </div>
     </div>
-    <div class="alert alert-warning text-center" data-ng-hide="!projects.$resolved || projects.length">
-    	No Projects yet, why don't you <a href="/#!/projects/create">create one</a>?
+    <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-3">
+            <label>Search:</label> <input ng-model="searchText" class="form-control">
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3">
+            <label>Sort:</label> <select ng-model="sortText" ng-init="sortText = 'created'" class="form-control">
+                                    <option value="created">Created</option>
+                                    <option value="title">Name</option>
+                                    <option value="estimatedCompletionDate">Due Time</option>
+                                    <option value="user._id">Project Creator</option>
+                                    <option value="status">Status</option>
+                                </select>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3">
+            <label>Order:</label> <select ng-init="sortTextOrder = 'reverse'" ng-model="sortTextOrder" class="form-control">
+                                    <option value="">Asc</option>
+                                    <option value="reverse">Desc</option>
+                                </select>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3">
+            <label>My Projects:</label> <input type="checkbox" name="userProjFilter" id="userProjFilter" ng-model="searchText" ng-true-value="{{authentication.user._id}}" ng-false-value="" class="form-control">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="list-group">
+                <a data-ng-repeat="project in projects | filter:searchText | orderBy: sortText : sortTextOrder" data-ng-href="#!/projects/{{project._id}}" class="list-group-item">
+                    <div class="row">
+                        <div class="col-lg-8 col-md-8 col-sm-8"><h4 class="list-group-item-heading">{{project.title}} <small>Due {{project.estimatedCompletionDate | date:'short'}}</small> </h4></div>
+                        <div class="col-lg-4 col-md-4 col-sm-4"><h4><small>Created {{project.created | date:'short'}} by {{project.user.displayName}}</small></h4></div>
+                    </div>
+                </a>
+            </div>
+            <div class="alert alert-warning text-center" data-ng-hide="!projects.$resolved || projects.length">
+            	No Projects yet, why don't you <a href="/#!/projects/create">create one</a>?
+            </div>
+        </div>
     </div>
 </section>

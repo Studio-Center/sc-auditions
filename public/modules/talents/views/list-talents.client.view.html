@@ -1,9 +1,9 @@
 <section data-ng-controller="TalentsController" data-ng-init="find()">
     <div class="page-header">
         <h1>Talent</h1>
-        <a class="btn btn-default" href="#!/talents/create">New Talent</a>
+        <a class="btn btn-default" href="#!/talents/create">Create New Talent</a>
     </div>
-    <label>Search:</label> <input ng-model="searchText">
+    <label>Search:</label> <input ng-model="searchText" class="form-control">
     <div class="list-group">
         <a data-ng-repeat="talent in talents | filter:searchText" data-ng-href="#!/talents/{{talent._id}}" class="list-group-item">
 			<small class="list-group-item-text">

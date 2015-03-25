@@ -13,3 +13,35 @@
 .ng-valid.ng-dirty{
     border-color:#78FA89;
 }
+/* bootstrap overrides */
+.list-group a:nth-child(even) {
+    background:#d4d4d4;
+}
+.list-group a:nth-child(even):hover {
+    background:#fff;
+}
+/* drop box styles */
+.panel-heading {
+    cursor: pointer;
+}
+.drop-box {
+	background: #F8F8F8;
+	border: 5px dashed #DDD;
+	width: 100%;
+	height: 100px;
+	text-align: center;
+	padding-top: 25px;
+	float: left;
+	margin-left: 10px;
+}
+.drop-box.dragover {
+	border: 5px dashed blue;
+}
+
+.drop-box.dragover-err {
+	border: 5px dashed red;
+}
+/* projects view specific */
+.strike-if{
+	text-decoration:line-through;
+}
