@@ -597,7 +597,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 			// update project store
 			$scope.update();
-		}
+		};
 		// Find a list of Projects
 		$scope.find = function() {
 			$scope.projects = Projects.query();
@@ -759,7 +759,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				$scope.audio[key] = ngAudio.load(fileName);
 				$scope.audio[key].unbind();
 			}
-			$scope.audio[key].play();
+			//$scope.audio[key].play();
 			$scope.lastAudioID = key;
 		};
 

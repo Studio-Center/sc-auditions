@@ -224,14 +224,15 @@
 								<fieldset>
 									<a href="/res/auditions/{{project._id}}/{{audition.file.name}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable">ngAudio</a> 
 									<span ng-show="verifyAudio(key)">
-										<button ng-click='playAudio(key)'>Play</button> 
+										<button ng-click='playAudio(key);audio[key].play()'>Play</button> 
 										<button ng-click='stopAudio()'>Stop</button>
 									</span>
 										<button data-ng-show="permitAdminDirector()" ng-click="delAudition(key)"><img src="/img/delete.png" alt="delete"></button>
 										<button ng-show="showRename === 0" ng-click="showRename = 1">rename</button>
 								</fieldset>
 								<fieldset ng-show="showRename">
-									<input type="text" ng-model="project.auditions[key].rename" placeholder="Enter new filename" class="form-control"><button ng-click="update();showRename = 0;">Update</button>
+									<input type="text" ng-model="project.auditions[key].rename" placeholder="Enter new filename" class="form-control">
+									<button ng-click="update();showRename = 0;">Update</button><button ng-click="showRename = 0;">Cancel</button>
 								</fieldset>
 								<fieldset>
 									<label>Published</label>
