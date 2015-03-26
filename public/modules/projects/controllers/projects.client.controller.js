@@ -109,6 +109,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				email: {
 					projectId: $scope.project._id,
 					to: [],
+					bcc: [],
 					subject: '',
 					message: ''
 				}
