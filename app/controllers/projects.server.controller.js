@@ -40,6 +40,73 @@ var procEmail = function(project, req){
 	delete project.email;
 };
 
+exports.sendEmail = function(req, res){
+
+	// ensure email body is not blank
+	if(typeof req.body.email !== 'undefined'){
+
+		// gather admin and producers emails to include in send
+		async.waterfall([
+			function(done) {
+				User.find({'roles':'admin'}).sort('-created').exec(function(err, admins) {
+					done(err, admins);
+				});
+			},
+			function(admins, done) {
+				User.find({'roles':'producer/auditions director'}).sort('-created').exec(function(err, directors) {
+					done(err, admins, directors);
+				});
+			},
+			function(admins, directors, done) {
+				User.find({'roles':'production coordinator'}).sort('-created').exec(function(err, coordinators) {
+					done(err, admins, directors, coordinators);
+				});
+			},
+			function(admins, directors, coordinators, done) {
+				User.find({'roles':'talent director'}).sort('-created').exec(function(err, talentdirectors) {
+					done(err, admins, directors, coordinators, talentdirectors);
+				});
+			},
+			function(admins, directors, coordinators, talentdirectors, done) {
+				var email = req.body.email;
+
+				// add previously queried roles to email list
+				var i, bcc = [];
+				for(i = 0; i < admins.length; ++i){
+					bcc.push(admins[i].email);
+				}
+				for(i = 0; i < directors.length; ++i){
+					bcc.push(directors[i].email);
+				}
+				for(i = 0; i < coordinators.length; ++i){
+					bcc.push(coordinators[i].email);
+				}
+				for(i = 0; i < talentdirectors.length; ++i){
+					bcc.push(talentdirectors[i].email);
+				}
+
+				// append default footer to email
+				email.message += '\n' + 'The ' + config.app.title + ' Support Team' + '\n';
+				email.message += '\n' + 'To view your StudioCenterAuditions.com Home Page, visit:' + '\n';
+				email.message += 'http://' + req.headers.host + '\n';
+
+				// send email
+				var transporter = nodemailer.createTransport(config.mailer.options);
+				transporter.sendMail({
+				    from: config.mailer.from,
+				    to: email.to,
+				    bcc: bcc,
+				    subject: email.subject,
+				    text: email.message
+				});
+			},
+			], function(err) {
+			if (err) return next(err);
+		});
+
+	}
+};
+
 // send emails from lead form
 exports.lead = function(req, res){
 

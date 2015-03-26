@@ -22,6 +22,9 @@ module.exports = function(app) {
 	app.route('/projects/lead')
 		.post(users.requiresLogin, projects.lead);
 
+	app.route('/projects/sendemail')
+		.post(users.requiresLogin, projects.sendEmail);
+
 	app.route('/projects/uploads')
 		.post(users.requiresLogin, multipartyMiddleware, projects.uploadFile);
 
