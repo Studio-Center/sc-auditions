@@ -16,7 +16,7 @@ module.exports = function(app) {
 		.put(users.update);
 
 	app.route('/usersfind/:userLevel')
-		.get(users.getListLevel, users.hasAuthorization);
+		.get(users.hasAuthorization, users.getListLevel);
 
 	app.route('/usersedit')
 		.get(users.requiresLogin, users.list, users.hasAuthorization)
