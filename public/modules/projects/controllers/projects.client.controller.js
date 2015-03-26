@@ -23,6 +23,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.audio = [];
 		$scope.lastAudioID = 0;
 		$scope.newLead = {};
+		$scope.referenceFiles = [];
+		$scope.scripts = [];
 
 		$scope.hoveringOver = function(value,key,object) {
 	        $scope.overStar = value;
@@ -86,7 +88,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			        email: $scope.newLead.email,
 			        describe: $scope.newLead.describe
 			    }).
-			success(function(data, status, headers, config) {
+				success(function(data, status, headers, config) {
             	$location.path('/projects/new-audition-form/thanks');
         	});
 		};
@@ -495,6 +497,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				actualTime: this.actualTime,
 				status: this.status,
 				scripts: this.scripts,
+				referenceFiles: this.referenceFiles,
 				description: this.description,
 				client: this.client,
 				talent: this.talent
@@ -813,6 +816,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 				$scope.project.deleteFiles[delFileCnt] = file;
 
+				$http.put('/projects/deletefile', {
+			        fileLocation: file
+			    });
+
 				$scope.project.scripts.splice(idx, 1);
 
 				// update project store
@@ -820,6 +827,16 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				
 			}
 		};
+
+		$scope.delTempScript = function(idx){
+			var file = '/res/scripts/temp/' + $scope.scripts[idx].file.name;
+
+			$http.post('/projects/deletefile', {
+		        fileLocation: file
+		    });
+
+		    $scope.scripts.splice(idx, 1);
+		}
 
 		$scope.uploadScript = function($files) {
 	    //$files: an array of files selected, each file has name, size, and type.
@@ -875,8 +892,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	    for (var i = 0; i < $files.length; i++) {
 	      var file = $files[i];
 
-		  $scope.scripts = [];
-
 	      $scope.upload = $upload.upload({
 	        url: 'projects/uploads/script/temp', //upload.php script, node.js route, or servlet url 
 	        data: {project: $scope.project},
@@ -888,7 +903,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	      }).success(function(data, status, headers, config) {
 	        // file is uploaded successfully 
 	        //console.log(data);
-	        $scope.scripts = angular.extend($scope.scripts, data);
+	        $scope.scripts.push(data[0]);
 	      });
     	 }
 	  	};
@@ -935,6 +950,37 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     	 }
 	  	};
 
+	  	$scope.uploadTempReferenceFile = function($files) {
+		    //$files: an array of files selected, each file has name, size, and type. 
+		    for (var i = 0; i < $files.length; i++) {
+		      var file = $files[i];
+
+			    $scope.upload = $upload.upload({
+			        url: 'projects/uploads/referenceFile/temp', //upload.php script, node.js route, or servlet url 
+			        data: {project: $scope.project},
+			        file: file, // or list of files ($files) for html5 only 
+			    }).progress(function(evt) {
+			        $scope.uploadStatus = i + ' of ' + $files.length + ' files uploaded';
+			      	$scope.uploadfile = evt.config.file.name;
+			        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
+			    }).success(function(data, status, headers, config) {
+			        // file is uploaded successfully 
+			        //console.log(data);
+			        $scope.referenceFiles.push(data[0]);
+			    });
+	    	}
+	  	};
+
+	  	$scope.delTempReferenceFile = function(idx){
+			var file = '/res/referenceFiles/temp/' + $scope.referenceFiles[idx].file.name;
+
+			$http.post('/projects/deletefile', {
+		        fileLocation: file
+		    });
+
+		    $scope.referenceFiles.splice(idx, 1);
+		}
+
 	  	$scope.delReferenceFile = function(idx){
 			// verify user wants to delete file
 			if (confirm('Are you sure?')) {
@@ -949,9 +995,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			    $scope.project.email.message += 'By: ' + Authentication.user.displayName + '\n';
 			    $scope.project.email.message += '\n' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '\n';
 
-				var delFileCnt = $scope.project.deleteFiles.length;
-
-				$scope.project.deleteFiles[delFileCnt] = file;
+				$http.post('/projects/deletefile', {
+			        fileLocation: file
+			    });
 
 				$scope.project.auditions.splice(idx, 1);
 
@@ -978,9 +1024,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			    $scope.project.email.message += 'By: ' + Authentication.user.displayName + '\n';
 			    $scope.project.email.message += '\n' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '\n';
 
-				var delFileCnt = $scope.project.deleteFiles.length;
-
-				$scope.project.deleteFiles[delFileCnt] = file;
+				$http.post('/projects/deletefile', {
+			        fileLocation: file
+			    });
 
 				$scope.project.auditions.splice(idx, 1);
 
