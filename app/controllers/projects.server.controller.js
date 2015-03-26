@@ -81,28 +81,59 @@ exports.create = function(req, res) {
 				res.jsonp(project);
 
 				// move new saved files from temp to project id based directory
-				if(typeof project.scripts[0] !== 'undefined'){
-					var appDir = path.dirname(require.main.filename);
-				    var tempPath = appDir + '/public/res/scripts/temp/' + project.scripts[0].file.name;
-				    var relativePath =  'res/scripts/' + project._id + '/';
-				    var newPath = appDir + '/public/' + relativePath;
+				if(typeof project.scripts !== 'undefined'){
+					for(var i = 0; i < project.scripts.length; ++i){
+						if(typeof project.scripts[i] !== 'undefined'){
+							var appDir = path.dirname(require.main.filename);
+						    var tempPath = appDir + '/public/res/scripts/temp/' + project.scripts[i].file.name;
+						    var relativePath =  'res/scripts/' + project._id + '/';
+						    var newPath = appDir + '/public/' + relativePath;
 
-				    // create project directory if not found
-				    if (!fs.existsSync(newPath)) {
-				    	fs.mkdirSync(newPath);
-				    }
+						    // create project directory if not found
+						    if (!fs.existsSync(newPath)) {
+						    	fs.mkdirSync(newPath);
+						    }
 
-				    // add file path
-				    newPath += project.scripts[0].file.name;
+						    // add file path
+						    newPath += project.scripts[i].file.name;
 
-				    mv(tempPath, newPath, function(err) {
-				        //console.log(err);
-				        if (err){
-				            res.status(500).end();
-				        }else{
-				            res.status(200).end();
-				        }
-				    });
+						    mv(tempPath, newPath, function(err) {
+						        //console.log(err);
+						        if (err){
+						            res.status(500).end();
+						        }else{
+						            res.status(200).end();
+						        }
+						    });
+						}
+					}
+				}
+				if(typeof project.referenceFiles !== 'undefined'){
+					for(var j = 0; j < project.referenceFiles.length; ++j){
+						if(typeof project.referenceFiles[j] !== 'undefined'){
+							var appDir = path.dirname(require.main.filename);
+						    var tempPath = appDir + '/public/res/referenceFiles/temp/' + project.referenceFiles[j].file.name;
+						    var relativePath =  'res/referenceFiles/' + project._id + '/';
+						    var newPath = appDir + '/public/' + relativePath;
+
+						    // create project directory if not found
+						    if (!fs.existsSync(newPath)) {
+						    	fs.mkdirSync(newPath);
+						    }
+
+						    // add file path
+						    newPath += project.referenceFiles[j].file.name;
+
+						    mv(tempPath, newPath, function(err) {
+						        //console.log(err);
+						        if (err){
+						            res.status(500).end();
+						        }else{
+						            res.status(200).end();
+						        }
+						    });
+						}
+					}
 				}
 			}
 		});
@@ -136,6 +167,18 @@ var deleteFiles = function(project){
 		project.deleteFiles.splice(i, 1);
 	}
 
+};
+
+// handle remote file delete requests
+exports.deleteFileByName = function(req, res){
+
+	var appDir = path.dirname(require.main.filename);
+	var file = appDir + '/public' + req.body.fileLocation;
+
+	// remove file is exists
+	if (fs.existsSync(file)) {
+		fs.unlinkSync(file);
+	}
 };
 
 // rename file from local file system
@@ -531,16 +574,12 @@ exports.uploadScript = function(req, res, next){
 				req.project = project ;
 
 				var script = {
-							file: req.files.file, 
-							discussion: [], 
-							rating: '', 
-							approved: 
-									{
-										by: 
-										{
-											userId: req.user._id,date: now.toJSON(), name: req.user.displayName
-										}
-									}
+								file: req.files.file, 
+								by: {
+									userId: req.user._id,
+									date: now.toJSON(), 
+									name: req.user.displayName
+								}
 							};
 
 				// assign script object to body
@@ -603,7 +642,12 @@ exports.uploadReferenceFile = function(req, res, next){
 				req.project = project ;
 
 				var referenceFile = {
-							file: req.files.file
+							file: req.files.file,
+							by: {
+								userId: req.user._id,
+								date: now.toJSON(), 
+								name: req.user.displayName
+							}
 							};
 
 				// assign script object to body
@@ -622,6 +666,45 @@ exports.uploadReferenceFile = function(req, res, next){
 				});
 			});
             //res.status(200).end();
+        }
+    });
+};
+
+exports.uploadTempReferenceFile = function(req, res, next){
+	// We are able to access req.files.file thanks to 
+    // the multiparty middleware
+    var file = req.files.file;
+    //console.log(file.name);
+    //console.log(file.type);
+
+    var referenceFiles = [];
+
+    //var file = req.files.file;
+    var appDir = path.dirname(require.main.filename);
+    var tempPath = file.path;
+    var relativePath =  'res' + '/' + 'referenceFiles' + '/temp/';
+    var newPath = appDir + '/public/' + relativePath;
+
+    // add file path
+    newPath += file.name;
+
+    //console.log(newPath);
+    var referenceFile = {
+    				file: req.files.file,
+    				by: {
+							userId: req.user._id,
+							date: now.toJSON(), 
+							name: req.user.displayName
+						}
+				};
+
+	referenceFiles.push(referenceFile);
+
+    mv(tempPath, newPath, function(err) {
+        if (err){
+            res.status(500).end();
+        }else{
+            res.jsonp(referenceFiles);
         }
     });
 };
@@ -647,16 +730,10 @@ exports.uploadTempScript = function(req, res, next){
 
     //console.log(newPath);
     var script = {
-				file: req.files.file, 
-				discussion: [], 
-				rating: '', 
-				approved: 
-						{
-							by: 
-							{
-								userId: req.user._id,date: now.toJSON(), name: req.user.displayName
-							}
-						}
+					file: req.files.file,
+					userId: req.user._id,
+					date: now.toJSON(), 
+					name: req.user.displayName
 				};
 
 	scripts.push(script);
@@ -718,7 +795,9 @@ exports.uploadAudition = function(req, res, next){
 									{
 										by: 
 										{
-											userId: req.user._id,date: now.toJSON(), name: req.user.displayName
+											userId: req.user._id,
+											date: now.toJSON(), 
+											name: req.user.displayName
 										}
 									}
 							};

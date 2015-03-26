@@ -58,16 +58,16 @@
 			            </h4>
 		        	</accordion-heading>
 						<div data-ng-show="permitAdminDirector()" class="clearfix" style="padding-bottom:5px">
-							<h4>Upload Script: </h4>
+						<h4>Upload Script: </h4>
 
-							<div ng-file-drop ng-file-select="uploadScript($files)" ng-model="files" ng-model-rejected="rejFiles"
-	                         drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}" class="drop-box"
-	                         ng-multiple="true" allow-dir="true" ng-accept="'*.pdf'"
-	                         drop-available="dropAvailable">
-	                            <div ng-hide="dropAvailable">File Drop not available</div>
-	                            <div ng-show="dropAvailable">Drop PDFs</div>
-	                            <div>or click to select</div>
-	                        </div>
+						<div ng-file-drop ng-file-select="uploadScript($files)" ng-model="files" ng-model-rejected="rejFiles"
+                         drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}" class="drop-box"
+                         ng-multiple="true" ng-accept="'*.pdf'"
+                         drop-available="dropAvailable">
+                            <div ng-hide="dropAvailable">File Drop not available</div>
+                            <div ng-show="dropAvailable">Drop PDFs</div>
+                            <div>or click to select</div>
+                        </div>
 
 						</div>
 						<ul class="list-group">
@@ -97,7 +97,7 @@
 
 							<div ng-file-drop ng-file-select="uploadReferenceFile($files)" ng-model="files" ng-model-rejected="rejFiles"
 	                         drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}" class="drop-box"
-	                         ng-multiple="true" allow-dir="true" ng-accept="'*'"
+	                         ng-multiple="true" ng-accept="'*'"
 	                         drop-available="dropAvailable">
 	                            <div ng-hide="dropAvailable">File Drop not available</div>
 	                            <div ng-show="dropAvailable">Drop Anything you would like.</div>
@@ -118,7 +118,6 @@
 					</accordion-group>
 				</accordion>
 			</div>
-
 			
 		</div>
 		
@@ -210,7 +209,7 @@
 
 							<div ng-file-drop ng-file-select="uploadAudition($files)" ng-model="files" ng-model-rejected="rejFiles"
 	                         drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}" class="drop-box"
-	                         ng-multiple="true" allow-dir="true" ng-accept="'*.mp3,*.mp4,*.wav,*.ogg'"
+	                         ng-multiple="true" ng-accept="'*.mp3,*.mp4,*.wav,*.ogg'"
 	                         drop-available="dropAvailable">
 	                            <div ng-hide="dropAvailable">File Drop not available</div>
 	                            <div ng-show="dropAvailable">Drop *.mp3,*.mp4,*.wav,*.ogg files..</div>
