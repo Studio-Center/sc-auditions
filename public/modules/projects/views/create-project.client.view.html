@@ -1,0 +1,25 @@
+<section data-ng-init="userCheck()">
+    <div class="page-header">
+        <h1>New Project</h1>
+    </div>
+    <div class="col-md-12" style="padding-bottom:75px">
+        <form class="form-horizontal" data-ng-submit="create()" novalidate>
+            <fieldset>
+                <div id="form-view" ui-view></div>
+            </fieldset>
+        </form>
+    </div>
+    <div class="container" style="position:fixed;bottom:0;background:#fff;z-index:999;padding-top:5px">
+        <div class="row" data-ng-show="permitAdminDirector()">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <ul style="clear:both" ng-show="rejFiles.length > 0" class="response">
+                    <li class="sel-file" ng-repeat="f in rejFiles">
+                        Rejected file: {{f.name}} - size: {{f.size}}B - type: {{f.type}}
+                    </li>
+                </ul>
+                <div data-ng-bind="uploadStatus"></div>
+                <progressbar value="uploadprogress" type="success" ng-model="upload"><b>{{uploadfile}}</b></progressbar>
+            </div>
+        </div>
+    </div>
+</section>
