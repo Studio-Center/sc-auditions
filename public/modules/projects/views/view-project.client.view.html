@@ -205,14 +205,14 @@
 			            </h4>
 		        	</accordion-heading>
 				 		<div data-ng-show="permitAdminDirector()" class="clearfix" style="padding-bottom:5px">
-							<h4>Upload Audition Files: (*.mp3,*.mp4,*.wav,*.ogg files only!)</h4>
+							<h4>Upload Audition Files: (*.mp3 only!)</h4>
 
 							<div ng-file-drop ng-file-select="uploadAudition($files)" ng-model="files" ng-model-rejected="rejFiles"
 	                         drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}" class="drop-box"
-	                         ng-multiple="true" ng-accept="'*.mp3,*.mp4,*.wav,*.ogg'"
+	                         ng-multiple="true" ng-accept="'*.mp3'"
 	                         drop-available="dropAvailable">
 	                            <div ng-hide="dropAvailable">File Drop not available</div>
-	                            <div ng-show="dropAvailable">Drop *.mp3,*.mp4,*.wav,*.ogg files..</div>
+	                            <div ng-show="dropAvailable">Drop *.mp3 files..</div>
 	                            <div>or click to select</div>
 	                        </div>
 
