@@ -16,6 +16,7 @@ var mongoose = require('mongoose'),
 	async = require('async'),
 	mv = require('mv'),
 	nodemailer = require('nodemailer'),
+	dateFormat = require('dateformat'),
 	now = new Date();
 
 exports.sendEmail = function(req, res){
@@ -64,23 +65,37 @@ exports.sendEmail = function(req, res){
 				}
 
 				// append default footer to email
-				email.message += '\n' + 'The ' + config.app.title + ' Support Team' + '\n';
-				email.message += '\n' + 'To view your StudioCenterAuditions.com Home Page, visit:' + '\n';
-				email.message += 'http://' + req.headers.host + '\n';
+				email.message += '<br>' + 'The ' + config.app.title + ' Support Team' + '<br>';
+				email.message += '<br>' + 'To view your StudioCenterAuditions.com Home Page, visit:' + '<br>';
+				email.message += 'http://' + req.headers.host + '<br>';
 
+				done('', email, bcc);
+			},
+			function(email, bcc, done) {
+				res.render('templates/email-message', {
+					email: email
+				}, function(err, emailHTML) {
+					done(err, emailHTML, email, bcc);
+				});
+			},
+			function(emailHTML, email, bcc, done) {
 				// send email
 				var transporter = nodemailer.createTransport(config.mailer.options);
-				transporter.sendMail({
-				    from: config.mailer.from,
+				var mailOptions = {
 				    to: email.to,
 				    bcc: bcc,
+				    from: config.mailer.from,
 				    subject: email.subject,
-				    text: email.message
+				    html: emailHTML
+				};
+
+				transporter.sendMail(mailOptions , function(err) {
+					done(err);
 				});
 			},
 			], function(err) {
-			if (err) return next(err);
-		});
+					if (err) return console.log(err);
+			});
 
 	}
 };
@@ -209,7 +224,10 @@ exports.create = function(req, res) {
 										to: [],
 										bcc: [],
 										subject: '',
-										message: ''
+										header: '',
+										footer: '',
+										scripts: '',
+										referenceFiles: ''
 									};
 						var i, to = [];
 
@@ -242,42 +260,57 @@ exports.create = function(req, res) {
 							}
 						}
 
-						email.subject = project.title + ' project created';
-					    email.message = 'Project: ' + project.title + '\n';
-					    email.message += 'Description: ' + project.description + '\n';
-					    email.message += 'Added by: ' + req.user.displayName + '\n';
+						email.subject = 'Audition Project Created - ' + project.title + ' - Due ' + dateFormat(project.estimatedCompletionDate, "dddd, mmmm dS, yyyy, h:MM TT");
+
+					    email.header = '<strong>Project:</strong> ' + project.title + '<br>';
+					    email.header += '<strong>Due:</strong> ' + dateFormat(project.estimatedCompletionDate, "dddd, mmmm dS, yyyy, h:MM TT") + '<br>';
+					    email.header += '<strong>Created by:</strong> ' + req.user.displayName + '<br>';
+					    email.header += '<strong>Description:</strong> ' + project.description + '<br>';
 
 						// add scripts and assets to email body
 						if(typeof project.scripts !== 'undefined'){
-							email.message += '\n' + 'Scripts:' + '\n';
+							email.scripts = '\n' + '<strong>Scripts:</strong>' + '<br>';
 							for(i = 0; i < project.scripts.length; ++i){
-								email.message += 'http://' + req.headers.host + '/res/scripts/' + project._id + '/' + project.scripts[i].file.name + '\n';
+								email.scripts += '<a href="http://' + req.headers.host + '/res/scripts/' + project._id + '/' + project.scripts[i].file.name + '">' + project.scripts[i].file.name + '</a><br>';
 							}
 						}
 						if(typeof project.referenceFiles !== 'undefined'){
-							email.message += '\n' + 'Reference Files:' + '\n';
+							email.referenceFiles = '\n' + '<strong>Reference Files:</strong>' + '<br>';
 							for(var j = 0; j < project.referenceFiles.length; ++j){
-								email.message += 'http://' + req.headers.host + '/res/referenceFiles/' + project._id + '/' + project.referenceFiles[j].file.name + '\n';
+								email.referenceFiles += '<a href="http://' + req.headers.host + '/res/referenceFiles/' + project._id + '/' + project.referenceFiles[j].file.name + '">' + project.referenceFiles[j].file.name + '</a><br>';
 							}
 						}
 
 						// append default footer to email
-						email.message += '\n' + 'The ' + config.app.title + ' Support Team' + '\n';
-						email.message += '\n' + 'To view your StudioCenterAuditions.com Home Page, visit:' + '\n';
-						email.message += 'http://' + req.headers.host + '\n';
+						email.footer =  'The ' + config.app.title + ' Support Team' + '<br>';
+						email.footer += 'To view your StudioCenterAuditions.com Home Page, visit:' + '<br>';
+						email.footer += 'http://' + req.headers.host;
 
+						done(err, email, to, bcc);
+					},
+					function(email, to, bcc, done) {
+						res.render('templates/create-project', {
+							email: email
+						}, function(err, emailHTML) {
+							done(err, emailHTML, email, to, bcc);
+						});
+					},
+					function(emailHTML, email, to, bcc, done) {
 						// send email
 						var transporter = nodemailer.createTransport(config.mailer.options);
-						transporter.sendMail({
-						    from: config.mailer.from,
-						    to: to,
-						    bcc: bcc,
-						    subject: email.subject,
-						    text: email.message
+						var mailOptions = {
+							to: to,
+							bcc: bcc,
+							from: config.mailer.from,
+							subject: email.subject,
+							html: emailHTML
+						};
+						transporter.sendMail(mailOptions , function(err) {
+							done(err);
 						});
 					},
 					], function(err) {
-					if (err) return next(err);
+					if (err) return console.log(err);
 				});
 
 			}

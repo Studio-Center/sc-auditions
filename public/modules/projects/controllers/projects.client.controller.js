@@ -240,23 +240,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				}
 			}
 
-			// add talent if never found
-			if(found === 0){
-				$scope.project.talent.push(talent);
-
-				// send update email
-				$scope.gatherToAddresses('updateTalent');
-			    $scope.email.subject = $scope.project.title + ' talent ' + talentName + ' added';
-			    $scope.email.message = 'Talent: ' + talentName + '\n';
-			    $scope.email.message += 'Project: ' + $scope.project.title + '\n';
-			    $scope.email.message += 'Added by: ' + Authentication.user.displayName + '\n';
-			    $scope.email.message += '\n' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '\n';
-
-			    $http.post('/projects/sendemail', {
-					email: $scope.email
-				});
-			}
-
 			// update project store
 			$scope.update();
 		};
@@ -282,19 +265,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		$scope.updateTalentStatus = function(key){
 
-			// send update email
-			$scope.gatherToAddresses('updateTalent');
-		    $scope.email.subject = $scope.project.title + ' talent ' + $scope.project.talent[key].name + ' status change';
-		    $scope.email.message = 'Talent: ' + $scope.project.talent[key].name + '\n';
-		    $scope.email.message += 'Status: ' + $scope.project.talent[key].status + '\n';
-		    $scope.email.message += 'Project: ' + $scope.project.title + '\n';
-		    $scope.email.message += 'Added by: ' + Authentication.user.displayName + '\n';
-		    $scope.email.message += '\n' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '\n';
-
-		    $http.post('/projects/sendemail', {
-				email: $scope.email
-			});
-
 			// update project store
 			$scope.update();
 		};
@@ -310,23 +280,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					$scope.project.team.splice(i, 1);
 					found = 1;
 				}
-			}
-
-			// add team member if never found
-			if(found === 0){
-				$scope.project.team.push(user);
-
-				// send update email
-				$scope.gatherToAddresses('updateTeam');
-			    $scope.email.subject = $scope.project.title + ' team member ' + displayName + ' added';
-			    $scope.email.message = 'Member: ' + displayName + '\n';
-			    $scope.email.message += 'Project: ' + $scope.project.title + '\n';
-			    $scope.email.message += 'Added by: ' + Authentication.user.displayName + '\n';
-			    $scope.email.message += '\n' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '\n';
-
-			    $http.post('/projects/sendemail', {
-					email: $scope.email
-				});
 			}
 
 			// update project store
@@ -346,23 +299,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				}
 			}
 
-			// add talent if never found
-			if(found === 0){
-				$scope.project.clientClient.push(user);
-
-				// send update email
-				$scope.gatherToAddresses('updateClientClient');
-			    $scope.email.subject = $scope.project.title + ' client client ' + displayName + ' added';
-			    $scope.email.message = 'Client Client: ' + displayName + '\n';
-			    $scope.email.message += 'Project: ' + $scope.project.title + '\n';
-			    $scope.email.message += 'Added by: ' + Authentication.user.displayName + '\n';
-			    $scope.email.message += '\n' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '\n';
-			
-			    $http.post('/projects/sendemail', {
-					email: $scope.email
-				});
-			}
-
 			// update project store
 			$scope.update();
 		};
@@ -378,23 +314,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					$scope.project.client.splice(i, 1);
 					found = 1;
 				}
-			}
-
-			// add talent if never found
-			if(found === 0){
-				$scope.project.client.push(user);
-	
-				// send update email
-				$scope.gatherToAddresses('updateClient');
-			    $scope.email.subject = $scope.project.title + ' client ' + displayName + ' added';
-			    $scope.email.message = 'Client: ' + displayName + '\n';
-			    $scope.email.message += 'Project: ' + $scope.project.title + '\n';
-			    $scope.email.message += 'Added by: ' + Authentication.user.displayName + '\n';
-			    $scope.email.message += '\n' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '\n';
-			
-			    $http.post('/projects/sendemail', {
-					email: $scope.email
-				});
 			}
 
 			// update project store
@@ -422,20 +341,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		$scope.toggleBooked = function(key){
 			$scope.project.talent[key].booked = !$scope.project.talent[key].booked;
-	
-			// send update email
-			if($scope.project.talent[key].booked === true){
-				$scope.gatherToAddresses('toggleBooked');
-			    $scope.email.subject = $scope.project.title + ' talent booked ' + $scope.project.talent[key].name + ' added';
-			    $scope.email.message = 'Talent: ' + $scope.project.talent[key].name + '\n';
-			    $scope.email.message += 'Project: ' + $scope.project.title + '\n';
-			    $scope.email.message += 'Added by: ' + Authentication.user.displayName + '\n';
-			    $scope.email.message += '\n' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '\n';
-				
-				$http.post('/projects/sendemail', {
-					email: $scope.email
-				});
-			}
 
 			// update project store
 			$scope.update();
@@ -448,19 +353,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			var item = {date: now.toJSON(), userid: Authentication.user._id, username: Authentication.user.displayName, item: this.auditions[key].discussion};
 
 			$scope.project.auditions[key].discussion.push(item);
-
-			// send update email
-			$scope.gatherToAddresses('saveAudtionNote');
-		    $scope.email.subject = $scope.project.title + ' audition note added';
-		    $scope.email.message = 'Audition: ' + $scope.project.auditions[key].file.name + '\n';
-		    $scope.email.message += 'Note: ' + this.auditions[key].discussion + '\n';
-		    $scope.email.message += 'Project: ' + $scope.project.title + '\n';
-		    $scope.email.message += 'Added by: ' + Authentication.user.displayName + '\n';
-		    $scope.email.message += '\n' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '\n';
-
-		    $http.post('/projects/sendemail', {
-				email: $scope.email
-			});
 
 			// update project store
 			$scope.update();
@@ -482,17 +374,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				$scope.project.scripts[key].approved.by.name = Authentication.user.fdisplayName;
 				$scope.project.scripts[key].approved.by.date = now.toJSON();
 
-				// send update email
-				$scope.gatherToAddresses('scrApprov');
-			    $scope.email.subject = $scope.project.title + ' script ' + $scope.project.scripts[key].file.name + ' approved';
-			    $scope.email.message = 'Project: ' + $scope.project.title + '\n';
-			    $scope.email.message += 'File: ' + $scope.project.scripts[key].file.name + '\n';
-			    $scope.email.message += 'Approved by: ' + Authentication.user.displayName + '\n';
-			    $scope.email.message += '\n' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '\n';
-			
-			    $http.post('/projects/sendemail', {
-					email: $scope.email
-				});
 			}
 
 			// update project store
@@ -506,19 +387,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			var item = {date: now.toJSON(), userid: Authentication.user._id, username: Authentication.user.displayName, item: this.scripts[key].discussion};
 
 			$scope.project.scripts[key].discussion.push(item);
-
-			// send update email
-			$scope.gatherToAddresses('saveScriptNote');
-		    $scope.email.subject = $scope.project.title + ' script note added';
-		    $scope.email.message = 'Audition: ' + $scope.project.scripts[key].file.name + '\n';
-		    $scope.email.message += 'Note: ' + this.scripts[key].discussion + '\n';
-		    $scope.email.message += 'Project: ' + $scope.project.title + '\n';
-		    $scope.email.message += 'Added by: ' + Authentication.user.displayName + '\n';
-		    $scope.email.message += '\n' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '\n';
-
-		    $http.post('/projects/sendemail', {
-					email: $scope.email
-			});
 
 			// update project store
 			$scope.update();
@@ -609,13 +477,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			// send update email
 			$scope.gatherToAddresses('updateStatus');
 		    $scope.email.subject = $scope.project.title + ' phase ' + $scope.project.phases[key].name + ' status update';
-		    $scope.email.message += 'Project: ' + $scope.project.title + '\n';
-		    $scope.email.message += 'Phase: ' + $scope.project.phases[key].name + '\n';
-		    $scope.email.message += 'Status: ' + $scope.project.phases[key].status + '\n';
-		    $scope.email.message += 'Start Date: ' + $scope.project.phases[key].startDate + '\n';
-		    $scope.email.message += 'End Date: ' + $scope.project.phases[key].endDate + '\n' + '\n';
-		    $scope.email.message += 'Added by: ' + Authentication.user.displayName + '\n';
-		    $scope.email.message += '\n' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '\n';
+		    $scope.email.message += 'Project: ' + $scope.project.title + '<br>';
+		    $scope.email.message += 'Phase: ' + $scope.project.phases[key].name + '<br>';
+		    $scope.email.message += 'Status: ' + $scope.project.phases[key].status + '<br>';
+		    $scope.email.message += 'Start Date: ' + $scope.project.phases[key].startDate + '<br>';
+		    $scope.email.message += 'End Date: ' + $scope.project.phases[key].endDate + '<br>' + '<br>';
+		    $scope.email.message += 'Added by: ' + Authentication.user.displayName + '<br>';
+		    $scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '<br>';
 
 		    $http.post('/projects/sendemail', {
 				email: $scope.email
@@ -634,10 +502,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 			$scope.gatherToAddresses('updateStatus');
 		    $scope.email.subject = $scope.project.title + ' status update';
-		    $scope.email.message += 'Project: ' + $scope.project.title + '\n';
-		    $scope.email.message += 'Status: ' + $scope.project.status + '\n';
-		    $scope.email.message += 'Added by: ' + Authentication.user.displayName + '\n';
-		    $scope.email.message += '\n' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '\n';
+		    $scope.email.message += 'Project: ' + $scope.project.title + '<br>';
+		    $scope.email.message += 'Status: ' + $scope.project.status + '<br>';
+		    $scope.email.message += 'Added by: ' + Authentication.user.displayName + '<br>';
+		    $scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '<br>';
 
 		    $http.post('/projects/sendemail', {
 				email: $scope.email
@@ -821,10 +689,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			// send update email
 			$scope.gatherToAddresses('saveDiscussion');
 		    $scope.email.subject = $scope.project.title + ' discussion added';
-		    $scope.email.message = 'Discussion Item: ' + this.discussion + '\n';
-		    $scope.email.message += 'Project: ' + $scope.project.title + '\n';
-		    $scope.email.message += 'Added by: ' + Authentication.user.displayName + '\n';
-		    $scope.email.message += '\n' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '\n';
+		    $scope.email.message = 'Discussion Item: ' + this.discussion + '<br>';
+		    $scope.email.message += 'Project: ' + $scope.project.title + '<br>';
+		    $scope.email.message += 'Added by: ' + Authentication.user.displayName + '<br>';
+		    $scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '<br>';
 
 			$scope.discussion = '';
 
@@ -852,18 +720,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 				var file = '/res/scripts/' + $scope.project._id + '/' + $scope.project.scripts[idx].file.name;
 
-				// send update email
-				$scope.gatherToAddresses('delScript');
-			    $scope.email.subject = $scope.project.title + ' scripts deleted';
-			    $scope.email.message = 'Project: ' + $scope.project.title + '\n';
-			    $scope.email.message += 'File: ' + $scope.project.scripts[idx].file.name + '\n';
-			    $scope.email.message += 'By: ' + Authentication.user.displayName + '\n';
-			    $scope.email.message += '\n' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '\n';
-				
-				$http.post('/projects/sendemail', {
-					email: $scope.email
-				});
-
 				$http.put('/projects/deletefile', {
 			        fileLocation: file
 			    });
@@ -888,20 +744,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		$scope.uploadScript = function($files) {
 	    //$files: an array of files selected, each file has name, size, and type.
-
-		// send update email
-		$scope.gatherToAddresses('uploadScript');
-	    $scope.email.subject = $scope.project.title + ' script uploaded';
-	    $scope.email.message = 'Project: ' + $scope.project.title + '\n';
-	    for (var j = 0; j < $files.length; j++) {
-	    	$scope.email.message += 'File: ' + $files[j].name + '\n';
-		}
-	    $scope.email.message += 'By: ' + Authentication.user.displayName + '\n';
-	    $scope.email.message += '\n' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '\n';
-
-	    $http.post('/projects/sendemail', {
-			email: $scope.email
-		});
 
 	    for (var i = 0; i < $files.length; i++) {
 	      var file = $files[i];
@@ -975,20 +817,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.uploadReferenceFile = function($files) {
 	    //$files: an array of files selected, each file has name, size, and type.
 
-		// send update email
-		$scope.gatherToAddresses('uploadReferenceFile');
-	    $scope.email.subject = $scope.project.title + ' reference file uploaded';
-	    $scope.email.message = 'Project: ' + $scope.project.title + '\n';
-	    for (var j = 0; j < $files.length; j++) {
-	    	$scope.email.message += 'File: ' + $files[j].name + '\n';
-		}
-	    $scope.email.message += 'By: ' + Authentication.user.displayName + '\n';
-	    $scope.email.message += '\n' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '\n';
-
-	    $http.post('/projects/sendemail', {
-			email: $scope.email
-		});
-
 	    for (var i = 0; i < $files.length; i++) {
 	      var file = $files[i];
 
@@ -1043,18 +871,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 				var file = '/res/referenceFiles/' + $scope.project._id + '/' + $scope.project.referenceFiles[idx].file.name;
 
-				// send update email
-				$scope.gatherToAddresses('delReferenceFile');
-			    $scope.email.subject = $scope.project.title + ' reference file deleted';
-			    $scope.email.message = 'Project: ' + $scope.project.title + '\n';
-			    $scope.email.message += 'File: ' + $scope.project.referenceFiles[idx].file.name + '\n';
-			    $scope.email.message += 'By: ' + Authentication.user.displayName + '\n';
-			    $scope.email.message += '\n' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '\n';
-
-				$http.post('/projects/sendemail', {
-					email: $scope.email
-				});
-
 				$http.post('/projects/deletefile', {
 			        fileLocation: file
 			    });
@@ -1076,19 +892,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 				var file = '/res/auditions/' + $scope.project._id + '/' + $scope.project.auditions[idx].file.name;
 
-				// send update email
-				$scope.gatherToAddresses('delAudition');
-			    $scope.email.subject = $scope.project.title + ' audition deleted';
-			    $scope.email.message = 'Project: ' + $scope.project.title + '\n';
-			    $scope.email.message += 'File: ' + $scope.project.auditions[idx].file.name + '\n';
-			    $scope.email.message += 'By: ' + Authentication.user.displayName + '\n';
-			    $scope.email.message += '\n' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '\n';
-
-			    // send associated email
-			    $http.post('/projects/sendemail', {
-			        email: $scope.email
-			    });
-
 			    // delete selected file
 				$http.post('/projects/deletefile', {
 			        fileLocation: file
@@ -1106,20 +909,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 			// tell audio system to reload files
 			$scope.loadAudio = 0;
-	     
-			// send update email
-			$scope.gatherToAddresses('uploadAudition');
-		    $scope.email.subject = $scope.project.title + ' auditions uploaded';
-		    $scope.email.message = 'Project: ' + $scope.project.title + '\n';
-		    for (var j = 0; j < $files.length; j++) {
-		    	$scope.email.message += 'File: ' + $files[j].name + '\n';
-			}
-		    $scope.email.message += 'By: ' + Authentication.user.displayName + '\n';
-		    $scope.email.message += '\n' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '\n';
-
-		    $http.post('/projects/sendemail', {
-				email: $scope.email
-			});
 
 		    //$files: an array of files selected, each file has name, size, and type. 
 		    for (var i = 0; i < $files.length; i++) {
