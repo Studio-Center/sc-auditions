@@ -64,10 +64,10 @@ exports.sendEmail = function(req, res){
 					bcc.push(talentdirectors[i].email);
 				}
 
-				// append default footer to email
-				email.message += '<br>' + 'The ' + config.app.title + ' Support Team' + '<br>';
-				email.message += '<br>' + 'To view your StudioCenterAuditions.com Home Page, visit:' + '<br>';
-				email.message += 'http://' + req.headers.host + '<br>';
+				// // append default footer to email
+				// email.message += '<br>' + 'The ' + config.app.title + ' Support Team' + '<br>';
+				// email.message += '<br>' + 'To view your StudioCenterAuditions.com Home Page, visit:' + '<br>';
+				// email.message += 'http://' + req.headers.host + '<br>';
 
 				done('', email, bcc);
 			},
@@ -268,23 +268,27 @@ exports.create = function(req, res) {
 					    email.header += '<strong>Description:</strong> ' + project.description + '<br>';
 
 						// add scripts and assets to email body
+						email.scripts = '\n' + '<strong>Scripts:</strong>' + '<br>';
 						if(typeof project.scripts !== 'undefined'){
-							email.scripts = '\n' + '<strong>Scripts:</strong>' + '<br>';
 							for(i = 0; i < project.scripts.length; ++i){
 								email.scripts += '<a href="http://' + req.headers.host + '/res/scripts/' + project._id + '/' + project.scripts[i].file.name + '">' + project.scripts[i].file.name + '</a><br>';
 							}
+						} else {
+							email.scripts += 'None';
 						}
+						email.referenceFiles = '\n' + '<strong>Reference Files:</strong>' + '<br>';
 						if(typeof project.referenceFiles !== 'undefined'){
-							email.referenceFiles = '\n' + '<strong>Reference Files:</strong>' + '<br>';
 							for(var j = 0; j < project.referenceFiles.length; ++j){
 								email.referenceFiles += '<a href="http://' + req.headers.host + '/res/referenceFiles/' + project._id + '/' + project.referenceFiles[j].file.name + '">' + project.referenceFiles[j].file.name + '</a><br>';
 							}
+						} else {
+							email.referenceFiles += 'None';
 						}
 
-						// append default footer to email
-						email.footer =  'The ' + config.app.title + ' Support Team' + '<br>';
-						email.footer += 'To view your StudioCenterAuditions.com Home Page, visit:' + '<br>';
-						email.footer += 'http://' + req.headers.host;
+						// // append default footer to email
+						// email.footer =  'The ' + config.app.title + ' Support Team' + '<br>';
+						// email.footer += 'To view your StudioCenterAuditions.com Home Page, visit:' + '<br>';
+						// email.footer += 'http://' + req.headers.host;
 
 						done(err, email, to, bcc);
 					},
