@@ -25,6 +25,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.newLead = {};
 		$scope.referenceFiles = [];
 		$scope.scripts = [];
+		$scope.newProject = {};
 
 		$scope.hoveringOver = function(value,key,object) {
 	        $scope.overStar = value;
@@ -396,17 +397,19 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.create = function() {
 			// Create new Project object
 			var project = new Projects ({
-				title: this.title,
-				estimatedCompletionDate: this.estimatedCompletionDate,
-				estimatedTime: this.estimatedTime,
-				actualTime: this.actualTime,
-				status: this.status,
-				scripts: this.scripts,
-				referenceFiles: this.referenceFiles,
-				description: this.description,
-				client: this.client,
-				talent: this.talent
+				title: $scope.newProject.title,
+				estimatedCompletionDate: $scope.newProject.estimatedCompletionDate,
+				estimatedTime: $scope.newProject.estimatedTime,
+				actualTime: $scope.newProject.actualTime,
+				status: $scope.newProject.status,
+				scripts: $scope.scripts,
+				referenceFiles: $scope.referenceFiles,
+				description: $scope.newProject.description,
+				client: $scope.client,
+				talent: $scope.talent
 			});
+
+			console.log(project);
 
 			// Redirect after save
 			project.$save(function(response) {
