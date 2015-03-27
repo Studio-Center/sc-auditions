@@ -1,0 +1,34 @@
+<div class="form-group">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <strong>Talent</strong>
+        </div>
+        <div class="panel-body">
+            <script>
+              var talents = angular.module("talents", []);
+              talents.controller("TalentsController", function($scope) {
+                  $scope.talents = Users.query();
+              });
+            </script>
+            <div class="controls" ng-module="talents">
+                <div ng-controller="TalentsController" data-ng-init="find()">
+                    <label>Search:</label> <input ng-model="filterTeam" class="form-control">
+                    <ul class="list-group">
+                        <li class="list-group-item" ng-repeat="(key, talent) in talents | filter:filterTeam"><input type="checkbox" value="{{talent._id}}" ng-click="updateCreateTalent(talent._id, talent.name)" ng-checked="checkCreateTalent(talent._id)"> {{talent.name}}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <a ui-sref="createProject.project" class="btn btn-block btn-info">
+        <span class="glyphicon glyphicon-circle-arrow-left"></span> Previous Section 
+    </a>
+</div>
+<div data-ng-show="error" class="text-danger">
+    <strong data-ng-bind="error"></strong>
+</div>
+<div class="form-group">
+    <input type="submit" class="btn btn-primary" style="display:block;margin:0 auto">
+</div>
