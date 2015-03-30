@@ -74,6 +74,13 @@ var ProjectSchema = new Schema({
 		default: '',
 		trim: true
 	},
+	sounders: {
+		type: [{
+			type: String,
+			enum: ['Sounders', 'No Sounders']
+		}],
+		default: ['Sounders']
+	},
 	scripts: {
 		type: Array,
 		required: 'You must assign a script'
