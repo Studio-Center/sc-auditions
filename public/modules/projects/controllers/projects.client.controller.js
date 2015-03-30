@@ -214,7 +214,18 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			if(typeof $scope.project === 'object'){
 				if(typeof $scope.project.talent === 'object'){
 					for(var i = 0; i < $scope.project.talent.length; ++i){
-						if($scope.project.talent[i].talentId === talentId){
+						if($scope.project.talent[i].talentId === talentId && $scope.project.talent[i].regular === true){
+							return true;
+						}
+					}
+				}
+			}
+		};
+		$scope.checkRequestedTalent = function(talentId){
+			if(typeof $scope.project === 'object'){
+				if(typeof $scope.project.talent === 'object'){
+					for(var i = 0; i < $scope.project.talent.length; ++i){
+						if($scope.project.talent[i].talentId === talentId && $scope.project.talent[i].requested === true){
 							return true;
 						}
 					}
@@ -223,7 +234,14 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		};
 		$scope.checkCreateTalent = function(talentId){
 			for(var i = 0; i < $scope.talent.length; ++i){
-				if($scope.talent[i].talentId === talentId){
+				if($scope.talent[i].talentId === talentId && $scope.talent[i].regular === true){
+					return true;
+				}
+			}
+		};
+		$scope.checkRequestedCreateTalent = function(talentId){
+			for(var i = 0; i < $scope.talent.length; ++i){
+				if($scope.talent[i].talentId === talentId && $scope.talent[i].requested === true){
 					return true;
 				}
 			}
@@ -231,15 +249,53 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		$scope.updateTalent = function(talentId, talentName, email){
 			// gen talent object
-			var talent = {'talentId': talentId, 'name': talentName, 'email': email, 'booked': false, 'status': ''};
+			var talent = {'talentId': talentId, 'name': talentName, 'email': email, 'booked': false, 'status': '',regular: true, requested: false};
 
 			// check for existing item
 			var found = 0;
 			for(var i = 0; i < $scope.project.talent.length; ++i){
 				if($scope.project.talent[i].talentId === talentId){
-					$scope.project.talent.splice(i, 1);
+					if($scope.project.talent[i].regular === true){
+						$scope.project.talent[i].regular = false;
+					} else {
+						$scope.project.talent[i].regular = true;
+					}
+					if($scope.project.talent[i].regular === false && $scope.project.talent[i].requested === false){
+						$scope.project.talent.splice(i, 1);
+					}
 					found = 1;
 				}
+			}
+
+			if(found === 0){
+				$scope.project.talent.push(talent);
+			}
+
+			// update project store
+			$scope.update();
+		};
+		$scope.updateRequestTalent = function(talentId, talentName, email){
+			// gen talent object
+			var talent = {'talentId': talentId, 'name': talentName, 'email': email, 'booked': false, 'status': '',regular: false, requested: true};
+
+			// check for existing item
+			var found = 0;
+			for(var i = 0; i < $scope.project.talent.length; ++i){
+				if($scope.project.talent[i].talentId === talentId){
+					if($scope.project.talent[i].requested === true){
+						$scope.project.talent[i].requested = false;
+					} else {
+						$scope.project.talent[i].requested = true;
+					}
+					if($scope.project.talent[i].regular === false && $scope.project.talent[i].requested === false){
+						$scope.project.talent.splice(i, 1);
+					}
+					found = 1;
+				}
+			}
+
+			if(found === 0){
+				$scope.project.talent.push(talent);
 			}
 
 			// update project store
@@ -247,13 +303,46 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		};
 		$scope.updateCreateTalent = function(talentId, talentName, email){
 			// gen talent object
-			var talent = {'talentId': talentId, 'name': talentName, 'email': email, 'booked': false, 'status': ''};
+			var talent = {'talentId': talentId, 'name': talentName, 'email': email, 'booked': false, 'status': '',regular: true, requested: false};
 
 			// check for existing item
 			var found = 0;
 			for(var i = 0; i < $scope.talent.length; ++i){
 				if($scope.talent[i].talentId === talentId){
-					$scope.talent.splice(i, 1);
+					if($scope.talent[i].regular === true){
+						$scope.talent[i].regular = false;
+					} else {
+						$scope.talent[i].regular = true;
+					}
+					if($scope.talent[i].regular === false && $scope.talent[i].requested === false){
+						$scope.talent.splice(i, 1);
+					}
+					found = 1;
+				}
+			}
+
+			// add talent if never found
+			if(found === 0){
+				$scope.talent.push(talent);
+			}
+
+		};
+		$scope.updateRequestCreateTalent = function(talentId, talentName, email){
+			// gen talent object
+			var talent = {'talentId': talentId, 'name': talentName, 'email': email, 'booked': false, 'status': '',regular: false, requested: true};
+
+			// check for existing item
+			var found = 0;
+			for(var i = 0; i < $scope.talent.length; ++i){
+				if($scope.talent[i].talentId === talentId){
+					if($scope.talent[i].requested === true){
+						$scope.talent[i].requested = false;
+					} else {
+						$scope.talent[i].requested = true;
+					}
+					if($scope.talent[i].regular === false && $scope.talent[i].requested === false){
+						$scope.talent.splice(i, 1);
+					}
 					found = 1;
 				}
 			}
