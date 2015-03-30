@@ -67,7 +67,11 @@
         </div>
     </div>
 </div>
-
+<div class="form-group">
+    <select class="form-control" style="display:block;margin:0 auto" ng-model="newProject.sounders">
+        <option ng-repeat="item in soundersOpts" value="{{item}}">{{item}}</option>
+    </select>
+</div>
 <div class="form-group">
     <div class="panel panel-default">
         <div class="panel-heading">
