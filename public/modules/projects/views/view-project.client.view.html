@@ -30,6 +30,11 @@
 		            	<strong>Notes</strong>
 		        	</div>
 		        	<fieldset>
+						<select class="form-control" style="display:block;margin:0 auto" ng-if="permitAdminDirector()" ng-model="project.sounders" ng-change="update()">
+	                        <option ng-repeat="item in soundersOpts" value="{{item}}">{{item}}</option>
+	                    </select>
+                	</fieldset>
+		        	<fieldset>
 						<textarea ng-model="discussion" name="discussion" class="form-control"></textarea>
 						<button style="float:right" class="btn btn-primary" ng-click="saveDiscussion()">Save</button>
 					</fieldset>
@@ -50,11 +55,6 @@
 
 		<div class="row">
 			<div class="col-lg-6 col-md-6 col-sm-6">
-				<fieldset>
-					<select class="form-control" style="display:block;margin:0 auto" ng-if="permitAdminDirector()" ng-model="project.sounders" ng-change="update()">
-                        <option ng-repeat="item in soundersOpts" value="{{item}}">{{item}}</option>
-                    </select>
-                </fieldset>
 				<accordion close-others="oneAtATime">
 					<accordion-group is-open="status.open">
 					<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
