@@ -4,6 +4,14 @@
         <a class="btn btn-default" href="#!/talents/create">Create New Talent</a>
     </div>
     <label>Search:</label> <input ng-model="searchText" class="form-control">
+    <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-3">
+            <label>union</label> <input type="checkbox" name="userProjFilter" id="userProjFilter" ng-model="searchText" ng-true-value="!non-union" ng-false-value="" class="form-control">
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3">
+            <label>non-union</label> <input type="checkbox" name="userProjFilter" id="userProjFilter" ng-model="searchText" ng-true-value="non-union" ng-false-value="" class="form-control">
+        </div>
+    </div>
     <div class="list-group item-list">
         <a data-ng-repeat="talent in talents | filter:searchText" data-ng-href="#!/talents/{{talent._id}}" class="list-group-item">
 			<small class="list-group-item-text">
@@ -12,7 +20,9 @@
 			</small>
 			<h4 class="list-group-item-heading">{{talent.name}} {{talent.lastName}}</h4>
             <p><strong>Phone Number</strong> {{talent.phone | tel}} <strong>Phone Number Alt</strong> {{talent.phone2 | tel}}<br>
-            <strong>Email</strong> {{talent.email}} <strong>Email Alt</strong> {{talent.email2}}</p>
+            <strong>Email</strong> {{talent.email}} <strong>Email Alt</strong> {{talent.email2}} <br>
+            <strong>Union Status</strong> 
+            <span ng-repeat="(key, usval) in talent.unionStatus">{{usval}} </span></p>
         </a>
     </div>
     <div class="alert alert-warning text-center" data-ng-hide="!talents.$resolved || talents.length">
