@@ -68,7 +68,7 @@
     </div>
 </div>
 <div class="form-group">
-    <select class="form-control" style="display:block;margin:0 auto" ng-model="newProject.sounders">
+    <select class="form-control" style="display:block;margin:0 auto" ng-model="newProject.sounders" ng-init="newProject.sounders = 'Sounders'">
         <option ng-repeat="item in soundersOpts" value="{{item}}">{{item}}</option>
     </select>
 </div>
