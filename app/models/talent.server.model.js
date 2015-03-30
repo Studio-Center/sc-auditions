@@ -47,7 +47,8 @@ var TalentSchema = new Schema({
 		trim: true
 	},
 	unionStatus: {
-		type: Array
+		type: Array,
+		required: 'Please select a union status'
 	},
 	producerID: {
 		type: Schema.ObjectId,
