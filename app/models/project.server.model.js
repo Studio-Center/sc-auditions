@@ -35,7 +35,7 @@ var ProjectSchema = new Schema({
 		type: Array,
 		default: [{
 						name: 'Casting',
-						status: 'in progress',
+						status: 'complete',
 						options: ['in progress','complete'],
 						startDate: now.toJSON(),
 						endDate: ''
