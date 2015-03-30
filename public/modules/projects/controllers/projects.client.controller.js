@@ -402,7 +402,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				estimatedCompletionDate: $scope.newProject.estimatedCompletionDate,
 				estimatedTime: $scope.newProject.estimatedTime,
 				actualTime: $scope.newProject.actualTime,
-				status: $scope.newProject.status,
+				status: 'In Progress',
 				scripts: $scope.scripts,
 				referenceFiles: $scope.referenceFiles,
 				description: $scope.newProject.description,
