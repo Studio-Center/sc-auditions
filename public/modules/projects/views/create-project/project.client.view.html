@@ -132,19 +132,6 @@
     </div>
 </div>
 
-<div class="form-group">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <strong>Status</strong>
-        </div>
-        <div class="panel-body">
-            <select ng-model="newProject.status" ng-init="newProject.status = statusOpts[0]" required>
-                <option ng-repeat="item in statusOpts" value="{{item}}">{{item}}</option>
-            </select>
-        </div>
-    </div>
-</div>
-
 <div data-ng-show="error" class="text-danger">
     <strong data-ng-bind="error"></strong>
 </div>
