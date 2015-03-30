@@ -410,14 +410,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				talent: $scope.talent
 			});
 
-			console.log(project);
-
 			// Redirect after save
 			project.$save(function(response) {
 				$location.path('projects/' + response._id);
 
 				// Clear form fields
 				$scope.name = '';
+				$scope.newProject = '';
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
 			});
