@@ -150,5 +150,11 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 				talentId: $stateParams.talentId
 			});
 		};
+
+		$scope.getOne = function(talentId) {
+			$scope.talent = Talents.get({ 
+				talentId: talentId
+			});
+		};
 	}
 ]);
