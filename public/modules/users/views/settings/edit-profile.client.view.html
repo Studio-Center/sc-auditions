@@ -31,11 +31,11 @@
 					<label for="notes">Email Signature</label>
 					<textarea style="height:200px" id="emailSignature" name="emailSignature" class="form-control" data-ng-model="user.emailSignature">{{user.emailSignature}}</textarea>
 				</div>
-				<div class="text-center form-group">
-					<button type="submit" class="btn btn-large btn-primary">Save Profile</button>
-				</div>
 				<div data-ng-show="success" class="text-center text-success">
 					<strong>Profile Saved Successfully</strong>
+				</div>
+				<div class="text-center form-group">
+					<button type="submit" class="btn btn-large btn-primary">Save Profile</button>
 				</div>
 				<div data-ng-show="error" class="text-center text-danger">
 					<strong data-ng-bind="error"></strong>
