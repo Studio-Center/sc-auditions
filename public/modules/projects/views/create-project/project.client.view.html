@@ -92,10 +92,14 @@
 
             <ul class="list-group">
             <li class="list-group-item" ng-repeat="(key, script) in scripts">
-                <fieldset>
-                    <strong>{{key+1}}.</strong> <a href="/res/scripts/temp/{{script.file.name}}" target="_blank" data-ng-bind="script.file.name"></a> 
-                    <a href="/res/scripts/temp/{{script.file.name}}" target="_blank"><img src="/img/Adobe-Acrobat-icon.png" alt="download PDF"></a>
-                    <button data-ng-show="permitAdminDirector()" ng-click="delTempScript(key)" target="_blank" class="btn btn-danger">Delete</button>
+                <div class="row">
+                    <div class="col-lg-11 col-md-11 col-sm-11">
+                        <strong>{{key+1}}.</strong> <a href="/res/scripts/temp/{{script.file.name}}" target="_blank" data-ng-bind="script.file.name"></a> 
+                        <a href="/res/scripts/temp/{{script.file.name}}" target="_blank"><img src="/img/Adobe-Acrobat-icon.png" alt="download PDF"></a>
+                    </div>
+                    <div class="col-lg-1 col-md-1 col-sm-1">
+                        <button data-ng-show="permitAdminDirector()" ng-click="delTempScript(key)" target="_blank" class="btn btn-danger">Delete</button>
+                    </div>
                 </fieldset>
             </li>
         </ul>
@@ -124,11 +128,15 @@
 
             <ul class="list-group">
                 <li class="list-group-item" ng-repeat="(key, referenceFile) in referenceFiles">
-                    <fieldset>
-                        <strong>{{key+1}}.</strong> <a href="/res/referenceFiles/temp/{{referenceFile.file.name}}" target="_blank" data-ng-bind="referenceFile.file.name"></a> 
-                        <a href="/res/referenceFiles/temp/{{referenceFile.file.name}}" target="_blank"></a>
-                        <button data-ng-show="permitAdminDirector()" ng-click="delTempReferenceFile(key)" target="_blank" class="btn btn-danger">Delete</button>
-                    </fieldset>
+                    <div class="row">
+                        <div class="col-lg-11 col-md-11 col-sm-11">
+                            <strong>{{key+1}}.</strong> 
+                            <a href="/res/referenceFiles/temp/{{referenceFile.file.name}}" target="_blank" data-ng-bind="referenceFile.file.name"></a> 
+                        </div>
+                        <div class="col-lg-1 col-md-1 col-sm-1">
+                            <button data-ng-show="permitAdminDirector()" ng-click="delTempReferenceFile(key)" target="_blank" class="btn btn-danger">Delete</button>
+                        </div>
+                    </div>
                 </li>
             </ul>
 
