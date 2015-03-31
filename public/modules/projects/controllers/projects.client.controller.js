@@ -629,10 +629,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		// load audio files into player after project object has finished loading
 
-		$scope.$watch('estimatedCompletionDate', function(val){
+		$scope.$watch('newProject.estimatedCompletionDate', function(val){
 			var now = new Date();
 
-			if($scope.estimatedCompletionDate < now){
+			if($scope.newProject.estimatedCompletionDate < now){
 				$scope.dateNotice = 'Date selected passed. Please select a future date and time!';
 			} else {
 				$scope.dateNotice = '';
