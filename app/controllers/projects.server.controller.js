@@ -300,7 +300,8 @@ exports.create = function(req, res) {
 					// render talent email body
 					function(emailHTML, email, done) {
 						res.render('templates/new-project-talent-email', {
-							email: email
+							email: email,
+							emailSignature: req.user.emailSignature.replace(/\r?\n/g, "<br>")
 						}, function(err, talentEmailHTML) {
 							done(err, talentEmailHTML, emailHTML, email);
 						});
@@ -335,9 +336,9 @@ exports.create = function(req, res) {
 								nameArr = project.talent[i].name.split(' ');
 
 								if(project.talent[i].requested === true){
-									emailSubject = nameArr[0] + ' Have a Requested Audition - ' + project.title + ' - Due ' + dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT');
+									emailSubject = nameArr[0] + ' has a Requested Audition - ' + project.title + ' - Due ' + dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT');
 								} else {
-									emailSubject = nameArr[0] + ' Have an Audition - ' + project.title + ' - Due ' + dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT');
+									emailSubject = nameArr[0] + ' has an Audition - ' + project.title + ' - Due ' + dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT');
 								}
 
 								var mailOptions = {

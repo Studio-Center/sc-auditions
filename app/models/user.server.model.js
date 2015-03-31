@@ -84,6 +84,9 @@ var UserSchema = new Schema({
 	notes: {
 		type: String
 	},
+	emailSignature: {
+		type: String
+	},
 	updated: {
 		type: Date
 	},
