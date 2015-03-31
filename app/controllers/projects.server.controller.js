@@ -257,10 +257,10 @@ exports.create = function(req, res) {
 							}
 						}
 
-						email.subject = 'Audition Project Created - ' + project.title + ' - Due ' + dateFormat(project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT');
+						email.subject = 'Audition Project Created - ' + project.title + ' - Due ' + dateFormat(project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
 
 					    email.header = '<strong>Project:</strong> ' + project.title + '<br>';
-					    email.header += '<strong>Due:</strong> ' + dateFormat(project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT') + '<br>';
+					    email.header += '<strong>Due:</strong> ' + dateFormat(project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST<br>';
 					    email.header += '<strong>Created by:</strong> ' + req.user.displayName + '<br>';
 					    email.header += '<strong>Description:</strong> ' + project.description + '<br>';
 
@@ -310,13 +310,15 @@ exports.create = function(req, res) {
 					function(talentEmailHTML, emailHTML, email, done) {
 						// send email
 						var transporter = nodemailer.createTransport(config.mailer.options);
+						var newDate = project.estimatedCompletionDate.setHours(project.estimatedCompletionDate.getHours() - 1);
 						
 						var mailOptions = {
 							to: email.to,
 							bcc: email.bcc,
 							from: config.mailer.from,
 							subject: email.subject,
-							html: emailHTML
+							html: emailHTML,
+							dueDate: newDate
 						};
 						transporter.sendMail(mailOptions , function(err) {
 							done(err, talentEmailHTML, email, done);
@@ -336,9 +338,9 @@ exports.create = function(req, res) {
 								nameArr = project.talent[i].name.split(' ');
 
 								if(project.talent[i].requested === true){
-									emailSubject = nameArr[0] + ' has a Requested Audition - ' + project.title + ' - Due ' + dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT');
+									emailSubject = nameArr[0] + ' has a Requested Audition - ' + project.title + ' - Due ' + dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
 								} else {
-									emailSubject = nameArr[0] + ' has an Audition - ' + project.title + ' - Due ' + dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT');
+									emailSubject = nameArr[0] + ' has an Audition - ' + project.title + ' - Due ' + dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
 								}
 
 								var mailOptions = {
