@@ -746,7 +746,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			if(typeof $scope.audio[$scope.lastAudioID] === 'object'){
 				$scope.audio[$scope.lastAudioID].stop();
 			}
-		}
+		};
 
 		$scope.playAudio = function(key){
 			// disable previous
@@ -833,7 +833,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		    });
 
 		    $scope.scripts.splice(idx, 1);
-		}
+		};
 
 		$scope.uploadScript = function($files) {
 	    //$files: an array of files selected, each file has name, size, and type.
@@ -956,7 +956,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		    });
 
 		    $scope.referenceFiles.splice(idx, 1);
-		}
+		};
 
 	  	$scope.delReferenceFile = function(idx){
 			// verify user wants to delete file

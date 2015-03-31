@@ -30,10 +30,10 @@
                         <li class="list-group-item" ng-repeat="(key, talent) in talents | filter:filterTeam">
                             <div class="row">
                                 <div class="col-lg-1 col-md-1 col-sm-1">
-                                    <input type="checkbox" value="{{talent._id}}" ng-click="updateCreateTalent(talent._id, talent.name + ' ' + talent.lastName)" ng-checked="checkCreateTalent(talent._id)"> 
+                                    <input type="checkbox" value="{{talent._id}}" ng-click="updateCreateTalent(talent._id, talent.name + ' ' + talent.lastName, talent.email)" ng-checked="checkCreateTalent(talent._id)"> 
                                 </div>
                                 <div class="col-lg-1 col-md-1 col-sm-1">
-                                    <input type="checkbox" value="{{talent._id}}" ng-click="updateRequestCreateTalent(talent._id, talent.name + ' ' + talent.lastName)" ng-checked="checkRequestedCreateTalent(talent._id)">
+                                    <input type="checkbox" value="{{talent._id}}" ng-click="updateRequestCreateTalent(talent._id, talent.name + ' ' + talent.lastName, talent.email)" ng-checked="checkRequestedCreateTalent(talent._id)">
                                 </div>
                                 <div class="col-lg-10 col-md-10 col-sm-10">
                                     {{talent.name}} {{talent.lastName}} - {{talent.locationISDN}} - Outage <span ng-show="!talent.outageTimes">None</span><span ng-show="talent.outageTimes != ''">{{talent.outageTimes}}</span>

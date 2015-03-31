@@ -129,6 +129,11 @@ exports.create = function(req, res) {
 	var project = new Project(req.body);
 	project.user = req.user;
 
+	var appDir = '';
+    var tempPath = '';
+    var relativePath =  '';
+    var newPath = '';
+
 	var allowedRoles = ['admin','producer/auditions director'];
 
 	if (_.intersection(req.user.roles, allowedRoles).length) {
@@ -144,10 +149,10 @@ exports.create = function(req, res) {
 				if(typeof project.scripts !== 'undefined'){
 					for(var i = 0; i < project.scripts.length; ++i){
 						if(typeof project.scripts[i] !== 'undefined'){
-							var appDir = path.dirname(require.main.filename);
-						    var tempPath = appDir + '/public/res/scripts/temp/' + project.scripts[i].file.name;
-						    var relativePath =  'res/scripts/' + project._id + '/';
-						    var newPath = appDir + '/public/' + relativePath;
+							appDir = path.dirname(require.main.filename);
+						    tempPath = appDir + '/public/res/scripts/temp/' + project.scripts[i].file.name;
+						    relativePath =  'res/scripts/' + project._id + '/';
+						    newPath = appDir + '/public/' + relativePath;
 
 						    // create project directory if not found
 						    if (!fs.existsSync(newPath)) {
@@ -171,10 +176,10 @@ exports.create = function(req, res) {
 				if(typeof project.referenceFiles !== 'undefined'){
 					for(var j = 0; j < project.referenceFiles.length; ++j){
 						if(typeof project.referenceFiles[j] !== 'undefined'){
-							var appDir = path.dirname(require.main.filename);
-						    var tempPath = appDir + '/public/res/referenceFiles/temp/' + project.referenceFiles[j].file.name;
-						    var relativePath =  'res/referenceFiles/' + project._id + '/';
-						    var newPath = appDir + '/public/' + relativePath;
+							appDir = path.dirname(require.main.filename);
+						    tempPath = appDir + '/public/res/referenceFiles/temp/' + project.referenceFiles[j].file.name;
+						    relativePath =  'res/referenceFiles/' + project._id + '/';
+						    newPath = appDir + '/public/' + relativePath;
 
 						    // create project directory if not found
 						    if (!fs.existsSync(newPath)) {
@@ -229,41 +234,33 @@ exports.create = function(req, res) {
 										scripts: '',
 										referenceFiles: ''
 									};
-						var i, to = [];
+						var i;
 
 						// add previously queried roles to email list
-						var i, bcc = [];
 						for(i = 0; i < admins.length; ++i){
-							bcc.push(admins[i].email);
+							email.bcc.push(admins[i].email);
 						}
 						for(i = 0; i < directors.length; ++i){
-							bcc.push(directors[i].email);
+							email.bcc.push(directors[i].email);
 						}
 						for(i = 0; i < coordinators.length; ++i){
-							bcc.push(coordinators[i].email);
+							email.bcc.push(coordinators[i].email);
 						}
 						for(i = 0; i < talentdirectors.length; ++i){
-							bcc.push(talentdirectors[i].email);
-						}
-
-						// add clients to email list
-						if(typeof project.talent !== 'undefined'){
-							for(i = 0; i < project.talent.length; ++i){
-								to.push(project.talent[i].email);
-							}
+							email.bcc.push(talentdirectors[i].email);
 						}
 
 						// add clients to email list
 						if(typeof project.client !== 'undefined'){
 							for(i = 0; i < project.client.length; ++i){
-								to.push(project.client[i].email);
+								email.to.push(project.client[i].email);
 							}
 						}
 
-						email.subject = 'Audition Project Created - ' + project.title + ' - Due ' + dateFormat(project.estimatedCompletionDate, "dddd, mmmm dS, yyyy, h:MM TT");
+						email.subject = 'Audition Project Created - ' + project.title + ' - Due ' + dateFormat(project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT');
 
 					    email.header = '<strong>Project:</strong> ' + project.title + '<br>';
-					    email.header += '<strong>Due:</strong> ' + dateFormat(project.estimatedCompletionDate, "dddd, mmmm dS, yyyy, h:MM TT") + '<br>';
+					    email.header += '<strong>Due:</strong> ' + dateFormat(project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT') + '<br>';
 					    email.header += '<strong>Created by:</strong> ' + req.user.displayName + '<br>';
 					    email.header += '<strong>Description:</strong> ' + project.description + '<br>';
 
@@ -290,28 +287,70 @@ exports.create = function(req, res) {
 						// email.footer += 'To view your StudioCenterAuditions.com Home Page, visit:' + '<br>';
 						// email.footer += 'http://' + req.headers.host;
 
-						done(err, email, to, bcc);
+						done(err, email);
 					},
-					function(email, to, bcc, done) {
+					// render regular email body
+					function(email, done) {
 						res.render('templates/create-project', {
 							email: email
 						}, function(err, emailHTML) {
-							done(err, emailHTML, email, to, bcc);
+							done(err, emailHTML, email);
 						});
 					},
-					function(emailHTML, email, to, bcc, done) {
+					// render talent email body
+					function(emailHTML, email, done) {
+						res.render('templates/new-project-talent-email', {
+							email: email
+						}, function(err, talentEmailHTML) {
+							done(err, talentEmailHTML, emailHTML, email);
+						});
+					},
+					// send out regular project creation email
+					function(talentEmailHTML, emailHTML, email, done) {
 						// send email
 						var transporter = nodemailer.createTransport(config.mailer.options);
+						
 						var mailOptions = {
-							to: to,
-							bcc: bcc,
+							to: email.to,
+							bcc: email.bcc,
 							from: config.mailer.from,
 							subject: email.subject,
 							html: emailHTML
 						};
 						transporter.sendMail(mailOptions , function(err) {
-							done(err);
+							done(err, talentEmailHTML, email, done);
 						});
+					},
+					// send out talent project creation email
+					function(talentEmailHTML, email, done) {
+						// send email
+						var transporter = nodemailer.createTransport(config.mailer.options);
+						var emailSubject = '';
+						var newDate = project.estimatedCompletionDate.setHours(project.estimatedCompletionDate.getHours() - 1);
+						var nameArr = [];
+						
+						if(typeof project.talent !== 'undefined'){
+							for(i = 0; i < project.talent.length; ++i){
+
+								nameArr = project.talent[i].name.split(' ');
+
+								if(project.talent[i].requested === true){
+									emailSubject = nameArr[0] + ' Have a Requested Audition - ' + project.title + ' - Due ' + dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT');
+								} else {
+									emailSubject = nameArr[0] + ' Have an Audition - ' + project.title + ' - Due ' + dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT');
+								}
+
+								var mailOptions = {
+									to: project.talent[i].email,
+									from: config.mailer.from,
+									subject: emailSubject,
+									html: talentEmailHTML
+								};
+
+								transporter.sendMail(mailOptions);
+
+							}
+						}
 					},
 					], function(err) {
 					if (err) return console.log(err);
@@ -639,7 +678,7 @@ exports.list = function(req, res) {
  */
 exports.projectByID = function(req, res, next, id) { Project.findById(id).populate('user', 'displayName').exec(function(err, project) {
 		if (err) return next(err);
-		if (! project) return next(new Error('Failed to load Project ' + id));
+		if (! project) return next(new Error('Failed to load Project '));
 		req.project = project ;
 		next();
 	});
@@ -730,7 +769,7 @@ exports.uploadScript = function(req, res, next){
         }else{
         	Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
 				if (err) return next(err);
-				if (! project) return next(new Error('Failed to load Project ' + id));
+				if (! project) return next(new Error('Failed to load Project '));
 				req.project = project ;
 
 				var script = {
@@ -798,7 +837,7 @@ exports.uploadReferenceFile = function(req, res, next){
         }else{
         	Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
 				if (err) return next(err);
-				if (! project) return next(new Error('Failed to load Project ' + id));
+				if (! project) return next(new Error('Failed to load Project '));
 				req.project = project ;
 
 				var referenceFile = {
@@ -941,7 +980,7 @@ exports.uploadAudition = function(req, res, next){
         }else{
             Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
 				if (err) return next(err);
-				if (! project) return next(new Error('Failed to load Project ' + id));
+				if (! project) return next(new Error('Failed to load Project '));
 				req.project = project ;
 
 				var audition = {
