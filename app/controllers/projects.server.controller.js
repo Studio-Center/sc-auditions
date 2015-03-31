@@ -299,7 +299,8 @@ exports.create = function(req, res) {
 					},
 					// render talent email body
 					function(emailHTML, email, done) {
-						var newDate = project.estimatedCompletionDate.setHours(project.estimatedCompletionDate.getHours() - 1);
+						var newDate = project.estimatedCompletionDate.setHours(project.estimatedCompletionDate.getHours() - 0.5);
+						newDate = dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT');
 						var emailSig = '';
 						if(typeof req.user.emailSignature === 'object'){
 							emailSig = req.user.emailSignature.replace(/\r?\n/g, "<br>");
@@ -335,7 +336,7 @@ exports.create = function(req, res) {
 						// send email
 						var transporter = nodemailer.createTransport(config.mailer.options);
 						var emailSubject = '';
-						var newDate = project.estimatedCompletionDate.setHours(project.estimatedCompletionDate.getHours() - 1);
+						var newDate = project.estimatedCompletionDate.setHours(project.estimatedCompletionDate.getHours() - 0.5);
 						var nameArr = [];
 						
 						if(typeof project.talent !== 'undefined'){
