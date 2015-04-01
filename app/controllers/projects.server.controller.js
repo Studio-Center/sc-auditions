@@ -184,6 +184,15 @@ exports.create = function(req, res) {
 
 	var allowedRoles = ['admin','producer/auditions director'];
 
+	if(req.body.notifyClient === true){
+		// create new project note stating client notified
+		var now = new Date();
+		var discussionTxt = 'Client Notified of Project Start by ' + req.user.displayName;
+		var item = {date: now.toJSON(), userid: '', username: 'system', item: discussionTxt, deleted: false};
+
+		project.discussion.push(item);
+	}
+
 	if (_.intersection(req.user.roles, allowedRoles).length) {
 		project.save(function(err) {
 			if (err) {
@@ -410,12 +419,17 @@ exports.create = function(req, res) {
 					function(email, done) {
 						// send email to client accounts, if needed
 						if(req.body.notifyClient === true){
+
+
 							if(typeof project.client !== 'undefined'){
 								for(i = 0; i < project.client.length; ++i){
 									emailClients(project.client[i], email, project, req, res);
 								}
 							}
+
 						}
+
+						done(err);
 					},
 					], function(err) {
 					if (err) return console.log(err);
