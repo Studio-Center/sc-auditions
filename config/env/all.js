@@ -35,6 +35,7 @@ module.exports = {
 				//'public/lib/bootstrap/dist/js/bootstrap.min.js', 
 				'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
 				'public/lib/ngAudio/app/angular.audio.js',
+				'public/lib/angular-encode-uri/dist/angular-encode-uri.min.js',
 				'public/lib/angular-bootstrap-datetimepicker/src/js/datetimepicker.js'
 			]
 		},
