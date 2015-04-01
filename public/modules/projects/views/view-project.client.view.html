@@ -3,8 +3,8 @@
 	<div class="page-header">
 		<div class="row">
 			<div class="col-lg-8 col-md-8 col-sm-8">
-				<h2 style="margin:0">{{project.title}} <small>Due {{project.estimatedCompletionDate | date:'short'}}</small></h2>
-				<h4>Created by {{project.user.displayName}} {{project.created | date:'short'}}</h4>
+				<h2 style="margin:0">{{project.title}} <small>Due {{project.estimatedCompletionDate | date:'short'}} EST</small></h2>
+				<h4>Created by {{project.user.displayName}} {{project.created | date:'short'}} EST</h4>
 			</div>
 			<div class="col-lg-4 col-md-4 col-sm-4">
 					<progressbar value="dynamic" type="success" ng-model="progress"><b>{{dynamic}}%</b></progressbar>
@@ -40,7 +40,7 @@
 					</fieldset>
 					<div style="max-height:200px;padding:10px;border-top:1px solid #e8e8e8;overflow-y:scroll">
 						<div ng-repeat="(key, ditem) in project.discussion.slice().reverse()">
-							<h5 ng-if="ditem.deleted === true" class="strike-if"><strong>{{ditem.date | date:'short'}} - {{ditem.username}}</strong></h5>
+							<h5 ng-if="ditem.deleted === true" class="strike-if"><strong>{{ditem.date | date:'short'}} EST - {{ditem.username}}</strong></h5>
 							<h5 ng-if="ditem.deleted === false"><strong>{{ditem.date | date:'short'}} - {{ditem.username}}</strong></h5>
 							<div class="clearfix">
 								<button ng-show="authentication.user._id === ditem.userid && ditem.deleted === false" style="float:right" class="btn btn-danger" ng-click="deleteDiscussion(key)">Delete</button>
