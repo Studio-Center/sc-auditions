@@ -43,12 +43,15 @@
 						<option value="{{item}}" ng-repeat="item in roleOpts">{{item}}</option>
 					</select>
 				</div>
-				<div class="text-center form-group">
-					<button type="submit" class="btn btn-large btn-primary">Create Account</button>
-				</div>
+				
 				<div data-ng-show="error" class="text-center text-danger">
 					<strong data-ng-bind="error"></strong>
 				</div>
+
+				<div class="text-center form-group">
+					<button type="submit" class="btn btn-large btn-primary">Create Account</button>
+				</div>
+				
 			</fieldset>
 		</form>
 	</div>
