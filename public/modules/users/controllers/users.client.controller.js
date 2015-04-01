@@ -76,6 +76,8 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
 			$http.post('/usersedit/create', useredit).
 			success(function(data, status, headers, config) {
 				$location.path('/usersedit');
+			}).error(function(response) {
+				$scope.error = response.message;
 			});
 		};
 	}
