@@ -59,7 +59,7 @@ var ProjectSchema = new Schema({
 	status: {
 		type: [{
 			type: String,
-			enum: ['In Progress', 'On Hold', 'Pending Client Decision', 'Booked', 'Canceled', 'ReAuditioned', 'Dead']
+			enum: ['In Progress', 'On Hold', 'Pending Client Decision', 'Booked', 'Canceled', 'ReAuditioned', 'Dead', 'Closed']
 		}],
 		default: ['Not started']
 	},
