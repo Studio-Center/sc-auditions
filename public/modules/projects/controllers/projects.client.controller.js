@@ -26,7 +26,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.newLead = {};
 		$scope.referenceFiles = [];
 		$scope.scripts = [];
-		$scope.newProject = {};
+		$scope.newProject = {notifyClient: true};
 
 		$scope.hoveringOver = function(value,key,object) {
 	        $scope.overStar = value;
@@ -497,7 +497,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				referenceFiles: $scope.referenceFiles,
 				description: $scope.newProject.description,
 				client: $scope.client,
-				talent: $scope.talent
+				talent: $scope.talent,
+				notifyClient: $scope.newProject.notifyClient
 			});
 
 			// Redirect after save

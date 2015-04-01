@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+</head>
+
+<body>
+
+	<p>Dear {{client.name}}, 
+
+	<p>We've begun working on your audition project: {{project.title}} Due {{dueDate}}. You can monitor our progress by logging in to our dedicated auditions website at {{audURL}} 
+
+	<p>Your User Name is: {{clientInfo.username}} </p>
+
+	<p>If you'd like to change your password to something that is easier to remember, please reply to this email and I will be happy to change it to whatever you prefer. </p>
+
+	<p>Thank you for your business! </p>
+
+	<p>{% autoescape false %}{{emailSignature}}{% endautoescape %}</p>
+
+</body>
+
+</html>

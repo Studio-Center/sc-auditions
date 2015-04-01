@@ -122,6 +122,54 @@ exports.lead = function(req, res){
 
 };
 
+
+var emailClients = function(client, email, project, req, res){
+		async.waterfall([
+			function(done) {
+				User.find({'_id':client.userId}).sort('-created').exec(function(err, clientInfo) {
+					done(err, clientInfo);
+				});
+			},
+			function(clientInfo, done) {
+				var emailSig = '';
+				if(typeof req.user.emailSignature === 'object'){
+					emailSig = req.user.emailSignature.replace(/\r?\n/g, "<br>");
+				} else {
+					emailSig = '';
+				}
+				res.render('templates/create-project-client-email', {
+					email: email,
+					emailSignature: emailSig,
+					project: project,
+					client: client,
+					clientInfo: clientInfo,
+					audURL: 'http://' + req.headers.host,
+					dueDate: dateFormat(project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT')
+				}, function(err, clientEmailHTML) {
+					done(err, clientInfo, clientEmailHTML);
+				});
+			},
+			function(clientInfo, clientEmailHTML, done){
+
+				var emailSubject = 'Your audition project:  ' + project.title + ' Due ' + dateFormat(project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
+
+				// send email
+				var transporter = nodemailer.createTransport(config.mailer.options);
+
+				var mailOptions = {
+									to: client.email,
+									from: config.mailer.from,
+									subject: emailSubject,
+									html: clientEmailHTML
+								};
+
+				transporter.sendMail(mailOptions);
+			}
+		], function(err) {
+			if (err) return console.log(err);
+		});
+};
+
 /**
  * Create a Project
  */
@@ -250,13 +298,6 @@ exports.create = function(req, res) {
 							email.bcc.push(talentdirectors[i].email);
 						}
 
-						// add clients to email list
-						if(typeof project.client !== 'undefined'){
-							for(i = 0; i < project.client.length; ++i){
-								email.to.push(project.client[i].email);
-							}
-						}
-
 						email.subject = 'Audition Project Created - ' + project.title + ' - Due ' + dateFormat(project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
 
 					    email.header = '<strong>Project:</strong> ' + project.title + '<br>';
@@ -297,9 +338,26 @@ exports.create = function(req, res) {
 							done(err, emailHTML, email);
 						});
 					},
-					// render talent email body
+					// send out regular project creation email
 					function(emailHTML, email, done) {
-						var newDate = project.estimatedCompletionDate.setHours(project.estimatedCompletionDate.getHours() - 0.5);
+						// send email
+						var transporter = nodemailer.createTransport(config.mailer.options);
+						
+						var mailOptions = {
+							to: email.to,
+							bcc: email.bcc,
+							from: config.mailer.from,
+							subject: email.subject,
+							html: emailHTML
+						};
+						transporter.sendMail(mailOptions , function(err) {
+							done(err, email);
+						});
+					},
+					// render talent email body
+					function(email, done) {
+						var newDate = new Date(project.estimatedCompletionDate);
+						newDate = newDate.setHours(newDate.getHours() - 1);
 						newDate = dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT');
 						var emailSig = '';
 						if(typeof req.user.emailSignature === 'object'){
@@ -312,23 +370,7 @@ exports.create = function(req, res) {
 							emailSignature: emailSig,
 							dueDate: newDate
 						}, function(err, talentEmailHTML) {
-							done(err, talentEmailHTML, emailHTML, email);
-						});
-					},
-					// send out regular project creation email
-					function(talentEmailHTML, emailHTML, email, done) {
-						// send email
-						var transporter = nodemailer.createTransport(config.mailer.options);
-						
-						var mailOptions = {
-							to: email.to,
-							bcc: email.bcc,
-							from: config.mailer.from,
-							subject: email.subject,
-							html: emailHTML
-						};
-						transporter.sendMail(mailOptions , function(err) {
-							done(err, talentEmailHTML, email, done);
+							done(err, talentEmailHTML, email);
 						});
 					},
 					// send out talent project creation email
@@ -336,7 +378,8 @@ exports.create = function(req, res) {
 						// send email
 						var transporter = nodemailer.createTransport(config.mailer.options);
 						var emailSubject = '';
-						var newDate = project.estimatedCompletionDate.setHours(project.estimatedCompletionDate.getHours() - 0.5);
+						var newDate = new Date(project.estimatedCompletionDate);
+						newDate = newDate.setHours(newDate.getHours() - 1);
 						var nameArr = [];
 						
 						if(typeof project.talent !== 'undefined'){
@@ -361,6 +404,18 @@ exports.create = function(req, res) {
 
 							}
 						}
+
+						done('', email);
+					},
+					function(email, done) {
+						// send email to client accounts, if needed
+						if(req.body.notifyClient === true){
+							if(typeof project.client !== 'undefined'){
+								for(i = 0; i < project.client.length; ++i){
+									emailClients(project.client[i], email, project, req, res);
+								}
+							}
+						}
 					},
 					], function(err) {
 					if (err) return console.log(err);
@@ -372,6 +427,7 @@ exports.create = function(req, res) {
 		return res.status(403).send('User is not authorized');
 	}
 };
+
 
 /**
  * Show the current Project

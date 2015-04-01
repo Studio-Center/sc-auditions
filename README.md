@@ -2,5 +2,5 @@
 
 Studio Center Auditions Web Application developed using the MEAN.JS stack. 
 
-Initial CRUD modules geneated using yeoman mean.js sub-generator.
+Initial CRUD modules generated using yeoman mean.js sub-generator.
 http://meanjs.org/generator.html
