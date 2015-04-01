@@ -20,6 +20,7 @@
     "ngAudio": "~1.4.1",
     "audio5js": "latest",
     "moment": "latest",
-    "angular-bootstrap-datetimepicker": "latest"
+    "angular-bootstrap-datetimepicker": "latest",
+    "angular-encode-uri": "latest"
   }
 }
