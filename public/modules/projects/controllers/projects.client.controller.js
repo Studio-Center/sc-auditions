@@ -46,6 +46,28 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				}
 			}
 		};
+		$scope.permitAdminTalentDirectorProdCoord = function(){
+			var allowRoles = ['admin', 'talent director', 'production coordinator'];
+
+			for(var i = 0; i < Authentication.user.roles.length; ++i){
+				for(var j = 0; j < allowRoles.length; ++j){
+					if(Authentication.user.roles[i] === allowRoles[j]) {
+						return true;
+					}
+				}
+			}
+		};
+		$scope.permitEveryOneButClients = function(){
+			var allowRoles = ['admin', 'producer/auditions director', 'production coordinator', 'talent director'];
+
+			for(var i = 0; i < Authentication.user.roles.length; ++i){
+				for(var j = 0; j < allowRoles.length; ++j){
+					if(Authentication.user.roles[i] === allowRoles[j]) {
+						return true;
+					}
+				}
+			}
+		};
 		$scope.permitClient = function(){
 			var allowRoles = ['client'];
 
