@@ -132,7 +132,7 @@ var emailClients = function(client, email, project, req, res){
 			},
 			function(clientInfo, done) {
 				var emailSig = '';
-				if(typeof req.user.emailSignature === 'object'){
+				if(req.user.emailSignature){
 					emailSig = req.user.emailSignature.replace(/\r?\n/g, "<br>");
 				} else {
 					emailSig = '';
@@ -158,7 +158,8 @@ var emailClients = function(client, email, project, req, res){
 
 				var mailOptions = {
 									to: client.email,
-									from: config.mailer.from,
+									from: req.user.email || config.mailer.from,
+									replyTo: req.user.email || config.mailer.from,
 									subject: emailSubject,
 									html: clientEmailHTML
 								};
@@ -355,7 +356,8 @@ exports.create = function(req, res) {
 						var mailOptions = {
 							to: email.to,
 							bcc: email.bcc,
-							from: config.mailer.from,
+							from: req.user.email || config.mailer.from,
+							replyTo: req.user.email || config.mailer.from,
 							subject: email.subject,
 							html: emailHTML
 						};
@@ -369,7 +371,7 @@ exports.create = function(req, res) {
 						newDate = newDate.setHours(newDate.getHours() - 1);
 						newDate = dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT');
 						var emailSig = '';
-						if(typeof req.user.emailSignature === 'object'){
+						if(req.user.emailSignature){
 							emailSig = req.user.emailSignature.replace(/\r?\n/g, "<br>");
 						} else {
 							emailSig = '';
@@ -404,7 +406,8 @@ exports.create = function(req, res) {
 
 								var mailOptions = {
 									to: project.talent[i].email,
-									from: config.mailer.from,
+									from: req.user.email || config.mailer.from,
+									replyTo: req.user.email || config.mailer.from,
 									subject: emailSubject,
 									html: talentEmailHTML
 								};
@@ -419,7 +422,6 @@ exports.create = function(req, res) {
 					function(email, done) {
 						// send email to client accounts, if needed
 						if(req.body.notifyClient === true){
-
 
 							if(typeof project.client !== 'undefined'){
 								for(i = 0; i < project.client.length; ++i){
