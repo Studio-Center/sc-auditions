@@ -45,3 +45,10 @@
 .strike-if{
 	text-decoration:line-through;
 }
+.blueBg{
+	background:blue;
+	color:#fff;
+}
+.yellowBg{
+	background:yellow;
+}

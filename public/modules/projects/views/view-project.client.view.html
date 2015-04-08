@@ -30,7 +30,7 @@
 		            	<strong>Notes</strong>
 		        	</div>
 		        	<fieldset>
-						<select class="form-control" style="display:block;margin:0 auto" ng-if="permitAdminDirector()" ng-model="project.sounders" ng-change="update()">
+						<select class="form-control" style="display:block;margin:0 auto" ng-if="permitAdminDirector()" ng-class="{blueBg: project.sounders == 'Sounders', yellowBg: project.sounders == 'No Sounders - Approved By William'}" ng-model="project.sounders" ng-change="update()">
 	                        <option ng-repeat="item in soundersOpts" value="{{item}}">{{item}}</option>
 	                    </select>
                 	</fieldset>
