@@ -170,7 +170,7 @@ var emailClients = function(client, email, project, req, res){
 		});
 };
 
-var emailTalent = function(talentInfo, email, project, req, res){
+var emailTalent = function(selTalent, talentInfo, email, project, req, res){
 
 	async.waterfall([
 		function(done) {
@@ -178,17 +178,26 @@ var emailTalent = function(talentInfo, email, project, req, res){
 			var newDate = new Date(project.estimatedCompletionDate);
 			newDate = newDate.setHours(newDate.getHours() - 1);
 			newDate = dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT');
+			var part = '';
 
+			// generate email signature
 			var emailSig = '';
 			if(req.user.emailSignature){
 				emailSig = req.user.emailSignature.replace(/\r?\n/g, "<br>");
 			} else {
 				emailSig = '';
 			}
+
+			// assign part text
+			if(selTalent.part !== ''){
+				part = '<p>You are cast for the part of ' + selTalent.part + '</p>';
+			}
+
 			res.render('templates/new-project-talent-email', {
 				email: email,
 				emailSignature: emailSig,
-				dueDate: newDate
+				dueDate: newDate,
+				part: part
 			}, function(err, talentEmailHTML) {
 				done(err, talentEmailHTML);
 			});
@@ -205,6 +214,7 @@ var emailTalent = function(talentInfo, email, project, req, res){
 
 			nameArr = talentInfo.name.split(' ');
 
+			// assign email subject line
 			if(talentInfo.requested === true){
 				emailSubject = nameArr[0] + ' has a Requested Audition - ' + project.title + ' - Due ' + dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
 			} else {
@@ -454,7 +464,7 @@ exports.create = function(req, res) {
 								for(j = 0; j < project.talent.length; ++j){
 									if(project.talent[j].talentId === String(talents[i]._id)){
 										// email talent
-										emailTalent(talents[i], email, project, req, res);
+										emailTalent(project.talent[j], talents[i], email, project, req, res);
 										// update talent status as needed
 										project.talent[j].status = 'Emailed';
 									}
