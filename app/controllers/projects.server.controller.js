@@ -122,11 +122,10 @@ exports.lead = function(req, res){
 
 };
 
-
 var emailClients = function(client, email, project, req, res){
 		async.waterfall([
 			function(done) {
-				User.find({'_id':client.userId}).sort('-created').exec(function(err, clientInfo) {
+				User.findOne({'_id':client.userId}).sort('-created').exec(function(err, clientInfo) {
 					done(err, clientInfo);
 				});
 			},
@@ -171,6 +170,64 @@ var emailClients = function(client, email, project, req, res){
 		});
 };
 
+var emailTalent = function(talentInfo, email, project, req, res){
+
+	async.waterfall([
+		function(done) {
+
+			var newDate = new Date(project.estimatedCompletionDate);
+			newDate = newDate.setHours(newDate.getHours() - 1);
+			newDate = dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT');
+
+			var emailSig = '';
+			if(req.user.emailSignature){
+				emailSig = req.user.emailSignature.replace(/\r?\n/g, "<br>");
+			} else {
+				emailSig = '';
+			}
+			res.render('templates/new-project-talent-email', {
+				email: email,
+				emailSignature: emailSig,
+				dueDate: newDate
+			}, function(err, talentEmailHTML) {
+				done(err, talentEmailHTML);
+			});
+
+		},
+		// send out talent project creation email
+		function(talentEmailHTML, done) {
+			// send email
+			var transporter = nodemailer.createTransport(config.mailer.options);
+			var emailSubject = '';
+			var newDate = new Date(project.estimatedCompletionDate);
+			newDate = newDate.setHours(newDate.getHours() - 1);
+			var nameArr = [];
+
+			nameArr = talentInfo.name.split(' ');
+
+			if(talentInfo.requested === true){
+				emailSubject = nameArr[0] + ' has a Requested Audition - ' + project.title + ' - Due ' + dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
+			} else {
+				emailSubject = nameArr[0] + ' has an Audition - ' + project.title + ' - Due ' + dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
+			}
+
+			var mailOptions = {
+				to: talentInfo.email,
+				from: req.user.email || config.mailer.from,
+				replyTo: req.user.email || config.mailer.from,
+				subject: emailSubject,
+				html: talentEmailHTML
+			};
+			transporter.sendMail(mailOptions, function(err){
+				done(err);
+			});
+		},
+		], function(err) {
+		//if (err) return console.log(err);
+	});
+
+};
+
 /**
  * Create a Project
  */
@@ -185,260 +242,258 @@ exports.create = function(req, res) {
 
 	var allowedRoles = ['admin','producer/auditions director'];
 
-	if(req.body.notifyClient === true){
-		// create new project note stating client notified
-		var now = new Date();
-		var discussionTxt = 'Client Notified of Project Start by ' + req.user.displayName;
-		var item = {date: now.toJSON(), userid: '', username: 'system', item: discussionTxt, deleted: false};
-
-		project.discussion.push(item);
-	}
-
 	if (_.intersection(req.user.roles, allowedRoles).length) {
-		project.save(function(err) {
-			if (err) {
-				return res.status(400).send({
-					message: errorHandler.getErrorMessage(err)
-				});
-			} else {
-				res.jsonp(project);
 
-				// move new saved files from temp to project id based directory
-				if(typeof project.scripts !== 'undefined'){
-					for(var i = 0; i < project.scripts.length; ++i){
-						if(typeof project.scripts[i] !== 'undefined'){
-							appDir = path.dirname(require.main.filename);
-						    tempPath = appDir + '/public/res/scripts/temp/' + project.scripts[i].file.name;
-						    relativePath =  'res/scripts/' + project._id + '/';
-						    newPath = appDir + '/public/' + relativePath;
+		// perform before save routines
+		if(req.body.notifyClient === true){
+			// create new project note stating client notified
+			var now = new Date();
+			var discussionTxt = 'Client Notified of Project Start by ' + req.user.displayName;
+			var item = {date: now.toJSON(), userid: '', username: 'system', item: discussionTxt, deleted: false};
 
-						    // create project directory if not found
-						    if (!fs.existsSync(newPath)) {
-						    	fs.mkdirSync(newPath);
-						    }
+			project.discussion.push(item);
+		}
 
-						    // add file path
-						    newPath += project.scripts[i].file.name;
+		//console.log(project._id);
 
-						    mv(tempPath, newPath, function(err) {
-						        //console.log(err);
-						        if (err){
-						            res.status(500).end();
-						        }else{
-						            res.status(200).end();
-						        }
-						    });
-						}
-					}
+		// move new saved files from temp to project id based directory
+		if(typeof project.scripts !== 'undefined'){
+			for(var i = 0; i < project.scripts.length; ++i){
+				if(typeof project.scripts[i] !== 'undefined'){
+					appDir = path.dirname(require.main.filename);
+				    tempPath = appDir + '/public/res/scripts/temp/' + project.scripts[i].file.name;
+				    relativePath =  'res/scripts/' + project._id + '/';
+				    newPath = appDir + '/public/' + relativePath;
+
+				    // create project directory if not found
+				    if (!fs.existsSync(newPath)) {
+				    	fs.mkdirSync(newPath);
+				    }
+
+				    // add file path
+				    newPath += project.scripts[i].file.name;
+
+				    mv(tempPath, newPath, function(err) {
+				        //console.log(err);
+				        // if (err){
+				        //     res.status(500).end();
+				        // }else{
+				        //     res.status(200).end();
+				        // }
+				    });
 				}
+			}
+		}
+		if(typeof project.referenceFiles !== 'undefined'){
+			for(var j = 0; j < project.referenceFiles.length; ++j){
+				if(typeof project.referenceFiles[j] !== 'undefined'){
+					appDir = path.dirname(require.main.filename);
+				    tempPath = appDir + '/public/res/referenceFiles/temp/' + project.referenceFiles[j].file.name;
+				    relativePath =  'res/referenceFiles/' + project._id + '/';
+				    newPath = appDir + '/public/' + relativePath;
+
+				    // create project directory if not found
+				    if (!fs.existsSync(newPath)) {
+				    	fs.mkdirSync(newPath);
+				    }
+
+				    // add file path
+				    newPath += project.referenceFiles[j].file.name;
+
+				    mv(tempPath, newPath, function(err) {
+				        //console.log(err);
+				        // if (err){
+				        //     res.status(500).end();
+				        // }else{
+				        //     res.status(200).end();
+				        // }
+				    });
+				}
+			}
+		}
+
+		// send project creation email
+		async.waterfall([
+			function(done) {
+				User.find({'roles':'admin'}).sort('-created').exec(function(err, admins) {
+					done(err, admins);
+				});
+			},
+			function(admins, done) {
+				User.find({'roles':'producer/auditions director'}).sort('-created').exec(function(err, directors) {
+					done(err, admins, directors);
+				});
+			},
+			function(admins, directors, done) {
+				User.find({'roles':'production coordinator'}).sort('-created').exec(function(err, coordinators) {
+					done(err, admins, directors, coordinators);
+				});
+			},
+			function(admins, directors, coordinators, done) {
+				User.find({'roles':'talent director'}).sort('-created').exec(function(err, talentdirectors) {
+					done(err, admins, directors, coordinators, talentdirectors);
+				});
+			},
+			function(admins, directors, coordinators, talentdirectors, done) {
+				var email =  {
+								projectId: '',
+								to: [],
+								bcc: [],
+								subject: '',
+								header: '',
+								footer: '',
+								scripts: '',
+								referenceFiles: ''
+							};
+				var i;
+
+				// add previously queried roles to email list
+				for(i = 0; i < admins.length; ++i){
+					email.bcc.push(admins[i].email);
+				}
+				for(i = 0; i < directors.length; ++i){
+					email.bcc.push(directors[i].email);
+				}
+				for(i = 0; i < coordinators.length; ++i){
+					email.bcc.push(coordinators[i].email);
+				}
+				for(i = 0; i < talentdirectors.length; ++i){
+					email.bcc.push(talentdirectors[i].email);
+				}
+
+				email.subject = 'Audition Project Created - ' + project.title + ' - Due ' + dateFormat(project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
+
+			    email.header = '<strong>Project:</strong> ' + project.title + '<br>';
+			    email.header += '<strong>Due:</strong> ' + dateFormat(project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST<br>';
+			    email.header += '<strong>Created by:</strong> ' + req.user.displayName + '<br>';
+			    email.header += '<strong>Description:</strong> ' + project.description + '<br>';
+
+				// add scripts and assets to email body
+				email.scripts = '\n' + '<strong>Scripts:</strong>' + '<br>';
+				if(typeof project.scripts !== 'undefined'){
+					for(i = 0; i < project.scripts.length; ++i){
+						email.scripts += '<a href="http://' + req.headers.host + '/res/scripts/' + project._id + '/' + project.scripts[i].file.name + '">' + project.scripts[i].file.name + '</a><br>';
+					}
+				} else {
+					email.scripts += 'None';
+				}
+				email.referenceFiles = '\n' + '<strong>Reference Files:</strong>' + '<br>';
 				if(typeof project.referenceFiles !== 'undefined'){
 					for(var j = 0; j < project.referenceFiles.length; ++j){
-						if(typeof project.referenceFiles[j] !== 'undefined'){
-							appDir = path.dirname(require.main.filename);
-						    tempPath = appDir + '/public/res/referenceFiles/temp/' + project.referenceFiles[j].file.name;
-						    relativePath =  'res/referenceFiles/' + project._id + '/';
-						    newPath = appDir + '/public/' + relativePath;
-
-						    // create project directory if not found
-						    if (!fs.existsSync(newPath)) {
-						    	fs.mkdirSync(newPath);
-						    }
-
-						    // add file path
-						    newPath += project.referenceFiles[j].file.name;
-
-						    mv(tempPath, newPath, function(err) {
-						        //console.log(err);
-						        if (err){
-						            res.status(500).end();
-						        }else{
-						            res.status(200).end();
-						        }
-						    });
-						}
+						email.referenceFiles += '<a href="http://' + req.headers.host + '/res/referenceFiles/' + project._id + '/' + project.referenceFiles[j].file.name + '">' + project.referenceFiles[j].file.name + '</a><br>';
 					}
+				} else {
+					email.referenceFiles += 'None';
 				}
 
-				// send project creation email
-				async.waterfall([
-					function(done) {
-						User.find({'roles':'admin'}).sort('-created').exec(function(err, admins) {
-							done(err, admins);
-						});
-					},
-					function(admins, done) {
-						User.find({'roles':'producer/auditions director'}).sort('-created').exec(function(err, directors) {
-							done(err, admins, directors);
-						});
-					},
-					function(admins, directors, done) {
-						User.find({'roles':'production coordinator'}).sort('-created').exec(function(err, coordinators) {
-							done(err, admins, directors, coordinators);
-						});
-					},
-					function(admins, directors, coordinators, done) {
-						User.find({'roles':'talent director'}).sort('-created').exec(function(err, talentdirectors) {
-							done(err, admins, directors, coordinators, talentdirectors);
-						});
-					},
-					function(admins, directors, coordinators, talentdirectors, done) {
-						var email =  {
-										projectId: '',
-										to: [],
-										bcc: [],
-										subject: '',
-										header: '',
-										footer: '',
-										scripts: '',
-										referenceFiles: ''
-									};
-						var i;
+				// // append default footer to email
+				// email.footer =  'The ' + config.app.title + ' Support Team' + '<br>';
+				// email.footer += 'To view your StudioCenterAuditions.com Home Page, visit:' + '<br>';
+				// email.footer += 'http://' + req.headers.host;
 
-						// add previously queried roles to email list
-						for(i = 0; i < admins.length; ++i){
-							email.bcc.push(admins[i].email);
-						}
-						for(i = 0; i < directors.length; ++i){
-							email.bcc.push(directors[i].email);
-						}
-						for(i = 0; i < coordinators.length; ++i){
-							email.bcc.push(coordinators[i].email);
-						}
-						for(i = 0; i < talentdirectors.length; ++i){
-							email.bcc.push(talentdirectors[i].email);
-						}
+				done('', email);
+			},
+			// render regular email body
+			function(email, done) {
+				res.render('templates/create-project', {
+					email: email
+				}, function(err, emailHTML) {
+					done(err, emailHTML, email);
+				});
+			},
+			// send out regular project creation email
+			function(emailHTML, email, done) {
+				// send email
+				var transporter = nodemailer.createTransport(config.mailer.options);
+				
+				var mailOptions = {
+					to: email.to,
+					bcc: email.bcc,
+					from: req.user.email || config.mailer.from,
+					replyTo: req.user.email || config.mailer.from,
+					subject: email.subject,
+					html: emailHTML
+				};
+				transporter.sendMail(mailOptions , function(err) {
+					done(err, email);
+				});
+			},
+			// send out talent project creation email
+			function(email, done) {
+				
+				if(typeof project.talent !== 'undefined'){
 
-						email.subject = 'Audition Project Created - ' + project.title + ' - Due ' + dateFormat(project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
+					var talentIds = [];
+					var emailTalentChk;
+					for(var i = 0; i < project.talent.length; ++i){
+						talentIds[i] = project.talent[i].talentId;						
+					}
 
-					    email.header = '<strong>Project:</strong> ' + project.title + '<br>';
-					    email.header += '<strong>Due:</strong> ' + dateFormat(project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST<br>';
-					    email.header += '<strong>Created by:</strong> ' + req.user.displayName + '<br>';
-					    email.header += '<strong>Description:</strong> ' + project.description + '<br>';
+					Talent.where('_id').in(talentIds).sort('-created').exec(function(err, talents) {
 
-						// add scripts and assets to email body
-						email.scripts = '\n' + '<strong>Scripts:</strong>' + '<br>';
-						if(typeof project.scripts !== 'undefined'){
-							for(i = 0; i < project.scripts.length; ++i){
-								email.scripts += '<a href="http://' + req.headers.host + '/res/scripts/' + project._id + '/' + project.scripts[i].file.name + '">' + project.scripts[i].file.name + '</a><br>';
+						for(i = 0; i < talents.length; ++i){
+
+							// check for email flag
+							emailTalentChk = false;
+							for(var k = 0; k < talents[i].type.length; ++k){
+								if(talents[i].type[k] === 'Email'){
+									emailTalentChk = true;
+								}
 							}
-						} else {
-							email.scripts += 'None';
-						}
-						email.referenceFiles = '\n' + '<strong>Reference Files:</strong>' + '<br>';
-						if(typeof project.referenceFiles !== 'undefined'){
-							for(var j = 0; j < project.referenceFiles.length; ++j){
-								email.referenceFiles += '<a href="http://' + req.headers.host + '/res/referenceFiles/' + project._id + '/' + project.referenceFiles[j].file.name + '">' + project.referenceFiles[j].file.name + '</a><br>';
-							}
-						} else {
-							email.referenceFiles += 'None';
-						}
 
-						// // append default footer to email
-						// email.footer =  'The ' + config.app.title + ' Support Team' + '<br>';
-						// email.footer += 'To view your StudioCenterAuditions.com Home Page, visit:' + '<br>';
-						// email.footer += 'http://' + req.headers.host;
+							// verify talent needs to be emailed
+							if(emailTalentChk === true){
+								for(j = 0; j < project.talent.length; ++j){
+									if(project.talent[j].talentId === String(talents[i]._id)){
+										// email talent
+										emailTalent(talents[i], email, project, req, res);
+										// update talent status as needed
+										project.talent[j].status = 'Emailed';
+									}
+								}							
+							}
+
+
+						}
 
 						done(err, email);
-					},
-					// render regular email body
-					function(email, done) {
-						res.render('templates/create-project', {
-							email: email
-						}, function(err, emailHTML) {
-							done(err, emailHTML, email);
-						});
-					},
-					// send out regular project creation email
-					function(emailHTML, email, done) {
-						// send email
-						var transporter = nodemailer.createTransport(config.mailer.options);
-						
-						var mailOptions = {
-							to: email.to,
-							bcc: email.bcc,
-							from: req.user.email || config.mailer.from,
-							replyTo: req.user.email || config.mailer.from,
-							subject: email.subject,
-							html: emailHTML
-						};
-						transporter.sendMail(mailOptions , function(err) {
-							done(err, email);
-						});
-					},
-					// render talent email body
-					function(email, done) {
-						var newDate = new Date(project.estimatedCompletionDate);
-						newDate = newDate.setHours(newDate.getHours() - 1);
-						newDate = dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT');
-						var emailSig = '';
-						if(req.user.emailSignature){
-							emailSig = req.user.emailSignature.replace(/\r?\n/g, "<br>");
-						} else {
-							emailSig = '';
+					});
+
+				} else {
+					done('', email);					
+				}
+
+			},
+			function(email, done) {
+				// send email to client accounts, if needed
+				if(req.body.notifyClient === true){
+
+					if(typeof project.client !== 'undefined'){
+						for(i = 0; i < project.client.length; ++i){
+							emailClients(project.client[i], email, project, req, res);
 						}
-						res.render('templates/new-project-talent-email', {
-							email: email,
-							emailSignature: emailSig,
-							dueDate: newDate
-						}, function(err, talentEmailHTML) {
-							done(err, talentEmailHTML, email);
+					}
+
+				}
+
+				done('');
+			},
+			// save final project document
+			function(done) {
+				project.save(function(err) {
+					if (err) {
+						return res.status(400).send({
+							message: errorHandler.getErrorMessage(err)
 						});
-					},
-					// send out talent project creation email
-					function(talentEmailHTML, email, done) {
-						// send email
-						var transporter = nodemailer.createTransport(config.mailer.options);
-						var emailSubject = '';
-						var newDate = new Date(project.estimatedCompletionDate);
-						newDate = newDate.setHours(newDate.getHours() - 1);
-						var nameArr = [];
-						
-						if(typeof project.talent !== 'undefined'){
-							for(i = 0; i < project.talent.length; ++i){
-
-								nameArr = project.talent[i].name.split(' ');
-
-								if(project.talent[i].requested === true){
-									emailSubject = nameArr[0] + ' has a Requested Audition - ' + project.title + ' - Due ' + dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
-								} else {
-									emailSubject = nameArr[0] + ' has an Audition - ' + project.title + ' - Due ' + dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
-								}
-
-								var mailOptions = {
-									to: project.talent[i].email,
-									from: req.user.email || config.mailer.from,
-									replyTo: req.user.email || config.mailer.from,
-									subject: emailSubject,
-									html: talentEmailHTML
-								};
-
-								transporter.sendMail(mailOptions);
-
-							}
-						}
-
-						done('', email);
-					},
-					function(email, done) {
-						// send email to client accounts, if needed
-						if(req.body.notifyClient === true){
-
-							if(typeof project.client !== 'undefined'){
-								for(i = 0; i < project.client.length; ++i){
-									emailClients(project.client[i], email, project, req, res);
-								}
-							}
-
-						}
-
-						done(err);
-					},
-					], function(err) {
-					if (err) return console.log(err);
+					} else {
+						res.jsonp(project);
+					}
 				});
-
-			}
+			},
+			], function(err) {
+			//if (err) return console.log(err);
 		});
+
 	} else {
 		return res.status(403).send('User is not authorized');
 	}
