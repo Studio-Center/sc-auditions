@@ -77,7 +77,7 @@ var ProjectSchema = new Schema({
 	sounders: {
 		type: [{
 			type: String,
-			enum: ['Sounders', 'No Sounders']
+			enum: ['Sounders', 'No Sounders - Approved By William']
 		}],
 		default: ['Sounders']
 	},
