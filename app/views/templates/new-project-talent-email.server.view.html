@@ -8,6 +8,8 @@
 
 	<p>We have a REQUESTED audition for you that is due {{dueDate}} EST</p>
 
+	{% autoescape false %}{{part}}{% endautoescape %}
+
 	<p>{% autoescape false %}{{email.scripts}}{% endautoescape %}</p>
 
 	<p>{% autoescape false %}{{email.referenceFiles}}{% endautoescape %}</p>

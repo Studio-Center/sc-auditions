@@ -27,12 +27,35 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.referenceFiles = [];
 		$scope.scripts = [];
 		$scope.newProject = {notifyClient: true};
+		$scope.parts = [];
 
 		$scope.hoveringOver = function(value,key,object) {
 	        $scope.overStar = value;
 	        $scope.percent = 100 * (value / $scope.max);
 	        $scope.selCheckVal = value;
       	};
+
+      	// show part field if talent value is not already checked
+      	$scope.showPartFld = function(id){
+      		for(var i = 0; i < $scope.project.talent.length; ++i){
+      			if($scope.project.talent[i].talentId === String(id)){
+      				if($scope.project.talent[i].requested === true || $scope.project.talent[i].regular === true){
+      					return false
+      				}
+      			}
+      		}
+   			return true
+     	};
+     	$scope.showCreatePartFld = function(id){
+      		for(var i = 0; i < $scope.talent.length; ++i){
+      			if($scope.talent[i].talentId === String(id)){
+      				if($scope.talent[i].requested === true || $scope.talent[i].regular === true){
+      					return false
+      				}
+      			}
+      		}
+   			return true
+     	};
 
 		// verify users
 		$scope.permitAdminDirector = function(){
@@ -271,7 +294,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		$scope.updateTalent = function(talentId, talentName, email){
 			// gen talent object
-			var talent = {'talentId': talentId, 'name': talentName, 'email': email, 'booked': false, 'status': '',regular: true, requested: false};
+			var talent = {'talentId': talentId, 'name': talentName, 'email': email, 'booked': false, 'status': '', part: $scope.parts[talentId] || '', regular: true, requested: false};
 
 			// check for existing item
 			var found = 0;
@@ -304,7 +327,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		};
 		$scope.updateRequestTalent = function(talentId, talentName, email){
 			// gen talent object
-			var talent = {'talentId': talentId, 'name': talentName, 'email': email, 'booked': false, 'status': '',regular: false, requested: true};
+			var talent = {'talentId': talentId, 'name': talentName, 'email': email, 'booked': false, 'status': '', part: $scope.parts[talentId] || '', regular: false, requested: true};
 
 			// check for existing item
 			var found = 0;
@@ -337,7 +360,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		};
 		$scope.updateCreateTalent = function(talentId, talentName, email){
 			// gen talent object
-			var talent = {'talentId': talentId, 'name': talentName, 'email': email, 'booked': false, 'status': '',regular: true, requested: false};
+			var talent = {'talentId': talentId, 'name': talentName, 'email': email, 'booked': false, 'status': '', part: $scope.parts[talentId] || '', regular: true, requested: false};
 
 			// check for existing item
 			var found = 0;
@@ -369,7 +392,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		};
 		$scope.updateRequestCreateTalent = function(talentId, talentName, email){
 			// gen talent object
-			var talent = {'talentId': talentId, 'name': talentName, 'email': email, 'booked': false, 'status': '',regular: false, requested: true};
+			var talent = {'talentId': talentId, 'name': talentName, 'email': email, 'booked': false, 'status': '', part: $scope.parts[talentId] || '', regular: false, requested: true};
 
 			// check for existing item
 			var found = 0;

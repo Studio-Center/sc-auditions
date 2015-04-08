@@ -101,7 +101,7 @@
 			            	Reference Files<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
 			            </h4>
 		        	</accordion-heading>
-		        	
+
 						<div data-ng-show="permitAdminDirector()" class="clearfix" style="padding-bottom:5px">
 							<h4>Upload Reference: </h4>
 
@@ -158,6 +158,7 @@
 										<select data-ng-show="permitEveryOneButClients()" ng-model="project.talent[key].status" ng-init="project.talent[key].status = project.talent[key].status || talentStatus[0]" style="width:100px" ng-change="updateTalentStatus(key)" ng-options="item for item in talentStatus"></select>
 										<span data-ng-show="permitEveryOneButClients() !== true">{{project.talent[key].status}}</span>
 										<span data-ng-show="permitEveryOneButClients()">Booked <input type="checkbox" data-ng-model="project.talent[key].booked" ng-checked="project.talent[key].booked" ng-click="toggleBooked(key)"> 
+										{{project.talent[key].part}}
 									</div>
 								</div>
 							</li>
@@ -187,7 +188,10 @@
 													<div class="col-lg-1 col-md-1 col-sm-1">
 														<b>R</b>
 													</div>
-													<div class="col-lg-10 col-md-10 col-sm-10">
+													<div class="col-lg-4 col-md-4 col-sm-4">
+														<b>Part</b>
+													</div>
+													<div class="col-lg-6 col-md-6 col-sm-6">
 														<b>Info</b>
 													</div>
 												</div>
@@ -200,7 +204,10 @@
 													<div class="col-lg-1 col-md-1 col-sm-1">
 														<input type="checkbox" value="{{talent._id}}" ng-click="updateRequestTalent(talent._id, talent.name + ' ' + talent.lastName, talent.email)" ng-checked="checkRequestedTalent(talent._id)">
 													</div>
-													<div class="col-lg-10 col-md-10 col-sm-10">
+													<div class="col-lg-4 col-md-4 col-sm-4">
+														<input type="text" class="form-control" ng-model="parts[talent._id]" ng-if="showPartFld(talent._id)">
+													</div>
+													<div class="col-lg-6 col-md-6 col-sm-6">
 														{{talent.name}} {{talent.lastName}} - {{talent.locationISDN}} - Outage <span ng-show="!talent.outageTimes">None</span><span ng-show="talent.outageTimes != ''">{{talent.outageTimes}}</span>
 													</div>
 												</div>
