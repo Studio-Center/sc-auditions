@@ -70,7 +70,7 @@
 <div class="form-group">
     <div class="row">
         <div class="col-lg-10 col-md-10 col-sm-10">
-            <select class="form-control" style="display:block;margin:0 auto" ng-model="newProject.sounders" ng-init="newProject.sounders = 'Sounders'">
+            <select class="form-control" style="display:block;margin:0 auto" ng-model="newProject.sounders"  ng-class="{blueBg: newProject.sounders == 'Sounders', yellowBg: newProject.sounders == 'No Sounders - Approved By William'}" ng-init="newProject.sounders = 'Sounders'">
                 <option ng-repeat="item in soundersOpts" value="{{item}}">{{item}}</option>
             </select>
         </div>
