@@ -371,16 +371,24 @@ exports.create = function(req, res) {
 				// add scripts and assets to email body
 				email.scripts = '\n' + '<strong>Scripts:</strong>' + '<br>';
 				if(typeof project.scripts !== 'undefined'){
-					for(i = 0; i < project.scripts.length; ++i){
-						email.scripts += '<a href="http://' + req.headers.host + '/res/scripts/' + project._id + '/' + project.scripts[i].file.name + '">' + project.scripts[i].file.name + '</a><br>';
+					if(project.scripts.length > 0){
+						for(i = 0; i < project.scripts.length; ++i){
+							email.scripts += '<a href="http://' + req.headers.host + '/res/scripts/' + project._id + '/' + project.scripts[i].file.name + '">' + project.scripts[i].file.name + '</a><br>';
+						}
+					} else {
+						email.scripts += 'None';
 					}
 				} else {
 					email.scripts += 'None';
 				}
 				email.referenceFiles = '\n' + '<strong>Reference Files:</strong>' + '<br>';
 				if(typeof project.referenceFiles !== 'undefined'){
-					for(var j = 0; j < project.referenceFiles.length; ++j){
-						email.referenceFiles += '<a href="http://' + req.headers.host + '/res/referenceFiles/' + project._id + '/' + project.referenceFiles[j].file.name + '">' + project.referenceFiles[j].file.name + '</a><br>';
+					if(project.referenceFiles.length > 0){
+						for(var j = 0; j < project.referenceFiles.length; ++j){
+							email.referenceFiles += '<a href="http://' + req.headers.host + '/res/referenceFiles/' + project._id + '/' + project.referenceFiles[j].file.name + '">' + project.referenceFiles[j].file.name + '</a><br>';
+						}
+					} else {
+						email.referenceFiles += 'None';
 					}
 				} else {
 					email.referenceFiles += 'None';
