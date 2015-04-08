@@ -277,11 +277,17 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			var found = 0;
 			for(var i = 0; i < $scope.project.talent.length; ++i){
 				if($scope.project.talent[i].talentId === talentId){
+					// reset requested to false
+					if($scope.project.talent[i].requested === true){
+						$scope.project.talent[i].requested =  false;
+					}
+					// update regular status
 					if($scope.project.talent[i].regular === true){
 						$scope.project.talent[i].regular = false;
 					} else {
 						$scope.project.talent[i].regular = true;
 					}
+					// remove talent if no longer selected
 					if($scope.project.talent[i].regular === false && $scope.project.talent[i].requested === false){
 						$scope.project.talent.splice(i, 1);
 					}
@@ -304,11 +310,17 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			var found = 0;
 			for(var i = 0; i < $scope.project.talent.length; ++i){
 				if($scope.project.talent[i].talentId === talentId){
+					// reset regular talent status
+					if($scope.project.talent[i].regular === true){
+						$scope.project.talent[i].regular = false;
+					}
+					// check requested talent status
 					if($scope.project.talent[i].requested === true){
 						$scope.project.talent[i].requested = false;
 					} else {
 						$scope.project.talent[i].requested = true;
 					}
+					// remove talent if no longer selected
 					if($scope.project.talent[i].regular === false && $scope.project.talent[i].requested === false){
 						$scope.project.talent.splice(i, 1);
 					}
@@ -331,11 +343,17 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			var found = 0;
 			for(var i = 0; i < $scope.talent.length; ++i){
 				if($scope.talent[i].talentId === talentId){
+					// reset requested status
+					if($scope.talent[i].requested === true){
+						$scope.talent[i].requested = false;
+					}
+					// set regular status
 					if($scope.talent[i].regular === true){
 						$scope.talent[i].regular = false;
 					} else {
 						$scope.talent[i].regular = true;
 					}
+					// remove talent if no longer selected
 					if($scope.talent[i].regular === false && $scope.talent[i].requested === false){
 						$scope.talent.splice(i, 1);
 					}
@@ -357,11 +375,17 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			var found = 0;
 			for(var i = 0; i < $scope.talent.length; ++i){
 				if($scope.talent[i].talentId === talentId){
+					// reset regular talent if set
+					if($scope.talent[i].regular === true){
+						$scope.talent[i].regular = false;
+					}
+					// set requested talent
 					if($scope.talent[i].requested === true){
 						$scope.talent[i].requested = false;
 					} else {
 						$scope.talent[i].requested = true;
 					}
+					// remove talent if no longer selected
 					if($scope.talent[i].regular === false && $scope.talent[i].requested === false){
 						$scope.talent.splice(i, 1);
 					}
