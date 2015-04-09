@@ -6,7 +6,10 @@
 var mongoose = require('mongoose'),
 	errorHandler = require('./errors'),
 	Talent = mongoose.model('Talent'),
-	_ = require('lodash');
+	_ = require('lodash'),
+	nodemailer = require('nodemailer'),
+	dateFormat = require('dateformat'),
+	now = new Date();
 
 /**
  * Create a Talent

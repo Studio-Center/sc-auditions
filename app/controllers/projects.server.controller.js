@@ -72,7 +72,7 @@ exports.sendEmail = function(req, res){
 				done('', email, bcc);
 			},
 			function(email, bcc, done) {
-				res.render('templates/email-message', {
+				res.render('templates/projects/email-message', {
 					email: email
 				}, function(err, emailHTML) {
 					done(err, emailHTML, email, bcc);
@@ -136,7 +136,7 @@ var emailClients = function(client, email, project, req, res){
 				} else {
 					emailSig = '';
 				}
-				res.render('templates/create-project-client-email', {
+				res.render('templates/projects/create-project-client-email', {
 					email: email,
 					emailSignature: emailSig,
 					project: project,
@@ -193,7 +193,7 @@ var emailTalent = function(selTalent, talentInfo, email, project, req, res){
 				part = '<p>You are cast for the part of ' + selTalent.part + '</p>';
 			}
 
-			res.render('templates/new-project-talent-email', {
+			res.render('templates/projects/new-project-talent-email', {
 				email: email,
 				emailSignature: emailSig,
 				dueDate: newDate,
@@ -413,7 +413,7 @@ exports.create = function(req, res) {
 			},
 			// render regular email body
 			function(email, done) {
-				res.render('templates/create-project', {
+				res.render('templates/projects/create-project', {
 					email: email
 				}, function(err, emailHTML) {
 					done(err, emailHTML, email);
