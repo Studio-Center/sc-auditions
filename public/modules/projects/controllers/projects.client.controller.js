@@ -653,10 +653,16 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				email: $scope.email
 			});
 
+
+
 		    if($scope.project.phases[key].status === 'complete'){
 		    	var now = new Date();
 		    	$scope.project.phases[key].endDate = now.toJSON();
-		    }
+				// update project status only for "Posting and Publishing" phase
+				if($scope.project.phases[key].name === 'Posting and Publishing'){
+					$scope.project.status = 'Complete';
+				}		    
+			}
 
 			// update project store
 			$scope.update();
@@ -765,11 +771,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 						// configure progress bar values
 						var perc = Math.floor((100 / phaseLngth) * complSteps);
 
-						if(perc >= 100){
-							$scope.project.status = 'Complete';
-						} else {
-							//$scope.project.status = 'In Progress';
-						}
+						// if(perc >= 100){
+						// 	$scope.project.status = 'Complete';
+						// } else {
+						// 	//$scope.project.status = 'In Progress';
+						// }
 
 						// set progress bar values
 						$scope.dynamic = perc;
