@@ -72,7 +72,7 @@ exports.sendEmail = function(req, res){
 				done('', email, bcc);
 			},
 			function(email, bcc, done) {
-				res.render('templates/projects/email-message', {
+				res.render('templates/email-message', {
 					email: email
 				}, function(err, emailHTML) {
 					done(err, emailHTML, email, bcc);
@@ -94,7 +94,7 @@ exports.sendEmail = function(req, res){
 				});
 			},
 			], function(err) {
-					if (err) return console.log(err);
+					//if (err) return console.log(err);
 			});
 
 	}

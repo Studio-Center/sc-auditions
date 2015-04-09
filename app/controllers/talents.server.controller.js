@@ -7,6 +7,8 @@ var mongoose = require('mongoose'),
 	errorHandler = require('./errors'),
 	Talent = mongoose.model('Talent'),
 	_ = require('lodash'),
+	config = require('../../config/config'),
+	async = require('async'),
 	nodemailer = require('nodemailer'),
 	dateFormat = require('dateformat'),
 	now = new Date();
@@ -28,6 +30,149 @@ exports.create = function(req, res) {
 					message: errorHandler.getErrorMessage(err)
 				});
 			} else {
+
+			// send out new talent email
+			async.waterfall([
+				function(done) {
+					var i;
+					//generate talent report
+					var talentData = '<p><strong>First Name</strong> ' + talent.name + '</p>';
+					talentData += '<p><strong>Last Name</strong> ' + talent.lastName + '</p>';
+					talentData += '<p><strong>Parent Name</strong> ' + talent.parentName + '</p>';
+					talentData += '<p><strong>Gender</strong> ' + talent.gender + ' ' + talent.ageRange + '</p>';
+					talentData += '<p><strong>Email</strong> ' + talent.email + '</p>';
+					talentData += '<p><strong>Email Alt</strong> ' + talent.email2 + '</p>';
+					talentData += '<p><strong>Phone Number</strong> ' + talent.phone + '</p>';
+					talentData += '<p><strong>Phone Number Alt</strong> ' + talent.phone2 + '</p>';
+					talentData += '<p><strong>Type</strong>';
+					for(i = 0; i < talent.type; ++i){
+						talentData += talent.type[i] + ' ';
+					}
+					talentData += '</p>';
+					talentData += '<p><strong>Union Status</strong> ';
+					for(i = 0; i < talent.tunionStatus; ++i){
+						talentData += talent.tunionStatus[i] + ' ';
+					}
+					talentData += '</p>';
+					talentData += '<p><strong>Last Name Code</strong> ' + talent.lastNameCode + '</p>';
+					talentData += '<p><strong>Outage Times</strong> ' + talent.outageTimes + '</p>';
+					talentData += '<p><strong>Location/ISDN</strong> ' + talent.locationISDN + '</p>';
+					talentData += '<p><strong>Exclusivity</strong> ' + talent.exclusivity + '</p>';
+					talentData += '<p><strong>ISDN Line 1</strong> ' + talent.ISDNLine1 + '</p>';
+					talentData += '<p><strong>ISDN Line 2</strong> ' + talent.ISDNLine2 + '</p>';
+					talentData += '<p><strong>Source Connect Username</strong> ' + talent.sourceConnectUsername + '</p>';
+					talentData += '<p><strong>Producer</strong> ' + talent.producerOptional + '</p>';
+					talentData += '<p><strong>Typecasts</strong>';
+					for(i = 0; i < talent.typeCasts; ++i){
+						talentData += talent.typeCasts[i] + ' ';
+					}
+					talentData += '</p>';
+
+					done('', talentData);
+				},
+				// generate Dave's email
+				function(talentData, done) {
+
+					// generate email signature
+					var emailSig = '';
+					if(req.user.emailSignature){
+						emailSig = req.user.emailSignature.replace(/\r?\n/g, "<br>");
+					} else {
+						emailSig = '';
+					}
+
+					res.render('templates/talents/new-talent-dave', {
+						talentData: talentData,
+						emailSignature: emailSig
+					}, function(err, emailHTML) {
+						done(err, emailHTML, talentData, emailSig);
+					});
+				},
+				// send Dave an email
+				function(emailHTML, talentData, emailSig, done) {
+
+					var emailSubject = 'NEW TALENT ADDITION TO VO ROSTER:  ' + talent.name + ' ' + talent.lastName;
+
+					// send email
+					var transporter = nodemailer.createTransport(config.mailer.options);
+
+					var mailOptions = {
+										to: 'Dave@studiocenter.com',
+										from: req.user.email || config.mailer.from,
+										replyTo: req.user.email || config.mailer.from,
+										subject: emailSubject,
+										html: emailHTML
+									};
+
+					transporter.sendMail(mailOptions, function(err){
+						done(err, talentData, emailSig );
+					});
+
+				},
+				// generate Ken's email
+				function(talentData, emailSig, done) {
+					res.render('templates/talents/new-talent-ken', {
+						talentData: talentData,
+						emailSignature: emailSig
+					}, function(err, emailHTML) {
+						done(err, emailHTML, talentData, emailSig);
+					});
+				},
+				// send Ken an email
+				function(emailHTML, talentData, emailSig, done) {
+
+					var emailSubject = 'NEW TALENT ADDITION TO VO ROSTER:  ' + talent.name + ' ' + talent.lastName;
+
+					// send email
+					var transporter = nodemailer.createTransport(config.mailer.options);
+
+					var mailOptions = {
+										to: 'Ken@studiocenter.com',
+										from: req.user.email || config.mailer.from,
+										replyTo: req.user.email || config.mailer.from,
+										subject: emailSubject,
+										html: emailHTML
+									};
+
+					transporter.sendMail(mailOptions, function(err){
+						done(err, talentData, emailSig );
+					});
+
+				},
+				// generate Kevin's email
+				function(talentData, emailSig, done) {
+					res.render('templates/talents/new-talent-kevin', {
+						talentData: talent,
+						emailSignature: emailSig
+					}, function(err, emailHTML) {
+						done(err, emailHTML, talentData, emailSig);
+					});
+				},
+				// send Kevin an email
+				function(emailHTML, talentData, emailSig, done) {
+
+					var emailSubject = 'NEW TALENT ADDITION TO VO ROSTER:  ' + talent.name + ' ' + talent.lastName;
+
+					// send email
+					var transporter = nodemailer.createTransport(config.mailer.options);
+
+					var mailOptions = {
+										to: 'Kevin@studiocenter.com',
+										from: req.user.email || config.mailer.from,
+										replyTo: req.user.email || config.mailer.from,
+										subject: emailSubject,
+										html: emailHTML
+									};
+
+					transporter.sendMail(mailOptions, function(err){
+						done(err);
+					});
+
+				},
+				], function(err) {
+				if (err) return console.log(err);
+			});
+
 				res.jsonp(talent);
 			}
 		});
