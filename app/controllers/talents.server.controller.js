@@ -45,12 +45,12 @@ exports.create = function(req, res) {
 					talentData += '<p><strong>Phone Number</strong> ' + talent.phone + '</p>';
 					talentData += '<p><strong>Phone Number Alt</strong> ' + talent.phone2 + '</p>';
 					talentData += '<p><strong>Type</strong>';
-					for(i = 0; i < talent.type; ++i){
+					for(i = 0; i < talent.type.length; ++i){
 						talentData += talent.type[i] + ' ';
 					}
 					talentData += '</p>';
 					talentData += '<p><strong>Union Status</strong> ';
-					for(i = 0; i < talent.tunionStatus; ++i){
+					for(i = 0; i < talent.tunionStatus.length; ++i){
 						talentData += talent.tunionStatus[i] + ' ';
 					}
 					talentData += '</p>';
@@ -63,7 +63,7 @@ exports.create = function(req, res) {
 					talentData += '<p><strong>Source Connect Username</strong> ' + talent.sourceConnectUsername + '</p>';
 					talentData += '<p><strong>Producer</strong> ' + talent.producerOptional + '</p>';
 					talentData += '<p><strong>Typecasts</strong>';
-					for(i = 0; i < talent.typeCasts; ++i){
+					for(i = 0; i < talent.typeCasts.length; ++i){
 						talentData += talent.typeCasts[i] + ' ';
 					}
 					talentData += '</p>';
