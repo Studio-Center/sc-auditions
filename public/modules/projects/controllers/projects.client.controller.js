@@ -28,6 +28,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.scripts = [];
 		$scope.newProject = {notifyClient: true};
 		$scope.parts = [];
+		$scope.toggleRefs = false;
 
 		$scope.hoveringOver = function(value,key,object) {
 	        $scope.overStar = value;
@@ -712,6 +713,16 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.$watch('project', function(val){
 
 			if(typeof $scope.project === 'object'){
+
+				// check for values then do things
+				$scope.$watch('project.referenceFiles',function(){
+					if(typeof $scope.project.referenceFiles === 'object'){
+						if($scope.project.referenceFiles.length > 0){
+							$scope.toggleRefs = true;
+						}
+					}
+				});
+
 				// load auditions
 				$scope.$watch('project.auditions', function(val){
 
@@ -1040,7 +1051,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			        fileLocation: file
 			    });
 
-				$scope.project.auditions.splice(idx, 1);
+				$scope.project.referenceFiles.splice(idx, 1);
 
 				// update project store
 				$scope.update();
