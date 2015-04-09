@@ -15,7 +15,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.client = [];
 		$scope.talent = [];
 		$scope.showRename = 0;
-		$scope.statusOpts = ['In Progress', 'On Hold', 'Pending Client Decision', 'Booked', 'Canceled', 'ReAuditioned', 'Dead', 'Closed'];
+		$scope.statusOpts = ['In Progress', 'On Hold', 'Booked', 'Canceled', 'ReAuditioned', 'Dead', 'Closed - Pending Client Decision', 'Complete'];
 		$scope.priorityOpts = ['None', 'Very low', 'Low', 'Medium', 'High', 'Very high'];
 		$scope.phaseStatusOpts = ['in progress','open','complete','suspended'];
 		$scope.soundersOpts = ['Sounders', 'No Sounders - Approved By William'];
@@ -755,9 +755,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 						var perc = Math.floor((100 / phaseLngth) * complSteps);
 
 						if(perc >= 100){
-							$scope.project.status = 'Closed';
+							$scope.project.status = 'Complete';
 						} else {
-							$scope.project.status = 'In Progress';
+							//$scope.project.status = 'In Progress';
 						}
 
 						// set progress bar values
