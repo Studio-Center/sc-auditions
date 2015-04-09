@@ -65,6 +65,13 @@
                         </unionOptions>
                     </div>
                 </div>
+                <div class="form-group" ng-if="checkUnionStatus(unionStatus)">
+                    <div class="btn-group" data-toggle="buttons">
+                        <unionOptions ng-repeat="union in unionJoinedOpts">
+                            <input type="checkbox" class="btn btn-primary" ng-model="unionJoinSelected[union]" ng-click="toggleNewUnionJoin(union)" ng-checked="unionJoinSelected.indexOf(union) > -1" btn-checkbox> {{union}}<br>
+                        </unionOptions>
+                    </div>
+                </div>
                 <div class="form-group">
                     <label class="control-label" for="gender">Gender</label><br/>
                     <div class="btn-group" data-toggle="buttons">

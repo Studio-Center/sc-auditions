@@ -10,7 +10,9 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 		$scope.unionOptions = ['union','non-union'];
 		$scope.locations = ['Offsite', 'Las Vegas', 'New York', 'Richmond', 'Santa Monica', 'Virginia Beach', 'Washington DC'];
 		$scope.exclusivityOpts = ['Non-Union Exclusive', 'Union', 'Non-Union Exclusive and Union', 'Foreign Language Agreement Non-Union', 'Foreign Language Agreement Union', 'Foreign Language Agreement Non-Union and Union', 'ISDN Non-Union', 'ISDN Union', 'ISDN Non-Union and Union', 'Independent Contractor Agreement Non-Union', 'Independent Contractor Agreement Union', 'Independent Contractor Agreement Non-Union and Union'];
+		$scope.unionJoinedOpts = ['SAG/AFTRA', 'OTHER'];
 		$scope.unionSelected = [];
+		$scope.unionJoinSelected = [];
 		$scope.typeSelected = [];
 		$scope.selTypecasts = [];
 
@@ -32,6 +34,14 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 			    $scope.talent.unionStatus.splice(idx, 1);
 			  }else{
 			    $scope.talent.unionStatus.push(union);
+			}
+		};
+		$scope.toggleUnionJoin = function(union){
+			  var idx = $scope.talent.unionJoined.indexOf(union);
+			  if (idx > -1){
+			    $scope.talent.unionJoined.splice(idx, 1);
+			  }else{
+			    $scope.talent.unionJoined.push(union);
 			}
 		};
 		$scope.toggleType = function(type){
@@ -59,6 +69,14 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 			    $scope.unionSelected.push(union);
 			}
 		};
+		$scope.toggleNewUnionJoin = function(union){
+			  var idx = $scope.unionJoinSelected.indexOf(union);
+			  if (idx > -1){
+			    $scope.unionJoinSelected.splice(idx, 1);
+			  }else{
+			    $scope.unionJoinSelected.push(union);
+			}
+		};
 		$scope.toggleNewType = function(type){
 			  var idx = $scope.typeSelected.indexOf(type);
 			  if (idx > -1){
@@ -74,6 +92,17 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 			  }else{
 			    $scope.selTypecasts.push(typeCast);
 			}
+		};
+
+		$scope.checkUnionStatus = function(unionVals){
+			if(typeof unionVals === 'object'){
+				for(var i = 0; i < unionVals.length; ++i){
+					if(unionVals[i] === 'union'){
+						return true;
+					}
+				}
+			}
+			return false;
 		};
 
 		// Create new Talent
@@ -100,7 +129,8 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 				typeCasts: this.selTypecasts,
 				exclusivity: this.exclusivity,
 				parentName: this.parentName,
-				producerOptional: this.producerOptional
+				producerOptional: this.producerOptional,
+				unionJoined: unionJoinSelected
 			});
 
 			// Redirect after save
