@@ -215,8 +215,8 @@ var emailTalent = function(selTalent, talentInfo, email, project, req, res){
 			nameArr = talentInfo.name.split(' ');
 
 			// assign email subject line
-			if(talentInfo.requested === true){
-				emailSubject = nameArr[0] + ' has a Requested Audition - ' + project.title + ' - Due ' + dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
+			if(selTalent.requested === true){
+				emailSubject = nameArr[0] + ' has a REQUESTED Audition - ' + project.title + ' - Due ' + dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
 			} else {
 				emailSubject = nameArr[0] + ' has an Audition - ' + project.title + ' - Due ' + dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
 			}
