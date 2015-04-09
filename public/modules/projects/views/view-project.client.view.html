@@ -368,21 +368,41 @@
 							<div class="panel-heading"><strong>{{project.phases[key].name}}</strong></div>
 							<div class="panel-body">
 								<span data-ng-show="permitAdminDirector()">
-									<label>Status:</label>
-									<select ng-model="project.phases[key].status" class="form-control" ng-change="updateStatus(key)" ng-options="item for item in project.phases[key].options">
-							        </select>
-							        <label>Start Date:</label>
-							        <p>{{project.phases[key].startDate | date:'fullDate'}}</p>
-							        <label>End Date:</label>
-							        <p>{{project.phases[key].endDate | date:'fullDate'}}</p>
+									<div class="row">
+										<div class="col-lg-3 col-md-3 col-sm-3">
+											<label>Status:</label>
+										</div>
+										<div class="col-lg-9 col-md-9 col-sm-9">
+											<select ng-model="project.phases[key].status" class="form-control" ng-change="updateStatus(key)" ng-options="item for item in project.phases[key].options">
+							        		</select>
+							        	</div>
+							        </div>
+							        <div class="row">
+										<div class="col-lg-3 col-md-3 col-sm-3">
+							        		<label>End Date:</label>
+							        	</div>
+							        	<div class="col-lg-9 col-md-9 col-sm-9">
+							        		<p>{{project.phases[key].endDate | date:'fullDate'}}</p>
+							        	</div>
+							        </div>
 					    		</span>
 					    		<span data-ng-show="permitClient() || permitClientClient()">
-					    			<label>Status:</label>
-									<p>{{project.phases[key].status}}</p>
-							        <label>Start Date:</label>
-							        <p>{{project.phases[key].startDate | date:'fullDate'}}</p>
-							        <label>End Date:</label>
-							        <p>{{project.phases[key].endDate | date:'fullDate'}}</p>
+					    			<div class="row">
+										<div class="col-lg-3 col-md-3 col-sm-3">
+							    			<label>Status:</label>
+						    			</div>
+							        	<div class="col-lg-9 col-md-9 col-sm-9">
+											<p>{{project.phases[key].status}}</p>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-lg-3 col-md-3 col-sm-3">
+							        		<label>End Date:</label>
+						        		</div>
+							        	<div class="col-lg-9 col-md-9 col-sm-9">
+							        		<p>{{project.phases[key].endDate | date:'fullDate'}}</p>
+							        	</div>
+							        </div>
 					    		</span>
 					        </div>
 						</div>
