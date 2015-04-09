@@ -59,6 +59,13 @@
                         </unionOptions>
                     </div>
                 </div>
+                <div class="form-group" ng-if="checkUnionStatus(talent.unionStatus)">
+                    <div class="btn-group" data-toggle="buttons">
+                        <unionOptions ng-repeat="union in unionJoinedOpts">
+                            <input type="checkbox" class="btn btn-primary" ng-model="talent.unionJoined[union]" ng-click="toggleUnionJoin(union)" ng-checked="talent.unionJoined.indexOf(union) > -1" btn-checkbox> {{union}}<br>
+                        </unionOptions>
+                    </div>
+                </div>
                 <div class="form-group">
                     <label class="control-label" for="gender">Gender</label><br/>
                     <div class="btn-group" data-toggle="buttons">
@@ -66,13 +73,6 @@
                         <label class="btn btn-primary" ng-model="talent.gender" btn-radio="'female'">Female</label>
                     </div>
                 </div>
-                <!-- <div class="form-group">
-                    <label class="control-label" for="gender">Gender</label><br/>
-                    <div class="btn-group" data-toggle="buttons">
-                        <label class="btn btn-primary" ng-model="talent.gender" btn-radio="'male'">Male</label>
-                        <label class="btn btn-primary" ng-model="talent.gender" btn-radio="'female'">Female</label>
-                    </div>
-                </div> -->
                 <div class="form-group">
                     <div class="btn-group" data-toggle="buttons">
                         <label class="btn btn-primary" ng-model="talent.ageRange" btn-radio="'kid'">Kid</label>

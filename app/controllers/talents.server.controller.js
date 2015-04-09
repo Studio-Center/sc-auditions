@@ -50,8 +50,12 @@ exports.create = function(req, res) {
 					}
 					talentData += '</p>';
 					talentData += '<p><strong>Union Status</strong> ';
-					for(i = 0; i < talent.tunionStatus.length; ++i){
-						talentData += talent.tunionStatus[i] + ' ';
+					for(i = 0; i < talent.unionStatus.length; ++i){
+						talentData += talent.unionStatus[i] + ' ';
+					}
+					talentData += '<br>';
+					for(i = 0; i < talent.unionJoined.length; ++i){
+						talentData += talent.unionJoined[i] + ' ';
 					}
 					talentData += '</p>';
 					talentData += '<p><strong>Last Name Code</strong> ' + talent.lastNameCode + '</p>';
