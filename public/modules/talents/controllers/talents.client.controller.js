@@ -99,7 +99,8 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 				sourceConnectUsername: this.sourceConnectUsername,
 				typeCasts: this.selTypecasts,
 				exclusivity: this.exclusivity,
-				parentName: this.parentName
+				parentName: this.parentName,
+				producerOptional: this.producerOptional
 			});
 
 			// Redirect after save

@@ -86,6 +86,9 @@ var TalentSchema = new Schema({
 	sourceConnectUsername: {
 		type: String
 	},
+	producerOptional: {
+		type: String
+	},
 	typeCasts: {
 		type: Array
 	},
