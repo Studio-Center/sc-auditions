@@ -9,6 +9,7 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 		$scope.typeOptions = ['Email','Phone'];
 		$scope.unionOptions = ['union','non-union'];
 		$scope.locations = ['Offsite', 'Las Vegas', 'New York', 'Richmond', 'Santa Monica', 'Virginia Beach', 'Washington DC'];
+		$scope.exclusivityOpts = ['Non-Union Exclusive', 'Union', 'Non-Union Exclusive and Union', 'Foreign Language Agreement Non-Union', 'Foreign Language Agreement Union', 'Foreign Language Agreement Non-Union and Union', 'ISDN Non-Union', 'ISDN Union', 'ISDN Non-Union and Union', 'Independent Contractor Agreement Non-Union', 'Independent Contractor Agreement Union', 'Independent Contractor Agreement Non-Union and Union'];
 		$scope.unionSelected = [];
 		$scope.typeSelected = [];
 		$scope.selTypecasts = [];
@@ -96,7 +97,9 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 				ISDNLine1: this.ISDNLine1,
 				ISDNLine2: this.ISDNLine2,
 				sourceConnectUsername: this.sourceConnectUsername,
-				typeCasts: this.selTypecasts
+				typeCasts: this.selTypecasts,
+				exclusivity: this.exclusivity,
+				parentName: this.parentName
 			});
 
 			// Redirect after save

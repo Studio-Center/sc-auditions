@@ -22,9 +22,15 @@ var TalentSchema = new Schema({
 		required: 'Please fill Talent last name',
 		trim: true
 	},
+	parentName: {
+		type: String
+	},
 	type: {
 		type: Array,
 		required: 'Please select a Talent type',
+	},
+	exclusivity: {
+		type: String
 	},
 	email: {
 		type: String

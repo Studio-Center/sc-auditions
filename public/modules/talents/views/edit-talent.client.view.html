@@ -80,6 +80,12 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label class="control-label" for="parentName">Parent Name</label>
+                    <div class="controls">
+                        <input type="text" data-ng-model="talent.parentName" id="parentName" class="form-control" placeholder="parentName" required>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="control-label" for="outageTimes">Outage Times</label>
                     <div class="controls">
                         <input type="text" data-ng-model="talent.outageTimes" id="outageTimes" class="form-control" placeholder="outageTimes" required>
@@ -90,6 +96,14 @@
                     <div class="controls">
                         <select ng-model="talent.locationISDN" required>
                             <option ng-repeat="item in locations" value="{{item}}">{{item}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="exclusivity">Exclusivity</label>
+                    <div class="controls">
+                        <select ng-model="talent.exclusivity" required>
+                            <option ng-repeat="item in exclusivityOpts" value="{{item}}">{{item}}</option>
                         </select>
                     </div>
                 </div>
