@@ -37,6 +37,26 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	        $scope.selCheckVal = value;
       	};
 
+      	// compare dates check for within hour
+      	$scope.compareDates = function(projDate){
+      		var now = new Date();
+      		projDate = new Date(projDate);
+
+      		var hours = Math.abs(projDate - now) / 36e5;
+
+      		if(hours < 1){
+      			return true
+      		}
+      	};
+      	$scope.checkPassed = function(projDate){
+      		var now = new Date();
+      		projDate = new Date(projDate);
+
+      		if(now > projDate){
+      			return true
+      		}
+      	};
+
       	// show part field if talent value is not already checked
       	$scope.showPartFld = function(id){
       		for(var i = 0; i < $scope.project.talent.length; ++i){
