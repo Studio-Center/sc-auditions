@@ -289,6 +289,13 @@
 		            		Main Clients<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
 		            	</h4>
 		        	</accordion-heading>
+
+		        		<div style="text-align:center;padding-bottom:7px">
+							<button class="btn btn-primary" ng-click="">Opening Email</button>
+							<button class="btn btn-primary" ng-click="">Carryover Email</button>
+							<button class="btn btn-primary" ng-click="">Closing Email</button>
+						</div>
+
 						<ul class="list-group">
 							<li class="list-group-item" ng-repeat="(key, member) in project.client"><a target="_blank" href="/#!/usersedit/{{member.userId}}">{{member.name}}</a></li>
 						</ul>
