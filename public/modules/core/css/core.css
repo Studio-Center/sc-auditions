@@ -47,40 +47,40 @@
 }
 /* background color codes */
 .blueBg{
-	background:blue !important;
-	color:#fff !important;
-}
-.yellowBg{
-	background:yellow !important;
-}
-.lyellowBg{
-	background:#FAFF63 !important;
-}
-.greenBg{
-	background:green !important;
-	color:#fff !important;
-}
-.lgreenBG{
-	background:#C3FF00 !important;
-}
-.orangeBG{
-	background:#FF8400 !important;
+	background:#4580ed !important;
 	color:#fff !important;
 }
 .lblueBG{
-	background:#8099FF !important;
+	background:#91b4e8 !important;
+}
+.yellowBg{
+	background:#ffff00 !important;
+}
+.lyellowBg{
+	background:#ffffb2 !important;
+}
+.greenBg{
+	background:#4ceb5a !important;
+	color:#fff !important;
+}
+.lgreenBG{
+	background:#9afca5 !important;
+}
+.orangeBG{
+	background:#fc7200 !important;
+	color:#fff !important;
 }
 .lgray{
-	background:#E3E3E3 !important;
+	background:#c8c8c8 !important;
 }
 .mgray{
-	background:#BABABA !important;
+	background:#919191 !important;
 }
 .gray{
-	background:#8C8C8C !important;
+	background:#484848 !important;
 	color:#fff !important;
 }
 .redBG{
-	background:red !important;
+	background:#fa2100 !important;
 	color:#fff !important;
 }
