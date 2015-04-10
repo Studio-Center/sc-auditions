@@ -45,10 +45,42 @@
 .strike-if{
 	text-decoration:line-through;
 }
+/* background color codes */
 .blueBg{
-	background:blue;
-	color:#fff;
+	background:blue !important;
+	color:#fff !important;
 }
 .yellowBg{
-	background:yellow;
+	background:yellow !important;
+}
+.lyellowBg{
+	background:#FAFF63 !important;
+}
+.greenBg{
+	background:green !important;
+	color:#fff !important;
+}
+.lgreenBG{
+	background:#C3FF00 !important;
+}
+.orangeBG{
+	background:#FF8400 !important;
+	color:#fff !important;
+}
+.lblueBG{
+	background:#8099FF !important;
+}
+.lgray{
+	background:#E3E3E3 !important;
+}
+.mgray{
+	background:#BABABA !important;
+}
+.gray{
+	background:#8C8C8C !important;
+	color:#fff !important;
+}
+.redBG{
+	background:red !important;
+	color:#fff !important;
 }
