@@ -101,7 +101,7 @@
                 <div class="form-group">
                     <label class="control-label" for="locationISDN">Location/ISDN</label>
                     <div class="controls">
-                        <select ng-model="talent.locationISDN" required>
+                        <select ng-model="talent.locationISDN" class="form-control">
                             <option ng-repeat="item in locations" value="{{item}}">{{item}}</option>
                         </select>
                     </div>
@@ -109,7 +109,7 @@
                 <div class="form-group">
                     <label class="control-label" for="exclusivity">Exclusivity</label>
                     <div class="controls">
-                        <select ng-model="talent.exclusivity" required>
+                        <select ng-model="talent.exclusivity" class="form-control">
                             <option ng-repeat="item in exclusivityOpts" value="{{item}}">{{item}}</option>
                         </select>
                     </div>
