@@ -37,7 +37,16 @@
             <div class="list-group item-list">
                 <a data-ng-repeat="project in projects | filter:searchText | orderBy: sortText : sortTextOrder" data-ng-href="#!/projects/{{project._id}}" class="list-group-item">
                     <div class="row">
-                        <div class="col-lg-8 col-md-8 col-sm-8"><h4 class="list-group-item-heading">{{project.title}} <small>Due {{project.estimatedCompletionDate | date:'short'}} EST</small> </h4></div>
+                        <div class="col-lg-8 col-md-8 col-sm-8">
+                            <h4 class="list-group-item-heading">
+                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                    {{project.title}} <small>Due {{project.estimatedCompletionDate | date:'short'}} EST</small> 
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                    <progressbar value="calcProjectProg(project)" type="success" ng-model="progress"><b>{{calcProjectProg(project)}}%</b></progressbar>
+                                </div>
+                            </h4>
+                        </div>
                         <div class="col-lg-4 col-md-4 col-sm-4"><h4><small>Created {{project.created | date:'short'}} EST by {{project.user.displayName}}</small></h4></div>
                     </div>
                 </a>

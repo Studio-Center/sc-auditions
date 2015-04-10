@@ -11,6 +11,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.ratings = [];
 		$scope.ratingsAvg = [];
 		// static project options
+		$scope.projProgress = [];
 		$scope.selCheckVal = 0;
 		$scope.client = [];
 		$scope.talent = [];
@@ -715,6 +716,26 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				$scope.dateNotice = '';
 			}
 		});
+
+		$scope.calcProjectProg = function(curProject){
+			if(typeof curProject.phases !== 'undefined'){
+				var phaseLngth = curProject.phases.length;
+				var complSteps = 0;
+
+				// determine completed steps
+				for(var i = 0; i < phaseLngth; ++i){
+					if(curProject.phases[i].status === 'complete'){
+						complSteps++;
+					}
+				}
+
+				// configure progress bar values
+				var perc = Math.floor((100 / phaseLngth) * complSteps);
+
+				// set progress bar values
+				return perc;
+			}
+		}
 
 		$scope.$watch('project', function(val){
 
