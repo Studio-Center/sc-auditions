@@ -155,6 +155,37 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			success(function(data, status, headers, config) {
         		alert('Clients Emailed ' + type + ' Email ');
         		$scope.selectedMainClients = [];
+
+				var now = new Date();
+				var item = {
+							date: now.toJSON(), 
+							userid: Authentication.user._id, 
+							username: Authentication.user.displayName, 
+							item: '', 
+							deleted: false
+						};
+
+        		// add note
+        		switch(type){
+        			case 'opening':
+						var note = 'Client Notified of Project Start by ' + Authentication.user.displayName;
+					break;
+					case 'carryover':
+						var note = 'Client sent Carryover by ' + Authentication.user.displayName;
+					break;
+					case 'closing':
+						var note = 'Client Notified of Project Completion by ' + Authentication.user.displayName;
+					break;
+        		}
+
+        		// add note to note object
+        		item.item = note;
+
+        		// add to project discussion
+        		$scope.project.discussion.push(item);
+
+        		// update project store
+				$scope.update();
         	}).
 			error(function(data, status, headers, config) {
 			    // called asynchronously if an error occurs
