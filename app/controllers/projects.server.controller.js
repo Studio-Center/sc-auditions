@@ -100,6 +100,107 @@ exports.sendEmail = function(req, res){
 	}
 };
 
+exports.sendClientEmail = function(req, res){
+
+	// determine email type
+	var template;
+	var type = req.body.type;
+
+	switch(type){
+		case 'opening':
+			template = 'templates/projects/create-project-client-email';
+		break;
+		case 'carryover':
+			template = 'templates/projects/carryover-email';
+		break;
+		case 'closing':
+			template = 'templates/projects/closing-email';
+		break;
+	}
+
+	// gather clients ids
+	var clientIds = [];
+	for(var i = 0; i < req.body.clients.length; ++i){
+		if(typeof req.body.clients[i] !== 'undefined' && req.body.clients[i] !== null && req.body.clients[i] !== false){
+			clientIds.push(req.body.clients[i]);
+		}
+	}
+
+	var emailSig = '';
+	if(req.user.emailSignature){
+		emailSig = req.user.emailSignature.replace(/\r?\n/g, "<br>");
+	} else {
+		emailSig = '';
+	}
+
+	// query required data then email clients
+	User.where('_id').in(clientIds).sort('-created').exec(function(err, foundClients) {
+
+		// walk through and email all selected clients
+		for(var j = 0; j < foundClients.length; ++j){
+
+			// wrap in anonymous function to preserve client values per iteration
+			(function(){
+				var curClient = foundClients[j];
+
+				var client = {name: curClient.displayName};
+
+				async.waterfall([
+					function(done) {
+
+						res.render(template, {
+							emailSignature: emailSig,
+							project: req.body.project,
+							client: client,
+							clientInfo: curClient,
+							audURL: 'http://' + req.headers.host,
+							dueDate: dateFormat(req.body.project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT'),
+							dueDateDay: dateFormat(req.body.project.estimatedCompletionDate, 'dddd')
+						}, function(err, clientEmailHTML) {
+							done(err, clientEmailHTML);
+						});
+
+					},
+					function(clientEmailHTML, done){
+				
+						switch(type){
+							case 'opening':
+								var emailSubject = 'Your audition project: ' + req.body.project.title + ' Due ' + dateFormat(req.body.project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
+							break;
+							case 'carryover':
+								var emailSubject = 'Your First Batch of ' + req.body.project.title + '  Auditions - Studio Center';
+							break;
+							case 'closing':
+								var emailSubject = 'Your Audition Project ' + req.body.project.title + ' is Complete';
+							break;
+						}
+
+						// send email
+						var transporter = nodemailer.createTransport(config.mailer.options);
+
+						var mailOptions = {
+											to: curClient.email,
+											from: req.user.email || config.mailer.from,
+											replyTo: req.user.email || config.mailer.from,
+											subject: emailSubject,
+											html: clientEmailHTML
+										};
+
+						transporter.sendMail(mailOptions, function(){
+							done(err);
+						});
+					}
+					], function(err) {
+					if (err) return res.json(400, err);
+				});
+			})();
+		}
+
+	});
+
+	return res.json(200);
+};
+
 // send emails from lead form
 exports.lead = function(req, res){
 
@@ -166,7 +267,7 @@ var emailClients = function(client, email, project, req, res){
 				transporter.sendMail(mailOptions);
 			}
 		], function(err) {
-			if (err) return console.log(err);
+			//if (err) return console.log(err);
 		});
 };
 

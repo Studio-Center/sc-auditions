@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+</head>
+
+<body>
+
+	<p>{{clientInfo.firstName}},
+
+	<p>Here's your first batch of auditions, we will have more for you on {{dueDateDay}}.<br>
+	Enjoy!</p>
+
+	<p>Your audition files have been uploaded to:</p>
+
+	<p><a href="{{audURL}}">{{audURL}}</a></p>
+
+	<p>Your login information is:</p>
+
+	<p>As a reminder, your User Name is: {{clientInfo.username}}</p>
+
+	<p>Thank you for your business, please let us know if you need anything else!</p>
+
+	<p>{% autoescape false %}{{emailSignature}}{% endautoescape %}</p>
+
+</body>
+
+</html>
