@@ -188,6 +188,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				$scope.update();
         	}).
 			error(function(data, status, headers, config) {
+				alert('An error occured while sending client emails. Please contact your administrator.');
 			    // called asynchronously if an error occurs
 			    // or server returns response with an error status.
 			});
