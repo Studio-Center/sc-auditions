@@ -159,8 +159,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				var now = new Date();
 				var item = {
 							date: now.toJSON(), 
-							userid: Authentication.user._id, 
-							username: Authentication.user.displayName, 
+							userid: '', 
+							username: 'System', 
 							item: '', 
 							deleted: false
 						};
