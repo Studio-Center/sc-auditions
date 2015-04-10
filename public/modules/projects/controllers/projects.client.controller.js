@@ -674,14 +674,12 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				email: $scope.email
 			});
 
-
-
 		    if($scope.project.phases[key].status === 'complete'){
 		    	var now = new Date();
 		    	$scope.project.phases[key].endDate = now.toJSON();
 				// update project status only for "Posting and Publishing" phase
 				if($scope.project.phases[key].name === 'Posting and Publishing'){
-					$scope.project.status = 'Complete';
+					$scope.project.status = 'Closed - Pending Client Decision';
 				}		    
 			}
 
