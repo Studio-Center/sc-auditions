@@ -14,7 +14,8 @@ var TypecastSchema = new Schema({
 		type: String,
 		default: '',
 		required: 'Please fill Typecast name',
-		trim: true
+		trim: true,
+		unique: true
 	},
 	created: {
 		type: Date,
