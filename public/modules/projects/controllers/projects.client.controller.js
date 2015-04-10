@@ -144,6 +144,24 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}
 		};
 
+		// send various client emails
+		$scope.sendClientEmail = function(type){
+
+			$http.post('/projects/sendclientemail', {
+		        type: type,
+		        project: $scope.project,
+		        clients: $scope.selectedMainClients
+		    }).
+			success(function(data, status, headers, config) {
+        		alert('Clients Emailed ' + type + ' Email ');
+        		$scope.selectedMainClients = [];
+        	}).
+			error(function(data, status, headers, config) {
+			    // called asynchronously if an error occurs
+			    // or server returns response with an error status.
+			});
+		};
+
 		// new project form 
 		$scope.lead = function(){
 

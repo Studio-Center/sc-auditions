@@ -25,6 +25,9 @@ module.exports = function(app) {
 	app.route('/projects/sendemail')
 		.post(users.requiresLogin, projects.sendEmail);
 
+	app.route('/projects/sendclientemail')
+		.post(users.requiresLogin, projects.sendClientEmail);
+
 	app.route('/projects/uploads')
 		.post(users.requiresLogin, multipartyMiddleware, projects.uploadFile);
 

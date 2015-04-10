@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+</head>
+
+<body>
+
+	<p>Dear {{clientInfo.firstName}},
+
+	<p>We've completed your audition project for {{project.title}}. You can review the project by logging in to our dedicated
+auditions website at <a href="{{audURL}}">{{audURL}}</a>.</p>
+
+	<p>As a reminder, your User Name is: {{clientInfo.username}}</p>
+
+	<p>Please let me know the talent you prefer and I will book them right away! If you're having a hard time choosing, I'll be
+happy to arrange a free live audition with your top candidates.</p>
+
+	<p>Thank you for your business!</p>
+
+	<p>{% autoescape false %}{{emailSignature}}{% endautoescape %}</p>
+
+</body>
+
+</html>
