@@ -30,6 +30,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.newProject = {notifyClient: true};
 		$scope.parts = [];
 		$scope.toggleRefs = false;
+		$scope.selectedMainClients = [];
 
 		$scope.hoveringOver = function(value,key,object) {
 	        $scope.overStar = value;
@@ -464,6 +465,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				}
 			}
 
+			if(found === 0){
+				$scope.project.team.push(user);
+			}
+
 			// update project store
 			$scope.update();
 		};
@@ -481,6 +486,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				}
 			}
 
+			if(found === 0){
+				$scope.project.clientClient.push(user);
+			}
+
 			// update project store
 			$scope.update();
 		};
@@ -496,6 +505,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					$scope.project.client.splice(i, 1);
 					found = 1;
 				}
+			}
+
+			if(found === 0){
+				$scope.project.client.push(user);
 			}
 
 			// update project store

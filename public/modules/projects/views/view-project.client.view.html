@@ -297,8 +297,11 @@
 						</div>
 
 						<ul class="list-group">
-							<li class="list-group-item" ng-repeat="(key, member) in project.client"><a target="_blank" href="/#!/usersedit/{{member.userId}}">{{member.name}}</a></li>
+							<li class="list-group-item" ng-repeat="(key, member) in project.client">
+								<input type="checkbox" ng-model="selectedMainClients[key]" ng-true-value="{{member.userId}}"> <a target="_blank" href="/#!/usersedit/{{member.userId}}">{{member.name}}</a>
+							</li>
 						</ul>
+						
 						<accordion close-others="oneAtATime">
 							<accordion-group is-open="statusInt.open">
 							<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
