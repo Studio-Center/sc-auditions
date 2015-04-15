@@ -357,8 +357,10 @@ var emailTalent = function(selTalent, talentInfo, email, project, req, res){
 			}
 
 			// assign part text
-			if(selTalent.part !== ''){
-				part = '<p>You are cast for the part of ' + selTalent.part + '</p>';
+			if(typeof selTalent.part !== 'undefined'){
+				if(selTalent.part !== ''){
+					part = '<p>You are cast for the part of ' + selTalent.part + '</p>';
+				}
 			}
 
 			res.render('templates/projects/new-project-talent-email', {
