@@ -1,7 +1,8 @@
 <section data-ng-controller="TalentsController" data-ng-init="findOne()">
-	<div class="page-header">
+	<div class="page-header jumbotron">
 		<p><strong>First Name</strong> {{talent.name}}</p>
 		<p><strong>Last Name</strong> {{talent.lastName}}</p>
+		<p><strong>Last Name Code</strong> {{talent.lastNameCode}}</p>
 		<p><strong>Parent Name</strong> {{talent.parentName}}</p>
 		<p><strong>Gender</strong> {{talent.gender}} {{talent.ageRange}}</p>
 		<p><strong>Email</strong> {{talent.email}}</p>
@@ -14,7 +15,6 @@
 		<span ng-repeat="(key, usval) in talent.unionStatus">{{usval}} </span>
 		<br>
 		<span ng-repeat="(key, usval) in talent.unionJoined">{{usval}} </span></p>
-		<p><strong>Last Name Code</strong> {{talent.lastNameCode}}</p>
 		<p><strong>Outage Times</strong> {{talent.outageTimes}}</p>
 		<p><strong>Location/ISDN</strong> {{talent.locationISDN}}</p>
 		<p><strong>Exclusivity</strong> {{talent.exclusivity}}</p>
@@ -24,6 +24,18 @@
 		<p><strong>Producer</strong> {{talent.producerOptional}}</p>
 		<p><strong>Typecasts</strong>
 		<span ng-repeat="(key, usval) in talent.typeCasts"> {{usval}} </span> </p>
+	</div>
+	<div class="page-header jumbotron">
+		<script>
+          var projects = angular.module("projects", []);
+          projects.controller("ProjectsController", function($scope) {
+              $scope.projects = Users.query();
+          });
+        </script>
+        <div class="controls" ng-module="projects">
+            <div ng-controller="ProjectsController" data-ng-init="findTalentProjects(talent._id)">
+            </div>
+        </div>
 	</div>
 	<div class="pull-right" data-ng-show="permitAdminDirector()">
 		<a class="btn btn-primary" href="/#!/talents/{{talent._id}}/edit">
