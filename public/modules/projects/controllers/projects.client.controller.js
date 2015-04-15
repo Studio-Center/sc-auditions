@@ -69,6 +69,17 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       		}
    			return true
      	};
+     	$scope.showPartString = function(id){
+      		for(var i = 0; i < $scope.project.talent.length; ++i){
+      			if($scope.project.talent[i].talentId === String(id)){
+      				if(typeof $scope.project.talent[i].part !== 'undefined'){
+	      				if($scope.project.talent[i].part !== ''){
+	      					return $scope.project.talent[i].part;
+	      				}
+      				}
+      			}
+      		}
+      	};
      	$scope.showCreatePartFld = function(id){
       		for(var i = 0; i < $scope.talent.length; ++i){
       			if($scope.talent[i].talentId === String(id)){
