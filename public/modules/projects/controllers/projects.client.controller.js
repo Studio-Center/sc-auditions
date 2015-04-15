@@ -770,10 +770,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 			// send update email
 			$scope.gatherToAddresses('updateStatus');
-		    $scope.email.subject = $scope.project.title + ' Phase ' + $scope.project.phases[key].name + ' Status Update';
+		    $scope.email.subject = $scope.project.title + ' Phase ' + $scope.project.phases[key].name[0].toUpperCase() + $scope.project.phases[key].name.slice(1) + ' Status Update';
 		    $scope.email.message += 'Project: ' + $scope.project.title + '<br>';
-		    $scope.email.message += 'Phase: ' + $scope.project.phases[key].name + '<br>';
-		    $scope.email.message += 'Status: ' + $scope.project.phases[key].status + '<br>';
+		    $scope.email.message += 'Phase: ' + $scope.project.phases[key].name[0].toUpperCase() + $scope.project.phases[key].name.slice(1)  + '<br>';
+		    $scope.email.message += 'Status: ' + $scope.project.phases[key].status[0].toUpperCase() + $scope.project.phases[key].status.slice(1) + '<br>';
 		    $scope.email.message += 'Start Date: ' + $scope.project.phases[key].startDate + '<br>';
 		    $scope.email.message += 'End Date: ' + $scope.project.phases[key].endDate + '<br>' + '<br>';
 		    $scope.email.message += 'Added by: ' + Authentication.user.displayName + '<br>';
@@ -801,7 +801,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			$scope.gatherToAddresses('updateStatus');
 		    $scope.email.subject = $scope.project.title + ' Status Update';
 		    $scope.email.message += 'Project: ' + $scope.project.title + '<br>';
-		    $scope.email.message += 'Status: ' + $scope.project.status + '<br>';
+		    $scope.email.message += 'Status: ' + $scope.project.phases[key].status[0].toUpperCase() + $scope.project.phases[key].status.slice(1) + '<br>';
 		    $scope.email.message += 'Added by: ' + Authentication.user.displayName + '<br>';
 		    $scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '<br>';
 
