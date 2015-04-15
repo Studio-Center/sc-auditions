@@ -758,7 +758,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 			// send update email
 			$scope.gatherToAddresses('updateStatus');
-		    $scope.email.subject = $scope.project.title + ' phase ' + $scope.project.phases[key].name + ' status update';
+		    $scope.email.subject = $scope.project.title + ' Phase ' + $scope.project.phases[key].name + ' Status Update';
 		    $scope.email.message += 'Project: ' + $scope.project.title + '<br>';
 		    $scope.email.message += 'Phase: ' + $scope.project.phases[key].name + '<br>';
 		    $scope.email.message += 'Status: ' + $scope.project.phases[key].status + '<br>';
