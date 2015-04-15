@@ -155,6 +155,18 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}
 		};
 
+		// get filtered projects list
+		$scope.findTalentProjects = function(talentId){
+
+			$http.get('/projects/filterByTalent', {
+		        talentId: talent
+		    }).
+			success(function(data, status, headers, config) {
+				$scope.projects = data;
+			});
+
+		};
+
 		// send talent project welcome email
 		$scope.sendTalentEmail = function(talent){
 
@@ -300,7 +312,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}
 
 			// attach talents to email chain
-			if(type !== 'updateTalent' && type !== 'updateTeam' && type !== 'updateClientClient' && type !== 'updateClient' && type !== 'saveAudtionNote' && type !== 'saveScriptNote' && type !== 'saveDiscussion'){
+			if(type !== 'updateTalent' && type !== 'updateTeam' && type !== 'updateClientClient' && type !== 'updateClient' && type !== 'saveAudtionNote' && type !== 'saveScriptNote' && type !== 'saveDiscussion' && type !== 'updateStatus'){
 				for(var l = 0; l < $scope.project.talent.length; ++l){
 					if($scope.project.talent[l].email !== '' && re.test($scope.project.talent[l].email)){
 						emailCnt += 1;
