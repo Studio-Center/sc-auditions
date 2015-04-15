@@ -100,6 +100,73 @@ exports.sendEmail = function(req, res){
 	}
 };
 
+// send talent project start email
+exports.sendTalentEmail = function(req, res){
+
+	var project = req.body.project;
+	var talent = req.body.talent;
+
+	async.waterfall([
+		// gather info for selected talent
+		function(done) {
+			Talent.findOne({'_id':talent.talentId}).sort('-created').exec(function(err, talentInfo) {
+				done(err, talentInfo);
+			});
+		},
+		// generate email body
+		function(talentInfo, done) {
+			var email =  {
+							projectId: '',
+							to: [],
+							bcc: [],
+							subject: '',
+							header: '',
+							footer: '',
+							scripts: '',
+							referenceFiles: ''
+						};
+			var i;
+
+			// add scripts and assets to email body
+			email.scripts = '\n' + '<strong>Scripts:</strong>' + '<br>';
+			if(typeof project.scripts !== 'undefined'){
+				if(project.scripts.length > 0){
+					for(i = 0; i < project.scripts.length; ++i){
+						email.scripts += '<a href="http://' + req.headers.host + '/res/scripts/' + project._id + '/' + project.scripts[i].file.name + '">' + project.scripts[i].file.name + '</a><br>';
+					}
+				} else {
+					email.scripts += 'None';
+				}
+			} else {
+				email.scripts += 'None';
+			}
+			email.referenceFiles = '\n' + '<strong>Reference Files:</strong>' + '<br>';
+			if(typeof project.referenceFiles !== 'undefined'){
+				if(project.referenceFiles.length > 0){
+					for(var j = 0; j < project.referenceFiles.length; ++j){
+						email.referenceFiles += '<a href="http://' + req.headers.host + '/res/referenceFiles/' + project._id + '/' + project.referenceFiles[j].file.name + '">' + project.referenceFiles[j].file.name + '</a><br>';
+					}
+				} else {
+					email.referenceFiles += 'None';
+				}
+			} else {
+				email.referenceFiles += 'None';
+			}
+
+			done('', email, talentInfo)
+		},
+		// email selected talent
+		function(email, talentInfo, done){
+			emailTalent(talent, talentInfo, email, project, req, res);
+			return res.json(200);
+		}
+		], function(err) {
+		if (err) return res.json(400, err);
+	});
+
+}
+
+// send client email based on user button click
 exports.sendClientEmail = function(req, res){
 
 	// determine email type

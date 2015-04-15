@@ -157,6 +157,7 @@
 										<a target="_blank" href="/#!/talents/{{member.talentId}}">{{talent.name}} {{talent.lastName | limitTo: 1}}</a> - {{talent.locationISDN}} <span ng-show="member.requested == true">- R</span>
 										<select data-ng-show="permitEveryOneButClients()" ng-model="project.talent[key].status" ng-init="project.talent[key].status = project.talent[key].status || talentStatus[0]" style="width:100px" ng-change="updateTalentStatus(key)" ng-options="item for item in talentStatus"></select>
 										<span data-ng-show="permitEveryOneButClients() !== true">{{project.talent[key].status}}</span>
+										<button class="btn btn-primary" ng-click="sendTalentEmail(project.talent[key])">Email</button>
 										<span data-ng-show="permitEveryOneButClients()">Booked <input type="checkbox" data-ng-model="project.talent[key].booked" ng-checked="project.talent[key].booked" ng-click="toggleBooked(key)"> 
 										{{project.talent[key].part}}
 									</div>
