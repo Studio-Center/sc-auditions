@@ -787,7 +787,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.updateProjectStatus = function(){
 
 			$scope.gatherToAddresses('updateStatus');
-		    $scope.email.subject = $scope.project.title + ' status update';
+		    $scope.email.subject = $scope.project.title + ' Status Update';
 		    $scope.email.message += 'Project: ' + $scope.project.title + '<br>';
 		    $scope.email.message += 'Status: ' + $scope.project.status + '<br>';
 		    $scope.email.message += 'Added by: ' + Authentication.user.displayName + '<br>';
