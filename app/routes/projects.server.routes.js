@@ -19,36 +19,50 @@ module.exports = function(app) {
 	app.route('/projects/create')
 		.get(users.requiresLogin, projects.hasAuthorization);
 
+	// gather filtered list of projects by selected talent id
+	app.route('/projects/filterByTalent')
+		.post(users.requiresLogin, projects.getTalentFilteredProjects);
+
+	// post lead via emailw
 	app.route('/projects/lead')
 		.post(users.requiresLogin, projects.lead);
 
+	// send non-group targetted email
 	app.route('/projects/sendemail')
 		.post(users.requiresLogin, projects.sendEmail);
 
+	// send emails to assigned clients
 	app.route('/projects/sendclientemail')
 		.post(users.requiresLogin, projects.sendClientEmail);
 
+	// send emails to clients
 	app.route('/projects/sendtalentemail')
 		.post(users.requiresLogin, projects.sendTalentEmail);
 
-	app.route('/projects/uploads')
-		.post(users.requiresLogin, multipartyMiddleware, projects.uploadFile);
+	// app.route('/projects/uploads')
+	// 	.post(users.requiresLogin, multipartyMiddleware, projects.uploadFile);
 
+	// remove selected file from file system
 	app.route('/projects/deletefile')
 		.post(users.requiresLogin, multipartyMiddleware, projects.deleteFileByName);
 
+	// upload reference file
 	app.route('/projects/uploads/referenceFile')
 		.post(users.requiresLogin, multipartyMiddleware, projects.uploadReferenceFile);
 
+	// upload temp reference file
 	app.route('/projects/uploads/referenceFile/temp')
 		.post(users.requiresLogin, multipartyMiddleware, projects.uploadTempReferenceFile);
 
+	// upload script
 	app.route('/projects/uploads/script')
 		.post(users.requiresLogin, multipartyMiddleware, projects.uploadScript);
 
+	// upload temp script file
 	app.route('/projects/uploads/script/temp')
 		.post(users.requiresLogin, multipartyMiddleware, projects.uploadTempScript);
 
+	// upload audition file
 	app.route('/projects/uploads/audition')
 		.post(users.requiresLogin, multipartyMiddleware, projects.uploadAudition);
 

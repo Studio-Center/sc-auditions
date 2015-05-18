@@ -155,18 +155,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}
 		};
 
-		// get filtered projects list
-		$scope.findTalentProjects = function(talentId){
-
-			$http.get('/projects/filterByTalent', {
-		        talentId: talent
-		    }).
-			success(function(data, status, headers, config) {
-				$scope.projects = data;
-			});
-
-		};
-
 		// send talent project welcome email
 		$scope.sendTalentEmail = function(talent){
 
