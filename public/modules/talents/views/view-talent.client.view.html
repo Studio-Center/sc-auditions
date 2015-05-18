@@ -26,14 +26,9 @@
 		<span ng-repeat="(key, usval) in talent.typeCasts"> {{usval}} </span> </p>
 	</div>
 	<div class="page-header jumbotron">
-		<script>
-          var projects = angular.module("projects", []);
-          projects.controller("ProjectsController", function($scope) {
-              $scope.projects = Users.query();
-          });
-        </script>
-        <div class="controls" ng-module="projects">
-            <div ng-controller="ProjectsController" data-ng-init="findTalentProjects(talent._id)">
+        <div class="controls" ng-module="projects">{{talent._id}}
+            <div ng-controller="TalentsController" data-ng-init="findTalentProjects(talent._id)">
+            	{{projects}}
             </div>
         </div>
 	</div>

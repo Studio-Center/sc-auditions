@@ -1,8 +1,8 @@
 'use strict';
 
 // Talents controller
-angular.module('talents').controller('TalentsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Talents', 
-	function($scope, $stateParams, $location, Authentication, Talents) {
+angular.module('talents').controller('TalentsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Talents', '$http',
+	function($scope, $stateParams, $location, Authentication, Talents, $http) {
 		$scope.authentication = Authentication;
 
 		// talent static options
@@ -183,6 +183,22 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 			$scope.talent = Talents.get({ 
 				talentId: $stateParams.talentId
 			});
+		};
+
+		$scope.findTalentProjects = function(){
+
+			$scope.$watch('talent._id', function(val){
+
+					$http.post('/projects/filterByTalent', {
+				        talentId: $scope.talent._id
+				    }).
+					success(function(data, status, headers, config) {
+						$scope.projects = data;
+					});
+
+
+			});
+
 		};
 
 		$scope.getOne = function(talentId) {

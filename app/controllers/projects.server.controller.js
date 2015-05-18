@@ -911,6 +911,21 @@ exports.delete = function(req, res) {
 	});
 };
 
+// list projects assigned to talent
+exports.getTalentFilteredProjects = function(req, res){
+
+	Project.find({'talent': { $elemMatch: { 'talentId': req.body.talentId}}}).sort('-created').populate('project', 'displayName').exec(function(err, projects) {
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			res.jsonp(projects);
+		}
+	});
+	
+};
+
 /**
  * List of Projects
  */
