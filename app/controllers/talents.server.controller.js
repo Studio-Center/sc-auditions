@@ -80,7 +80,7 @@ exports.create = function(req, res) {
 					// generate email signature
 					var emailSig = '';
 					if(req.user.emailSignature){
-						emailSig = req.user.emailSignature.replace(/\r?\n/g, "<br>");
+						emailSig = req.user.emailSignature.replace(/\r?\n/g, '<br>');
 					} else {
 						emailSig = '';
 					}
@@ -225,7 +225,7 @@ exports.delete = function(req, res) {
 			// generate email signature
 			var emailSig = '';
 			if(req.user.emailSignature){
-				emailSig = req.user.emailSignature.replace(/\r?\n/g, "<br>");
+				emailSig = req.user.emailSignature.replace(/\r?\n/g, '<br>');
 			} else {
 				emailSig = '';
 			}

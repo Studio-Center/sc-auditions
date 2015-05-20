@@ -26,9 +26,33 @@
 		<span ng-repeat="(key, usval) in talent.typeCasts"> {{usval}} </span> </p>
 	</div>
 	<div class="page-header jumbotron">
-        <div class="controls" ng-module="projects">{{talent._id}}
+		<div class="row">
+			<div class="col-md-10">
+				Cast For:
+			</div>
+			<div class="col-md-2">
+				<input type="checkbox" data-ng-model="archived" id="archived">
+				<label>Archived</label>
+			</div>
+		</div>
+        <div class="controls" ng-module="projects">
             <div ng-controller="TalentsController" data-ng-init="findTalentProjects(talent._id)">
-            	{{projects}}
+            	<div data-ng-repeat="(key, project) in projects">
+            		<div class="row">
+            			<strong><a target="_blank" data-ng-href="#!/projects/{{project._id}}">{{project.title}}</a></strong> 
+            			-
+            			<small>Due by {{project.estimatedCompletionDate | date:'short'}} EST</small> 
+            			-
+            			{{project.talent[projectTalentIdx[key]].part}}
+            			<span ng-show="project.talent[projectTalentIdx[key]].requested == true">- Requested</span>
+            			:
+            			<select ng-model="project.talent[projectTalentIdx[key]].status" ng-init="project.talent[projectTalentIdx[key]].status = project.talent[projectTalentIdx[key]].status || talentStatus[0]" style="width:100px" ng-change="updateTalentStatus(project, projectTalentIdx[key])" ng-options="item for item in talentStatus"></select>
+            			<button class="btn btn-primary" ng-click="sendTalentEmail(project.talent[projectTalentIdx[key]], project)">Email</button>
+            			<span ng-repeat="(key, script) in project.scripts">
+            				<a href="/res/scripts/{{project._id}}/{{script.file.name}}" target="_blank"><img src="/img/Adobe-Acrobat-icon.png" alt="download PDF"></a>
+            			</span>
+            		</div>
+            	</div>
             </div>
         </div>
 	</div>

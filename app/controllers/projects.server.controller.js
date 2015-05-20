@@ -155,16 +155,75 @@ exports.sendTalentEmail = function(req, res){
 
 			done('', email, talentInfo)
 		},
+		// update talent email status
+		function(email, talentInfo, done){
+
+			// update talent email status 
+			for(var i = 0; i < req.body.project.talent.length; ++i){
+				if(req.body.project.talent[i].talentId === talent.talentId){
+					req.body.project.talent[i].status = 'Emailed';
+					done('', email, talentInfo);
+				}
+			}
+
+		},
 		// email selected talent
 		function(email, talentInfo, done){
 			emailTalent(talent, talentInfo, email, project, req, res);
-			return res.json(200);
+
+			Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
+				
+				project = _.extend(project, req.body.project);
+
+				req.project = project ;
+
+				project.save(function(err) {
+					if (err) {
+						done(err);
+					} else {
+						res.json(200);
+					}
+				});			
+
+			});
+
+
 		}
 		], function(err) {
 		if (err) return res.json(400, err);
 	});
 
-}
+};
+
+// update talent status
+exports.updateTalentStatus = function(req, res){
+
+	var allowedRoles = ['admin','producer/auditions director', 'production coordinator','client','client-client'];
+
+	// validate user interaction
+	if (_.intersection(req.user.roles, allowedRoles).length) {
+
+		var project = req.body.project;
+
+		Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
+
+			project = _.extend(project, req.body.project);
+
+			req.project = project ;
+
+			project.save(function(err) {
+				if (err) {
+					done(err);
+				} else {
+					res.json(200);
+				}
+			});	
+
+		});
+
+	}
+
+};
 
 // send client email based on user button click
 exports.sendClientEmail = function(req, res){
@@ -914,7 +973,20 @@ exports.delete = function(req, res) {
 // list projects assigned to talent
 exports.getTalentFilteredProjects = function(req, res){
 
-	Project.find({'talent': { $elemMatch: { 'talentId': req.body.talentId}}}).sort('-created').populate('project', 'displayName').exec(function(err, projects) {
+	var searchCriteria = {"$and": [
+							{'talent': { 
+									$elemMatch: { 
+										'talentId': req.body.talentId
+									} 
+								}
+							},
+							//{'estimatedCompletionDate': { $gte: new String(now) }}
+							]
+						};
+
+						console.log(searchCriteria);
+
+	Project.find(searchCriteria).sort('-created').populate('project', 'displayName').exec(function(err, projects) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)

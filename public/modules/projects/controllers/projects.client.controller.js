@@ -165,13 +165,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			success(function(data, status, headers, config) {
 				alert('Selected talent has been emailed.');
 
-				// update talent email status 
-				for(var i = 0; i < $scope.project.talent.length; ++i){
-					if($scope.project.talent[i].talentId === talent.talentId){
-						$scope.project.talent[i].status = 'Emailed';
-					}
-				}
-
 				// update project store
 				$scope.update();
 			});
