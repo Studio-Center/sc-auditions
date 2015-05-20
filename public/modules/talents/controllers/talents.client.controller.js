@@ -130,7 +130,7 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 				exclusivity: this.exclusivity,
 				parentName: this.parentName,
 				producerOptional: this.producerOptional,
-				unionJoined: unionJoinSelected
+				unionJoined: this.unionJoinSelected
 			});
 
 			// Redirect after save
