@@ -215,17 +215,94 @@ exports.update = function(req, res) {
  * Delete an Talent
  */
 exports.delete = function(req, res) {
-	var talent = req.talent ;
+	var talent = req.talent;
 
-	talent.remove(function(err) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
+	// send delete talent emails
+	async.waterfall([
+		// generate Dave's email
+		function(done) {
+
+			// generate email signature
+			var emailSig = '';
+			if(req.user.emailSignature){
+				emailSig = req.user.emailSignature.replace(/\r?\n/g, "<br>");
+			} else {
+				emailSig = '';
+			}
+
+			res.render('templates/talents/delete-talent-dave', {
+				talentData: talent,
+				emailSignature: emailSig
+			}, function(err, emailHTML) {
+				done(err, emailHTML, emailSig);
 			});
-		} else {
-			res.jsonp(talent);
+		},
+		// send Dave an email
+		function(emailHTML, emailSig, done) {
+
+			var emailSubject = 'TALENT TERMINATED FROM VO ROSTER: ' + talent.name + ' ' + talent.lastName;
+
+			// send email
+			var transporter = nodemailer.createTransport(config.mailer.options);
+
+			var mailOptions = {
+								to: 'Dave@studiocenter.com',
+								from: req.user.email || config.mailer.from,
+								replyTo: req.user.email || config.mailer.from,
+								subject: emailSubject,
+								html: emailHTML
+							};
+
+			transporter.sendMail(mailOptions, function(err){
+				done(err, emailSig);
+			});
+
+		},
+		// generate Ken's email
+		function(emailSig, done) {
+			res.render('templates/talents/delete-talent-ken', {
+				talentData: talent,
+				emailSignature: emailSig
+			}, function(err, emailHTML) {
+				done(err, emailHTML);
+			});
+		},
+		// send Ken an email
+		function(emailHTML, done) {
+
+			var emailSubject = 'TALENT TERMINATED FROM VO ROSTER: ' + talent.name + ' ' + talent.lastName;
+
+			// send email
+			var transporter = nodemailer.createTransport(config.mailer.options);
+
+			var mailOptions = {
+								to: 'Ken@studiocenter.com',
+								from: req.user.email || config.mailer.from,
+								replyTo: req.user.email || config.mailer.from,
+								subject: emailSubject,
+								html: emailHTML
+							};
+
+			transporter.sendMail(mailOptions, function(err){
+				done(err);
+			});
+
+		},
+		function(done) {
+			talent.remove(function(err) {
+				if (err) {
+					done(err);
+				} else {
+					res.jsonp(talent);
+					done(err);
+				}
+			});
 		}
+	], function(err) {
+		if (err) return console.log(err);
 	});
+
+	
 };
 
 /**

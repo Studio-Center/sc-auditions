@@ -6,13 +6,13 @@
 
 <body>
 
-	<p>NEW TALENT ADDITION TO VO ROSTER:</p>
+	<p>TALENT TERMINATED FROM VO ROSTER:</p>
 
-	{% autoescape false %}{{talentData}}{% endautoescape %}
+	{% autoescape false %}{{talent.name}} {{talent.lastName}}{% endautoescape %}
 
 	<p>**********TALENT ACTIONS NEEDED********** </p>
 
-	<p>Please add talent to Office Tracker</p>
+	<p>Please remove Talent from Office Tracker</p>
 
 	<p>{% autoescape false %}{{emailSignature}}{% endautoescape %}</p>
 
