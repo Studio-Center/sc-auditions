@@ -36,6 +36,10 @@ module.exports = function(app) {
 		.post(users.requiresLogin, projects.sendClientEmail);
 
 	// send emails to clients
+	app.route('/projects/updatetalentstatus')
+		.post(users.requiresLogin, projects.updateTalentStatus);
+
+	// update project talent status
 	app.route('/projects/sendtalentemail')
 		.post(users.requiresLogin, projects.sendTalentEmail);
 

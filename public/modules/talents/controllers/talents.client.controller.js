@@ -15,7 +15,12 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 		$scope.unionJoinSelected = [];
 		$scope.typeSelected = [];
 		$scope.selTypecasts = [];
+		// store talent project data
+		$scope.projectTalentIdx = [];
+		$scope.talentStatus = ['Cast', 'Emailed', 'Scheduled', 'Message left', 'Out', 'Received needs to be posted', 'Posted', 'Not Posted (Bad Read)'];
+		$scope.archived = false;
 
+		// user access rules
 		$scope.permitAdminDirector = function(){
 			var allowRoles = ['admin','talent director'];
 
@@ -185,21 +190,94 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 			});
 		};
 
+		// load talent assigned projects
 		$scope.findTalentProjects = function(){
 
 			$scope.$watch('talent._id', function(val){
 
 					$http.post('/projects/filterByTalent', {
-				        talentId: $scope.talent._id
+				        talentId: $scope.talent._id,
+				        archived: $scope.archived
 				    }).
 					success(function(data, status, headers, config) {
+						// store projects data
 						$scope.projects = data;
+
+						// gather project talent indexs
+						for(var i = 0; i < data.length; ++i){
+							// walk through projects assigned talents looking for current selected talent
+							for(var j = 0; j < data[i].talent.length; ++j){
+								if(data[i].talent[j].talentId === $scope.talent._id){
+									$scope.projectTalentIdx[i] = j;
+								}
+							}
+						}
 					});
 
 
 			});
 
 		};
+
+		// send talent project welcome email
+		$scope.sendTalentEmail = function(talent, project){
+
+			// reload project to make sure other recent changes are not overwritten
+			$http.get('/projects/' + project._id,{}).
+			success(function(data, status, headers, config) {
+
+				// send talent email request
+				$http.post('/projects/sendtalentemail', {
+			        talent: talent,
+			        project: data
+			    }).
+				success(function(data, status, headers, config) {
+					alert('Selected talent has been emailed.');
+
+					// update projects listing
+					$http.post('/projects/filterByTalent', {
+				        talentId: $scope.talent._id,
+				        archived: $scope.archived
+				    }).
+					success(function(data, status, headers, config) {
+						// store projects data
+						$scope.projects = data;
+					});
+				});			
+
+			});
+
+
+		};
+
+		// update selected talents project status
+		$scope.updateTalentStatus = function(project, talentId){
+
+			// reload project to make sure other recent changes are not overwritten
+			$http.get('/projects/' + project._id,{}).
+			success(function(data, status, headers, config) {
+
+				data.talent[talentId].status = project.talent[talentId].status;
+
+				$http.post('/projects/updatetalentstatus', {
+			        project: data
+			    }).
+				success(function(data, status, headers, config) {
+					
+					// update projects listing
+					$http.post('/projects/filterByTalent', {
+				        talentId: $scope.talent._id,
+				        archived: $scope.archived
+				    }).
+					success(function(data, status, headers, config) {
+						// store projects data
+						$scope.projects = data;
+					});
+
+				});
+
+			});
+		}
 
 		$scope.getOne = function(talentId) {
 			$scope.talent = Talents.get({ 
