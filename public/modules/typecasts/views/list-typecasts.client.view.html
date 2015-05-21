@@ -4,8 +4,39 @@
         <a class="btn btn-default" href="#!/typecasts/create">Create New Typecast</a>
     </div>
     <label>Search:</label> <input ng-model="searchText" class="form-control">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <select ng-init="limit = 20" ng-model="limit" class="form-control">
+                <option value="5" selected>Show 5 per page</option>
+                <option value="10">Show 10 per page</option>
+                <option value="15">Show 15 per page</option>
+                <option value="20">Show 20 per page</option>
+                <option value="30">Show 30 per page</option>
+                <option value="50">Show 50 per page</option>
+                <option value="100">Show 100 per page</option>
+                <option value="200">Show 200 per page</option>
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="text-center">
+            <ul class="pagination">
+                <li ng-class="{disabled: currentPage == 0}">
+                    <a href ng-click="currentPage=currentPage-1">« Prev</a>
+                </li>
+                <li ng-repeat="n in range(0, Math.floor(typecasts.length/limit))" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                    <a href ng-bind="n + 1">1</a>
+                </li>
+                <li ng-class="{disabled: currentPage == Math.floor(typecasts.length/limit)}">
+                    <a href ng-click="currentPage=currentPage+1">Next »</a>
+                </li>
+            </ul>
+            </div>
+        </div>
+    </div>
     <div class="list-group item-list">
-        <a data-ng-repeat="typecast in typecasts | filter:searchText" data-ng-href="#!/typecasts/{{typecast._id}}" class="list-group-item">
+        <a data-ng-repeat="typecast in typecasts | filter:searchText | startFrom:currentPage*limit | limitTo: limit" data-ng-href="#!/typecasts/{{typecast._id}}" class="list-group-item">
 			<small class="list-group-item-text">
 				Posted on
 				<span data-ng-bind="typecast.created | date:'short'"></span>
@@ -14,6 +45,23 @@
 			</small>
 			<h4 class="list-group-item-heading" data-ng-bind="typecast.name"></h4>
         </a>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="text-center">
+            <ul class="pagination">
+                <li ng-class="{disabled: currentPage == 0}">
+                    <a href ng-click="currentPage=currentPage-1">« Prev</a>
+                </li>
+                <li ng-repeat="n in range(0, Math.floor(typecasts.length/limit))" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                    <a href ng-bind="n + 1">1</a>
+                </li>
+                <li ng-class="{disabled: currentPage == Math.floor(typecasts.length/limit)}">
+                    <a href ng-click="currentPage=currentPage+1">Next »</a>
+                </li>
+            </ul>
+            </div>
+        </div>
     </div>
     <div class="alert alert-warning text-center" data-ng-hide="!typecasts.$resolved || typecasts.length">
     	No Typecasts yet, why don't you <a href="/#!/typecasts/create">create one</a>?

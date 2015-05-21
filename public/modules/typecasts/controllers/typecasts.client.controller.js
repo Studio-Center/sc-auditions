@@ -5,6 +5,19 @@ angular.module('typecasts').controller('TypecastsController', ['$scope', '$state
 	function($scope, $stateParams, $location, Authentication, Typecasts ) {
 		$scope.authentication = Authentication;
 
+		// used for paginator
+		$scope.Math = window.Math;
+		$scope.currentPage = 0;
+		$scope.range = function(min, max, step){
+		    step = step || 1;
+		    var input = [];
+		    for (var i = min; i <= max; i += step) input.push(i);
+		    return input;
+		};
+		$scope.setPage = function () {
+	        $scope.currentPage = this.n;
+	    };
+
 		$scope.permitAdminDirector = function(){
 			var allowRoles = ['admin', 'producer/auditions director','talent director'];
 
