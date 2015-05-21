@@ -19,8 +19,9 @@
     "ng-file-upload-shim": "~3.0.2",
     "ngAudio": "~1.4.1",
     "audio5js": "latest",
-    "moment": "latest",
+    "moment": "~2.10.3",
     "angular-bootstrap-datetimepicker": "latest",
-    "angular-encode-uri": "latest"
+    "angular-encode-uri": "latest",
+    "moment-timezone": "~0.3.1"
   }
 }

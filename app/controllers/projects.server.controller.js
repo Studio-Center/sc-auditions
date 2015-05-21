@@ -17,7 +17,10 @@ var mongoose = require('mongoose'),
 	mv = require('mv'),
 	nodemailer = require('nodemailer'),
 	dateFormat = require('dateformat'),
-	now = new Date();
+	// set date and timezone
+	moment = require('moment-timezone'),
+	now = moment(new Date())
+	now.tz('America/New_York');
 
 exports.sendEmail = function(req, res){
 
@@ -486,7 +489,6 @@ exports.create = function(req, res) {
 		// perform before save routines
 		if(req.body.notifyClient === true){
 			// create new project note stating client notified
-			var now = new Date();
 			var discussionTxt = 'Client Notified of Project Start by ' + req.user.displayName;
 			var item = {date: now.toJSON(), userid: '', username: 'system', item: discussionTxt, deleted: false};
 
@@ -973,28 +975,37 @@ exports.delete = function(req, res) {
 // list projects assigned to talent
 exports.getTalentFilteredProjects = function(req, res){
 
-	var searchCriteria = {"$and": [
-							{'talent': { 
+	var dayAgo = new Date();
+	dayAgo.setMonth(dayAgo.getDay() - 1);
+
+	var searchCriteria = {'talent': { 
 									$elemMatch: { 
 										'talentId': req.body.talentId
 									} 
 								}
-							},
-							//{'estimatedCompletionDate': { $gte: new String(now) }}
-							]
 						};
 
-						console.log(searchCriteria);
-
-	Project.find(searchCriteria).sort('-created').populate('project', 'displayName').exec(function(err, projects) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(projects);
-		}
-	});
+	if(req.body.archived === true){
+		Project.find(searchCriteria).sort('-created').populate('project', 'displayName').exec(function(err, projects) {
+			if (err) {
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
+			} else {
+				res.jsonp(projects);
+			}
+		});
+	} else {
+		Project.find(searchCriteria).where('estimatedCompletionDate').gt(dayAgo).sort('-created').populate('project', 'displayName').exec(function(err, projects) {
+			if (err) {
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
+			} else {
+				res.jsonp(projects);
+			}
+		});
+	} 
 	
 };
 
