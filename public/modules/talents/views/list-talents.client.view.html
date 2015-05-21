@@ -52,6 +52,7 @@
 			<h4 class="list-group-item-heading">{{talent.name}} {{talent.lastName}}</h4>
             <p><strong>Phone Number</strong> {{talent.phone | tel}} <strong>Phone Number Alt</strong> {{talent.phone2 | tel}}<br>
             <strong>Email</strong> {{talent.email}} <strong>Email Alt</strong> {{talent.email2}} <br>
+            <strong>Location:</strong> {{talent.locationISDN}} <br>
             <strong>Union Status</strong> 
             <span ng-repeat="(key, usval) in talent.unionStatus">{{usval}} </span></p>
         </a>
