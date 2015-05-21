@@ -7,8 +7,7 @@ var mongoose = require('mongoose'),
 	Schema = mongoose.Schema,
 	// set date and timezone
 	moment = require('moment-timezone'),
-	now = moment(new Date())
-	now.tz('America/New_York');
+	now = new Date();
 
 /**
  * Project Schema
