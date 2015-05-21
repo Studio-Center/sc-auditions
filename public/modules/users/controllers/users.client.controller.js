@@ -7,6 +7,19 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
 
 		$scope.roleOpts = ['user', 'admin', 'producer/auditions director', 'production coordinator', 'talent director', 'client', 'client-client'];
 
+		// used for paginator
+		$scope.Math = window.Math;
+		$scope.currentPage = 0;
+		$scope.range = function(min, max, step){
+		    step = step || 1;
+		    var input = [];
+		    for (var i = min; i <= max; i += step) input.push(i);
+		    return input;
+		};
+		$scope.setPage = function () {
+	        $scope.currentPage = this.n;
+	    };
+
 		// Find a list of Users
 		$scope.find = function() {
 			$scope.users = UsersEdit.query();

@@ -31,23 +31,16 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.parts = [];
 		$scope.toggleRefs = false;
 		$scope.selectedMainClients = [];
-		$scope.Math = window.Math;
 
 		// used for paginator
+		$scope.Math = window.Math;
 		$scope.currentPage = 0;
 		$scope.range = function(min, max, step){
 		    step = step || 1;
 		    var input = [];
 		    for (var i = min; i <= max; i += step) input.push(i);
 		    return input;
-		  };
-
-		$scope.nextPage = function () {
-	        if ($scope.currentPage < $scope.pagedItems.length - 1) {
-	            $scope.currentPage++;
-	        }
-	    };
-	    
+		};
 	    $scope.setPage = function () {
 	        $scope.currentPage = this.n;
 	    };

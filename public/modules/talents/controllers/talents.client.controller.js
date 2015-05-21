@@ -20,6 +20,19 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 		$scope.talentStatus = ['Cast', 'Emailed', 'Scheduled', 'Message left', 'Out', 'Received needs to be posted', 'Posted', 'Not Posted (Bad Read)'];
 		$scope.archived = false;
 
+		// used for paginator
+		$scope.Math = window.Math;
+		$scope.currentPage = 0;
+		$scope.range = function(min, max, step){
+		    step = step || 1;
+		    var input = [];
+		    for (var i = min; i <= max; i += step) input.push(i);
+		    return input;
+		};
+		$scope.setPage = function () {
+	        $scope.currentPage = this.n;
+	    };
+
 		// user access rules
 		$scope.permitAdminDirector = function(){
 			var allowRoles = ['admin','talent director'];
