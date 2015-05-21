@@ -19,8 +19,7 @@ var mongoose = require('mongoose'),
 	dateFormat = require('dateformat'),
 	// set date and timezone
 	moment = require('moment-timezone'),
-	now = moment(new Date())
-	now.tz('America/New_York');
+	now = new Date();
 
 exports.sendEmail = function(req, res){
 
