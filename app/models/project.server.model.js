@@ -5,7 +5,10 @@
  */
 var mongoose = require('mongoose'),
 	Schema = mongoose.Schema,
-	now = new Date();
+	// set date and timezone
+	moment = require('moment-timezone'),
+	now = moment(new Date())
+	now.tz('America/New_York');
 
 /**
  * Project Schema
@@ -13,7 +16,7 @@ var mongoose = require('mongoose'),
 var ProjectSchema = new Schema({
 	created: {
 		type: Date,
-		default: Date.now
+		default: now
 	},
 	modified: {
 		type: Date

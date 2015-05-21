@@ -26,19 +26,20 @@
 		<span ng-repeat="(key, usval) in talent.typeCasts"> {{usval}} </span> </p>
 	</div>
 	<div class="page-header jumbotron">
-		<div class="row">
-			<div class="col-md-10">
-				Cast For:
-			</div>
-			<div class="col-md-2">
-				<input type="checkbox" data-ng-model="archived" id="archived">
-				<label>Archived</label>
-			</div>
-		</div>
+		
         <div class="controls" ng-module="projects">
             <div ng-controller="TalentsController" data-ng-init="findTalentProjects(talent._id)">
-            	<div data-ng-repeat="(key, project) in projects">
-            		<div class="row">
+            	<div class="row">
+					<div class="col-md-10">
+						Cast For:
+					</div>
+					<div class="col-md-2">
+						<input type="checkbox" data-ng-model="archived" id="archived" ng-change="findTalentProjects(talent._id)">
+						<label>Archived</label>
+					</div>
+				</div>
+				<div data-ng-repeat="(key, project) in projects">
+					<div class="row">
             			<strong><a target="_blank" data-ng-href="#!/projects/{{project._id}}">{{project.title}}</a></strong> 
             			-
             			<small>Due by {{project.estimatedCompletionDate | date:'short'}} EST</small> 
