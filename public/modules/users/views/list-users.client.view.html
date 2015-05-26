@@ -3,7 +3,17 @@
         <h1>Users</h1>
         <a class="btn btn-default" href="#!/usersedit/create">Create New User</a>
     </div>
-    <label>Search:</label> <input ng-model="searchText" class="form-control">
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <label>Search:</label> <input ng-model="searchString" class="form-control">
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3">
+            <label>Main Clients Only:</label> <input type="checkbox" ng-model="searchText.roles" ng-true-value="client" ng-false-value="" class="form-control">
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3">
+            <label>Additional Clients Only:</label> <input type="checkbox" ng-model="searchText.roles" ng-true-value="client-client" ng-false-value="" class="form-control">
+        </div>
+    </div>
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
             <select ng-init="limit = 20" ng-model="limit" class="form-control">
@@ -36,7 +46,7 @@
         </div>
     </div>
     <div class="list-group item-list">
-        <a data-ng-repeat="user in users | filter:searchText | startFrom:currentPage*limit | limitTo: limit" data-ng-href="#!/usersedit/{{user._id}}" class="list-group-item">
+        <a data-ng-repeat="user in users | filter:searchString || searchText | startFrom:currentPage*limit | limitTo: limit" data-ng-href="#!/usersedit/{{user._id}}" class="list-group-item">
 			<small class="list-group-item-text">
 				Created
 				<span data-ng-bind="user.created | date:'short'"></span>
