@@ -1,29 +1,29 @@
 <section data-ng-controller="TalentsController" data-ng-init="findOne()">
 	<div class="page-header jumbotron">
-		<p><strong>First Name</strong> {{talent.name}}</p>
-		<p><strong>Last Name</strong> {{talent.lastName}}</p>
-		<p><strong>Last Name Code</strong> {{talent.lastNameCode}}</p>
-		<p><strong>Parent Name</strong> {{talent.parentName}}</p>
-		<p><strong>Gender</strong> {{talent.gender}} {{talent.ageRange}}</p>
-		<p><strong>Email</strong> {{talent.email}}</p>
-		<p><strong>Email Alt</strong> {{talent.email2}}</p>
-		<p><strong>Phone Number</strong> {{talent.phone | tel}}</p>
-		<p><strong>Phone Number Alt</strong> {{talent.phone2 | tel}}</p>
-		<p><strong>Type</strong> 
-		<span ng-repeat="(key, usval) in talent.type">{{usval}} </span> </p>
-		<p><strong>Union Status</strong> 
+		<div><strong>First Name</strong> {{talent.name}}</div>
+		<div><strong>Last Name</strong> {{talent.lastName}}</div>
+		<div><strong>Last Name Code</strong> {{talent.lastNameCode}}</div>
+		<div><strong>Parent Name</strong> {{talent.parentName}}</div>
+		<div><strong>Gender</strong> {{talent.gender}} {{talent.ageRange}}</div>
+		<div><strong>Email</strong> {{talent.email}}</div>
+		<div><strong>Email Alt</strong> {{talent.email2}}</div>
+		<div><strong>Phone Number</strong> {{talent.phone | tel}}</div>
+		<div><strong>Phone Number Alt</strong> {{talent.phone2 | tel}}</div>
+		<div><strong>Type</strong> 
+		<span ng-repeat="(key, usval) in talent.type">{{usval}} </span> </div>
+		<div><strong>Union Status</strong> 
 		<span ng-repeat="(key, usval) in talent.unionStatus">{{usval}} </span>
 		<br>
-		<span ng-repeat="(key, usval) in talent.unionJoined">{{usval}} </span></p>
-		<p><strong>Outage Times</strong> {{talent.outageTimes}}</p>
-		<p><strong>Location/ISDN</strong> {{talent.locationISDN}}</p>
-		<p><strong>Exclusivity</strong> {{talent.exclusivity}}</p>
-		<p><strong>ISDN Line 1</strong> {{talent.ISDNLine1 | tel}}</p>
-		<p><strong>ISDN Line 2</strong> {{talent.ISDNLine2 | tel}}</p>
-		<p><strong>Source Connect Username</strong> {{talent.sourceConnectUsername}}</p>
-		<p><strong>Producer</strong> {{talent.producerOptional}}</p>
-		<p><strong>Typecasts</strong>
-		<span ng-repeat="(key, usval) in talent.typeCasts"> {{usval}} </span> </p>
+		<span ng-repeat="(key, usval) in talent.unionJoined">{{usval}} </span></div>
+		<div><strong>Outage Times</strong> {{talent.outageTimes}}</div>
+		<div><strong>Location/ISDN</strong> {{talent.locationISDN}}</div>
+		<div><strong>Exclusivity</strong> {{talent.exclusivity}}</div>
+		<div><strong>ISDN Line 1</strong> {{talent.ISDNLine1 | tel}}</div>
+		<div><strong>ISDN Line 2</strong> {{talent.ISDNLine2 | tel}}</div>
+		<div><strong>Source Connect Username</strong> {{talent.sourceConnectUsername}}</div>
+		<div><strong>Producer</strong> {{talent.producerOptional}}</div>
+		<div><strong>Typecasts</strong>
+		<span ng-repeat="(key, usval) in talent.typeCasts"> {{usval}} </span> </div>
 	</div>
 	<div class="page-header jumbotron">
 		
@@ -31,7 +31,7 @@
             <div ng-controller="TalentsController" data-ng-init="findTalentProjects(talent._id)">
             	<div class="row">
 					<div class="col-md-10">
-						Cast For:
+						<h3 style="margin:0;padding:0">Cast For:</h3>
 					</div>
 					<div class="col-md-2">
 						<input type="checkbox" data-ng-model="archived" id="archived" ng-change="findTalentProjects(talent._id)">
@@ -39,7 +39,8 @@
 					</div>
 				</div>
 				<div data-ng-repeat="(key, project) in projects">
-					<div class="row">
+					<div class="row" style="padding:4px 0;border-bottom:1px solid #000">
+						{{key + 1}}.
             			<strong><a target="_blank" data-ng-href="#!/projects/{{project._id}}">{{project.title}}</a></strong> 
             			-
             			<small>Due by {{project.estimatedCompletionDate | date:'short'}} EST</small> 
@@ -50,7 +51,7 @@
             			<select ng-model="project.talent[projectTalentIdx[key]].status" ng-init="project.talent[projectTalentIdx[key]].status = project.talent[projectTalentIdx[key]].status || talentStatus[0]" style="width:100px" ng-change="updateTalentStatus(project, projectTalentIdx[key])" ng-options="item for item in talentStatus"></select>
             			<button class="btn btn-primary" ng-click="sendTalentEmail(project.talent[projectTalentIdx[key]], project)">Email</button>
             			<span ng-repeat="(key, script) in project.scripts">
-            				<a href="/res/scripts/{{project._id}}/{{script.file.name}}" target="_blank"><img src="/img/Adobe-Acrobat-icon.png" alt="download PDF"></a>
+            				<a href="/res/scripts/{{project._id}}/{{script.file.name}}" popover="{{script.file.name}}" popover-trigger="mouseenter" target="_blank"><img src="/img/Adobe-Acrobat-icon.png" alt="download PDF"></a>
             			</span>
             		</div>
             	</div>
