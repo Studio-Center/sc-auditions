@@ -481,7 +481,7 @@ exports.create = function(req, res) {
     var relativePath =  '';
     var newPath = '';
 
-	var allowedRoles = ['admin','producer/auditions director'];
+	var allowedRoles = ['admin','producer/auditions director','production coordinator'];
 
 	if (_.intersection(req.user.roles, allowedRoles).length) {
 

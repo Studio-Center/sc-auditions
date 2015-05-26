@@ -163,7 +163,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		// verify create access
 		$scope.userCheck = function(){
-			if(Authentication.user.roles[0] !== 'admin' && Authentication.user.roles[0] !== 'producer/auditions director'){
+			if(Authentication.user.roles[0] !== 'admin' && Authentication.user.roles[0] !== 'producer/auditions director' && Authentication.user.roles[0] !== 'production coordinator'){
 				$location.path('/projects');
 			}
 		};
