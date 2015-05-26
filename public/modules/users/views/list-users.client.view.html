@@ -46,7 +46,7 @@
         </div>
     </div>
     <div class="list-group item-list">
-        <a data-ng-repeat="user in users | filter:searchString || searchText | startFrom:currentPage*limit | limitTo: limit" data-ng-href="#!/usersedit/{{user._id}}" class="list-group-item">
+        <a data-ng-repeat="user in users | filter:searchString | filter:searchText | startFrom:currentPage*limit | limitTo: limit" data-ng-href="#!/usersedit/{{user._id}}" class="list-group-item">
 			<small class="list-group-item-text">
 				Created
 				<span data-ng-bind="user.created | date:'short'"></span>
