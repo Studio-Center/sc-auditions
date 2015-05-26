@@ -208,25 +208,24 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 
 			$scope.$watch('talent._id', function(val){
 
-					$http.post('/projects/filterByTalent', {
-				        talentId: $scope.talent._id,
-				        archived: $scope.archived
-				    }).
-					success(function(data, status, headers, config) {
-						// store projects data
-						$scope.projects = data;
+				$http.post('/projects/filterByTalent', {
+			        talentId: $scope.talent._id,
+			        archived: $scope.archived
+			    }).
+				success(function(data, status, headers, config) {
+					// store projects data
+					$scope.projects = data;
 
-						// gather project talent indexs
-						for(var i = 0; i < data.length; ++i){
-							// walk through projects assigned talents looking for current selected talent
-							for(var j = 0; j < data[i].talent.length; ++j){
-								if(data[i].talent[j].talentId === $scope.talent._id){
-									$scope.projectTalentIdx[i] = j;
-								}
+					// gather project talent indexs
+					for(var i = 0; i < data.length; ++i){
+						// walk through projects assigned talents looking for current selected talent
+						for(var j = 0; j < data[i].talent.length; ++j){
+							if(data[i].talent[j].talentId === $scope.talent._id){
+								$scope.projectTalentIdx[i] = j;
 							}
 						}
-					});
-
+					}
+				});
 
 			});
 
