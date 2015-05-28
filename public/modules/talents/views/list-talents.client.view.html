@@ -3,13 +3,16 @@
         <h1>Talent</h1>
         <a class="btn btn-default" href="#!/talents/create">Create New Talent</a>
     </div>
-    <label>Search:</label> <input ng-model="searchText" class="form-control">
+    <label>Search:</label> <input ng-model="searchString" class="form-control">
     <div class="row">
         <div class="col-lg-3 col-md-3 col-sm-3">
-            <label>union</label> <input type="checkbox" name="userProjFilter" id="userProjFilter" ng-model="searchText" ng-true-value="!non-union" ng-false-value="" class="form-control">
+            <label>union</label> <input type="checkbox" ng-model="searchText.unionStatus" ng-true-value="!non-union" ng-false-value="" class="form-control">
         </div>
         <div class="col-lg-3 col-md-3 col-sm-3">
-            <label>non-union</label> <input type="checkbox" name="userProjFilter" id="userProjFilter" ng-model="searchText" ng-true-value="non-union" ng-false-value="" class="form-control">
+            <label>non-union</label> <input type="checkbox" ng-model="searchText.unionStatus" ng-true-value="!union" ng-false-value="" class="form-control">
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3">
+            <label>union and non-union</label> <input type="checkbox" ng-model="searchUnions" ng-true-value="union non-union" ng-false-value="" class="form-control">
         </div>
     </div>
     <div class="row">
@@ -44,7 +47,7 @@
         </div>
     </div>
     <div class="list-group item-list">
-        <a data-ng-repeat="talent in talents | filter:searchText | startFrom:currentPage*limit | limitTo: limit" data-ng-href="#!/talents/{{talent._id}}" class="list-group-item">
+        <a data-ng-repeat="talent in talents | multiTerm:searchUnions | filter:searchText : startsWith | filter:searchString | startFrom:currentPage*limit | limitTo: limit" data-ng-href="#!/talents/{{talent._id}}" class="list-group-item">
 			<small class="list-group-item-text">
 				Added
 				<span data-ng-bind="talent.created | date:'short'"></span>
