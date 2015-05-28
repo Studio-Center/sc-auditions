@@ -47,12 +47,12 @@
         </div>
     </div>
     <div class="list-group item-list">
-        <a data-ng-repeat="talent in talents | multiTerm:searchUnions | filter:searchText : startsWith | filter:searchString | startFrom:currentPage*limit | limitTo: limit" data-ng-href="#!/talents/{{talent._id}}" class="list-group-item">
-			<small class="list-group-item-text">
-				Added
-				<span data-ng-bind="talent.created | date:'short'"></span>
-			</small>
-			<h4 class="list-group-item-heading">{{talent.name}} {{talent.lastName}}</h4>
+        <a data-ng-repeat="talent in talents | multiTerm:searchUnions | filter:searchText:startsWith | filter:searchString | startFrom:currentPage*limit | limitTo: limit" data-ng-href="#!/talents/{{talent._id}}" class="list-group-item">
+            <small class="list-group-item-text">
+                Added
+                <span data-ng-bind="talent.created | date:'short'"></span>
+            </small>
+            <h4 class="list-group-item-heading">{{talent.name}} {{talent.lastName}}</h4>
             <p><strong>Phone Number</strong> {{talent.phone | tel}} <strong>Phone Number Alt</strong> {{talent.phone2 | tel}}<br>
             <strong>Email</strong> {{talent.email}} <strong>Email Alt</strong> {{talent.email2}} <br>
             <strong>Location:</strong> {{talent.locationISDN}} <br>
@@ -78,6 +78,6 @@
         </div>
     </div>
     <div class="alert alert-warning text-center" data-ng-hide="!talents.$resolved || talents.length">
-    	No Talents yet, why don't you <a href="/#!/talents/create">create one</a>?
+        No Talents yet, why don't you <a href="/#!/talents/create">create one</a>?
     </div>
 </section>
