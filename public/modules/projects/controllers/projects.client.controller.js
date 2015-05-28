@@ -73,12 +73,14 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
       	// show part field if talent value is not already checked
       	$scope.showPartFld = function(id){
-      		for(var i = 0; i < $scope.project.talent.length; ++i){
-      			if($scope.project.talent[i].talentId === String(id)){
-      				if($scope.project.talent[i].requested === true || $scope.project.talent[i].regular === true){
-      					return false
-      				}
-      			}
+      		if(typeof $scope.project.talent !== 'undefined'){
+	      		for(var i = 0; i < $scope.project.talent.length; ++i){
+	      			if($scope.project.talent[i].talentId === String(id)){
+	      				if($scope.project.talent[i].requested === true || $scope.project.talent[i].regular === true){
+	      					return false
+	      				}
+	      			}
+	      		}
       		}
    			return true
      	};
@@ -207,9 +209,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
         		alert('Clients Emailed ' + type + ' Email ');
         		$scope.selectedMainClients = [];
 
-				var now = new Date();
+				var now = moment(new Date()).format();
 				var item = {
-							date: now.toJSON(), 
+							date: now, 
 							userid: '', 
 							username: 'System', 
 							item: '', 

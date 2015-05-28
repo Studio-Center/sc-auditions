@@ -3,8 +3,8 @@
 	<div class="page-header">
 		<div class="row">
 			<div class="col-lg-8 col-md-8 col-sm-8">
-				<h2 style="margin:0">{{project.title}} <small>Due {{project.estimatedCompletionDate | date:'short'}} EST</small></h2>
-				<h4>Created by {{project.user.displayName}} {{project.created | date:'short'}} EST</h4>
+				<h2 style="margin:0">{{project.title}} <small>Due {{project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST</small></h2>
+				<h4>Created by {{project.user.displayName}} {{project.created | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST</h4>
 			</div>
 			<div class="col-lg-4 col-md-4 col-sm-4">
 					<progressbar value="dynamic" type="success" ng-model="progress"><b>{{dynamic}}%</b></progressbar>
@@ -40,8 +40,8 @@
 					</fieldset>
 					<div style="max-height:200px;padding:10px;border-top:1px solid #e8e8e8;overflow-y:scroll">
 						<div ng-repeat="(key, ditem) in project.discussion.slice().reverse()">
-							<h5 ng-if="ditem.deleted === true" class="strike-if"><strong>{{ditem.date | date:'short'}} EST - {{ditem.username}}</strong></h5>
-							<h5 ng-if="ditem.deleted === false"><strong>{{ditem.date | date:'short'}} - {{ditem.username}}</strong></h5>
+							<h5 ng-if="ditem.deleted === true" class="strike-if"><strong>{{ditem.date | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST - {{ditem.username}}</strong></h5>
+							<h5 ng-if="ditem.deleted === false"><strong>{{ditem.date | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST - {{ditem.username}}</strong></h5>
 							<div class="clearfix">
 								<button ng-show="authentication.user._id === ditem.userid && ditem.deleted === false" style="float:right" class="btn btn-danger" ng-click="deleteDiscussion(key)">Delete</button>
 								<p ng-if="ditem.deleted === true" class="strike-if" data-ng-bind="ditem.item"></p>
@@ -155,11 +155,11 @@
 					            <div class="controls" ng-module="talents">
 					                <div ng-controller="TalentsController" data-ng-init="getOne(member.talentId)">
 										<a target="_blank" href="/#!/talents/{{member.talentId}}">{{talent.name}} {{talent.lastName | limitTo: 1}}</a> - {{talent.locationISDN}} <span ng-show="member.requested == true">- R</span>
-										<select data-ng-show="permitEveryOneButClients()" ng-model="project.talent[key].status" ng-init="project.talent[key].status = project.talent[key].status || talentStatus[0]" style="width:100px" ng-change="updateTalentStatus(key)" ng-options="item for item in talentStatus"></select>
-										<span data-ng-show="permitEveryOneButClients() !== true">{{project.talent[key].status}}</span>
+										<select data-ng-show="$parent.permitEveryOneButClients()" ng-model="project.talent[key].status" ng-init="project.talent[key].status = project.talent[key].status || talentStatus[0]" style="width:100px" ng-change="$parent.updateTalentStatus(key)" ng-options="item for item in talentStatus"></select>
+										<span data-ng-show="$parent.permitEveryOneButClients() !== true">{{project.talent[key].status}}</span>
 										{{project.talent[key].part}}
-										<button class="btn btn-primary" ng-click="sendTalentEmail(project.talent[key])">Email</button>
-										<span data-ng-show="permitEveryOneButClients()">Booked <input type="checkbox" data-ng-model="project.talent[key].booked" ng-checked="project.talent[key].booked" ng-click="toggleBooked(key)"> 
+										<button class="btn btn-primary" ng-click="$parent.sendTalentEmail(project.talent[key])">Email</button>
+										<span data-ng-show="$parent.permitEveryOneButClients()">Booked <input type="checkbox" data-ng-model="project.talent[key].booked" ng-checked="project.talent[key].booked" ng-click="$parent.toggleBooked(key)"> 
 										
 									</div>
 								</div>
@@ -395,7 +395,7 @@
 							        		<label>End Date:</label>
 							        	</div>
 							        	<div class="col-lg-9 col-md-9 col-sm-9">
-							        		<p>{{project.phases[key].endDate | date:'short'}}</p>
+							        		<p>{{project.phases[key].endDate | amDateFormat:'MM/DD/YY h:mm:ss a'}}</p>
 							        	</div>
 							        </div>
 					    		</span>
@@ -413,7 +413,7 @@
 							        		<label>End Date:</label>
 						        		</div>
 							        	<div class="col-lg-9 col-md-9 col-sm-9">
-							        		<p>{{project.phases[key].endDate | date:'short'}}</p>
+							        		<p>{{project.phases[key].endDate | amDateFormat:'MM/DD/YY h:mm:ss a'}}</p>
 							        	</div>
 							        </div>
 					    		</span>

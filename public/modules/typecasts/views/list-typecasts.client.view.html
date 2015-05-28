@@ -39,7 +39,7 @@
         <a data-ng-repeat="typecast in typecasts | filter:searchText | startFrom:currentPage*limit | limitTo: limit" data-ng-href="#!/typecasts/{{typecast._id}}" class="list-group-item">
 			<small class="list-group-item-text">
 				Posted on
-				<span data-ng-bind="typecast.created | date:'short'"></span>
+				<span data-ng-bind="typecast.created | amDateFormat:'MM/DD/YY h:mm:ss a'"></span>
 				by
 				<span data-ng-bind="typecast.user.displayName"></span>
 			</small>
