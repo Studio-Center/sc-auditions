@@ -300,24 +300,24 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			toEmails[emailCnt] = Authentication.user.email;
 
 			// attach client clients to email chain
-			if(type !== 'updateTeam' && type !== 'updateClient' && type !== 'saveDiscussion'){
-				for(var i = 0; i < $scope.project.clientClient.length; ++i){
-					if($scope.project.clientClient[i].email !== '' && re.test($scope.project.clientClient[i].email)){
-						emailCnt += 1;
-						toEmails[emailCnt] = $scope.project.clientClient[i].email;
-					}
-				}
-			}
+			// if(type !== 'updateTeam' && type !== 'updateClient' && type !== 'saveDiscussion'){
+			// 	for(var i = 0; i < $scope.project.clientClient.length; ++i){
+			// 		if($scope.project.clientClient[i].email !== '' && re.test($scope.project.clientClient[i].email)){
+			// 			emailCnt += 1;
+			// 			toEmails[emailCnt] = $scope.project.clientClient[i].email;
+			// 		}
+			// 	}
+			// }
 
 			// attach clients to email chain
-			if(type !== 'updateTeam' && type !== 'updateClient' && type !== 'saveDiscussion'){
-				for(var j = 0; j < $scope.project.client.length; ++j){
-					if($scope.project.client[j].email !== '' && re.test($scope.project.client[j].email)){
-						emailCnt += 1;
-						toEmails[emailCnt] = $scope.project.client[j].email;
-					}
-				}
-			}
+			// if(type !== 'updateTeam' && type !== 'updateClient' && type !== 'saveDiscussion'){
+			// 	for(var j = 0; j < $scope.project.client.length; ++j){
+			// 		if($scope.project.client[j].email !== '' && re.test($scope.project.client[j].email)){
+			// 			emailCnt += 1;
+			// 			toEmails[emailCnt] = $scope.project.client[j].email;
+			// 		}
+			// 	}
+			// }
 
 			// attach talents to email chain
 			if(type !== 'updateTalent' && type !== 'updateTeam' && type !== 'updateClientClient' && type !== 'updateClient' && type !== 'saveAudtionNote' && type !== 'saveScriptNote' && type !== 'saveDiscussion' && type !== 'updateStatus'){
@@ -809,13 +809,22 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			$scope.gatherToAddresses('updateStatus');
 		    $scope.email.subject = $scope.project.title + ' Status Update';
 		    $scope.email.message += 'Project: ' + $scope.project.title + '<br>';
-		    $scope.email.message += 'Status: ' + $scope.project.phases[key].status[0].toUpperCase() + $scope.project.phases[key].status.slice(1) + '<br>';
+		    $scope.email.message += 'Status: ' + $scope.project.status.toUpperCase() + $scope.project.status.slice(1) + '<br>';
 		    $scope.email.message += 'Added by: ' + Authentication.user.displayName + '<br>';
 		    $scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '<br>';
 
 		    $http.post('/projects/sendemail', {
 				email: $scope.email
 			});
+
+			// send client email if project status is set to finished
+			if($scope.project.status === 'Complete'){
+				// build main clients list
+				for(var i = 0; i < $scope.project.client.length; ++i){
+					$scope.selectedMainClients[i] = $scope.project.client[i].userId;
+				}
+				$scope.sendClientEmail('closing');
+			}
 
 			// update project store
 			$scope.update();
