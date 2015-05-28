@@ -31,6 +31,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.parts = [];
 		$scope.toggleRefs = false;
 		$scope.selectedMainClients = [];
+		$scope.rejFiles = [];
 
 		// used for paginator
 		$scope.Math = window.Math;
