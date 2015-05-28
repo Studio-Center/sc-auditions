@@ -20,6 +20,12 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 		$scope.talentStatus = ['Cast', 'Emailed', 'Scheduled', 'Message left', 'Out', 'Received needs to be posted', 'Posted', 'Not Posted (Bad Read)'];
 		$scope.archived = false;
 
+		// listing filter
+		$scope.startsWith = function (actual, expected) {
+		    var lowerStr = (actual + "").toLowerCase();
+		    return lowerStr.indexOf(expected.toLowerCase()) === 0;
+		}
+
 		// used for paginator
 		$scope.Math = window.Math;
 		$scope.currentPage = 0;
