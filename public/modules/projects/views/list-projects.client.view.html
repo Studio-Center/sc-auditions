@@ -72,7 +72,7 @@
                         <div class="col-lg-8 col-md-8 col-sm-8">
                             <div class="row">
                                 <div class="col-lg-6 col-md-6 col-sm-6">
-                                    <strong>{{project.title}}</strong> <small>Due {{project.estimatedCompletionDate | date:'short'}} EST</small> 
+                                    <strong>{{project.title}}</strong> <small>Due {{project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST</small> 
                                 </div>
                                 <div class="col-lg-3 col-md-3 col-sm-3">
                                     <progressbar value="calcProjectProg(project)" type="success" ng-model="progress"><b>{{calcProjectProg(project)}}%</b></progressbar>
@@ -81,7 +81,7 @@
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-4 col-sm-4">
-                            <small>Created {{project.created | date:'short'}} EST by {{project.user.displayName}}</small>
+                            <small>Created {{project.created | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST by {{project.user.displayName}}</small>
                         </div>
                     </div>
                 </a>

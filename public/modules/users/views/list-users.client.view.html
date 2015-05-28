@@ -49,7 +49,7 @@
         <a data-ng-repeat="user in users | filter:searchString | filter:searchText | startFrom:currentPage*limit | limitTo: limit" data-ng-href="#!/usersedit/{{user._id}}" class="list-group-item">
 			<small class="list-group-item-text">
 				Created
-				<span data-ng-bind="user.created | date:'short'"></span>
+				<span data-ng-bind="user.created | amDateFormat:'MM/DD/YY h:mm:ss a'"></span>
 				by
 				<span data-ng-bind="user.displayName"></span>
 			</small>
