@@ -3,9 +3,10 @@
 .sass-cache/
 npm-debug.log
 node_modules/
-public/lib
-!public/lib/moment
-!public/lib/moment-timezone
+!public/lib/
+public/lib/*
+!public/lib/moment/
+!public/lib/moment-timezone/
 app/tests/coverage/
 .bower-*/
 .idea/
