@@ -11,7 +11,7 @@
     </div>
     <div class="row">
         <div class="col-lg-3 col-md-3 col-sm-3">
-            <label>Search:</label> <input ng-model="searchText" class="form-control">
+            <label>Search:</label> <input ng-model="searchString" class="form-control">
         </div>
         <div class="col-lg-3 col-md-3 col-sm-3">
             <label>Sort:</label> 
@@ -31,6 +31,11 @@
         </div>
         <div class="col-lg-3 col-md-3 col-sm-3">
             <label>My Projects:</label> <input type="checkbox" name="userProjFilter" id="userProjFilter" ng-model="searchText" ng-true-value="{{authentication.user._id}}" ng-false-value="" class="form-control">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-3">
+            <label>In Progress:</label> <input type="checkbox" name="userProjFilter" id="userProjFilter" ng-model="searchText.status" ng-true-value="In Progress" ng-false-value="" ng-checked="permitProducers()" class="form-control">
         </div>
     </div>
     <div class="row">
@@ -67,7 +72,7 @@
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="list-group item-list">
-                <a data-ng-repeat="project in projects | filter: searchText | orderBy:sortText:sortTextOrder | startFrom:currentPage*limit | limitTo: limit" data-ng-href="#!/projects/{{project._id}}" class="list-group-item"  ng-class="{redBG: project.status == 'In Progress' && checkPassed(project.estimatedCompletionDate), greenBg: project.status == 'Booked', lgreenBG: project.status == 'Closed - Pending Client Decision', orangeBG: project.status == 'On Hold', lgray: project.status == 'Cancelled', mgray: project.status == 'ReAuditioned', gray: project.status == 'Dead', blueBg: project.status == 'In Progress' && compareDates(project.estimatedCompletionDate),lblueBG: project.status == 'In Progress', yellowBg: project.sounders == 'No Sounders - Approved By William' && compareDates(project.estimatedCompletionDate), lyellowBg: project.sounders == 'No Sounders - Approved By William'}">
+                <a data-ng-repeat="project in projects | filter:searchText | filter:searchString | orderBy:sortText:sortTextOrder | startFrom:currentPage*limit | limitTo: limit" data-ng-href="#!/projects/{{project._id}}" class="list-group-item"  ng-class="{redBG: project.status == 'In Progress' && checkPassed(project.estimatedCompletionDate), greenBg: project.status == 'Booked', lgreenBG: project.status == 'Closed - Pending Client Decision', orangeBG: project.status == 'On Hold', lgray: project.status == 'Cancelled', mgray: project.status == 'ReAuditioned', gray: project.status == 'Dead', blueBg: project.status == 'In Progress' && compareDates(project.estimatedCompletionDate),lblueBG: project.status == 'In Progress', yellowBg: project.sounders == 'No Sounders - Approved By William' && compareDates(project.estimatedCompletionDate), lyellowBg: project.sounders == 'No Sounders - Approved By William'}">
                     <div class="row">
                         <div class="col-lg-8 col-md-8 col-sm-8">
                             <div class="row">
