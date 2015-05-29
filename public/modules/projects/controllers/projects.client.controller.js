@@ -32,6 +32,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.toggleRefs = false;
 		$scope.selectedMainClients = [];
 		$scope.rejFiles = [];
+		// projects client portal
+		$scope.selectedAuditions = [];
 
 		// used for paginator
 		$scope.Math = window.Math;
@@ -60,7 +62,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       		var hours = Math.abs(projDate - now) / 36e5;
 
       		if(hours < 1){
-      			return true
+      			return true;
       		}
       	};
       	$scope.checkPassed = function(projDate){
@@ -68,7 +70,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       		projDate = new Date(projDate);
 
       		if(now > projDate){
-      			return true
+      			return true;
       		}
       	};
 
@@ -78,12 +80,12 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	      		for(var i = 0; i < $scope.project.talent.length; ++i){
 	      			if($scope.project.talent[i].talentId === String(id)){
 	      				if($scope.project.talent[i].requested === true || $scope.project.talent[i].regular === true){
-	      					return false
+	      					return false;
 	      				}
 	      			}
 	      		}
       		}
-   			return true
+   			return true;
      	};
      	$scope.showPartString = function(id){
       		for(var i = 0; i < $scope.project.talent.length; ++i){
@@ -100,11 +102,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       		for(var i = 0; i < $scope.talent.length; ++i){
       			if($scope.talent[i].talentId === String(id)){
       				if($scope.talent[i].requested === true || $scope.talent[i].regular === true){
-      					return false
+      					return false;
       				}
       			}
       		}
-   			return true
+   			return true;
      	};
 
 		// verify users
@@ -221,7 +223,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
         		alert('Clients Emailed ' + type + ' Email ');
         		$scope.selectedMainClients = [];
 
-				var now = moment(new Date()).format();
+				var note, now = moment(new Date()).format();
 				var item = {
 							date: now, 
 							userid: '', 
@@ -233,13 +235,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
         		// add note
         		switch(type){
         			case 'opening':
-						var note = 'Client Notified of Project Start by ' + Authentication.user.displayName;
+						note = 'Client Notified of Project Start by ' + Authentication.user.displayName;
 					break;
 					case 'carryover':
-						var note = 'Client sent Carryover by ' + Authentication.user.displayName;
+						note = 'Client sent Carryover by ' + Authentication.user.displayName;
 					break;
 					case 'closing':
-						var note = 'Client Notified of Project Completion by ' + Authentication.user.displayName;
+						note = 'Client Notified of Project Completion by ' + Authentication.user.displayName;
 					break;
         		}
 
@@ -843,6 +845,15 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		// Find a list of Projects
 		$scope.find = function() {
 			$scope.projects = Projects.query();
+		};
+
+		// find single project by id
+		$scope.findOneById = function(id) {
+
+			$stateParams.projectId = id;
+
+			$scope.findOne();
+
 		};
 
 		// Find existing Project

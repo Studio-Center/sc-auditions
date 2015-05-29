@@ -102,6 +102,76 @@ exports.sendEmail = function(req, res){
 	}
 };
 
+var emailTalent = function(selTalent, talentInfo, email, project, req, res){
+
+	async.waterfall([
+		function(done) {
+
+			var newDate = new Date(project.estimatedCompletionDate);
+			newDate = newDate.setHours(newDate.getHours() - 1);
+			newDate = dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT');
+			var part = '';
+
+			// generate email signature
+			var emailSig = '';
+			if(req.user.emailSignature){
+				emailSig = req.user.emailSignature.replace(/\r?\n/g, '<br>');
+			} else {
+				emailSig = '';
+			}
+
+			// assign part text
+			if(typeof selTalent.part !== 'undefined'){
+				if(selTalent.part !== ''){
+					part = '<p>You are cast for the part of ' + selTalent.part + '</p>';
+				}
+			}
+
+			res.render('templates/projects/new-project-talent-email', {
+				email: email,
+				emailSignature: emailSig,
+				dueDate: newDate,
+				part: part
+			}, function(err, talentEmailHTML) {
+				done(err, talentEmailHTML);
+			});
+
+		},
+		// send out talent project creation email
+		function(talentEmailHTML, done) {
+			// send email
+			var transporter = nodemailer.createTransport(config.mailer.options);
+			var emailSubject = '';
+			var newDate = new Date(project.estimatedCompletionDate);
+			newDate = newDate.setHours(newDate.getHours() - 1);
+			var nameArr = [];
+
+			nameArr = talentInfo.name.split(' ');
+
+			// assign email subject line
+			if(selTalent.requested === true){
+				emailSubject = nameArr[0] + ' has a REQUESTED Audition - ' + project.title + ' - Due ' + dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
+			} else {
+				emailSubject = nameArr[0] + ' has an Audition - ' + project.title + ' - Due ' + dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
+			}
+
+			var mailOptions = {
+				to: talentInfo.email,
+				from: req.user.email || config.mailer.from,
+				replyTo: req.user.email || config.mailer.from,
+				subject: emailSubject,
+				html: talentEmailHTML
+			};
+			transporter.sendMail(mailOptions, function(err){
+				done(err);
+			});
+		},
+		], function(err) {
+		//if (err) return console.log(err);
+	});
+
+};
+
 // send talent project start email
 exports.sendTalentEmail = function(req, res){
 
@@ -155,7 +225,7 @@ exports.sendTalentEmail = function(req, res){
 				email.referenceFiles += 'None';
 			}
 
-			done('', email, talentInfo)
+			done('', email, talentInfo);
 		},
 		// update talent email status
 		function(email, talentInfo, done){
@@ -215,7 +285,7 @@ exports.updateTalentStatus = function(req, res){
 
 			project.save(function(err) {
 				if (err) {
-					done(err);
+					return res.json(400, err);
 				} else {
 					res.json(200);
 				}
@@ -256,7 +326,7 @@ exports.sendClientEmail = function(req, res){
 
 	var emailSig = '';
 	if(req.user.emailSignature){
-		emailSig = req.user.emailSignature.replace(/\r?\n/g, "<br>");
+		emailSig = req.user.emailSignature.replace(/\r?\n/g, '<br>');
 	} else {
 		emailSig = '';
 	}
@@ -290,16 +360,18 @@ exports.sendClientEmail = function(req, res){
 
 					},
 					function(clientEmailHTML, done){
+
+						var emailSubject;
 				
 						switch(type){
 							case 'opening':
-								var emailSubject = 'Your audition project: ' + req.body.project.title + ' Due ' + dateFormat(req.body.project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
+								emailSubject = 'Your audition project: ' + req.body.project.title + ' Due ' + dateFormat(req.body.project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
 							break;
 							case 'carryover':
-								var emailSubject = 'Your First Batch of ' + req.body.project.title + '  Auditions - Studio Center';
+								emailSubject = 'Your First Batch of ' + req.body.project.title + '  Auditions - Studio Center';
 							break;
 							case 'closing':
-								var emailSubject = 'Your Audition Project ' + req.body.project.title + ' is Complete';
+								emailSubject = 'Your Audition Project ' + req.body.project.title + ' is Complete';
 							break;
 						}
 
@@ -361,7 +433,7 @@ var emailClients = function(client, email, project, req, res){
 			function(clientInfo, done) {
 				var emailSig = '';
 				if(req.user.emailSignature){
-					emailSig = req.user.emailSignature.replace(/\r?\n/g, "<br>");
+					emailSig = req.user.emailSignature.replace(/\r?\n/g, '<br>');
 				} else {
 					emailSig = '';
 				}
@@ -397,76 +469,6 @@ var emailClients = function(client, email, project, req, res){
 		], function(err) {
 			//if (err) return console.log(err);
 		});
-};
-
-var emailTalent = function(selTalent, talentInfo, email, project, req, res){
-
-	async.waterfall([
-		function(done) {
-
-			var newDate = new Date(project.estimatedCompletionDate);
-			newDate = newDate.setHours(newDate.getHours() - 1);
-			newDate = dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT');
-			var part = '';
-
-			// generate email signature
-			var emailSig = '';
-			if(req.user.emailSignature){
-				emailSig = req.user.emailSignature.replace(/\r?\n/g, "<br>");
-			} else {
-				emailSig = '';
-			}
-
-			// assign part text
-			if(typeof selTalent.part !== 'undefined'){
-				if(selTalent.part !== ''){
-					part = '<p>You are cast for the part of ' + selTalent.part + '</p>';
-				}
-			}
-
-			res.render('templates/projects/new-project-talent-email', {
-				email: email,
-				emailSignature: emailSig,
-				dueDate: newDate,
-				part: part
-			}, function(err, talentEmailHTML) {
-				done(err, talentEmailHTML);
-			});
-
-		},
-		// send out talent project creation email
-		function(talentEmailHTML, done) {
-			// send email
-			var transporter = nodemailer.createTransport(config.mailer.options);
-			var emailSubject = '';
-			var newDate = new Date(project.estimatedCompletionDate);
-			newDate = newDate.setHours(newDate.getHours() - 1);
-			var nameArr = [];
-
-			nameArr = talentInfo.name.split(' ');
-
-			// assign email subject line
-			if(selTalent.requested === true){
-				emailSubject = nameArr[0] + ' has a REQUESTED Audition - ' + project.title + ' - Due ' + dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
-			} else {
-				emailSubject = nameArr[0] + ' has an Audition - ' + project.title + ' - Due ' + dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
-			}
-
-			var mailOptions = {
-				to: talentInfo.email,
-				from: req.user.email || config.mailer.from,
-				replyTo: req.user.email || config.mailer.from,
-				subject: emailSubject,
-				html: talentEmailHTML
-			};
-			transporter.sendMail(mailOptions, function(err){
-				done(err);
-			});
-		},
-		], function(err) {
-		//if (err) return console.log(err);
-	});
-
 };
 
 /**

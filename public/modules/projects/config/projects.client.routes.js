@@ -9,6 +9,10 @@ angular.module('projects').config(['$stateProvider', '$urlRouterProvider',
 			url: '/projects',
 			templateUrl: 'modules/projects/views/list-projects.client.view.html'
 		}).
+		state('clientListProjects', {
+			url: '/projects-client',
+			templateUrl: 'modules/projects/views/client-list-projects.client.view.html'
+		}).
 		state('createProject', {
 			abstract: true,
 			url: '/projects/create',

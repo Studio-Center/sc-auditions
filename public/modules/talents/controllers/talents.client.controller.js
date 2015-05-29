@@ -22,9 +22,9 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 
 		// listing filter
 		$scope.startsWith = function (actual, expected) {
-		    var lowerStr = (actual + "").toLowerCase();
+		    var lowerStr = (actual + '').toLowerCase();
 		    return lowerStr.indexOf(expected.toLowerCase()) === 0;
-		}
+		};
 
 		// used for paginator
 		$scope.Math = window.Math;
@@ -295,7 +295,7 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 				});
 
 			});
-		}
+		};
 
 		$scope.getOne = function(talentId) {
 			$scope.talent = Talents.get({ 

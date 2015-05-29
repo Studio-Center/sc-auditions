@@ -16,5 +16,5 @@ angular.module('core').filter('multiTerm', function($filter){
         } else {
             return input;
         }
-    }
+    };
 });
