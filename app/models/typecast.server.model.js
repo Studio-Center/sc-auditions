@@ -15,7 +15,8 @@ var TypecastSchema = new Schema({
 		default: '',
 		required: 'Please fill Typecast name',
 		trim: true,
-		unique: true
+		unique: true, 
+		dropDups: true
 	},
 	created: {
 		type: Date,
