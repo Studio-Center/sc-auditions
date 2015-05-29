@@ -1,0 +1,73 @@
+<section data-ng-controller="ProjectsController" data-ng-init="find()">
+	<div class="row" style="margin-top:20px">
+		<div class="col-md-12">
+			<div class="text-center">
+				<p>
+					<a class="btn btn-primary btn-lg" href="#!/projects/new-audition-form" target="_blank">Start A New Audition Project</a>
+				</p>
+				<p>
+					<img src="/img/sc-logo-black.png" alt="Studio Center logo image">
+				</p>
+			</div>
+		</div>
+	</div>
+
+	<div class="row" style="margin-top:20px">
+		<div class="col-md-12">
+			<select ng-model="selectedProject" ng-init="selectedProject = ''" class="form-control" ng-change="findOneById(selectedProject)">
+				<option value="">Pick Your Project</option>
+				<option ng-repeat="project in projects" value="{{project._id}}">{{project.title}} Due {{project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST</option>
+			</select>
+		</div>
+	</div>
+	
+	<div ng-if="project">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="page-header jumbotron">
+					<p><strong>{{project.title}} Due {{project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST {{project.status[0]}}</strong></p>
+				</div>
+			</div>
+
+		</div>
+		
+		<div class="row">
+			<div class="col-md-12" style="text-align:center">
+				<h4 style="padding:0">Sort By</h4>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-3" style="text-align:center">
+				Name
+			</div>
+			<div class="col-md-3" style="text-align:center">
+				Rating
+			</div>
+			<div class="col-md-3" style="text-align:center">
+				Favorite
+			</div>
+			<div class="col-md-3" style="text-align:center">
+				Random
+			</div>
+		</div>
+
+		<ul class="list-group" style="margin-top:20px">
+			<li class="list-group-item" ng-repeat="(key, audition) in project.auditions">
+				<fieldset>
+					<input type="checkbox" ng-model="selectedAuditions" ng-true-value="{{key}}">
+					<strong>{{key+1}}.</strong> <a href="/res/auditions/{{project._id}}/{{audition.file.name | encodeUri}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable">ngAudio</a> 
+				
+					<rating ng-model="ratings[key]" readonly="false" ng-click="updateRating(key)" max="max" on-leave="overStar = ratings[key]" on-hover="hoveringOver(value,key)"></rating>
+				
+					<span ng-show="verifyAudio(key)">
+						<button ng-click="playAudio(key);audio[key].play()" class="btn btn-primary">Play</button> 
+						<button ng-click="stopAudio()" class="btn btn-primary">Stop</button>
+					</span>
+				</fieldset>
+
+			</li>
+		</ul>
+	</div>
+
+</section>

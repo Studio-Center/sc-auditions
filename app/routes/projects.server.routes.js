@@ -11,6 +11,10 @@ module.exports = function(app) {
 		.get(users.requiresLogin, projects.list)
 		.post(users.requiresLogin, projects.create);
 
+	// list projects for clients
+	app.route('/projects-client')
+		.get(users.requiresLogin, projects.list);
+
 	app.route('/projects/:projectId')
 		.get(users.requiresLogin, projects.read)
 		.put(users.requiresLogin, projects.update)
