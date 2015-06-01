@@ -753,18 +753,27 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		};
 
 		// Update existing Project
-		$scope.update = function() {
+		$scope.update = function(redirect) {
 			var project = $scope.project;
+			// determine if update should result in user redirect
+			var redirect = typeof redirect === 'undefined' ? true : redirect;
+
 
 			project.$update(function() {
-				$location.path('projects/' + project._id);
+				if(redirect === true){
+					$location.path('projects/' + project._id);
+				}
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
 			});
 		};
 
+		// client update
+
 		// update audition rating
-		$scope.updateRating = function(key){
+		$scope.updateRating = function(key, redirect){
+			// determine if update should result in user redirect
+			var redirect = typeof redirect === 'undefined' ? true : redirect;
 
 			// console.log($scope.rate[key]);
 			var rating = {
@@ -783,7 +792,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			$scope.project.auditions[key].rating.push(rating);
 
 			// update project store
-			$scope.update();
+			$scope.update(redirect);
 		};
 
 		// update phase options
