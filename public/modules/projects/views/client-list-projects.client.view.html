@@ -21,7 +21,7 @@
 		</div>
 	</div>
 	
-	<div ng-if="project">
+	<div ng-if="project.title">
 		<div class="row">
 			<div class="col-md-12">
 				<div class="page-header jumbotron">
@@ -31,43 +31,58 @@
 
 		</div>
 		
-		<div class="row">
+		<div class="row" ng-if="project.auditions.length > 0">
 			<div class="col-md-12" style="text-align:center">
 				<h4 style="padding:0">Sort By</h4>
 			</div>
 		</div>
 
-		<div class="row">
-			<div class="col-md-3" style="text-align:center">
-				Name
+		<div class="row audition" ng-if="project.auditions">
+
+			<div class="row">
+				<div class="col-md-12" style="text-align:center">
+					[ <a href="" ng-click="predicate=''">unsorted</a> ]
+				</div>
+				<div class="col-md-3" style="text-align:center">
+					<a href="" ng-click="predicate = 'file.name'; reverse=false">Name</a>
+					(<a href="" ng-click="predicate = '-file.name'; reverse=false">^</a>)
+				</div>
+				<div class="col-md-3" style="text-align:center">
+					<a href="" ng-click="predicate = 'rating.value'; reverse=false">Rating</a>
+					(<a href="" ng-click="predicate = '-rating.value'; reverse=false">^</a>)
+				</div>
+				<div class="col-md-3" style="text-align:center">
+					<a href="" ng-click="predicate = 'file.name'; reverse=false">Favorite</a>
+					(<a href="" ng-click="predicate = '-file.name'; reverse=false">^</a>)
+				</div>
+				<div class="col-md-3" style="text-align:center">
+					<a href="" ng-click="predicate = 'file.name'; reverse=false">Random</a>
+				</div>
 			</div>
-			<div class="col-md-3" style="text-align:center">
-				Rating
-			</div>
-			<div class="col-md-3" style="text-align:center">
-				Favorite
-			</div>
-			<div class="col-md-3" style="text-align:center">
-				Random
+
+			<div class="row">
+				<ul class="list-group" style="margin-top:20px">
+					<li class="list-group-item" ng-repeat="(key, audition) in project.auditions | orderBy:predicate:reverse">
+						<fieldset>
+							{{audition}}
+							<input type="checkbox" ng-model="selectedAuditions" ng-true-value="{{key}}">
+							<strong>{{key+1}}.</strong> <a href="/res/auditions/{{project._id}}/{{audition.file.name | encodeUri}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable">ngAudio</a> 
+						
+							<rating ng-model="ratings[key]" readonly="false" ng-click="updateRating(key, false)" max="max" on-leave="overStar = ratings[key]" on-hover="hoveringOver(value,key)"></rating>
+						
+							<span ng-show="verifyAudio(key)">
+								<button ng-click="playAudio(key);audio[key].play()" class="btn btn-primary">Play</button> 
+								<button ng-click="stopAudio()" class="btn btn-primary">Stop</button>
+
+							</span>
+						</fieldset>
+
+					</li>
+				</ul>
 			</div>
 		</div>
 
-		<ul class="list-group" style="margin-top:20px">
-			<li class="list-group-item" ng-repeat="(key, audition) in project.auditions">
-				<fieldset>
-					<input type="checkbox" ng-model="selectedAuditions" ng-true-value="{{key}}">
-					<strong>{{key+1}}.</strong> <a href="/res/auditions/{{project._id}}/{{audition.file.name | encodeUri}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable">ngAudio</a> 
-				
-					<rating ng-model="ratings[key]" readonly="false" ng-click="updateRating(key)" max="max" on-leave="overStar = ratings[key]" on-hover="hoveringOver(value,key)"></rating>
-				
-					<span ng-show="verifyAudio(key)">
-						<button ng-click="playAudio(key);audio[key].play()" class="btn btn-primary">Play</button> 
-						<button ng-click="stopAudio()" class="btn btn-primary">Stop</button>
-					</span>
-				</fieldset>
-
-			</li>
-		</ul>
+		
 	</div>
 
 </section>
