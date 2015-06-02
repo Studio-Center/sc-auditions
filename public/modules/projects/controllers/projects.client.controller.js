@@ -771,25 +771,50 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		// client update
 
 		// update audition rating
-		$scope.updateRating = function(key, redirect){
+		$scope.updateRating = function(path, redirect){
 			// determine if update should result in user redirect
 			var redirect = typeof redirect === 'undefined' ? true : redirect;
 
 			// console.log($scope.rate[key]);
+			var key, ratingCnt = 0, avgRating = 0;
+
+			// get key for selected audition
+			for(var j = 0; j < $scope.project.auditions.length; ++j){
+				if($scope.project.auditions[j].file.path === path){
+					key = j;
+				}
+			}
+
+			// walk through existing ratings
+			if(typeof $scope.project.auditions[key] !== 'undefined' && typeof $scope.project.auditions[key].rating !== 'undefined'){
+				for(var i = 0; i < $scope.project.auditions[key].rating.length; ++i){
+					// toggle existing rating if found
+					if($scope.project.auditions[key].rating[i].userId === Authentication.user._id){
+						$scope.project.auditions[key].rating.splice(i,1);
+					} else {
+						// gather average rating
+						avgRating += $scope.project.auditions[key].rating[i].value;
+					}
+				}
+				ratingCnt += $scope.project.auditions[key].rating.length;
+			}
+
+			avgRating += $scope.selCheckVal;
+
+			// average rating values
+			avgRating /= ratingCnt + 1;
+
+			// generate new rating object
 			var rating = {
 				userId: Authentication.user._id,
 				value: $scope.selCheckVal
 			};
 
-			// walk through existing ratings
-			for(var i = 0; i < $scope.project.auditions[key].rating.length; ++i){
-				if($scope.project.auditions[key].rating[i].userId === Authentication.user._id){
-					$scope.project.auditions[key].rating.splice(i,1);
-				}
-			}
-
 			// push new rating
 			$scope.project.auditions[key].rating.push(rating);
+
+			// merge average rating
+			$scope.project.auditions[key].avgRating = avgRating;
 
 			// update project store
 			$scope.update(redirect);
@@ -926,29 +951,29 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				});
 
 				// load auditions
-				$scope.$watch('project.auditions', function(val){
+				// $scope.$watch('project.auditions', function(val){
 
-					if(typeof $scope.project.auditions === 'object'){
-						// if($scope.loadAudio === 0){
-						// 	$scope.loadAudioPlayer();	
-						// 	$scope.loadAudio = 1;
-						// }
+				// 	if(typeof $scope.project.auditions === 'object'){
+				// 		// if($scope.loadAudio === 0){
+				// 		// 	$scope.loadAudioPlayer();	
+				// 		// 	$scope.loadAudio = 1;
+				// 		// }
 
-						// load audition ratings
-						for(var i = 0; i < $scope.project.auditions.length; ++i){
-							// gather average value 
-							$scope.ratingsAvg[i] = 0;
-							// gather per user rating
-							for(var j = 0; j < $scope.project.auditions[i].rating.length; ++j){
-								if($scope.project.auditions[i].rating[j].userId === String(Authentication.user._id)){
-									$scope.ratings[i] = $scope.project.auditions[i].rating[j].value;
-								}
-								$scope.ratingsAvg[i] += $scope.project.auditions[i].rating[j].value;
-							}
-							$scope.ratingsAvg[i] = $scope.ratingsAvg[i] / $scope.project.auditions[i].rating.length;
-						}
-					}
-				});
+				// 		// load audition ratings
+				// 		for(var i = 0; i < $scope.project.auditions.length; ++i){
+				// 			// gather average value 
+				// 			$scope.ratingsAvg[i] = 0;
+				// 			// gather per user rating
+				// 			for(var j = 0; j < $scope.project.auditions[i].rating.length; ++j){
+				// 				if($scope.project.auditions[i].rating[j].userId === String(Authentication.user._id)){
+				// 					$scope.ratings[i] = $scope.project.auditions[i].rating[j].value;
+				// 				}
+				// 				$scope.ratingsAvg[i] += $scope.project.auditions[i].rating[j].value;
+				// 			}
+				// 			$scope.ratingsAvg[i] = $scope.ratingsAvg[i] / $scope.project.auditions[i].rating.length;
+				// 		}
+				// 	}
+				// });
 
 				// update progress bar
 				$scope.$watch('project.phases', function(val){
