@@ -11,7 +11,7 @@
     </div>
     <div class="row">
         <div class="col-lg-3 col-md-3 col-sm-3">
-            <label>Search Entire Project:</label> <input ng-model="searchString" class="form-control">
+            <label>Search by Project Name:</label> <input ng-model="searchText.title" class="form-control">
         </div>
         <div class="col-lg-3 col-md-3 col-sm-3">
             <label>Sort:</label> 
@@ -35,7 +35,7 @@
     </div>
     <div class="row">
         <div class="col-lg-3 col-md-3 col-sm-3">
-            <label>Search by Project Name:</label> <input ng-model="searchText.title" class="form-control">
+            <label>Search Entire Project:</label> <input ng-model="searchString" class="form-control">
         </div>
         <div class="col-lg-3 col-md-3 col-sm-3">
             <label>In Progress:</label> <input type="checkbox" name="userProjFilter" id="userProjFilter" ng-model="searchText.status" ng-true-value="In Progress" ng-false-value="" ng-checked="permitProducers()" class="form-control">
