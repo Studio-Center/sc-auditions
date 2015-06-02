@@ -268,9 +268,9 @@
 								</fieldset>
 								<fieldset>
 									<label>Rating {{project.auditions[key].rating[authentication.user._id]}}</label>
-									<rating ng-model="ratings[key]" readonly="false" ng-click="updateRating(key)" max="max" on-leave="overStar = ratings[key]" on-hover="hoveringOver(value,key)"></rating>
-									<p data-ng-show="ratingsAvg[key]">Average: 
-										<rating ng-model="ratingsAvg[key]" readonly="true" max="max" on-leave="overStar = ratingsAvg[key]" ></rating>
+									<rating ng-model="audition.avgRating" readonly="false" ng-click="updateRating(audition.file.path, false)" max="max" on-leave="overStar = audition.avgRating" on-hover="hoveringOver(value,key)"></rating>
+									<p data-ng-show="audition.avgRating">Average: 
+										<rating ng-model="audition.avgRating" readonly="true" max="max" on-leave="overStar = audition.avgRating" ></rating>
 									</p>
 								</fieldset>
 							</li>
