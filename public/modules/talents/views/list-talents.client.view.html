@@ -47,7 +47,7 @@
         </div>
     </div>
     <div class="list-group item-list">
-        <a data-ng-repeat="talent in talents | multiTerm:searchUnions | filter:searchText:startsWith | filter:searchString | startFrom:currentPage*limit | limitTo: limit" data-ng-href="#!/talents/{{talent._id}}" class="list-group-item">
+        <a data-ng-repeat="talent in talents | multiTerm:searchUnions:'AND' | filter:searchText:startsWith | filter:searchString | startFrom:currentPage*limit | limitTo: limit" data-ng-href="#!/talents/{{talent._id}}" class="list-group-item">
             <small class="list-group-item-text">
                 Added
                 <span data-ng-bind="talent.created | amDateFormat:'MM/DD/YY h:mm:ss a'"></span>
