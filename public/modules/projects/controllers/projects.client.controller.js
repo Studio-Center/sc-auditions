@@ -872,8 +872,17 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		    	$scope.project.phases[key].endDate = now.toJSON();
 				// update project status only for "Posting and Publishing" phase
 				if($scope.project.phases[key].name === 'Posting and Publishing'){
+					// reset overall project status to closed
 					$scope.project.status = 'Closed - Pending Client Decision';
-				}		    
+
+					// send closing email
+					for(var i = 0; i < $scope.project.client.length; ++i){
+						$scope.selectedMainClients[i] = $scope.project.client[i].userId;
+					}
+					$scope.sendClientEmail('closing');
+				}
+
+
 			}
 
 			// update project store
@@ -893,14 +902,14 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				email: $scope.email
 			});
 
-			// send client email if project status is set to finished
-			if($scope.project.status === 'Complete'){
-				// build main clients list
-				for(var i = 0; i < $scope.project.client.length; ++i){
-					$scope.selectedMainClients[i] = $scope.project.client[i].userId;
-				}
-				$scope.sendClientEmail('closing');
-			}
+			// // send client email if project status is set to finished
+			// if($scope.project.status === 'Complete'){
+			// 	// build main clients list
+			// 	for(var i = 0; i < $scope.project.client.length; ++i){
+			// 		$scope.selectedMainClients[i] = $scope.project.client[i].userId;
+			// 	}
+			// 	$scope.sendClientEmail('closing');
+			// }
 
 			// update project store
 			$scope.update();
