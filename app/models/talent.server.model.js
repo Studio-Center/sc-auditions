@@ -75,7 +75,8 @@ var TalentSchema = new Schema({
 		type: String
 	},
 	locationISDN: {
-		type: String
+		type: String,
+		required: 'Please select a location',
 	},
 	ISDNLine1: {
 		type: String
