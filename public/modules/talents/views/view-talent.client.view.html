@@ -43,7 +43,7 @@
 						{{key + 1}}.
             			<strong><a target="_blank" data-ng-href="#!/projects/{{project._id}}">{{project.title}}</a></strong> 
             			-
-            			<small>Due by {{project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST</small> 
+            			<small>Due by {{project.estimatedCompletionDate | date:'short'}} EST</small> 
             			-
             			{{project.talent[projectTalentIdx[key]].part}}
             			<span ng-show="project.talent[projectTalentIdx[key]].requested == true">- Requested</span>
