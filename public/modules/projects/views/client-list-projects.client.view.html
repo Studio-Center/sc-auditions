@@ -22,6 +22,7 @@
 	</div>
 	
 	<div ng-if="project.title">
+
 		<div class="row">
 			<div class="col-md-12">
 				<div class="page-header jumbotron">
@@ -30,64 +31,88 @@
 			</div>
 
 		</div>
-		
-		<div class="row" ng-if="project.auditions.length > 0">
-			<div class="col-md-12" style="text-align:center">
-				<h4 style="padding:0">Sort By</h4>
+
+		<div class="row audition" ng-if="project.auditions.length > 0">
+
+			<div class="panel panel-default">
+			  	<div class="panel-heading">
+			  		<div class="row">
+						<div class="col-md-12" style="text-align:center">
+							<h4 style="padding:0">Sort By</h4>
+						</div>
+					</div>
+				  	<div class="row">
+						<div class="col-md-3" style="text-align:center">
+							<a href="" ng-click="predicate = 'file.name'; reverse=false">Name</a>
+							(<a href="" ng-click="predicate = '-file.name'; reverse=false">^</a>)
+						</div>
+						<div class="col-md-3" style="text-align:center">
+							<a href="" ng-click="predicate = 'avgRating'; reverse=false">Rating</a>
+							(<a href="" ng-click="predicate = '-avgRating'; reverse=false">^</a>)
+						</div>
+						<div class="col-md-3" style="text-align:center">
+							<a href="" ng-click="predicate = 'favorite'; reverse=false">Favorite</a>
+							(<a href="" ng-click="predicate = '-favorite'; reverse=false">^</a>)
+						</div>
+						<div class="col-md-3" style="text-align:center">
+							[ <a href="" ng-click="predicate=''">unsorted</a> ]
+						</div>
+					</div>
+				</div>
+				
+				<div class="panel-body">
+					<div class="row">
+						<ul class="list-group" style="margin-top:20px">
+							<li class="list-group-item" ng-repeat="(key, audition) in project.auditions | orderBy:predicate:reverse">
+
+								<fieldset>
+									
+									<input type="checkbox" ng-model="selectedAuditions" ng-true-value="{{key}}">
+									<strong>{{key+1}}.</strong> <a href="/res/auditions/{{project._id}}/{{audition.file.name | encodeUri}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable">ngAudio</a> 
+								
+									<rating ng-model="audition.avgRating" readonly="false" ng-click="updateRating(audition.file.path, false)" max="max" on-leave="overStar = audition.avgRating" on-hover="hoveringOver(value,key)"></rating>
+								
+									<span ng-show="verifyAudio(key)">
+										<button ng-click="playAudio(key);audio[key].play()" class="btn btn-primary">Play</button> 
+										<button ng-click="stopAudio()" class="btn btn-primary">Stop</button>
+									</span>
+
+									<span ng-if="audition.favorite == 1">
+										<a href="" ng-click="updateFavorite(audition.file.path, false)"><img src="/img/gold-trophy.png" alt="favorited audition"></a>
+									</span>
+									<span ng-if="audition.favorite != 1">
+										<a href="" ng-click="updateFavorite(audition.file.path, false)"><img src="/img/gray-trophy.png" alt="favorited audition"></a>
+									</span>
+
+								</fieldset>
+
+							</li>
+						</ul>
+					</div>
+				</div>
 			</div>
-		</div>
 
-		<div class="row audition" ng-if="project.auditions">
-
-			<div class="row">
-				<div class="col-md-12" style="text-align:center">
-					[ <a href="" ng-click="predicate=''">unsorted</a> ]
-				</div>
-				<div class="col-md-3" style="text-align:center">
-					<a href="" ng-click="predicate = 'file.name'; reverse=false">Name</a>
-					(<a href="" ng-click="predicate = '-file.name'; reverse=false">^</a>)
-				</div>
-				<div class="col-md-3" style="text-align:center">
-					<a href="" ng-click="predicate = 'avgRating'; reverse=false">Rating</a>
-					(<a href="" ng-click="predicate = '-avgRating'; reverse=false">^</a>)
-				</div>
-				<div class="col-md-3" style="text-align:center">
-					<a href="" ng-click="predicate = 'favorite'; reverse=false">Favorite</a>
-					(<a href="" ng-click="predicate = '-favorite'; reverse=false">^</a>)
-				</div>
-				<div class="col-md-3" style="text-align:center">
-					<a href="" ng-click="predicate = 'file.name'; reverse=false">Random</a>
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<div class="row">
+						<div class="col-md-4" style="text-align:center">
+							<a href="" class="btn btn-primary" ng-click="hideSelectedAuditions()">Hide Selected</a>
+						</div>
+						<div class="col-md-4" style="text-align:center">
+							<a href="" class="btn btn-primary" ng-click="showHiddenAuditions()">Show Hidden</a>
+						</div>
+						<div class="col-md-4" style="text-align:center">
+							<a href="" class="btn btn-primary" ng-click="showAllAuditions()">Show All</a>
+						</div>
+					</div>
+					<div class="row" style="padding-top:20px">
+						<div class="col-md-12" style="text-align:center">
+							<a href="" class="btn btn-primary" ng-click="downloadAllAuditions()">Download All</a>
+						</div>
+					</div>
 				</div>
 			</div>
 
-			<div class="row">
-				<ul class="list-group" style="margin-top:20px">
-					<li class="list-group-item" ng-repeat="(key, audition) in project.auditions | orderBy:predicate:reverse">
-
-						<fieldset>
-							
-							<input type="checkbox" ng-model="selectedAuditions" ng-true-value="{{key}}">
-							<strong>{{key+1}}.</strong> <a href="/res/auditions/{{project._id}}/{{audition.file.name | encodeUri}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable">ngAudio</a> 
-						
-							<rating ng-model="audition.avgRating" readonly="false" ng-click="updateRating(audition.file.path, false)" max="max" on-leave="overStar = audition.avgRating" on-hover="hoveringOver(value,key)"></rating>
-						
-							<span ng-show="verifyAudio(key)">
-								<button ng-click="playAudio(key);audio[key].play()" class="btn btn-primary">Play</button> 
-								<button ng-click="stopAudio()" class="btn btn-primary">Stop</button>
-							</span>
-
-							<span ng-if="audition.favorite == 1">
-								<a href="" ng-click="updateFavorite(audition.file.path, false)"><img src="/img/gold-trophy.png" alt="favorited audition"></a>
-							</span>
-							<span ng-if="audition.favorite != 1">
-								<a href="" ng-click="updateFavorite(audition.file.path, false)"><img src="/img/gray-trophy.png" alt="favorited audition"></a>
-							</span>
-
-						</fieldset>
-
-					</li>
-				</ul>
-			</div>
 		</div>
 
 		
