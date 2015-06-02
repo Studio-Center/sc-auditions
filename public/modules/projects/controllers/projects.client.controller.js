@@ -820,6 +820,35 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			$scope.update(redirect);
 		};
 
+		// update audition rating
+		$scope.updateFavorite = function(path, redirect){
+			// determine if update should result in user redirect
+			var redirect = typeof redirect === 'undefined' ? true : redirect;
+
+			// console.log($scope.rate[key]);
+			var key, favoriteVal = 1;
+
+			// get key for selected audition
+			for(var j = 0; j < $scope.project.auditions.length; ++j){
+				if($scope.project.auditions[j].file.path === path){
+					key = j;
+				}
+			}
+
+			// determine existing favorite setting
+			if(typeof $scope.project.auditions[key].favorite !== 'undefined'){
+				if($scope.project.auditions[key].favorite === 1){
+					favoriteVal = 0;
+				}
+			}
+
+			// merge average rating
+			$scope.project.auditions[key].favorite = favoriteVal;
+
+			// update project store
+			$scope.update(redirect);
+		};
+
 		// update phase options
 		$scope.updateStatus = function(key){
 

@@ -52,8 +52,8 @@
 					(<a href="" ng-click="predicate = '-avgRating'; reverse=false">^</a>)
 				</div>
 				<div class="col-md-3" style="text-align:center">
-					<a href="" ng-click="predicate = 'file.name'; reverse=false">Favorite</a>
-					(<a href="" ng-click="predicate = '-file.name'; reverse=false">^</a>)
+					<a href="" ng-click="predicate = 'favorite'; reverse=false">Favorite</a>
+					(<a href="" ng-click="predicate = '-favorite'; reverse=false">^</a>)
 				</div>
 				<div class="col-md-3" style="text-align:center">
 					<a href="" ng-click="predicate = 'file.name'; reverse=false">Random</a>
@@ -74,9 +74,15 @@
 							<span ng-show="verifyAudio(key)">
 								<button ng-click="playAudio(key);audio[key].play()" class="btn btn-primary">Play</button> 
 								<button ng-click="stopAudio()" class="btn btn-primary">Stop</button>
-
 							</span>
-							
+
+							<span ng-if="audition.favorite == 1">
+								<a href="" ng-click="updateFavorite(audition.file.path, false)"><img src="/img/gold-trophy.png" alt="favorited audition"></a>
+							</span>
+							<span ng-if="audition.favorite != 1">
+								<a href="" ng-click="updateFavorite(audition.file.path, false)"><img src="/img/gray-trophy.png" alt="favorited audition"></a>
+							</span>
+
 						</fieldset>
 
 					</li>

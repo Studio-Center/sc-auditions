@@ -1415,6 +1415,7 @@ exports.uploadAudition = function(req, res, next){
 							published: false,
 							rename: '',
 							avgRating: 0,
+							favorite: 0,
 							approved: 
 									{
 										by: 
