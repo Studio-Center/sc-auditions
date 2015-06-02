@@ -19,6 +19,37 @@
             <div class="controls" ng-module="talents">
                 <div ng-controller="TalentsController" data-ng-init="find()">
                     <label>Search:</label> <input ng-model="filterTeam" class="form-control">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <select ng-init="limit = 20" ng-model="limit" class="form-control">
+                                <option value="5" selected>Show 5 per page</option>
+                                <option value="10">Show 10 per page</option>
+                                <option value="15">Show 15 per page</option>
+                                <option value="20">Show 20 per page</option>
+                                <option value="30">Show 30 per page</option>
+                                <option value="50">Show 50 per page</option>
+                                <option value="100">Show 100 per page</option>
+                                <option value="200">Show 200 per page</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <div class="text-center">
+                            <ul class="pagination">
+                                <li ng-class="{disabled: currentPage == 0}">
+                                    <a href ng-click="currentPage=currentPage-1">« Prev</a>
+                                </li>
+                                <li ng-repeat="n in range(0, Math.floor(talents.length/limit))" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                                    <a href ng-bind="n + 1">1</a>
+                                </li>
+                                <li ng-class="{disabled: currentPage == Math.floor(talents.length/limit)}">
+                                    <a href ng-click="currentPage=currentPage+1">Next »</a>
+                                </li>
+                            </ul>
+                            </div>
+                        </div>
+                    </div>
                     <ul class="list-group">
                         <li class="list-group-item">
                             <div class="row">
@@ -36,7 +67,7 @@
                                 </div>
                             </div>
                         </li>
-                        <li class="list-group-item" ng-repeat="(key, talent) in talents | filter:filterTeam">
+                        <li class="list-group-item" ng-repeat="(key, talent) in talents | filter:filterTeam | startFrom:currentPage*limit | limitTo: limit">
                             <div class="row">
                                 <div class="col-lg-1 col-md-1 col-sm-1">
                                     <input type="checkbox" value="{{talent._id}}" ng-click="updateCreateTalent(talent._id, talent.name + ' ' + talent.lastName, talent.email)" ng-checked="checkCreateTalent(talent._id)"> 
@@ -53,6 +84,23 @@
                             </div>
                         </li>
                     </ul>
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                            <div class="text-center">
+                            <ul class="pagination">
+                                <li ng-class="{disabled: currentPage == 0}">
+                                    <a href ng-click="currentPage=currentPage-1">« Prev</a>
+                                </li>
+                                <li ng-repeat="n in range(0, Math.floor(talents.length/limit))" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                                    <a href ng-bind="n + 1">1</a>
+                                </li>
+                                <li ng-class="{disabled: currentPage == Math.floor(talents.length/limit)}">
+                                    <a href ng-click="currentPage=currentPage+1">Next »</a>
+                                </li>
+                            </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
