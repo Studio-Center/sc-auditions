@@ -63,11 +63,10 @@
 				<div class="panel-body">
 					<div class="row">
 						<ul class="list-group" style="margin-top:20px">
-							<li class="list-group-item" ng-repeat="(key, audition) in project.auditions | orderBy:predicate:reverse">
+							<li class="list-group-item" ng-if="isDisplayed(audition.file.path)" ng-repeat="(key, audition) in project.auditions | orderBy:predicate:reverse">
 
 								<fieldset>
-									
-									<input type="checkbox" ng-click="selAudition(audition.file.path)" ng-model="selectedAuditions" ng-true-value="{{key}}">
+									<input type="checkbox" ng-click="selAudition(audition.file.path)" ng-checked="selCheck(audition.file.path)" ng-model="selectedAuditions" ng-true-value="{{key}}">
 									<strong>{{key+1}}.</strong> <a href="/res/auditions/{{project._id}}/{{audition.file.name | encodeUri}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable">ngAudio</a> 
 								
 									<rating ng-model="audition.avgRating" readonly="false" ng-click="updateRating(audition.file.path, false)" max="max" on-leave="overStar = audition.avgRating" on-hover="hoveringOver(value,key)"></rating>
@@ -96,31 +95,22 @@
 				<div class="panel-heading">
 					<div class="row">
 						<div class="col-md-4" style="text-align:center">
-							<a href="" class="btn btn-primary" ng-click="hideSelectedAuditions()">Hide Selected</a>
+							<a href="" class="btn btn-primary" ng-click="hideSelectedAuditions()">
+								<span ng-if="hideSelected == false">
+								Hide Selected
+								</span>
+								<span ng-if="hideSelected == true">
+								Show Hidden
+								</span>
+							</a>
 						</div>
 						<div class="col-md-4" style="text-align:center">
-							<a href="" class="btn btn-primary" ng-click="showHiddenAuditions()">Show Hidden</a>
-						</div>
-						<div class="col-md-4" style="text-align:center">
-							<a href="" class="btn btn-primary" ng-click="showAllAuditions()">Show All</a>
-						</div>
-					</div>
-{{selectedAuditions}}
-					<div ng-if="selectedAuditions.length == 0">
-						<div class="row" style="padding-top:20px">
-							<div class="col-md-12" style="text-align:center">
-								<a href="" class="btn btn-primary" ng-click="downloadAllAuditions()">Download All</a>
-							</div>
-						</div>
-					</div>
-					<div ng-if="selectedAuditions.length > 0">
-						<div class="row" style="padding-top:20px">
-							<div class="col-md-6" style="text-align:center">
+							<div ng-if="selectedAuditions.length > 0">
 								<a href="" class="btn btn-primary" ng-click="bookSelectedAuditions()">Book Selected</a>
 							</div>
-							<div class="col-md-6" style="text-align:center">
-								<a href="" class="btn btn-primary" ng-click="downloadAllAuditions()">Download All</a>
-							</div>
+						</div>
+						<div class="col-md-4" style="text-align:center">
+							<a href="" class="btn btn-primary" ng-click="downloadAllAuditions()">Download All</a>
 						</div>
 					</div>
 

@@ -16,6 +16,7 @@ var mongoose = require('mongoose'),
 	async = require('async'),
 	mv = require('mv'),
 	nodemailer = require('nodemailer'),
+	archiver = require('archiver'),
 	dateFormat = require('dateformat'),
 	// set date and timezone
 	moment = require('moment-timezone'),
@@ -1445,4 +1446,32 @@ exports.uploadAudition = function(req, res, next){
             //res.status(200).end();
         }
     });
+
+};
+
+exports.downloadAllAuditions = function(req, res, next){
+	// get app dir
+	var appDir = path.dirname(require.main.filename);
+	var relativePath =  'res' + '/' + 'auditions' + '/' + req.body.project._id + '/';
+    var newPath = appDir + '/public/' + relativePath;
+    var savePath = appDir + '/public/' + 'res' + '/' + 'archives' + '/';
+    var newZip = savePath + req.body.project._id + '_' + req.user._id + '.zip';
+
+    console.log(newPath);
+
+    var output = fs.createWriteStream(newZip);
+	var archive = archiver('zip');
+
+    archive.directory(newPath, 'my-auditions');
+
+    archive.pipe(output);
+
+    archive.finalize();
+
+    res.status(200).end();
+
+ //    res.setHeader('Content-Type', 'application/zip');
+	// res.setHeader('content-disposition', 'attachment; filename="auditions.zip"');
+ //    return archive.pipe(res);
+
 };

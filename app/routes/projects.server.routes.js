@@ -23,6 +23,10 @@ module.exports = function(app) {
 	app.route('/projects/create')
 		.get(users.requiresLogin, projects.hasAuthorization);
 
+	// download all auditions for selected project
+	app.route('/projects/downloadallauditions')
+		.post(users.requiresLogin, projects.downloadAllAuditions);
+
 	// gather filtered list of projects by selected talent id
 	app.route('/projects/filterByTalent')
 		.post(users.requiresLogin, projects.getTalentFilteredProjects);
