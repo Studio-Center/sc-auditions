@@ -16,7 +16,7 @@
 		<div class="col-md-12">
 			<select ng-model="selectedProject" ng-init="selectedProject = ''" class="form-control" ng-change="findOneById(selectedProject)">
 				<option value="">Pick Your Project</option>
-				<option ng-repeat="project in projects" value="{{project._id}}">{{project.title}} Due {{project.estimatedCompletionDate | date:'short'}} EST</option>
+				<option ng-repeat="project in projects" value="{{project._id}}" >{{project.title}} Due {{project.estimatedCompletionDate | date:'short'}} EST</option>
 			</select>
 		</div>
 	</div>
@@ -25,7 +25,7 @@
 
 		<div class="row">
 			<div class="col-md-12">
-				<div class="page-header jumbotron">
+				<div class="page-header jumbotron" ng-class="{redBG: project.status == 'In Progress' && checkPassed(project.estimatedCompletionDate), greenBg: project.status == 'Booked', lgreenBG: project.status == 'Closed - Pending Client Decision', orangeBG: project.status == 'On Hold', lgray: project.status == 'Cancelled', mgray: project.status == 'ReAuditioned', gray: project.status == 'Dead', blueBg: project.status == 'In Progress' && compareDates(project.estimatedCompletionDate),lblueBG: project.status == 'In Progress', yellowBg: project.sounders == 'No Sounders - Approved By William' && compareDates(project.estimatedCompletionDate), lyellowBg: project.sounders == 'No Sounders - Approved By William'}">
 					<p><strong>{{project.title}} Due {{project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST {{project.status[0]}}</strong></p>
 				</div>
 			</div>
