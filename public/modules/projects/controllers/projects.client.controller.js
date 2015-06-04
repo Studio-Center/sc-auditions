@@ -24,6 +24,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.loadAudio = 0;
 		$scope.audio = [];
 		$scope.lastAudioID = 0;
+		$scope.audioStatus = 0;
 		$scope.newLead = {};
 		$scope.referenceFiles = [];
 		$scope.scripts = [];
@@ -1144,6 +1145,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.stopAudio = function(){
 			if(typeof $scope.audio[$scope.lastAudioID] === 'object'){
 				$scope.audio[$scope.lastAudioID].stop();
+				$scope.audioStatus = 2;
 			}
 		};
 
@@ -1155,6 +1157,22 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				}
 			}
 
+			if(typeof $scope.audio[key] === 'object' && key === $scope.lastAudioID && $scope.audioStatus === 1){
+				$scope.audio[key].pause();
+				$scope.audioStatus = 0;
+				return;
+			}
+			if(typeof $scope.audio[key] === 'object' && key === $scope.lastAudioID && $scope.audioStatus === 0){
+				$scope.audio[key].play();
+				$scope.audioStatus = 1;
+				return;
+			}
+			if(typeof $scope.audio[key] === 'object' && key === $scope.lastAudioID && $scope.audioStatus === 2){
+				$scope.audio[key].play();
+				$scope.audioStatus = 1;
+				return;
+			}
+
 			// assign file name
 			var fileName = '/res/auditions/' + $scope.project._id + '/' + filename;
 
@@ -1162,11 +1180,26 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				if($scope.audio[key].id !== fileName){
 					$scope.audio[key] = ngAudio.load(fileName);
 					$scope.audio[key].unbind();
+					$scope.audioStatus = 1;
+					setTimeout(
+					function(){
+						$scope.audio[key].play();
+					},
+					500
+					);
 				}
 			} else {
 				$scope.audio[key] = ngAudio.load(fileName);
 				$scope.audio[key].unbind();
+				$scope.audioStatus = 1;
+				setTimeout(
+					function(){
+						$scope.audio[key].play();
+					},
+					500
+				);
 			}
+
 			//$scope.audio[key].play();
 			$scope.lastAudioID = key;
 		};

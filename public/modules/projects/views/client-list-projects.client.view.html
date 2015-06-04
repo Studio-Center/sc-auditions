@@ -47,12 +47,12 @@
 							(<a href="" ng-click="predicate = '-file.name'; reverse=false">^</a>)
 						</div>
 						<div class="col-md-3" style="text-align:center">
-							<a href="" ng-click="predicate = 'avgRating'; reverse=false">Rating</a>
-							(<a href="" ng-click="predicate = '-avgRating'; reverse=false">^</a>)
+							<a href="" ng-click="predicate = '-avgRating'; reverse=false">Rating</a>
+							(<a href="" ng-click="predicate = 'avgRating'; reverse=false">^</a>)
 						</div>
 						<div class="col-md-3" style="text-align:center">
-							<a href="" ng-click="predicate = 'favorite'; reverse=false">Favorite</a>
-							(<a href="" ng-click="predicate = '-favorite'; reverse=false">^</a>)
+							<a href="" ng-click="predicate = '-favorite'; reverse=false">Favorite</a>
+							(<a href="" ng-click="predicate = 'favorite'; reverse=false">^</a>)
 						</div>
 						<div class="col-md-3" style="text-align:center">
 							[ <a href="" ng-click="predicate=''">unsorted</a> ]
@@ -72,7 +72,7 @@
 									<rating ng-model="audition.avgRating" readonly="false" ng-click="updateRating(audition.file.path, false)" max="max" on-leave="overStar = audition.avgRating" on-hover="hoveringOver(value,key)"></rating>
 								
 									<span ng-show="verifyAudio(key)">
-										<button ng-click="playAudio(key, audition.file.name);audio[key].play()" class="btn btn-primary">Play</button> 
+										<button ng-click="playAudio(key, audition.file.name)" class="btn btn-primary">Play</button> 
 										<button ng-click="stopAudio()" class="btn btn-primary">Stop</button>
 									</span>
 

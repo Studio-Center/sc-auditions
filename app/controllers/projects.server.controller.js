@@ -1466,9 +1466,13 @@ exports.downloadAllAuditions = function(req, res, next){
 
     archive.pipe(output);
 
-    archive.finalize();
-
-    res.status(200).end();
+    archive.finalize(function(err, bytes) {
+	  if (err) {
+	    throw err;
+	  } else {
+	  	res.status(200).end();
+	  }
+	});
 
  //    res.setHeader('Content-Type', 'application/zip');
 	// res.setHeader('content-disposition', 'attachment; filename="auditions.zip"');
