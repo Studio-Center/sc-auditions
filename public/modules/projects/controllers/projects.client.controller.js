@@ -54,6 +54,21 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	        $scope.selCheckVal = value;
       	};
 
+      	// client portal specific methods
+      	$scope.selAudition = function(key){
+			var idx = $scope.selectedAuditions.indexOf(key);
+			if (idx > -1){
+			    $scope.selectedAuditions.splice(idx, 1);
+			}else{
+			    $scope.selectedAuditions.push(key);
+			}
+      	};
+      	$scope.hideSelectedAuditions = function(){
+      		for(var i = 0; i < project.auditions.length; ++i){
+
+      		}
+      	};
+
       	// compare dates check for within hour
       	$scope.compareDates = function(projDate){
       		var now = new Date();
@@ -1096,7 +1111,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}
 		};
 
-		$scope.playAudio = function(key){
+		$scope.playAudio = function(key, filename){
 			// disable previous
 			if(typeof $scope.audio[$scope.lastAudioID] === 'object'){
 				if(key !== $scope.lastAudioID){
@@ -1105,7 +1120,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}
 
 			// assign file name
-			var fileName = '/res/auditions/' + $scope.project._id + '/' + $scope.project.auditions[key].file.name;
+			var fileName = '/res/auditions/' + $scope.project._id + '/' + filename;
 
 			if(typeof $scope.audio[key] === 'object'){
 				if($scope.audio[key].id !== fileName){

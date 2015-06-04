@@ -16,7 +16,7 @@
 		<div class="col-md-12">
 			<select ng-model="selectedProject" ng-init="selectedProject = ''" class="form-control" ng-change="findOneById(selectedProject)">
 				<option value="">Pick Your Project</option>
-				<option ng-repeat="project in projects" value="{{project._id}}">{{project.title}} Due {{project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST</option>
+				<option ng-repeat="project in projects" value="{{project._id}}">{{project.title}} Due {{project.estimatedCompletionDate | date:'short'}} EST</option>
 			</select>
 		</div>
 	</div>
@@ -67,13 +67,13 @@
 
 								<fieldset>
 									
-									<input type="checkbox" ng-model="selectedAuditions" ng-true-value="{{key}}">
+									<input type="checkbox" ng-click="selAudition(audition.file.path)" ng-model="selectedAuditions" ng-true-value="{{key}}">
 									<strong>{{key+1}}.</strong> <a href="/res/auditions/{{project._id}}/{{audition.file.name | encodeUri}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable">ngAudio</a> 
 								
 									<rating ng-model="audition.avgRating" readonly="false" ng-click="updateRating(audition.file.path, false)" max="max" on-leave="overStar = audition.avgRating" on-hover="hoveringOver(value,key)"></rating>
 								
 									<span ng-show="verifyAudio(key)">
-										<button ng-click="playAudio(key);audio[key].play()" class="btn btn-primary">Play</button> 
+										<button ng-click="playAudio(key, audition.file.name);audio[key].play()" class="btn btn-primary">Play</button> 
 										<button ng-click="stopAudio()" class="btn btn-primary">Stop</button>
 									</span>
 
@@ -105,11 +105,25 @@
 							<a href="" class="btn btn-primary" ng-click="showAllAuditions()">Show All</a>
 						</div>
 					</div>
-					<div class="row" style="padding-top:20px">
-						<div class="col-md-12" style="text-align:center">
-							<a href="" class="btn btn-primary" ng-click="downloadAllAuditions()">Download All</a>
+{{selectedAuditions}}
+					<div ng-if="selectedAuditions.length == 0">
+						<div class="row" style="padding-top:20px">
+							<div class="col-md-12" style="text-align:center">
+								<a href="" class="btn btn-primary" ng-click="downloadAllAuditions()">Download All</a>
+							</div>
 						</div>
 					</div>
+					<div ng-if="selectedAuditions.length > 0">
+						<div class="row" style="padding-top:20px">
+							<div class="col-md-6" style="text-align:center">
+								<a href="" class="btn btn-primary" ng-click="bookSelectedAuditions()">Book Selected</a>
+							</div>
+							<div class="col-md-6" style="text-align:center">
+								<a href="" class="btn btn-primary" ng-click="downloadAllAuditions()">Download All</a>
+							</div>
+						</div>
+					</div>
+
 				</div>
 			</div>
 
