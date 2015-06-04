@@ -63,10 +63,46 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			    $scope.selectedAuditions.push(key);
 			}
       	};
-      	$scope.hideSelectedAuditions = function(){
-      		for(var i = 0; i < project.auditions.length; ++i){
-
+      	$scope.selCheck = function(filename){
+			for(var i = 0; i < $scope.selectedAuditions.length; ++i){
+      			if($scope.selectedAuditions[i] === filename){
+      				return true;
+      			}
       		}
+      	};
+      	$scope.hideSelected = false;
+      	$scope.hideSelectedAuditions = function(){
+      		$scope.hideSelected = !$scope.hideSelected;
+      	};
+      	$scope.isDisplayed = function(filename){
+      		if($scope.hideSelected == true){
+	      		for(var i = 0; i < $scope.selectedAuditions.length; ++i){
+	      			if($scope.selectedAuditions[i] === filename){
+	      				return false;
+	      			}
+	      		}
+      		}
+
+      		return true;
+      	};
+      	$scope.downloadAllAuditions = function(){
+
+			$http.post('/projects/downloadallauditions', {
+		        project: $scope.project
+		    }).
+			success(function(data, status, headers, config) {
+				// send data to users browser
+				// wait one second for archive processing on server
+				setTimeout(
+					function(){
+						var link = document.createElement("a");
+					    link.download = $scope.project._id + '_' + Authentication.user._id + '.zip';
+					    link.href = 'res/archives/' + $scope.project._id + '_' + Authentication.user._id + '.zip';
+					    link.click()
+					},
+				    1000
+				);
+			});
       	};
 
       	// compare dates check for within hour
