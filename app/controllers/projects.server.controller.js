@@ -1457,7 +1457,7 @@ exports.downloadAllAuditions = function(req, res, next){
     var savePath = appDir + '/public/' + 'res' + '/' + 'archives' + '/';
     var newZip = savePath + req.body.project._id + '_' + req.user._id + '.zip';
 
-    console.log(newPath);
+    //console.log(newPath);
 
     var output = fs.createWriteStream(newZip);
 	var archive = archiver('zip');
