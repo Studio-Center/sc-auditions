@@ -1462,17 +1462,15 @@ exports.downloadAllAuditions = function(req, res, next){
     var output = fs.createWriteStream(newZip);
 	var archive = archiver('zip');
 
+	output.on('close', function() {
+	  res.status(200).end();
+	});
+
     archive.directory(newPath, 'my-auditions');
 
     archive.pipe(output);
 
-    archive.finalize(function(err, bytes) {
-	  if (err) {
-	    throw err;
-	  } else {
-	  	res.status(200).end();
-	  }
-	});
+    archive.finalize();
 
  //    res.setHeader('Content-Type', 'application/zip');
 	// res.setHeader('content-disposition', 'attachment; filename="auditions.zip"');
