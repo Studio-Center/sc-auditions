@@ -1174,19 +1174,19 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			if(typeof $scope.audio === 'object' && key === $scope.lastAudioID && $scope.audioStatus === 1){
 				$scope.audio.pause();
 				$scope.audioStatus = 0;
-				console.log('pause');
+				//console.log('pause');
 				return;
 			}
 			if(typeof $scope.audio === 'object' && key === $scope.lastAudioID && $scope.audioStatus === 0){
 				$scope.audio.play();
 				$scope.audioStatus = 1;
-				console.log('play');
+				//console.log('play');
 				return;
 			}
 			if(typeof $scope.audio === 'object' && key === $scope.lastAudioID && $scope.audioStatus === 2){
 				$scope.audio.play();
 				$scope.audioStatus = 1;
-				console.log('play');
+				//console.log('play');
 				return;
 			}
 
@@ -1212,7 +1212,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				$scope.audioStatus = 1;	
 			// }
 
-			console.log('load');
+			//console.log('load');
 
 			$scope.audio.play();
 			$scope.lastAudioID = key;
