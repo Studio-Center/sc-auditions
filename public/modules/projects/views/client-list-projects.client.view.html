@@ -90,6 +90,9 @@
 										<a href="" ng-click="updateFavorite(audition.file.path, false)"><img src="/img/gray-trophy.png" alt="favorited audition"></a>
 									</span>
 
+									<button ng-click="hideAudition(audition.file.path)" ng-show="isHidden(audition.file.path) == true" class="btn btn-primary">Hide</button>
+									<button ng-click="showAudition(audition.file.path)" ng-show="isHidden(audition.file.path) == false" class="btn btn-danger">Show</button>
+
 								</fieldset>
 
 							</li>
