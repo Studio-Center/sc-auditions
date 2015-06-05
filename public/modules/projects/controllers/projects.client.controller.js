@@ -72,6 +72,21 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		      //$log.info('Modal dismissed at: ' + new Date());
 		    });
 		};
+		// create talent modal
+		$scope.createTalent = function(size){
+			var modalInstance = $modal.open({
+		      animation: true,
+		      templateUrl: 'modules/talents/views/create-talent-modal.client.view.html',
+		      controller: 'TalentsModalController',
+		      size: size
+		    });
+
+		    modalInstance.result.then(function (selectedItem) {
+		      //$scope.selected = selectedItem;
+		    }, function () {
+		      //$log.info('Modal dismissed at: ' + new Date());
+		    });
+		};
 
       	// client portal specific methods
       	$scope.selAudition = function(key){
