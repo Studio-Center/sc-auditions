@@ -27,6 +27,8 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 				// And redirect based on user role
 				if($scope.authentication.user.roles[0] === 'admin' || $scope.authentication.user.roles[0] === 'producer/auditions director'){
 					$location.path('/projects');
+				} else if($scope.authentication.user.roles[0] === 'client' || $scope.authentication.user.roles[0] === 'client-client') {
+					$location.path('/projects-client');
 				} else {
 					$location.path('/');
 				}
