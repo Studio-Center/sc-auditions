@@ -180,6 +180,9 @@
 					              });
 					            </script>
 					            <div class="controls" ng-module="talents">
+					            	<div style="text-align:center">
+										<button class="btn btn-primary" ng-click="createTalent()">Create Talent</button>
+									</div>
 					                <div ng-controller="TalentsController" data-ng-init="find()">
 					                	<label>Search:</label> <input ng-model="filterTeam" class="form-control">
 					                	<div class="row">
