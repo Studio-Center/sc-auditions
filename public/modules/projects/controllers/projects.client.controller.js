@@ -35,6 +35,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.rejFiles = [];
 		// projects client portal
 		$scope.selectedAuditions = [];
+		$scope.hideList = [];
 
 		// used for paginator
 		$scope.Math = window.Math;
@@ -71,14 +72,32 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       			}
       		}
       	};
-      	$scope.hideSelected = false;
+      	$scope.hideSelected = true;
       	$scope.hideSelectedAuditions = function(){
       		$scope.hideSelected = !$scope.hideSelected;
       	};
+      	$scope.hideAudition = function(filename){
+      		$scope.hideList.push(filename);
+      	};
+      	$scope.showAudition = function(filename){
+			var idx = $scope.hideList.indexOf(filename);
+			if (idx > -1){
+			    $scope.hideList.splice(idx, 1);
+			}
+      	};
+      	$scope.isHidden = function(filename){
+      		for(var i = 0; i < $scope.hideList.length; ++i){
+      			if($scope.hideList[i] === filename){
+      				return false;
+      			}
+      		}
+
+      		return true;
+      	}
       	$scope.isDisplayed = function(filename){
       		if($scope.hideSelected == true){
-	      		for(var i = 0; i < $scope.selectedAuditions.length; ++i){
-	      			if($scope.selectedAuditions[i] === filename){
+	      		for(var i = 0; i < $scope.hideList.length; ++i){
+	      			if($scope.hideList[i] === filename){
 	      				return false;
 	      			}
 	      		}
