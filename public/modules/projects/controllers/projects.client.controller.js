@@ -124,6 +124,21 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				);
 			});
       	};
+      	$scope.bookSelectedShow = function(){
+      		var hiddenMatchCnt = 0, idx;
+
+      		for(var i = 0; i < $scope.hideList.length; ++i){
+  				idx = $scope.selectedAuditions.indexOf($scope.hideList[i]);
+				if (idx > -1){
+					++hiddenMatchCnt;
+				}
+      		}
+
+      		if($scope.selectedAuditions.length > hiddenMatchCnt){
+      			return true;
+      		}
+
+      	};
 
       	// compare dates check for within hour
       	$scope.compareDates = function(projDate){
@@ -993,8 +1008,14 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		// find single project by id
 		$scope.findOneById = function(id) {
 
+			// reset selected params
+			$scope.selectedAuditions = [];
+			$scope.hideList = [];
+
+			// assigned search id
 			$stateParams.projectId = id;
 
+			// retrieve selected project
 			$scope.findOne();
 
 		};
