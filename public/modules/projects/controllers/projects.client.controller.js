@@ -1,8 +1,8 @@
 'use strict';
 
 // Projects controller
-angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$upload', 'ngAudio', '$http',
-	function($scope, $stateParams, $location, Authentication, Projects, $upload, ngAudio, $http ) {
+angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$upload', 'ngAudio', '$http', '$modal',
+	function($scope, $stateParams, $location, Authentication, Projects, $upload, ngAudio, $http, $modal ) {
 		$scope.authentication = Authentication;
 
 		// rating
@@ -55,6 +55,23 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	        $scope.percent = 100 * (value / $scope.max);
 	        $scope.selCheckVal = value;
       	};
+
+      	// create user modals
+      	$scope.createClient = function (size) {
+
+		    var modalInstance = $modal.open({
+		      animation: true,
+		      templateUrl: 'modules/users/views/modal-create.client.view.html',
+		      controller: 'UsersModalController',
+		      size: size
+		    });
+
+		    modalInstance.result.then(function (selectedItem) {
+		      //$scope.selected = selectedItem;
+		    }, function () {
+		      //$log.info('Modal dismissed at: ' + new Date());
+		    });
+		};
 
       	// client portal specific methods
       	$scope.selAudition = function(key){

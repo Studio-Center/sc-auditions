@@ -373,6 +373,9 @@
 					              });
 					            </script>
 					            <div class="controls" ng-module="users">
+					            	<div style="text-align:center">
+										<button class="btn btn-primary" ng-click="createClient()">Create Client</button>
+									</div>
 					                <div ng-controller="UsersController" data-ng-init="findFilter('client')">
 					                	<label>Search:</label> <input ng-model="filterClient" class="form-control">
 					                	<div class="row">
@@ -429,6 +432,7 @@
 									</div>
 								</div>
 							</accordion-group>
+							
 						</accordion>
 					</accordion-group>
 				</accordion>
@@ -457,6 +461,9 @@
 					              });
 					            </script>
 					            <div class="controls" ng-module="users">
+					            	<div style="text-align:center">
+										<button class="btn btn-primary" ng-click="createClient()">Create Client</button>
+									</div>
 					                <div ng-controller="UsersController" data-ng-init="findFilter('client-client')">
 					                	<label>Search:</label> <input ng-model="filterClientClient" class="form-control">
 					                	<div class="row">

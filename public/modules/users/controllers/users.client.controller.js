@@ -2,7 +2,7 @@
 
 // Users controller
 angular.module('users').controller('UsersController', ['$scope', '$stateParams', '$location', 'Authentication', 'UsersEdit', 'UsersFind', '$http',
-	function($scope, $stateParams, $location, Authentication, UsersEdit, UsersFind, $http ) {
+	function($scope, $stateParams, $location, Authentication, UsersEdit, UsersFind, $http) {
 		$scope.authentication = Authentication;
 
 		$scope.roleOpts = ['user', 'admin', 'producer/auditions director', 'production coordinator', 'talent director', 'client', 'client-client'];
