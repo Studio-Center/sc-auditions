@@ -321,6 +321,11 @@
 										<rating ng-model="audition.avgRating" readonly="true" max="max" on-leave="overStar = audition.avgRating" ></rating>
 									</p>
 								</fieldset>
+								<fieldset>
+									<span ng-if="audition.favorite == 1">
+										<img src="/img/gold-trophy.png" alt="favorited audition">
+									</span>
+								</fieldset>
 							</li>
 						</ul>
 						
