@@ -1,8 +1,8 @@
 'use strict';
 
 // Users controller
-angular.module('users').controller('UsersController', ['$scope', '$stateParams', '$location', 'Authentication', 'UsersEdit', 'UsersFind', '$http',
-	function($scope, $stateParams, $location, Authentication, UsersEdit, UsersFind, $http) {
+angular.module('users').controller('UsersController', ['$scope', '$stateParams', '$location', 'Authentication', 'UsersEdit', 'UsersFind', '$http', '$rootScope',
+	function($scope, $stateParams, $location, Authentication, UsersEdit, UsersFind, $http, $rootScope) {
 		$scope.authentication = Authentication;
 
 		$scope.roleOpts = ['user', 'admin', 'producer/auditions director', 'production coordinator', 'talent director', 'client', 'client-client'];
@@ -27,6 +27,14 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
 		$scope.findFilter = function(selUserLevel) {
 			$scope.users = UsersFind.query({userLevel: selUserLevel});
 		};
+
+		// refresh list of users on refresh emit
+		$rootScope.$on('refresh', $scope.find());
+		$rootScope.$on('refreshFilter', 
+			function(event, args) { 
+				$scope.findFilter(args);
+			} 
+		);
 
 		// Find existing Users
 		$scope.findOne = function() {

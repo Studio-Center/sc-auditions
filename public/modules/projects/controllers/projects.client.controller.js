@@ -57,19 +57,28 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       	};
 
       	// create user modals
-      	$scope.createClient = function (size) {
+      	$scope.createClient = function (owner) {
 
 		    var modalInstance = $modal.open({
 		      animation: true,
 		      templateUrl: 'modules/users/views/modal-create.client.view.html',
 		      controller: 'UsersModalController',
-		      size: size
+		      resolve: {
+		      	owner: function () {
+			      	if(owner === 'client'){
+				        return 'client';
+				    } else {
+				        return 'client-client';
+				    }
+				}
+		      }
 		    });
 
 		    modalInstance.result.then(function (selectedItem) {
 		      //$scope.selected = selectedItem;
 		    }, function () {
 		      //$log.info('Modal dismissed at: ' + new Date());
+
 		    });
 		};
 		// create talent modal
