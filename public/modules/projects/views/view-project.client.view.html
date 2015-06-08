@@ -304,7 +304,14 @@
 								</fieldset>
 								<fieldset>
 									<span ng-show="verifyAudio(key)">
-										<button ng-click="playAudio(key, audition.file.name)" class="btn btn-primary">Play</button> 
+										<button ng-click="playAudio(key, audition.file.name)" class="btn btn-primary">
+											<span ng-if="lastAudioID == key && audioStatus == 1">
+												pause
+											</span>
+											<span ng-if="lastAudioID != key || audioStatus != 1">
+												Play
+											</span>
+										</button> 
 										<button ng-click="stopAudio()" class="btn btn-primary">Stop</button>
 									</span>
 									<button ng-show="showRename === 0" ng-click="showRename = 1" class="btn btn-primary">Rename</button>
