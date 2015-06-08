@@ -148,10 +148,10 @@
 						<ul class="list-group">
 							<li class="list-group-item" ng-repeat="(key, member) in project.talent"> 
 								<script>
-					              var talents = angular.module("talents", []);
-					              talents.controller("TalentsController", function($scope) {
-					                  $scope.talents = Users.query();
-					              });
+					              // var talents = angular.module("talents", []);
+					              // talents.controller("TalentsController", function($scope) {
+					              //     $scope.talents = Users.query();
+					              // });
 					            </script>
 					            <div class="controls" ng-module="talents">
 					                <div ng-controller="TalentsController" data-ng-init="getOne(member.talentId)">
@@ -174,10 +174,10 @@
 								</h4>
 							</accordion-heading>
 								<script>
-					              var talents = angular.module("talents", []);
-					              talents.controller("TalentsController", function($scope) {
-					                  $scope.talents = Users.query();
-					              });
+					              // var talents = angular.module("talents", []);
+					              // talents.controller("TalentsController", function($scope) {
+					              //     $scope.talents = Users.query();
+					              // });
 					            </script>
 					            <div class="controls" ng-module="talents">
 					            	<div style="text-align:center">
@@ -370,14 +370,14 @@
 								</h4>
 							</accordion-heading>
 								<script>
-					              var users = angular.module("users", []);
-					              users.controller("UsersController", function($scope) {
-					                  $scope.users = Users.query();
-					              });
+					              // var users = angular.module("users", []);
+					              // users.controller("UsersController", function($scope) {
+					              //     $scope.users = Users.query();
+					              // });
 					            </script>
 					            <div class="controls" ng-module="users">
 					            	<div style="text-align:center">
-										<button class="btn btn-primary" ng-click="createClient()">Create Client</button>
+										<button class="btn btn-primary" ng-click="createClient('client')">Create Client</button>
 									</div>
 					                <div ng-controller="UsersController" data-ng-init="findFilter('client')">
 					                	<label>Search:</label> <input ng-model="filterClient" class="form-control">
@@ -458,16 +458,16 @@
 								</h4>
 							</accordion-heading>
 								<script>
-					              var users = angular.module("users", []);
-					              users.controller("UsersController", function($scope) {
-					                  $scope.users = Users.query();
-					              });
+					              // var users = angular.module("users", []);
+					              // users.controller("UsersController", function($scope) {
+					              //     $scope.users = Users.query();
+					              // });
 					            </script>
 					            <div class="controls" ng-module="users">
 					            	<div style="text-align:center">
-										<button class="btn btn-primary" ng-click="createClient()">Create Client</button>
+										<button class="btn btn-primary" ng-click="createClient('client-client')">Create Client</button>
 									</div>
-					                <div ng-controller="UsersController" data-ng-init="findFilter('client-client')">
+					                <div ng-controller="UsersListController" data-ng-init="findFilter('client-client')">
 					                	<label>Search:</label> <input ng-model="filterClientClient" class="form-control">
 					                	<div class="row">
 									        <div class="col-lg-12 col-md-12 col-sm-12">
