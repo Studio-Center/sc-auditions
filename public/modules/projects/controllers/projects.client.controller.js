@@ -82,12 +82,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		    });
 		};
 		// create talent modal
-		$scope.createTalent = function(size){
+		$scope.createTalent = function(){
 			var modalInstance = $modal.open({
 		      animation: true,
 		      templateUrl: 'modules/talents/views/create-talent-modal.client.view.html',
-		      controller: 'TalentsModalController',
-		      size: size
+		      controller: 'TalentsModalController'
 		    });
 
 		    modalInstance.result.then(function (selectedItem) {

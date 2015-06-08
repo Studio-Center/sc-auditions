@@ -1,8 +1,8 @@
 'use strict';
 
 // Talents controller
-angular.module('talents').controller('TalentsModalController', ['$scope', '$stateParams', '$location', 'Authentication', 'Talents', '$http', '$modalInstance',
-	function($scope, $stateParams, $location, Authentication, Talents, $http, $modalInstance) {
+angular.module('talents').controller('TalentsModalController', ['$scope', '$stateParams', '$location', 'Authentication', 'Talents', '$http', '$modalInstance', '$rootScope',
+	function($scope, $stateParams, $location, Authentication, Talents, $http, $modalInstance, $rootScope) {
 		$scope.authentication = Authentication;
 
 		// talent static options
@@ -132,6 +132,7 @@ angular.module('talents').controller('TalentsModalController', ['$scope', '$stat
 
 			// Redirect after save
 			talent.$save(function(response) {
+				$rootScope.$broadcast('refreshTalent');
 				$modalInstance.close();
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
