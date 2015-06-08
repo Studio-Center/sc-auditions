@@ -1,8 +1,8 @@
 'use strict';
 
 // Talents controller
-angular.module('talents').controller('TalentsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Talents', '$http',
-	function($scope, $stateParams, $location, Authentication, Talents, $http) {
+angular.module('talents').controller('TalentsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Talents', '$http', '$rootScope',
+	function($scope, $stateParams, $location, Authentication, Talents, $http, $rootScope) {
 		$scope.authentication = Authentication;
 
 		// talent static options
@@ -208,6 +208,9 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 				talentId: $stateParams.talentId
 			});
 		};
+
+		// refresh list of talents on refresh emit
+		$rootScope.$on('refreshTalent', $scope.find());
 
 		// load talent assigned projects
 		$scope.findTalentProjects = function(){
