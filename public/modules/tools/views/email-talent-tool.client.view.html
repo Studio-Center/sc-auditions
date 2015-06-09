@@ -1,0 +1,143 @@
+<section data-ng-controller="ToolsController">
+    <div class="page-header">
+        <h1>Email Talent</h1>
+    </div>
+    <div class="col-md-8" data-ng-init="gatherTalents()">
+    	<label>Search:</label> <input ng-model="searchString" class="form-control">
+	    <div class="row">
+	        <div class="col-lg-3 col-md-3 col-sm-3">
+	            <div class="btn-group" data-toggle="buttons" style="padding-top:15px">
+	                <label class="btn btn-primary" ng-model="searchText.gender" btn-radio="'male'">Male</label>
+	                <label class="btn btn-primary" ng-model="searchText.gender" btn-radio="'female'">Female</label>
+	            </div>
+	        </div>
+	        <div class="col-lg-2 col-md-2 col-sm-2">
+	            <label>union</label> <input type="checkbox" ng-model="searchText.unionStatus" ng-true-value="!non-union" ng-false-value="" class="form-control">
+	        </div>
+	        <div class="col-lg-2 col-md-2 col-sm-2">
+	            <label>non-union</label> <input type="checkbox" ng-model="searchText.unionStatus" ng-true-value="!union" ng-false-value="" class="form-control">
+	        </div>
+	        <div class="col-lg-3 col-md-3 col-sm-3">
+	            <label>union and non-union</label> <input type="checkbox" ng-model="searchUnions" ng-true-value="union non-union" ng-false-value="" class="form-control">
+	        </div>
+	        <div class="col-lg-2 col-md-2 col-sm-2">
+	            <label>Emailer</label> <input type="checkbox" ng-model="searchText.type" ng-true-value="email" ng-false-value="" class="form-control">
+	        </div>
+	    </div>
+	    <div class="row">
+	        <div class="col-lg-3 col-md-3 col-sm-3">
+	            <div class="btn-group" data-toggle="buttons" style="padding-top:15px">
+	                <label class="btn btn-primary" ng-model="searchText.ageRange" btn-radio="'kid'">Kid</label>
+	                <label class="btn btn-primary" ng-model="searchText.ageRange" btn-radio="'teen'">Teen</label>
+	                <label class="btn btn-primary" ng-model="searchText.ageRange" btn-radio="'adult'">Adult</label>
+	            </div>
+	        </div>
+	        <div class="col-lg-3 col-md-3 col-sm-3">
+	            <select ng-model="searchText.locationISDN" class="form-control" style="margin-top:15px">
+	                <option value="">Location</option>
+	                <option ng-repeat="item in locations" value="{{item}}">{{item}}</option>
+	            </select>
+	        </div>
+	        <div class="col-lg-2 col-md-2 col-sm-2">
+	            <label>British</label> <input type="checkbox" ng-model="searchText.typeCasts" ng-true-value="british" ng-false-value="" class="form-control">
+	        </div>
+	        <div class="col-lg-2 col-md-2 col-sm-2">
+	            <label>Spanish</label> <input type="checkbox" ng-model="searchText.typeCasts" ng-true-value="spanish" ng-false-value="" class="form-control">
+	        </div>
+	        <div class="col-lg-2 col-md-2 col-sm-2">
+	            <label>Foreign Language</label> <input type="checkbox" ng-model="searchText.typeCasts" ng-true-value="foreign language" ng-false-value="" class="form-control">
+	        </div>
+	    </div>
+	    <div class="row">
+	        <div class="col-lg-12 col-md-12 col-sm-12">
+	            <select ng-init="limit = 20" ng-model="limit" class="form-control">
+	                <option value="5" selected>Show 5 per page</option>
+	                <option value="10">Show 10 per page</option>
+	                <option value="15">Show 15 per page</option>
+	                <option value="20">Show 20 per page</option>
+	                <option value="30">Show 30 per page</option>
+	                <option value="50">Show 50 per page</option>
+	                <option value="100">Show 100 per page</option>
+	                <option value="200">Show 200 per page</option>
+	            </select>
+	        </div>
+	    </div>
+	    <div class="row">
+	        <div class="col-lg-12 col-md-12 col-sm-12">
+	            <div class="text-center">
+	            <ul class="pagination">
+	                <li ng-class="{disabled: currentPage == 0}">
+	                    <a href ng-click="currentPage=currentPage-1">« Prev</a>
+	                </li>
+	                <li ng-repeat="n in range(0, Math.floor(talents.length/limit))" ng-class="{active: n == currentPage}" ng-click="setPage()">
+	                    <a href ng-bind="n + 1">1</a>
+	                </li>
+	                <li ng-class="{disabled: currentPage == Math.floor(talents.length/limit)}">
+	                    <a href ng-click="currentPage=currentPage+1">Next »</a>
+	                </li>
+	            </ul>
+	            </div>
+	        </div>
+	    </div>
+	    <div class="list-group item-list">
+	        <div data-ng-repeat="talent in talents | multiTerm:searchUnions:'AND' | filter:searchText:startsWith | filter:searchString | startFrom:currentPage*limit | limitTo: limit" data-ng-href="#!/talents/{{talent._id}}" class="list-group-item">
+	        	<div style="float:right">
+	        		<label>Email:</label>
+	        		<input type="checkbox" name="emailClients" ng-model="emailClients" ng-true-value="{{talent._id}}" ng-checked="checkToggleEmail(talent._id)" ng-click="toggleEmailer(talent._id,talent)">
+	        	</div>
+	            <small class="list-group-item-text">
+	                Added
+	                <span data-ng-bind="talent.created | amDateFormat:'MM/DD/YY h:mm:ss a'"></span>
+	            </small>
+	            <h4 class="list-group-item-heading">{{talent.name}} {{talent.lastName}}</h4>
+	            <p><strong>Phone Number</strong> {{talent.phone | tel}} <strong>Phone Number Alt</strong> {{talent.phone2 | tel}}<br>
+	            <strong>Email</strong> {{talent.email}} <strong>Email Alt</strong> {{talent.email2}} <br>
+	            <strong>Location:</strong> {{talent.locationISDN}} <br>
+	            <strong>Union Status</strong> 
+	            <span ng-repeat="(key, usval) in talent.unionStatus">{{usval}} </span></p>
+	        </div>
+	    </div>
+	    <div class="row">
+	        <div class="col-lg-12 col-md-12 col-sm-12">
+	            <div class="text-center">
+	            <ul class="pagination">
+	                <li ng-class="{disabled: currentPage == 0}">
+	                    <a href ng-click="currentPage=currentPage-1">« Prev</a>
+	                </li>
+	                <li ng-repeat="n in range(0, Math.floor(talents.length/limit))" ng-class="{active: n == currentPage}" ng-click="setPage()">
+	                    <a href ng-bind="n + 1">1</a>
+	                </li>
+	                <li ng-class="{disabled: currentPage == Math.floor(talents.length/limit)}">
+	                    <a href ng-click="currentPage=currentPage+1">Next »</a>
+	                </li>
+	            </ul>
+	            </div>
+	        </div>
+	    </div>
+    </div>
+    <div class="col-md-4">
+    	<div class="row" ng-if="email.all != true">
+    		<h3>Email Selected</h3>
+	    	<select name="verifySelected" multiple="multiple" ng-model="verifySelected" class="form-control" style="width:100%;height:250px;">
+	    		<option data-ng-repeat="talent in emailClients track by $index" value="{{talent}}">{{talentLookup(talent)}}</option>
+	    	</select>
+	    	<button type="button" class="btn btn-primary" ng-click="removeSelectedTalents()">Remove</button>
+    	</div>
+    	<div class="row">
+    		<label for="email.subject">Email All</label>
+    		<input type="checkbox" name="email.all" ng-model="email.all" class="form-control">
+    	</div>
+    	<div class="row">
+    		<h3>Send Email</h3>
+    		<label for="email.subject">Email Subject</label>
+    		<input type="text" name="email.subject" ng-model="email.subject" class="form-control">
+    	</div>
+    	<div class="row">
+    		<label for="email.body">Email Body</label>
+    		<div text-angular ng-model="email.body"></div>
+    	</div>
+    	<div class="row" style="text-align:center">
+    		<button type="button" class="btn btn-primary" ng-click="sendTalentEmails()">Send</button>
+    	</div>
+    </div>
+</section>

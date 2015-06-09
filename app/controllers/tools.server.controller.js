@@ -6,7 +6,194 @@
 var mongoose = require('mongoose'),
 	errorHandler = require('./errors'),
 	Tool = mongoose.model('Tool'),
-	_ = require('lodash');
+	Project = mongoose.model('Project'),
+	User = mongoose.model('User'),
+	Talent = mongoose.model('Talent'),
+	Typecast = mongoose.model('Typecast'),
+	fs = require('fs'),
+	config = require('../../config/config'),
+	_ = require('lodash'),
+	path = require('path'),
+	async = require('async'),
+	mv = require('mv'),
+	nodemailer = require('nodemailer'),
+	archiver = require('archiver'),
+	dateFormat = require('dateformat'),
+	// set date and timezone
+	moment = require('moment-timezone'),
+	now = new Date();;
+
+/* custom tools methods */
+exports.sendTalentEmails = function(req, res){
+	var email = req.body.email;
+	var emailClients = req.body.emailClients;
+
+	// email all talents if email all is set to true
+	if(email.all === true){
+
+		Talent.find().sort({'locationISDN': 1,'lastName': 1,'-created': -1}).populate('user', 'displayName').exec(function(err, talents) {
+			if (err) {
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
+			} else {
+
+				async.waterfall([
+					function(done) {
+
+						// generate email signature
+						var emailSig = '';
+						if(req.user.emailSignature){
+							emailSig = req.user.emailSignature.replace(/\r?\n/g, '<br>');
+						} else {
+							emailSig = '';
+						}
+
+						res.render('templates/custom-talent-email', {
+							email: email,
+							emailSignature: emailSig
+						}, function(err, talentEmailHTML) {
+							done(err, talentEmailHTML);
+						});
+
+					},
+					function(talentEmailHTML, done) {
+						// walk through all available telent and send emails
+						for(var i = 0; i < talents.length; ++i){
+
+							// anon func to capture state variables
+							(function(){
+
+								var curTalent = talents[i];
+
+								// check for talent preferred contact
+								var idx = curTalent.type.indexOf('Email');
+								if (idx > -1){
+
+									// add both email addresses if talent has backup
+									var talentEmails = [];
+									talentEmails[0] = curTalent.email;
+									if(typeof curTalent.email2 !== 'undefined' && curTalent.email2.length > 0){
+										talentEmails[1] = curTalent.email2
+									}
+
+									// send email
+									var transporter = nodemailer.createTransport(config.mailer.options);
+
+									var mailOptions = {
+														to: talentEmails,
+														from: req.user.email || config.mailer.from,
+														replyTo: req.user.email || config.mailer.from,
+														subject: email.subject,
+														html: talentEmailHTML
+													};
+
+									transporter.sendMail(mailOptions, function(){
+										//done(err);
+									});
+										
+								}
+
+						})();
+					}
+					done('');
+				}
+				], function(err) {
+					if(err){
+						return res.status(400).send({
+							message: errorHandler.getErrorMessage(err)
+						});
+					} else {
+						return res.status(200).send();
+					}
+				});
+			}
+		});
+
+	// email only selected clients
+	} else {
+
+		Talent.where('_id').in(emailClients).sort({'locationISDN': 1,'lastName': 1,'-created': -1}).populate('user', 'displayName').exec(function(err, talents) {
+			if (err) {
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
+			} else {
+
+				async.waterfall([
+					function(done) {
+
+						// generate email signature
+						var emailSig = '';
+						if(req.user.emailSignature){
+							emailSig = req.user.emailSignature.replace(/\r?\n/g, '<br>');
+						} else {
+							emailSig = '';
+						}
+
+						res.render('templates/custom-talent-email', {
+							email: email,
+							emailSignature: emailSig
+						}, function(err, talentEmailHTML) {
+							done(err, talentEmailHTML);
+						});
+
+					},
+					function(talentEmailHTML, done) {
+						// walk through all available telent and send emails
+						for(var i = 0; i < talents.length; ++i){
+
+							// anon func to capture state variables
+							(function(){
+
+								var curTalent = talents[i];
+
+								// check for talent preferred contact
+								var idx = curTalent.type.indexOf('Email');
+								if (idx > -1){
+
+									// add both email addresses if talent has backup
+									var talentEmails = [];
+									talentEmails[0] = curTalent.email;
+									if(typeof curTalent.email2 !== 'undefined' && curTalent.email2.length > 0){
+										talentEmails[1] = curTalent.email2
+									}
+
+									// send email
+									var transporter = nodemailer.createTransport(config.mailer.options);
+
+									var mailOptions = {
+														to: talentEmails,
+														from: req.user.email || config.mailer.from,
+														replyTo: req.user.email || config.mailer.from,
+														subject: email.subject,
+														html: talentEmailHTML
+													};
+
+									transporter.sendMail(mailOptions, function(){
+										//done(err);
+									});
+										
+								}
+
+						})();
+					}
+					done('');
+				}
+				], function(err) {
+					if(err){
+						return res.status(400).send({
+							message: errorHandler.getErrorMessage(err)
+						});
+					} else {
+						return res.status(200).send();
+					}
+				});
+			}
+		});
+	}
+	
+};
 
 /**
  * Create a Tool
