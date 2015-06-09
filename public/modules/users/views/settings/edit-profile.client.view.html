@@ -1,6 +1,6 @@
 <section class="row" data-ng-controller="SettingsController">
 	<h3 class="col-md-12 text-center">Edit your profile</h3>
-	<div class="col-xs-offset-4 col-xs-8 col-md-offset-4 col-md-4">
+	<div class="col-xs-offset-2 col-xs-10 col-md-offset-3 col-md-6">
 		<form name="userForm" data-ng-submit="updateUserProfile(userForm.$valid)" class="signin form-horizontal" autocomplete="off">
 			<fieldset>
 				<div class="form-group">
@@ -29,7 +29,7 @@
 				</div>
 				<div class="form-group">
 					<label for="notes">Email Signature</label>
-					<textarea style="height:200px" id="emailSignature" name="emailSignature" class="form-control" data-ng-model="user.emailSignature">{{user.emailSignature}}</textarea>
+					<div text-angular ng-model="user.emailSignature"></div>
 				</div>
 				<div data-ng-show="success" class="text-center text-success">
 					<strong>Profile Saved Successfully</strong>

@@ -116,7 +116,7 @@ var emailTalent = function(selTalent, talentInfo, email, project, req, res){
 			// generate email signature
 			var emailSig = '';
 			if(req.user.emailSignature){
-				emailSig = req.user.emailSignature.replace(/\r?\n/g, '<br>');
+				emailSig = req.user.emailSignature;
 			} else {
 				emailSig = '';
 			}
@@ -327,7 +327,7 @@ exports.sendClientEmail = function(req, res){
 
 	var emailSig = '';
 	if(req.user.emailSignature){
-		emailSig = req.user.emailSignature.replace(/\r?\n/g, '<br>');
+		emailSig = req.user.emailSignature;
 	} else {
 		emailSig = '';
 	}
@@ -434,7 +434,7 @@ var emailClients = function(client, email, project, req, res){
 			function(clientInfo, done) {
 				var emailSig = '';
 				if(req.user.emailSignature){
-					emailSig = req.user.emailSignature.replace(/\r?\n/g, '<br>');
+					emailSig = req.user.emailSignature;
 				} else {
 					emailSig = '';
 				}
