@@ -4,7 +4,7 @@
 var ApplicationConfiguration = (function() {
 	// Init module configuration options
 	var applicationModuleName = 'studio-center-auditions';
-	var applicationModuleVendorDependencies = ['ngResource', 'ngCookies',  'ngAnimate',  'ngTouch',  'ngSanitize',  'ui.router', 'ui.bootstrap', 'ui.utils', 'angularFileUpload', 'ngAudio','ui.bootstrap.datetimepicker','rt.encodeuri', 'angularMoment'];
+	var applicationModuleVendorDependencies = ['ngResource', 'ngCookies',  'ngAnimate',  'ngTouch',  'ngSanitize',  'ui.router', 'ui.bootstrap', 'ui.utils', 'angularFileUpload', 'ngAudio','ui.bootstrap.datetimepicker','rt.encodeuri', 'angularMoment', 'textAngular'];
 
 	// Add a new vertical module
 	var registerModule = function(moduleName, dependencies) {

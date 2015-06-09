@@ -1,65 +1,92 @@
 'use strict';
 
 // Tools controller
-angular.module('tools').controller('ToolsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Tools',
-	function($scope, $stateParams, $location, Authentication, Tools ) {
+angular.module('tools').controller('ToolsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Tools', 'Talents', '$http',
+	function($scope, $stateParams, $location, Authentication, Tools, Talents, $http ) {
 		$scope.authentication = Authentication;
 
-		// Create new Tool
-		$scope.create = function() {
-			// Create new Tool object
-			var tool = new Tools ({
-				name: this.name
-			});
+		// scope variables
+		$scope.emailClients = [];
+		$scope.email = {
+						all: '',
+						subject: '',
+						body: ''
+					};
 
-			// Redirect after save
-			tool.$save(function(response) {
-				$location.path('tools/' + response._id);
-
-				// Clear form fields
-				$scope.name = '';
-			}, function(errorResponse) {
-				$scope.error = errorResponse.data.message;
-			});
-		};
-
-		// Remove existing Tool
-		$scope.remove = function( tool ) {
-			if ( tool ) { tool.$remove();
-
-				for (var i in $scope.tools ) {
-					if ($scope.tools [i] === tool ) {
-						$scope.tools.splice(i, 1);
-					}
-				}
-			} else {
-				$scope.tool.$remove(function() {
-					$location.path('tools');
-				});
+		// toggle checkbox options
+		$scope.toggleEmailer = function(id,talent){
+			  var idx = $scope.emailClients.indexOf(id);
+			  if (idx > -1){
+			    $scope.emailClients.splice(idx, 1);
+			  }else{
+			    $scope.emailClients.push(id);
 			}
 		};
-
-		// Update existing Tool
-		$scope.update = function() {
-			var tool = $scope.tool ;
-
-			tool.$update(function() {
-				$location.path('tools/' + tool._id);
-			}, function(errorResponse) {
-				$scope.error = errorResponse.data.message;
-			});
+		$scope.checkToggleEmail = function(talentId){
+			var idx = $scope.emailClients.indexOf(talentId);
+			if (idx > -1){
+				return true;
+			} else {
+				return false;
+			}
 		};
-
-		// Find a list of Tools
-		$scope.find = function() {
-			$scope.tools = Tools.query();
+		$scope.gatherTalents = function(){
+			$scope.talents = Talents.query();
 		};
-
-		// Find existing Tool
-		$scope.findOne = function() {
-			$scope.tool = Tools.get({ 
-				toolId: $stateParams.toolId
-			});
+		$scope.talentLookup = function(id){
+			for(var i = 0; i < $scope.talents.length; ++i){
+				if($scope.talents[i]._id == id){
+					return $scope.talents[i].name + ' ' + $scope.talents[i].lastName;
+				}
+			}
 		};
+		$scope.removeSelectedTalents = function(){
+			for(var i = 0; i < $scope.verifySelected.length; ++i){
+				for(var j = 0; j < $scope.emailClients.length; ++j){
+					if($scope.verifySelected[i] == $scope.emailClients[j]){
+						var idx = $scope.emailClients.indexOf($scope.emailClients[j]);
+						if (idx > -1){
+						    $scope.emailClients.splice(idx, 1);
+						}
+						var idx = $scope.verifySelected.indexOf($scope.emailClients[j]);
+						if (idx > -1){
+						    $scope.verifySelected.splice(idx, 1);
+						}
+					}
+				}
+			}
+		};
+		$scope.sendTalentEmails = function(){
+			var conf = confirm('Are you sure you would like to send the entered email information to your selected talent?');
+			if(conf === true){
+				if($scope.email.subject !== '' && $scope.email.body !== ''){
+					// pass entered values to the server
+					$http.post('/tools/sendtalentemails', {
+				        email: $scope.email,
+				        emailClients: $scope.emailClients
+				    }).
+					success(function(data, status, headers, config) {
+						alert('Talent has been emailed!');
+					});
+				} else {
+					alert('Email subject and message cannot be empty!');
+				}
+			}
+		};
+		$scope.$watch('selected', function(verifySelected){
+		    // reset to nothing, could use `splice` to preserve non-angular references
+		    $scope.verifySelected = [];
+
+		    if( ! verifySelected ){
+		        // sometimes selected is null or undefined
+		        return;
+		    }
+
+		    // here's the magic
+		    angular.forEach(verifySelected, function(val){
+		        $scope.verifySelected.push( val );
+		    });
+		});
+
 	}
 ]);
