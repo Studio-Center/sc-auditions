@@ -173,11 +173,7 @@ var emailTalent = function(selTalent, talentInfo, email, project, req, res){
 
 };
 
-// send talent project start email
-exports.sendTalentEmail = function(req, res){
-
-	var project = req.body.project;
-	var talent = req.body.talent;
+var sendTalentEmail = function(req, res, project, talent){
 
 	async.waterfall([
 		// gather info for selected talent
@@ -232,9 +228,11 @@ exports.sendTalentEmail = function(req, res){
 		function(email, talentInfo, done){
 
 			// update talent email status 
-			for(var i = 0; i < req.body.project.talent.length; ++i){
-				if(req.body.project.talent[i].talentId === talent.talentId){
-					req.body.project.talent[i].status = 'Emailed';
+			for(var i = 0; i < project.talent.length; ++i){
+				if(project.talent[i].talentId === talent.talentId){
+					console.log(project.talent[i].status);
+					project.talent[i].status = 'Emailed';
+					console.log(project.talent[i].status);
 					done('', email, talentInfo);
 				}
 			}
@@ -244,28 +242,123 @@ exports.sendTalentEmail = function(req, res){
 		function(email, talentInfo, done){
 			emailTalent(talent, talentInfo, email, project, req, res);
 
+			var newProject = project.toObject();
+
 			Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
 				
-				project = _.extend(project, req.body.project);
+				project = _.extend(project, newProject);
 
-				req.project = project ;
+				req.project = project;
 
 				project.save(function(err) {
 					if (err) {
 						done(err);
 					} else {
-						res.json(200);
+						res.json(project);
 					}
 				});			
 
 			});
 
+		}
+		], function(err) {
+		if (err) {
+			if (err) {
+				return res.json(400, err);
+			} else {
+				return res.json(200);
+			}
+		}
+	});
+
+};
+
+// send talent project start email
+exports.sendTalentEmail = function(req, res){
+
+	var project = req.body.project;
+	var talent = req.body.talent;
+
+	sendTalentEmail(req, res, project, talent);	
+
+};
+
+exports.sendTalentEmailById = function(req, res){
+
+	var projectId = req.body.projectId;
+	var talent = req.body.talent;
+
+	async.waterfall([
+		// gather info for selected talent
+		function(done) {
+			Project.findOne({'_id':projectId}).sort('-created').exec(function(err, project) {
+				done(err, project);
+			});
+		},
+		function(project, done) {
+			sendTalentEmail(req, res, project, talent);	
+		}
+		], function(err) {
+		if (err) {
+			return res.json(400, err);
+		} else {
+			return res.json(200);
+		}
+	});
+
+};
+
+// update single talent single project status
+exports.updateSingleTalentStatus = function (req, res){
+
+	var projectId = req.body.projectId;
+	var talentId = req.body.talentId;
+	var talentStatus = req.body.talentStatus;
+
+	async.waterfall([
+		// gather info for selected talent
+		function(done) {
+			Project.findOne({'_id':projectId}).sort('-created').exec(function(err, project) {
+				done(err, project);
+			});
+		},
+		// update talent email status
+		function(project, done){
+
+			// update talent email status 
+			for(var i = 0; i < project.talent.length; ++i){
+				if(project.talent[i].talentId === talentId){
+					project.talent[i].status = talentStatus;
+					done('', project);
+				}
+			}
+
+		},
+		// email selected talent
+		function(project, done){
+
+			var newProject = project.toObject();
+
+			Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
+				
+				project = _.extend(project, newProject);
+
+				req.project = project;
+
+				project.save(function(err) {
+					done(err);
+				});			
+
+			});
 
 		}
 		], function(err) {
-		if (err) return res.json(400, err);
+		if (err) {
+			return res.json(400, err);
+		} else {
+			return res.json(200);
+		}
 	});
-
 };
 
 // update talent status
