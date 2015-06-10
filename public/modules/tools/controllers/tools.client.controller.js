@@ -7,11 +7,18 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 
 		// scope variables
 		$scope.emailClients = [];
+		$scope.talents = [];
 		$scope.email = {
 						all: '',
 						subject: '',
 						body: ''
 					};
+
+		// call list vals
+		$scope.talentStatus = ['Cast', 'Emailed', 'Scheduled', 'Message left', 'Out', 'Received needs to be posted', 'Posted', 'Not Posted (Bad Read)'];
+		$scope.callTalents = [];
+		$scope.messagedTalents = [];
+		$scope.alreadyScheduledTalents = [];
 
 		// toggle checkbox options
 		$scope.toggleEmailer = function(id,talent){
@@ -87,6 +94,42 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 		        $scope.verifySelected.push( val );
 		    });
 		});
+
+		// call list methods
+		// gather list of talents to call
+		$scope.talentLookupData = function(id){
+			for(var i = 0; i < $scope.talents.length; ++i){
+				console.log($scope.talents[i]);
+				if($scope.talents[i]._id == id){
+					return $scope.talents[i];
+				}
+			}
+		};
+		$scope.gatherTalentsToCall = function(){
+
+			$http.post('/tools/gatherTalentsToCall').
+			success(function(data, status, headers, config) {
+				$scope.callProjects = data;
+			});
+
+		};
+		// gather talents 
+		$scope.gatherTalentsMessagesLeft = function(){
+
+			$http.post('/tools/gatherTalentsMessagesLeft').
+			success(function(data, status, headers, config) {
+				$scope.messagedTalents = data;
+			});
+
+		};
+		$scope.gatherTalentsAlreadyScheduled = function(){
+
+			$http.post('/tools/gatherTalentsAlreadyScheduled').
+			success(function(data, status, headers, config) {
+				$scope.alreadyScheduledTalents = data;
+			});
+
+		};
 
 	}
 ]);

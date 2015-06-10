@@ -195,6 +195,107 @@ exports.sendTalentEmails = function(req, res){
 	
 };
 
+// call list methods
+var gatherTalentsSearch = function(req, res, filter){
+	var callTalents = [], talentId;
+	var searchCriteria = {'talent': { 
+									$elemMatch: { 
+										'status': filter
+									} 
+								}
+						};
+
+	Project.find(searchCriteria).sort('-estimatedCompletionDate').populate('project', 'displayName').exec(function(err, projects) {
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			
+			// walk through found projects
+			async.forEach(projects, function (project, callback) {
+				// walk through found talents
+				if(typeof project.talent !== 'undefined'){
+
+					// walk through project found talent
+					async.forEach(project.talent, function (talent, talentCallback) {
+
+						if(typeof talent !== 'undefined'){
+
+							async.waterfall([
+								// gather info for selected talent
+								function(done) {
+									Talent.findOne({'_id':talent.talentId}).sort('-created').exec(function(err, talentInfo) {
+										done(err, talentInfo);
+									});
+								},
+								function(talentInfo, done){
+									if(talent.status === 'Cast'){
+										callTalents.push(talent);
+										talentId = callTalents.length - 1;
+										callTalents[talentId].data = talentInfo;
+										callTalents[talentId].project = {};
+										callTalents[talentId].project._id = project._id;
+										callTalents[talentId].project.title = project.title;
+										callTalents[talentId].project.estimatedCompletionDate = project.estimatedCompletionDate;
+									}
+									done('');
+								}
+								], function(err) {
+								if (err) {
+									return res.json(400, err);
+								} else {
+									talentCallback();
+								}
+							});
+
+						}
+
+					}, function (err) {
+						if( err ) {
+							return res.status(400).send({
+								message: errorHandler.getErrorMessage(err)
+							});
+						} else {
+			            	callback();
+						}
+		           	});
+
+				} else {
+
+					callback();
+
+				}
+			
+			}, function (err) {
+				if( err ) {
+					return res.status(400).send({
+						message: errorHandler.getErrorMessage(err)
+					});
+				} else {
+					res.jsonp(callTalents);
+				}
+           	});
+			
+		}
+	});
+};
+exports.gatherTalentsToCall = function(req, res){
+
+	gatherTalentsSearch(req, res, 'Cast');
+
+};
+exports.gatherTalentsMessagesLeft = function(req, res){
+
+	gatherTalentsSearch(req, res, 'Message left');
+
+};
+exports.gatherTalentsAlreadyScheduled = function(req, res){
+
+	gatherTalentsSearch(req, res, 'Scheduled');
+
+};
+
 /**
  * Create a Tool
  */
