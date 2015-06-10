@@ -6,7 +6,27 @@
 var mongoose = require('mongoose'),
 	errorHandler = require('./errors'),
 	Report = mongoose.model('Report'),
-	_ = require('lodash');
+	Project = mongoose.model('Project'),
+	User = mongoose.model('User'),
+	Talent = mongoose.model('Talent'),
+	Typecast = mongoose.model('Typecast'),
+	fs = require('fs'),
+	config = require('../../config/config'),
+	_ = require('lodash'),
+	path = require('path'),
+	async = require('async'),
+	mv = require('mv'),
+	nodemailer = require('nodemailer'),
+	archiver = require('archiver'),
+	dateFormat = require('dateformat'),
+	// set date and timezone
+	moment = require('moment-timezone'),
+	now = new Date();
+
+// methods for missing auditions report
+exports.findMissingAuditions = function(req, res){
+
+};
 
 /**
  * Create a Report

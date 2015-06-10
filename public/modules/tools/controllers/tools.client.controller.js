@@ -1,8 +1,8 @@
 'use strict';
 
 // Tools controller
-angular.module('tools').controller('ToolsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Tools', 'Talents', '$http',
-	function($scope, $stateParams, $location, Authentication, Tools, Talents, $http ) {
+angular.module('tools').controller('ToolsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Tools', 'Talents', '$http', 'Socket',
+	function($scope, $stateParams, $location, Authentication, Tools, Talents, $http, Socket ) {
 		$scope.authentication = Authentication;
 
 		// scope variables
@@ -96,6 +96,20 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 		});
 
 		// call list methods
+		Socket.on('callListUpdate', function(talentsData) {
+
+		    switch(talentsData.filter){
+		    	case 'Cast':
+		    		$scope.callProjects = talentsData.talents;
+		    	break;
+		    	case 'Message Left':
+		    		$scope.messagedTalents = talentsData.talents;
+		    	break;
+		    	case 'Scheduled':
+		    		$scope.alreadyScheduledTalents = talentsData.talents;
+		    	break;
+		    }
+		});
 		// gather list of talents to call
 		$scope.talentLookupData = function(id){
 			for(var i = 0; i < $scope.talents.length; ++i){
