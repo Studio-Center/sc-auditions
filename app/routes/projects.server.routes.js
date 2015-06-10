@@ -50,6 +50,10 @@ module.exports = function(app) {
 	// update project talent status
 	app.route('/projects/sendtalentemail')
 		.post(users.requiresLogin, projects.sendTalentEmail);
+	app.route('/projects/sendTalentEmailById')
+		.post(users.requiresLogin, projects.sendTalentEmailById);
+	app.route('/projects/updateSingleTalentStatus')
+		.post(users.requiresLogin, projects.updateSingleTalentStatus);
 
 	// app.route('/projects/uploads')
 	// 	.post(users.requiresLogin, multipartyMiddleware, projects.uploadFile);

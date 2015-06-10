@@ -130,15 +130,33 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 			});
 
 		};
-		$scope.emailCallListTalent = function(talentId, projectId){
+		$scope.emailCallListTalent = function(talent, projectId){
 
-			// $http.post('/projects/sendtalentemail', {
-		 //        talent: talent,
-		 //        project: $scope.project
-		 //    }).
-			// success(function(data, status, headers, config) {
-			// 	alert('Selected talent has been emailed.');
-			// });
+			$http.post('/projects/sendTalentEmailById', {
+		        talent: talent,
+		        projectId: projectId
+		    }).
+			success(function(data, status, headers, config) {
+				alert('Selected talent has been emailed.');
+
+				$scope.gatherTalentsToCall();
+				$scope.gatherTalentsMessagesLeft();
+				$scope.gatherTalentsAlreadyScheduled();
+			});
+
+		};
+		$scope.updateStatus = function(talentId, projectId, status){
+
+			$http.post('/projects/updateSingleTalentStatus', {
+		        talentId: talentId,
+		        talentStatus: status,
+		        projectId: projectId
+		    }).
+			success(function(data, status, headers, config) {
+				$scope.gatherTalentsToCall();
+				$scope.gatherTalentsMessagesLeft();
+				$scope.gatherTalentsAlreadyScheduled();
+			});
 
 		};
 

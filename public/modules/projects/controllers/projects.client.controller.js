@@ -332,7 +332,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				alert('Selected talent has been emailed.');
 
 				// update project store
-				$scope.update();
+				$scope.project = data;
 			});
 
 		};
