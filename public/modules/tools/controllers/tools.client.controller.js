@@ -102,13 +102,14 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 		    	case 'Cast':
 		    		$scope.callProjects = talentsData.talents;
 		    	break;
-		    	case 'Message Left':
+		    	case 'Message left':
 		    		$scope.messagedTalents = talentsData.talents;
 		    	break;
 		    	case 'Scheduled':
 		    		$scope.alreadyScheduledTalents = talentsData.talents;
 		    	break;
 		    }
+
 		});
 		// gather list of talents to call
 		$scope.talentLookupData = function(id){
