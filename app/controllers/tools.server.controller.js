@@ -21,7 +21,7 @@ var mongoose = require('mongoose'),
 	dateFormat = require('dateformat'),
 	// set date and timezone
 	moment = require('moment-timezone'),
-	now = new Date();;
+	now = new Date();
 
 /* custom tools methods */
 exports.sendTalentEmails = function(req, res){
@@ -273,6 +273,9 @@ var gatherTalentsSearch = function(req, res, filter){
 						message: errorHandler.getErrorMessage(err)
 					});
 				} else {
+					var socketio = req.app.get('socketio'); // tacke out socket instance from the app container
+					socketio.sockets.emit('callListUpdate', {talents: callTalents, filter: filter}); // emit an event for all connected clients
+
 					res.jsonp(callTalents);
 				}
            	});
