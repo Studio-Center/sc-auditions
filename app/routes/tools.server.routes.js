@@ -18,6 +18,16 @@ module.exports = function(app) {
 	app.route('/tools/sendtalentemails')
 		.post(users.requiresLogin, tools.sendTalentEmails);
 
+	// call list routes
+	app.route('/tools/gatherTalentsToCall')
+		.post(users.requiresLogin, tools.gatherTalentsToCall);
+
+	app.route('/tools/gatherTalentsMessagesLeft')
+		.post(users.requiresLogin, tools.gatherTalentsMessagesLeft);
+
+	app.route('/tools/gatherTalentsAlreadyScheduled')
+		.post(users.requiresLogin, tools.gatherTalentsAlreadyScheduled);
+
 	// Finish by binding the Tool middleware
 	app.param('toolId', tools.toolByID);
 };

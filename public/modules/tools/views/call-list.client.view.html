@@ -1,0 +1,92 @@
+<section data-ng-controller="ToolsController" data-ng-init="gatherTalents()">
+    <div class="page-header">
+        <h1>Call List</h1>
+    </div>
+    <div class="col-md-12" data-ng-init="gatherTalentsToCall()">
+    	<h3>Talent to Call</h3>
+    	<div class="row">
+    		<table class="table table-striped">
+    			<tr>
+    				<th>Talent Name</th>
+    				<th>Parent Name</th>
+    				<th>Phone #</th>
+    				<th>Alt Phone #</th>
+    				<th>Location</th>
+    				<th>Project</th>
+    				<th>Due Time/Date</th>
+    				<th>Status</th>
+    				<th>Email</th>
+    			</tr>
+	    		<tr ng-repeat="(key, talent) in callProjects">
+	    			<td>{{talent.data.name}} {{talent.data.lastName}}</td>
+	    			<td>{{talent.data.parentName}}</td>
+	    			<td>{{talent.data.phone}}</td>
+	    			<td>{{talent.data.phone2}}</td>
+	    			<td>{{talent.data.locationISDN}}</td>
+	    			<td><a href="/#!/projects/{{talent.project._id}}" target="_blank">{{talent.project.title}}</a></td>
+	    			<td>{{talent.project.estimatedCompletionDate | date:'short'}}</td>
+					<td><select ng-model="callProjects[key].status" style="width:100px" ng-change="" ng-options="item for item in talentStatus"></select></td>
+					<td><button class="btn btn-primary" ng-click="$parent.sendTalentEmail(project.talent[key])">Email</button></td>
+	    		</tr>
+    		</table>
+    	</div>
+    </div>
+    <div class="col-md-12" data-ng-init="gatherTalentsMessagesLeft()">
+    	<h3>Messages Left</h3>
+    	<div class="row">
+    		<table class="table table-striped">
+    			<tr>
+    				<th>Talent Name</th>
+    				<th>Parent Name</th>
+    				<th>Phone #</th>
+    				<th>Alt Phone #</th>
+    				<th>Location</th>
+    				<th>Project</th>
+    				<th>Due Time/Date</th>
+    				<th>Status</th>
+    				<th>Email</th>
+    			</tr>
+	    		<tr ng-repeat="(key, talent) in messagedTalents">
+	    			<td>{{talent.data.name}} {{talent.data.lastName}}</td>
+	    			<td>{{talent.data.parentName}}</td>
+	    			<td>{{talent.data.phone}}</td>
+	    			<td>{{talent.data.phone2}}</td>
+	    			<td>{{talent.data.locationISDN}}</td>
+	    			<td><a href="/#!/projects/{{talent.project._id}}" target="_blank">{{talent.project.title}}</a></td>
+	    			<td>{{talent.project.estimatedCompletionDate | date:'short'}}</td>
+					<td><select ng-model="callProjects[key].status" style="width:100px" ng-change="" ng-options="item for item in talentStatus"></select></td>
+					<td><button class="btn btn-primary" ng-click="$parent.sendTalentEmail(project.talent[key])">Email</button></td>
+	    		</tr>
+    		</table>
+    	</div>
+    </div>
+    <div class="col-md-12" data-ng-init="gatherTalentsAlreadyScheduled()">
+    	<h3>Already Scheduled Talent</h3>
+    	<div class="row">
+    		<table class="table table-striped">
+    			<tr>
+    				<th>Talent Name</th>
+    				<th>Parent Name</th>
+    				<th>Phone #</th>
+    				<th>Alt Phone #</th>
+    				<th>Location</th>
+    				<th>Project</th>
+    				<th>Due Time/Date</th>
+    				<th>Status</th>
+    				<th>Email</th>
+    			</tr>
+	    		<tr ng-repeat="(key, talent) in alreadyScheduledTalents">
+	    			<td>{{talent.data.name}} {{talent.data.lastName}}</td>
+	    			<td>{{talent.data.parentName}}</td>
+	    			<td>{{talent.data.phone}}</td>
+	    			<td>{{talent.data.phone2}}</td>
+	    			<td>{{talent.data.locationISDN}}</td>
+	    			<td><a href="/#!/projects/{{talent.project._id}}" target="_blank">{{talent.project.title}}</a></td>
+	    			<td>{{talent.project.estimatedCompletionDate | date:'short'}}</td>
+					<td><select ng-model="callProjects[key].status" style="width:100px" ng-change="" ng-options="item for item in talentStatus"></select></td>
+					<td><button class="btn btn-primary" ng-click="$parent.sendTalentEmail(project.talent[key])">Email</button></td>
+	    		</tr>
+    		</table>
+    	</div>
+    </div>
+</section>
