@@ -230,7 +230,7 @@ var gatherTalentsSearch = function(req, res, filter){
 									});
 								},
 								function(talentInfo, done){
-									if(talent.status === 'Cast'){
+									if(talent.status === filter){
 										callTalents.push(talent);
 										talentId = callTalents.length - 1;
 										callTalents[talentId].data = talentInfo;

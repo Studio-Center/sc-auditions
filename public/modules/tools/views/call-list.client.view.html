@@ -54,7 +54,7 @@
 	    			<td>{{talent.data.locationISDN}}</td>
 	    			<td><a href="/#!/projects/{{talent.project._id}}" target="_blank">{{talent.project.title}}</a></td>
 	    			<td>{{talent.project.estimatedCompletionDate | date:'short'}}</td>
-					<td><select ng-model="callProjects[key].status" style="width:100px" ng-change="" ng-options="item for item in talentStatus"></select></td>
+					<td><select ng-model="messagedTalents[key].status" style="width:100px" ng-change="" ng-options="item for item in talentStatus"></select></td>
 					<td><button class="btn btn-primary" ng-click="$parent.sendTalentEmail(project.talent[key])">Email</button></td>
 	    		</tr>
     		</table>
@@ -83,7 +83,7 @@
 	    			<td>{{talent.data.locationISDN}}</td>
 	    			<td><a href="/#!/projects/{{talent.project._id}}" target="_blank">{{talent.project.title}}</a></td>
 	    			<td>{{talent.project.estimatedCompletionDate | date:'short'}}</td>
-					<td><select ng-model="callProjects[key].status" style="width:100px" ng-change="" ng-options="item for item in talentStatus"></select></td>
+					<td><select ng-model="alreadyScheduledTalents[key].status" style="width:100px" ng-change="" ng-options="item for item in talentStatus"></select></td>
 					<td><button class="btn btn-primary" ng-click="$parent.sendTalentEmail(project.talent[key])">Email</button></td>
 	    		</tr>
     		</table>
