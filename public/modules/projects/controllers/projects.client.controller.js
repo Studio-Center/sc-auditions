@@ -560,7 +560,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		$scope.updateTalent = function(talentId, talentName, email){
 			// gen talent object
-			var talent = {'talentId': talentId, 'name': talentName, 'email': email, 'booked': false, 'status': '', part: $scope.parts[talentId] || '', regular: true, requested: false};
+			var talent = {'talentId': talentId, 'name': talentName, 'email': email, 'booked': false, 'status': 'Cast', part: $scope.parts[talentId] || '', regular: true, requested: false};
 
 			// check for existing item
 			var found = 0;
@@ -593,7 +593,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		};
 		$scope.updateRequestTalent = function(talentId, talentName, email){
 			// gen talent object
-			var talent = {'talentId': talentId, 'name': talentName, 'email': email, 'booked': false, 'status': '', part: $scope.parts[talentId] || '', regular: false, requested: true};
+			var talent = {'talentId': talentId, 'name': talentName, 'email': email, 'booked': false, 'status': 'Cast', part: $scope.parts[talentId] || '', regular: false, requested: true};
 
 			// check for existing item
 			var found = 0;
@@ -626,7 +626,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		};
 		$scope.updateCreateTalent = function(talentId, talentName, email){
 			// gen talent object
-			var talent = {'talentId': talentId, 'name': talentName, 'email': email, 'booked': false, 'status': '', part: $scope.parts[talentId] || '', regular: true, requested: false};
+			var talent = {'talentId': talentId, 'name': talentName, 'email': email, 'booked': false, 'status': 'Cast', part: $scope.parts[talentId] || '', regular: true, requested: false};
 
 			// check for existing item
 			var found = 0;
@@ -658,7 +658,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		};
 		$scope.updateRequestCreateTalent = function(talentId, talentName, email){
 			// gen talent object
-			var talent = {'talentId': talentId, 'name': talentName, 'email': email, 'booked': false, 'status': '', part: $scope.parts[talentId] || '', regular: false, requested: true};
+			var talent = {'talentId': talentId, 'name': talentName, 'email': email, 'booked': false, 'status': 'Cast', part: $scope.parts[talentId] || '', regular: false, requested: true};
 
 			// check for existing item
 			var found = 0;

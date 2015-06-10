@@ -130,6 +130,17 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 			});
 
 		};
+		$scope.emailCallListTalent = function(talentId, projectId){
+
+			// $http.post('/projects/sendtalentemail', {
+		 //        talent: talent,
+		 //        project: $scope.project
+		 //    }).
+			// success(function(data, status, headers, config) {
+			// 	alert('Selected talent has been emailed.');
+			// });
+
+		};
 
 	}
 ]);
