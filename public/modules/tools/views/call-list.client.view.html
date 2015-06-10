@@ -25,8 +25,8 @@
 	    			<td>{{talent.data.locationISDN}}</td>
 	    			<td><a href="/#!/projects/{{talent.project._id}}" target="_blank">{{talent.project.title}}</a></td>
 	    			<td>{{talent.project.estimatedCompletionDate | date:'short'}}</td>
-					<td><select ng-model="callProjects[key].status" style="width:100px" ng-change="" ng-options="item for item in talentStatus"></select></td>
-					<td><button class="btn btn-primary" ng-click="$parent.sendTalentEmail(project.talent[key])">Email</button></td>
+					<td><select ng-model="callProjects[key].status" style="width:100px" ng-change="updateStatus(talent.data._id,talent.project._id)" ng-options="item for item in talentStatus"></select></td>
+					<td><button class="btn btn-primary" ng-change="emailCallListTalent(talent.data._id,talent.project._id)">Email</button></td>
 	    		</tr>
     		</table>
     	</div>
