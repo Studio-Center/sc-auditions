@@ -24,8 +24,102 @@ var mongoose = require('mongoose'),
 	now = new Date();
 
 // methods for missing auditions report
-exports.findMissingAuditions = function(req, res){
+exports.findMissingAuds = function(req, res){
+	var callTalents = {}, talentId, missingCnt = 0;
+	var searchCriteria = {'talent': { 
+									$not: {
+										$elemMatch: { 
+											'status': ['Out', 'Posted', 'Not Posted (Bad Read)']
+										}
+									} 
+								}
+						};
 
+	Project.find(searchCriteria).sort('-estimatedCompletionDate').populate('project', 'displayName').exec(function(err, projects) {
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			
+			// walk through found projects
+			async.forEach(projects, function (project, callback) {
+				// walk through found talents
+				if(typeof project.talent !== 'undefined' && project.talent.length > 0){
+
+					// create project object
+					callTalents[project._id] = {
+												project: {
+															_id: '', 
+															title: '', 
+															estimatedCompletionDate: ''
+														},
+												talents: []
+												};
+					callTalents[project._id].project._id = project._id;
+					callTalents[project._id].project.title = project.title;
+					callTalents[project._id].project.estimatedCompletionDate = project.estimatedCompletionDate;
+
+					// walk through project found talent
+					async.forEach(project.talent, function (talent, talentCallback) {
+
+						if(typeof talent !== 'undefined'){
+
+							async.waterfall([
+								// gather info for selected talent
+								function(done) {
+									Talent.findOne({'_id':talent.talentId}).sort('-created').exec(function(err, talentInfo) {
+										done(err, talentInfo);
+									});
+								},
+								function(talentInfo, done){
+
+									if(talent.status !== 'Out' && talent.status !== 'Posted' && talent.status !== 'Not Posted (Bad Read)'){
+										callTalents[project._id].talents.push(talent);
+										talentId = callTalents[project._id].talents.length - 1;
+										callTalents[project._id].talents[talentId].data = talentInfo;
+										++missingCnt;
+									}
+									done('');
+								}
+								], function(err) {
+								if (err) {
+									return res.json(400, err);
+								} else {
+									talentCallback();
+								}
+							});
+
+						}
+
+					}, function (err) {
+						if( err ) {
+							return res.status(400).send({
+								message: errorHandler.getErrorMessage(err)
+							});
+						} else {
+			            	callback();
+						}
+		           	});
+
+				} else {
+
+					callback();
+
+				}
+			
+			}, function (err) {
+				if( err ) {
+					return res.status(400).send({
+						message: errorHandler.getErrorMessage(err)
+					});
+				} else {
+					res.jsonp({count: missingCnt, results:callTalents});
+				}
+           	});
+			
+		}
+	});
 };
 
 /**

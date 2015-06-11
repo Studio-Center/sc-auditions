@@ -9,10 +9,13 @@ module.exports = function(app) {
 		.get(reports.list)
 		.post(users.requiresLogin, reports.create);
 
-	app.route('/reports/:reportId')
-		.get(reports.read)
-		.put(users.requiresLogin, reports.hasAuthorization, reports.update)
-		.delete(users.requiresLogin, reports.hasAuthorization, reports.delete);
+	// app.route('/reports/:reportId')
+	// 	.get(reports.read)
+	// 	.put(users.requiresLogin, reports.hasAuthorization, reports.update)
+	// 	.delete(users.requiresLogin, reports.hasAuthorization, reports.delete);
+
+	app.route('/reports/findMissingAuds')
+		.post(users.requiresLogin, reports.findMissingAuds);
 
 	// Finish by binding the Report middleware
 	app.param('reportId', reports.reportByID);
