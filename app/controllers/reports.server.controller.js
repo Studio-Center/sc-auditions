@@ -26,16 +26,23 @@ var mongoose = require('mongoose'),
 // methods for missing auditions report
 exports.findMissingAuds = function(req, res){
 	var callTalents = {}, talentId, missingCnt = 0;
-	var searchCriteria = {'talent': { 
-									$not: {
-										$elemMatch: { 
-											'status': ['Out', 'Posted', 'Not Posted (Bad Read)']
-										}
-									} 
-								}
-						};
+	// var searchCriteria = {'talent': { 
+	// 								$not: {
+	// 									$elemMatch: { 
+	// 										'status': ['Out', 'Posted', 'Not Posted (Bad Read)']
+	// 									}
+	// 								} 
+	// 							}
+	// 					};
 
-	Project.find().sort('-estimatedCompletionDate').populate('project', 'displayName').exec(function(err, projects) {
+	var yesterday = new Date(req.body.dateFilter);
+	yesterday.setDate(yesterday.getDate() - 1);
+	var tomorrow = new Date(req.body.dateFilter);
+	tomorrow.setDate(tomorrow.getDate() + 1);
+
+	var searchCriteria = {'estimatedCompletionDate': {$gte: yesterday, $lt: tomorrow}};
+
+	Project.find(searchCriteria).sort('-estimatedCompletionDate').populate('project', 'displayName').exec(function(err, projects) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)

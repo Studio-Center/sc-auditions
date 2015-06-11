@@ -4,11 +4,12 @@
 angular.module('reports').controller('ReportsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Reports', '$http',
 	function($scope, $stateParams, $location, Authentication, Reports, $http ) {
 		$scope.authentication = Authentication;
+		$scope.dateFilter = '';
 
 		// find missing auditions report methods
 		$scope.findMissingAuditions = function(){
 
-			$http.post('/reports/findMissingAuds').
+			$http.post('/reports/findMissingAuds',{dateFilter:$scope.dateFilter}).
 			success(function(data, status, headers, config) {
 				console.log(data);
 				$scope.missingAuditions = data;
