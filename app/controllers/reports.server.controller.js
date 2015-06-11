@@ -35,7 +35,7 @@ exports.findMissingAuds = function(req, res){
 								}
 						};
 
-	Project.find(searchCriteria).sort('-estimatedCompletionDate').populate('project', 'displayName').exec(function(err, projects) {
+	Project.find().sort('-estimatedCompletionDate').populate('project', 'displayName').exec(function(err, projects) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
@@ -54,6 +54,7 @@ exports.findMissingAuds = function(req, res){
 															title: '', 
 															estimatedCompletionDate: ''
 														},
+												missingAudsCnt: 0,
 												talents: []
 												};
 					callTalents[project._id].project._id = project._id;
@@ -78,8 +79,9 @@ exports.findMissingAuds = function(req, res){
 										callTalents[project._id].talents.push(talent);
 										talentId = callTalents[project._id].talents.length - 1;
 										callTalents[project._id].talents[talentId].data = talentInfo;
+										++callTalents[project._id].missingAudsCnt;
 										++missingCnt;
-									}
+									} 
 									done('');
 								}
 								], function(err) {

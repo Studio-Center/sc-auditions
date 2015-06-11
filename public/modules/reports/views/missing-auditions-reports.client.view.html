@@ -3,13 +3,27 @@
         <h1>Missing Auditions Report</h1>
         <h3 ng-if="missingAuditions.count > 0">Total Missing: {{missingAuditions.count}}</h3>
         <h3 ng-if="missingAuditions.count == 0">No missing auditions found!</h3>
+        <div class="form-group">
+		    <div class="panel panel-default">
+		        <div class="panel-heading">
+		            <strong>Date Filter (Click to select date and time)</strong>
+		        </div>
+		        <div class="panel-body">
+		            <input type="date" class="form-control" data-ng-model="dateFilter">
+		        </div>
+		    </div>
+		</div>
+
     </div>
     <div class="list-group">
     	<div class="row">
     		<div class="col-md-12" ng-repeat="(key, project) in missingAuditions.results">
     			<h4><a href="/#!/projects/{{project._id}}" target="_blank">{{project.project.title}}</a></h4>
-    			<div class="col-md-12" ng-repeat="(key, talent) in project.talents">
+    			<div ng-if="project.missingAudsCnt > 0" class="col-md-12" ng-repeat="(key, talent) in project.talents">
     				<div>{{talent.name}} - {{talent.status}}</div>
+    			</div>
+    			<div ng-if="project.missingAudsCnt == 0">
+    				No Missing Talent
     			</div>
     		</div>
     	</div>
