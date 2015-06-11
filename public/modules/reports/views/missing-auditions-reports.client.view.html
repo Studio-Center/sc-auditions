@@ -1,0 +1,17 @@
+<section data-ng-controller="ReportsController" data-ng-init="findMissingAuditions()">
+    <div class="page-header">
+        <h1>Missing Auditions Report</h1>
+        <h3 ng-if="missingAuditions.count > 0">Total Missing: {{missingAuditions.count}}</h3>
+        <h3 ng-if="missingAuditions.count == 0">No missing auditions found!</h3>
+    </div>
+    <div class="list-group">
+    	<div class="row">
+    		<div class="col-md-12" ng-repeat="(key, project) in missingAuditions.results">
+    			<h4><a href="/#!/projects/{{project._id}}" target="_blank">{{project.project.title}}</a></h4>
+    			<div class="col-md-12" ng-repeat="(key, talent) in project.talents">
+    				<div>{{talent.name}} - {{talent.status}}</div>
+    			</div>
+    		</div>
+    	</div>
+    </div>
+</section>
