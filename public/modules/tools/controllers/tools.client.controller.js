@@ -22,7 +22,20 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 		// delete projects vals
 		$scope.selectAll = '';
 		$scope.projects = [];
-		$scope.deleteProjectsList = [];
+		$scope.projectsList = [];
+
+		// used for paginator
+		$scope.Math = window.Math;
+		$scope.currentPage = 0;
+		$scope.range = function(min, max, step){
+		    step = step || 1;
+		    var input = [];
+		    for (var i = min; i <= max; i += step) input.push(i);
+		    return input;
+		};
+	    $scope.setPage = function () {
+	        $scope.currentPage = this.n;
+	    };
 
 		// toggle checkbox options
 		$scope.toggleEmailer = function(id,talent){
@@ -184,15 +197,15 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 			$scope.projects = Projects.query();
 		};
 		$scope.toggleProject = function(id){
-			  var idx = $scope.deleteProjectsList.indexOf(id);
+			  var idx = $scope.projectsList.indexOf(id);
 			  if (idx > -1){
-			    $scope.deleteProjectsList.splice(idx, 1);
+			    $scope.projectsList.splice(idx, 1);
 			  }else{
-			    $scope.deleteProjectsList.push(id);
+			    $scope.projectsList.push(id);
 			}
 		};
-		$scope.checkToggleDeleteProject = function(projectId){
-			var idx = $scope.deleteProjectsList.indexOf(projectId);
+		$scope.checkToggleProject = function(projectId){
+			var idx = $scope.projectsList.indexOf(projectId);
 			if (idx > -1){
 				return true;
 			} else {
@@ -201,25 +214,25 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 		};
 		$scope.selectAllProjects = function(){
 			// reset all selected projects
-			$scope.deleteProjectsList = [];
+			$scope.projectsList = [];
 
 			if($scope.selectAll === true){
 				for(var i = 0; i < $scope.projects.length; ++i){
-					$scope.deleteProjectsList.push($scope.projects[i]._id);
+					$scope.projectsList.push($scope.projects[i]._id);
 				}
 			}
 
 		};
 		$scope.deleteProjects = function(){
 			var i;
-			if($scope.deleteProjectsList.length > 0){
+			if($scope.projectsList.length > 0){
 				var con = confirm('Are you sure?');
 				if(con === true){
 					var concon = confirm('Are you sure you\'re sure?');
 					if(concon === true){
-						for(i = 0; i < $scope.deleteProjectsList.length; ++i){
+						for(i = 0; i < $scope.projectsList.length; ++i){
 							$http.post('/projects/deleteProjectById', {
-						        projectId: $scope.deleteProjectsList[i]
+						        projectId: $scope.projectsList[i]
 						    }).
 							success(function(data, status, headers, config) {
 								$scope.projects = Projects.query()
@@ -230,6 +243,11 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 			} else {
 				alert('You must first select some projects!');
 			}
+		};
+
+		// backup projects methods
+		$scope.uploadBackupFile = function(){
+
 		};
 
 	}

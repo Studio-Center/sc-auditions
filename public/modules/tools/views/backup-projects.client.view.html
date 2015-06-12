@@ -1,10 +1,10 @@
 <section data-ng-controller="ToolsController" data-ng-init="findProjects()">
     <div class="page-header">
-        <h1>Delete Projects</h1>
+        <h1>Backup Projects</h1>
     </div>
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
-            <h4>Delete Options</h4>
+            <h4>Backup Options</h4>
         </div>
     </div>
     <div class="row">
@@ -17,10 +17,24 @@
         	<input type="date" class="form-control" ng-model="searchText.estimatedCompletionDate">
         </div>
         <div class="col-lg-3 col-md-3 col-sm-3" style="text-align:center">
-        	<button class="btn btn-danger" ng-click="deleteProjects()">Delete Selected</button>
+        	<button class="btn btn-danger" ng-click="backupProjects()">Backup Selected</button>
         </div>
         <div class="col-lg-3 col-md-3 col-sm-3">
+            
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h4>Upload Backup Files: (*.zip only!) <small>- Restores projects from provided files on completion.</small></h4>
 
+            <div ng-file-drop ng-file-select="uploadBackupFile($files)" ng-model="files" ng-model-rejected="rejFiles"
+             drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}" class="drop-box"
+             ng-multiple="true" ng-accept="'*.zip'"
+             drop-available="dropAvailable">
+                <div ng-hide="dropAvailable">File Drop not available</div>
+                <div ng-show="dropAvailable">Drop *.zip files..</div>
+                <div>or click to select</div>
+            </div>
         </div>
     </div>
     <div class="row">
@@ -109,7 +123,7 @@
                         </div>
                         <div class="col-lg-4 col-md-4 col-sm-4">
                         	<div style="float:right">
-				        		<label>Delete:</label>
+				        		<label>Backup:</label>
 				        		<input type="checkbox" ng-model="projectsList" ng-true-value="{{project._id}}" ng-checked="checkToggleProject(project._id)" ng-click="toggleProject(project._id)">
 				        	</div>
                             <small>Created {{project.created | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST by {{project.user.displayName}}</small>
