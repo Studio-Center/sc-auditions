@@ -20,6 +20,10 @@ angular.module('tools').config(['$stateProvider',
 		state('toolDeleteProjects', {
 			url: '/tools/delete-projects',
 			templateUrl: 'modules/tools/views/delete-projects.client.view.html'
+		}).
+		state('toolBackupProjects', {
+			url: '/tools/backup-restore',
+			templateUrl: 'modules/tools/views/backup-projects.client.view.html'
 		});
 		// state('createTool', {
 		// 	url: '/tools/create',
