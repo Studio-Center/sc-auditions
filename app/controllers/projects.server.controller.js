@@ -1581,3 +1581,98 @@ exports.downloadAllAuditions = function(req, res, next){
  //    return archive.pipe(res);
 
 };
+
+exports.backupProjectsById = function(req, res, next){
+
+	// get app dir
+	var appDir = path.dirname(require.main.filename);
+    var archivesPath = appDir + '/public/' + 'res' + '/' + 'archives' + '/';
+    var newZip = archivesPath + req.user._id + '_backup_bundle.zip';
+    var backupDir = archivesPath + req.user._id + '_backup'
+    var auditionsDir, scriptsDir, referenceFilesDir;
+    // archiver settings
+    var output = fs.createWriteStream(newZip);
+	var archive = archiver('zip');
+
+	output.on('close', function() {
+	  // delete temp files
+	  rimraf.sync(backupDir);
+	  // inform user of file download
+	  res.status(200).end();
+	});
+
+	// create backup directory
+	if (!fs.existsSync(backupDir)) {
+    	fs.mkdirSync(backupDir);
+    }
+
+	async.forEach(req.body.projectList, function (projectId, callback) {
+
+		Project.findById(projectId).populate('user', 'displayName').exec(function(err, project) {
+			if (err) return next(err);
+			if (! project) return next(new Error('Failed to load Project '));
+			req.project = project ;
+
+			// set project file directory params
+			auditionsDir = appDir + '/public/res/auditions/' + project._id + '/';
+			scriptsDir = appDir + '/public/res/scripts/' + project._id + '/';
+			referenceFilesDir = appDir + '/public/res/referenceFiles/' + project._id + '/';
+
+			// compress associated files and JSON document to single archive
+			async.waterfall([
+			function(done) {
+
+				// create backup directory
+				if (!fs.existsSync(backupDir + '/' + project._id)) {
+			    	fs.mkdirSync(backupDir + '/' + project._id);
+			    }
+
+				// create text file containing json object
+				var file = fs.createWriteStream(backupDir + '/' + project._id + '/JSON.txt');
+				file.end(JSON.stringify(project));
+
+				archive.file(backupDir + '/' + project._id + '/JSON.txt', { name:'/backups/' + project._id + '/JSON.txt' });
+
+				done('');
+			},
+			function(done) {
+				// create archive of all associated files
+				if (fs.existsSync(auditionsDir)){
+			    	archive.directory(auditionsDir, '/backups/' + project._id + '/auditions');
+				}
+				if (fs.existsSync(scriptsDir)){
+			    	archive.directory(scriptsDir, '/backups/' + project._id + '/scripts');
+			    }
+			    if (fs.existsSync(referenceFilesDir)){
+			    	archive.directory(referenceFilesDir, '/backups/' + project._id + '/referenceFiles');
+			    }
+
+			    done('');
+			}
+			], function(err) {
+				if (err) {
+					return res.status(400).send({
+						message: errorHandler.getErrorMessage(err)
+					});
+				} else {
+					callback();
+				}
+			});
+		});
+
+	}, function (err) {
+		if( err ) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+
+			archive.pipe(output);
+
+		    archive.finalize();
+
+			//res.jsonp({count: missingCnt, results:callTalents});
+		}
+   	});
+
+}

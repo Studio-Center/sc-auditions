@@ -246,6 +246,30 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 		};
 
 		// backup projects methods
+		$scope.backupProjects = function(){
+			if($scope.projectsList.length > 0){
+				var con = confirm('Are you sure?');
+				if(con === true){
+					$http.post('/projects/backupProjectsById', {
+				        projectList: $scope.projectsList
+				    }).
+					success(function(data, status, headers, config) {
+						// download backup file on completion
+						setTimeout(
+							function(){
+								var link = document.createElement("a");
+							    link.download = Authentication.user._id + '_backup_bundle.zip';
+							    link.href = 'res/archives/' + Authentication.user._id + '_backup_bundle.zip';
+							    link.click()
+							},
+						    1000
+						);
+					});
+				}
+			} else {
+				alert('You must first select some projects!');
+			}
+		};
 		$scope.uploadBackupFile = function(){
 
 		};

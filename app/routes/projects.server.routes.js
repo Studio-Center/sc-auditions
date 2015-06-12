@@ -24,6 +24,10 @@ module.exports = function(app) {
 	app.route('/projects/deleteProjectById')
 		.post(users.requiresLogin, projects.hasAuthorization, projects.deleteById);
 
+	// backup projects by id in a group
+	app.route('/projects/backupProjectsById')
+		.post(users.requiresLogin, projects.hasAuthorization, projects.backupProjectsById);
+
 	app.route('/projects/create')
 		.get(users.requiresLogin, projects.hasAuthorization);
 
