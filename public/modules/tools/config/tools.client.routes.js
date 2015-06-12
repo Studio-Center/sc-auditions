@@ -16,6 +16,10 @@ angular.module('tools').config(['$stateProvider',
 		state('talentCallList', {
 			url: '/tools/call-list',
 			templateUrl: 'modules/tools/views/call-list.client.view.html'
+		}).
+		state('toolDeleteProjects', {
+			url: '/tools/delete-projects',
+			templateUrl: 'modules/tools/views/delete-projects.client.view.html'
 		});
 		// state('createTool', {
 		// 	url: '/tools/create',

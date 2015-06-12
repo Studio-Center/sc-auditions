@@ -11,7 +11,6 @@ angular.module('reports').controller('ReportsController', ['$scope', '$statePara
 
 			$http.post('/reports/findMissingAuds',{dateFilter:$scope.dateFilter}).
 			success(function(data, status, headers, config) {
-				console.log(data);
 				$scope.missingAuditions = data;
 			});
 

@@ -10,6 +10,7 @@ var mongoose = require('mongoose'),
 	Talent = mongoose.model('Talent'),
 	Typecast = mongoose.model('Typecast'),
 	fs = require('fs'),
+	rimraf = require('rimraf'),
 	config = require('../../config/config'),
 	_ = require('lodash'),
 	path = require('path'),
@@ -1024,37 +1025,14 @@ exports.delete = function(req, res) {
 	var delFilesLn = project.deleteFiles.length || 0;
 	var i;
 	var appDir = path.dirname(require.main.filename) + '/public';
-	var auditionsDir = '/res/auditions/' + project._id + '/';
-	var scriptsDir = '/res/scripts/' + project._id + '/';
+	var auditionsDir = appDir + '/res/auditions/' + project._id + '/';
+	var scriptsDir = appDir + '/res/scripts/' + project._id + '/';
+	var referenceFilesDir = appDir + '/res/referenceFiles/' + project._id + '/';
 
-	for(i = 0; i < project.auditions.length; ++i){
-		if(typeof project.auditions[i] !== 'undefined' && project.auditions[i] !== null){
-			if(typeof project.auditions[i].file !== 'undefined'){
-				project.deleteFiles[delFilesLn] = auditionsDir + project.auditions[i].file.name;
-				delFilesLn++;
-			}
-		}
-	}
-	for(i = 0; i < project.scripts.length; ++i){
-		if(typeof project.scripts[i] !== 'undefined' && project.scripts[i] !== null){
-			if(typeof project.scripts[i].file !== 'undefined'){
-				project.deleteFiles[delFilesLn] = scriptsDir + project.scripts[i].file.name;
-				delFilesLn++;
-			}
-		}
-	}
-
-	// delete found files
-	deleteFiles(project);
-
-	// remove auditions and scripts directories is exists
-	if (fs.existsSync(appDir + auditionsDir)) {
-		removeFolder(appDir + auditionsDir);
-	}
-		if (fs.existsSync(appDir + scriptsDir)) {
-		removeFolder(appDir + scriptsDir);
-	}
-
+	// remove all file if exists
+	rimraf.sync(auditionsDir);
+	rimraf.sync(scriptsDir);
+	rimraf.sync(referenceFilesDir);
 
 	project.remove(function(err) {
 		if (err) {
@@ -1065,6 +1043,39 @@ exports.delete = function(req, res) {
 			res.jsonp(project);
 		}
 	});
+};
+
+exports.deleteById = function(req, res) {
+
+	Project.findById(req.body.projectId).populate('user', 'displayName').exec(function(err, project) {
+		if (err) return next(err);
+		if (! project) return next(new Error('Failed to load Project '));
+
+		// generate delete files list
+		var delFilesLn = project.deleteFiles.length || 0;
+		var i;
+		var appDir = path.dirname(require.main.filename) + '/public';
+		var auditionsDir = appDir + '/res/auditions/' + project._id + '/';
+		var scriptsDir = appDir + '/res/scripts/' + project._id + '/';
+		var referenceFilesDir = appDir + '/res/referenceFiles/' + project._id + '/';
+
+		// remove all file if exists
+		rimraf.sync(auditionsDir);
+		rimraf.sync(scriptsDir);
+		rimraf.sync(referenceFilesDir);
+
+		project.remove(function(err) {
+			if (err) {
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
+			} else {
+				res.jsonp(project);
+			}
+		});
+
+	});
+	
 };
 
 // list projects assigned to talent

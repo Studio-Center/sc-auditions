@@ -1,0 +1,43 @@
+<section data-ng-controller="ReportsController">
+    <div class="page-header">
+        <h1>Auditions Booked</h1>
+        <div class="form-group">
+		    <div class="panel panel-default">
+		        <div class="panel-heading">
+		            <strong>Start Date Filter (Click to select date and time)</strong>
+		        </div>
+		        <div class="panel-body">
+		            <input type="date" class="form-control" data-ng-model="dateFilterStart">
+		        </div>
+		    </div>
+		</div>
+		<div class="form-group">
+		    <div class="panel panel-default">
+		        <div class="panel-heading">
+		            <strong>End Date Filter (Click to select date and time)</strong>
+		        </div>
+		        <div class="panel-body">
+		            <input type="date" class="form-control" data-ng-model="dateFilterEnd" >
+		        </div>
+		    </div>
+		</div>
+		<div class="form-group">
+			<button class="btn btn-primary" ng-click="findAuditionsBooked()">Search</button>
+		</div>
+    </div>
+    <div class="row">
+    	<table class="table table-striped">
+    			<tr>
+    				<th>Project</th>
+    				<th>Client</th>
+    				<th>Audition Date</th>
+    				<th>Production Coordinator</th>
+    				<th>Status</th>
+    				<th>Talent Chosen</th>
+    			</tr>
+	    		<tr ng-repeat="(key, talent) in callProjects">
+	    		</tr>
+	    	</table>
+        
+    </div>
+</section>
