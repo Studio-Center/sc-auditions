@@ -20,6 +20,10 @@ module.exports = function(app) {
 		.put(users.requiresLogin, projects.update)
 		.delete(users.requiresLogin, projects.hasAuthorization, projects.delete);
 
+	// custom delete method for delete tool
+	app.route('/projects/deleteProjectById')
+		.post(users.requiresLogin, projects.hasAuthorization, projects.deleteById);
+
 	app.route('/projects/create')
 		.get(users.requiresLogin, projects.hasAuthorization);
 

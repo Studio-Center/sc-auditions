@@ -1,8 +1,8 @@
 'use strict';
 
 // Tools controller
-angular.module('tools').controller('ToolsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Tools', 'Talents', '$http', 'Socket',
-	function($scope, $stateParams, $location, Authentication, Tools, Talents, $http, Socket ) {
+angular.module('tools').controller('ToolsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Tools', 'Talents', '$http', 'Socket', 'Projects',
+	function($scope, $stateParams, $location, Authentication, Tools, Talents, $http, Socket, Projects ) {
 		$scope.authentication = Authentication;
 
 		// scope variables
@@ -19,6 +19,10 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 		$scope.callTalents = [];
 		$scope.messagedTalents = [];
 		$scope.alreadyScheduledTalents = [];
+		// delete projects vals
+		$scope.selectAll = '';
+		$scope.projects = [];
+		$scope.deleteProjectsList = [];
 
 		// toggle checkbox options
 		$scope.toggleEmailer = function(id,talent){
@@ -173,6 +177,59 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 				$scope.gatherTalentsAlreadyScheduled();
 			});
 
+		};
+
+		// delete projects methods
+		$scope.findProjects = function(){
+			$scope.projects = Projects.query();
+		};
+		$scope.toggleProject = function(id){
+			  var idx = $scope.deleteProjectsList.indexOf(id);
+			  if (idx > -1){
+			    $scope.deleteProjectsList.splice(idx, 1);
+			  }else{
+			    $scope.deleteProjectsList.push(id);
+			}
+		};
+		$scope.checkToggleDeleteProject = function(projectId){
+			var idx = $scope.deleteProjectsList.indexOf(projectId);
+			if (idx > -1){
+				return true;
+			} else {
+				return false;
+			}
+		};
+		$scope.selectAllProjects = function(){
+			// reset all selected projects
+			$scope.deleteProjectsList = [];
+
+			if($scope.selectAll === true){
+				for(var i = 0; i < $scope.projects.length; ++i){
+					$scope.deleteProjectsList.push($scope.projects[i]._id);
+				}
+			}
+
+		};
+		$scope.deleteProjects = function(){
+			var i;
+			if($scope.deleteProjectsList.length > 0){
+				var con = confirm('Are you sure?');
+				if(con === true){
+					var concon = confirm('Are you sure you\'re sure?');
+					if(concon === true){
+						for(i = 0; i < $scope.deleteProjectsList.length; ++i){
+							$http.post('/projects/deleteProjectById', {
+						        projectId: $scope.deleteProjectsList[i]
+						    }).
+							success(function(data, status, headers, config) {
+								$scope.projects = Projects.query()
+							});
+						}
+					}
+				}
+			} else {
+				alert('You must first select some projects!');
+			}
 		};
 
 	}

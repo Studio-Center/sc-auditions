@@ -12,6 +12,10 @@ angular.module('reports').config(['$stateProvider',
 		state('missingAuditionsReports', {
 			url: '/reports/missing-auditions',
 			templateUrl: 'modules/reports/views/missing-auditions-reports.client.view.html'
+		}).
+		state('missingAuditionsBooked', {
+			url: '/reports/auditions-booked',
+			templateUrl: 'modules/reports/views/auditions-booked.client.view.html'
 		});
 		// state('createReport', {
 		// 	url: '/reports/create',
