@@ -1590,7 +1590,7 @@ exports.backupProjectsById = function(req, res, next){
     var archivesPath = appDir + '/public/' + 'res' + '/' + 'archives' + '/';
     var newZip = archivesPath + req.user._id + '_backup_bundle.zip';
     var backupDir = archivesPath + req.user._id + '_backup'
-    var auditionsDir, scriptsDir, referenceFilesDir;
+    var auditionsDir, scriptsDir, referenceFilesDir, projectBuDir;
     // archiver settings
     var output = fs.createWriteStream(newZip);
 	var archive = archiver('zip');
@@ -1618,6 +1618,7 @@ exports.backupProjectsById = function(req, res, next){
 			auditionsDir = appDir + '/public/res/auditions/' + project._id + '/';
 			scriptsDir = appDir + '/public/res/scripts/' + project._id + '/';
 			referenceFilesDir = appDir + '/public/res/referenceFiles/' + project._id + '/';
+			projectBuDir = '/backups/' + moment(project.estimatedCompletionDate).format('MM-DD-YYYY hhmm a') + '-' + project.title + '-' + project._id;
 
 			// compress associated files and JSON document to single archive
 			async.waterfall([
@@ -1632,20 +1633,20 @@ exports.backupProjectsById = function(req, res, next){
 				var file = fs.createWriteStream(backupDir + '/' + project._id + '/JSON.txt');
 				file.end(JSON.stringify(project));
 
-				archive.file(backupDir + '/' + project._id + '/JSON.txt', { name:'/backups/' + project._id + '/JSON.txt' });
+				archive.file(backupDir + '/' + project._id + '/JSON.txt', { name:projectBuDir + '/JSON.txt' });
 
 				done('');
 			},
 			function(done) {
 				// create archive of all associated files
 				if (fs.existsSync(auditionsDir)){
-			    	archive.directory(auditionsDir, '/backups/' + project._id + '/auditions');
+			    	archive.directory(auditionsDir, projectBuDir + '/auditions');
 				}
 				if (fs.existsSync(scriptsDir)){
-			    	archive.directory(scriptsDir, '/backups/' + project._id + '/scripts');
+			    	archive.directory(scriptsDir, projectBuDir + '/scripts');
 			    }
 			    if (fs.existsSync(referenceFilesDir)){
-			    	archive.directory(referenceFilesDir, '/backups/' + project._id + '/referenceFiles');
+			    	archive.directory(referenceFilesDir, projectBuDir + '/referenceFiles');
 			    }
 
 			    done('');
