@@ -62,15 +62,31 @@
 				
 				<div class="panel-body">
 					<div class="row">
-						<ul class="list-group" style="margin-top:20px">
-							<li class="list-group-item" ng-if="isDisplayed(audition.file.path)" ng-repeat="(key, audition) in project.auditions | orderBy:predicate:reverse">
+							<table class="table table-striped">
+								<tr>
+									<th>Sel</th>
+									<th>#</th>
+									<th>Name</th>
+									<th>Rating</th>
+									<th>Playback</th>
+									<th>Favorite</th>
+									<th>Hide</th>
+								</tr>
+							<tr ng-if="isDisplayed(audition.file.path)" ng-repeat="(key, audition) in project.auditions | orderBy:predicate:reverse">
 
-								<fieldset>
+								<td>
 									<input type="checkbox" ng-click="selAudition(audition.file.path)" ng-checked="selCheck(audition.file.path)" ng-model="selectedAuditions" ng-true-value="{{key}}">
-									<strong>{{key+1}}.</strong> <a href="/res/auditions/{{project._id}}/{{audition.file.name | encodeUri}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable">ngAudio</a> 
-								
+								</td>
+								<td>
+									<strong>{{key+1}}.</strong> 
+								</td>
+								<td>
+									<a href="/res/auditions/{{project._id}}/{{audition.file.name | encodeUri}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable">ngAudio</a> 
+								</td>
+								<td>
 									<rating ng-model="audition.avgRating" readonly="false" ng-click="updateRating(audition.file.path, false)" max="max" on-leave="overStar = audition.avgRating" on-hover="hoveringOver(value,key)"></rating>
-								
+								</td>
+								<td>
 									<span ng-show="verifyAudio(key)">
 										<button ng-click="playAudio(key, audition.file.name)" class="btn btn-primary">
 											<span ng-if="lastAudioID == key && audioStatus == 1">
@@ -82,21 +98,22 @@
 										</button> 
 										<button ng-click="stopAudio()" class="btn btn-primary">Stop</button>
 									</span>
-
+								</td>
+								<td>
 									<span ng-if="audition.favorite == 1">
 										<a href="" ng-click="updateFavorite(audition.file.path, false)"><img src="/img/gold-trophy.png" alt="favorited audition"></a>
 									</span>
 									<span ng-if="audition.favorite != 1">
 										<a href="" ng-click="updateFavorite(audition.file.path, false)"><img src="/img/gray-trophy.png" alt="favorited audition"></a>
 									</span>
-
+								</td>
+								<td>
 									<button ng-click="hideAudition(audition.file.path)" ng-show="isHidden(audition.file.path) == true" class="btn btn-primary">Hide</button>
 									<button ng-click="showAudition(audition.file.path)" ng-show="isHidden(audition.file.path) == false" class="btn btn-danger">Show</button>
+								</td>
 
-								</fieldset>
-
-							</li>
-						</ul>
+							</tr>
+						</table>
 					</div>
 				</div>
 			</div>

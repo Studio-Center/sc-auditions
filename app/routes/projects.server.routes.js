@@ -28,6 +28,9 @@ module.exports = function(app) {
 	app.route('/projects/backupProjectsById')
 		.post(users.requiresLogin, projects.hasAuthorization, projects.backupProjectsById);
 
+	app.route('/projects/uploadBackup')
+		.post(users.requiresLogin, projects.hasAuthorization, multipartyMiddleware, projects.uploadBackup);
+
 	app.route('/projects/create')
 		.get(users.requiresLogin, projects.hasAuthorization);
 

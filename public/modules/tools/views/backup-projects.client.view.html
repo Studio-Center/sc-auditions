@@ -1,152 +1,168 @@
 <section data-ng-controller="ToolsController" data-ng-init="findProjects()">
-    <div class="page-header">
-        <h1>Backup Projects</h1>
-    </div>
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-            <h4>Backup Options</h4>
+    <div style="padding-bottom:75px">
+        <div class="page-header">
+            <h1>Backup Projects</h1>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-3 col-md-3 col-sm-3">
-        	<label>Select All:</label> 
-        	<input type="checkbox" ng-model="selectAll" ng-change="selectAllProjects()" class="form-control">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <h4>Backup Options</h4>
+            </div>
         </div>
-        <div class="col-lg-3 col-md-3 col-sm-3">
-        	<label>Completion Date:</label> 
-        	<input type="date" class="form-control" ng-model="searchText.estimatedCompletionDate">
+        <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-3">
+            	<label>Select All:</label> 
+            	<input type="checkbox" ng-model="selectAll" ng-change="selectAllProjects()" class="form-control">
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3">
+            	<label>Completion Date:</label> 
+            	<input type="date" class="form-control" ng-model="searchText.estimatedCompletionDate">
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3" style="text-align:center">
+            	<button class="btn btn-danger" ng-click="backupProjects()">Backup Selected</button>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3">
+                
+            </div>
         </div>
-        <div class="col-lg-3 col-md-3 col-sm-3" style="text-align:center">
-        	<button class="btn btn-danger" ng-click="backupProjects()">Backup Selected</button>
-        </div>
-        <div class="col-lg-3 col-md-3 col-sm-3">
-            
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <h4>Upload Backup Files: (*.zip only!) <small>- Restores projects from provided files on completion.</small></h4>
+        <div class="row">
+            <div class="col-md-12">
+                <h4>Upload Backup Files: (*.zip only!) <small>- Restores projects from provided files on completion.</small></h4>
 
-            <div ng-file-drop ng-file-select="uploadBackupFile($files)" ng-model="files" ng-model-rejected="rejFiles"
-             drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}" class="drop-box"
-             ng-multiple="true" ng-accept="'*.zip'"
-             drop-available="dropAvailable">
-                <div ng-hide="dropAvailable">File Drop not available</div>
-                <div ng-show="dropAvailable">Drop *.zip files..</div>
-                <div>or click to select</div>
+                <div ng-file-drop ng-file-select="uploadBackupFile($files)" ng-model="files" ng-model-rejected="rejFiles"
+                 drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}" class="drop-box"
+                 ng-multiple="true" ng-accept="'*.zip'"
+                 drop-available="dropAvailable">
+                    <div ng-hide="dropAvailable">File Drop not available</div>
+                    <div ng-show="dropAvailable">Drop *.zip files..</div>
+                    <div>or click to select</div>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-            <h4>Filter Options</h4>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-3 col-md-3 col-sm-3">
-            <label>Search by Project Name:</label> <input ng-model="searchText.title" class="form-control">
-        </div>
-        <div class="col-lg-3 col-md-3 col-sm-3">
-            <label>Sort:</label> 
-            <select ng-model="sortText" ng-init="sortText = 'created'" class="form-control">
-                <option value="created">Created</option>
-                <option value="title">Name</option>
-                <option value="estimatedCompletionDate">Due Time</option>
-                <option value="user._id">Project Creator</option>
-                <option value="status">Status</option>
-            </select>
-        </div>
-        <div class="col-lg-3 col-md-3 col-sm-3">
-            <label>Order:</label> <select ng-init="sortTextOrder = 'reverse'" ng-model="sortTextOrder" class="form-control">
-                                    <option value="">Asc</option>
-                                    <option value="reverse">Desc</option>
-                                </select>
-        </div>
-        <div class="col-lg-3 col-md-3 col-sm-3">
-            <label>My Projects:</label> <input type="checkbox" name="userProjFilter" id="userProjFilter" ng-model="searchText" ng-true-value="{{authentication.user._id}}" ng-false-value="" class="form-control">
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-3 col-md-3 col-sm-3">
-            <label>Search Entire Project:</label> <input ng-model="searchString" class="form-control">
-        </div>
-        <div class="col-lg-3 col-md-3 col-sm-3">
-            <label>In Progress:</label> <input type="checkbox" name="userProjFilter" id="userProjFilter" ng-model="searchText.status" ng-true-value="In Progress" ng-false-value="" ng-checked="permitProducers()" class="form-control">
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-            <select ng-init="limit = 20" ng-model="limit" class="form-control">
-                <option value="5" selected>Show 5 per page</option>
-                <option value="10">Show 10 per page</option>
-                <option value="15">Show 15 per page</option>
-                <option value="20">Show 20 per page</option>
-                <option value="30">Show 30 per page</option>
-                <option value="50">Show 50 per page</option>
-                <option value="100">Show 100 per page</option>
-                <option value="200">Show 200 per page</option>
-            </select>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-            <div class="text-center">
-            <ul class="pagination">
-                <li ng-class="{disabled: currentPage == 0}">
-                    <a href ng-click="currentPage=currentPage-1">« Prev</a>
-                </li>
-                <li ng-repeat="n in range(0, Math.floor(projects.length/limit))" ng-class="{active: n == currentPage}" ng-click="setPage()">
-                    <a href ng-bind="n + 1">1</a>
-                </li>
-                <li ng-class="{disabled: currentPage == Math.floor(projects.length/limit)}">
-                    <a href ng-click="currentPage=currentPage+1">Next »</a>
-                </li>
-            </ul>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <h4>Filter Options</h4>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-            <div class="list-group item-list">
-                <div data-ng-repeat="project in projects | filter:searchText | filter:searchString | orderBy:sortText:sortTextOrder | startFrom:currentPage*limit | limitTo: limit" data-ng-href="#!/projects/{{project._id}}" class="list-group-item"  ng-class="{redBG: project.status == 'In Progress' && checkPassed(project.estimatedCompletionDate), greenBg: project.status == 'Booked', lgreenBG: project.status == 'Closed - Pending Client Decision', orangeBG: project.status == 'On Hold', lgray: project.status == 'Cancelled', mgray: project.status == 'ReAuditioned', gray: project.status == 'Dead', blueBg: project.status == 'In Progress' && compareDates(project.estimatedCompletionDate),lblueBG: project.status == 'In Progress', yellowBg: project.sounders == 'No Sounders - Approved By William' && compareDates(project.estimatedCompletionDate), lyellowBg: project.sounders == 'No Sounders - Approved By William'}">
-                    <div class="row">
-                        <div class="col-lg-8 col-md-8 col-sm-8">
-                            <div class="row">
-                                <div class="col-lg-6 col-md-6 col-sm-6">
-                                    <strong>{{project.title}}</strong> <small>Due {{project.estimatedCompletionDate | date:'short'}} EST</small> 
+        <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-3">
+                <label>Search by Project Name:</label> <input ng-model="searchText.title" class="form-control">
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3">
+                <label>Sort:</label> 
+                <select ng-model="sortText" ng-init="sortText = 'created'" class="form-control">
+                    <option value="created">Created</option>
+                    <option value="title">Name</option>
+                    <option value="estimatedCompletionDate">Due Time</option>
+                    <option value="user._id">Project Creator</option>
+                    <option value="status">Status</option>
+                </select>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3">
+                <label>Order:</label> <select ng-init="sortTextOrder = 'reverse'" ng-model="sortTextOrder" class="form-control">
+                                        <option value="">Asc</option>
+                                        <option value="reverse">Desc</option>
+                                    </select>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3">
+                <label>My Projects:</label> <input type="checkbox" name="userProjFilter" id="userProjFilter" ng-model="searchText" ng-true-value="{{authentication.user._id}}" ng-false-value="" class="form-control">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-3">
+                <label>Search Entire Project:</label> <input ng-model="searchString" class="form-control">
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3">
+                <label>In Progress:</label> <input type="checkbox" name="userProjFilter" id="userProjFilter" ng-model="searchText.status" ng-true-value="In Progress" ng-false-value="" ng-checked="permitProducers()" class="form-control">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <select ng-init="limit = 20" ng-model="limit" class="form-control">
+                    <option value="5" selected>Show 5 per page</option>
+                    <option value="10">Show 10 per page</option>
+                    <option value="15">Show 15 per page</option>
+                    <option value="20">Show 20 per page</option>
+                    <option value="30">Show 30 per page</option>
+                    <option value="50">Show 50 per page</option>
+                    <option value="100">Show 100 per page</option>
+                    <option value="200">Show 200 per page</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="text-center">
+                <ul class="pagination">
+                    <li ng-class="{disabled: currentPage == 0}">
+                        <a href ng-click="currentPage=currentPage-1">« Prev</a>
+                    </li>
+                    <li ng-repeat="n in range(0, Math.floor(projects.length/limit))" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                        <a href ng-bind="n + 1">1</a>
+                    </li>
+                    <li ng-class="{disabled: currentPage == Math.floor(projects.length/limit)}">
+                        <a href ng-click="currentPage=currentPage+1">Next »</a>
+                    </li>
+                </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="list-group item-list">
+                    <div data-ng-repeat="project in projects | filter:searchText | filter:searchString | orderBy:sortText:sortTextOrder | startFrom:currentPage*limit | limitTo: limit" data-ng-href="#!/projects/{{project._id}}" class="list-group-item"  ng-class="{redBG: project.status == 'In Progress' && checkPassed(project.estimatedCompletionDate), greenBg: project.status == 'Booked', lgreenBG: project.status == 'Closed - Pending Client Decision', orangeBG: project.status == 'On Hold', lgray: project.status == 'Cancelled', mgray: project.status == 'ReAuditioned', gray: project.status == 'Dead', blueBg: project.status == 'In Progress' && compareDates(project.estimatedCompletionDate),lblueBG: project.status == 'In Progress', yellowBg: project.sounders == 'No Sounders - Approved By William' && compareDates(project.estimatedCompletionDate), lyellowBg: project.sounders == 'No Sounders - Approved By William'}">
+                        <div class="row">
+                            <div class="col-lg-8 col-md-8 col-sm-8">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <strong>{{project.title}}</strong> <small>Due {{project.estimatedCompletionDate | date:'short'}} EST</small> 
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-sm-3">
+                                        <progressbar value="calcProjectProg(project)" type="success" ng-model="progress"><b>{{calcProjectProg(project)}}%</b></progressbar>
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-sm-3"></div>
                                 </div>
-                                <div class="col-lg-3 col-md-3 col-sm-3">
-                                    <progressbar value="calcProjectProg(project)" type="success" ng-model="progress"><b>{{calcProjectProg(project)}}%</b></progressbar>
-                                </div>
-                                <div class="col-lg-3 col-md-3 col-sm-3"></div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4">
+                            	<div style="float:right">
+    				        		<label>Backup:</label>
+    				        		<input type="checkbox" ng-model="projectsList" ng-true-value="{{project._id}}" ng-checked="checkToggleProject(project._id)" ng-click="toggleProject(project._id)">
+    				        	</div>
+                                <small>Created {{project.created | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST by {{project.user.displayName}}</small>
                             </div>
                         </div>
-                        <div class="col-lg-4 col-md-4 col-sm-4">
-                        	<div style="float:right">
-				        		<label>Backup:</label>
-				        		<input type="checkbox" ng-model="projectsList" ng-true-value="{{project._id}}" ng-checked="checkToggleProject(project._id)" ng-click="toggleProject(project._id)">
-				        	</div>
-                            <small>Created {{project.created | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST by {{project.user.displayName}}</small>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <div class="text-center">
+                        <ul class="pagination">
+                            <li ng-class="{disabled: currentPage == 0}">
+                                <a href ng-click="currentPage=currentPage-1">« Prev</a>
+                            </li>
+                            <li ng-repeat="n in range(0, Math.floor(projects.length/limit))" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                                <a href ng-bind="n + 1">1</a>
+                            </li>
+                            <li ng-class="{disabled: currentPage == Math.floor(projects.length/limit)}">
+                                <a href ng-click="currentPage=currentPage+1">Next »</a>
+                            </li>
+                        </ul>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12">
-                    <div class="text-center">
-                    <ul class="pagination">
-                        <li ng-class="{disabled: currentPage == 0}">
-                            <a href ng-click="currentPage=currentPage-1">« Prev</a>
-                        </li>
-                        <li ng-repeat="n in range(0, Math.floor(projects.length/limit))" ng-class="{active: n == currentPage}" ng-click="setPage()">
-                            <a href ng-bind="n + 1">1</a>
-                        </li>
-                        <li ng-class="{disabled: currentPage == Math.floor(projects.length/limit)}">
-                            <a href ng-click="currentPage=currentPage+1">Next »</a>
-                        </li>
-                    </ul>
-                    </div>
-                </div>
+        </div>
+    </div>
+
+    <div class="container" style="position:fixed;bottom:0;background:#fff;z-index:999;padding-top:5px">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <ul style="clear:both" ng-show="rejFiles.length > 0" class="response">
+                    <li class="sel-file" ng-repeat="f in rejFiles">
+                        Rejected file: {{f.name}} - size: {{f.size}}B - type: {{f.type}}
+                    </li>
+                </ul>
+                <div data-ng-bind="uploadStatus"></div>
+                <progressbar value="uploadprogress" type="success" ng-model="upload"><b>{{uploadfile}}</b></progressbar>
             </div>
         </div>
     </div>

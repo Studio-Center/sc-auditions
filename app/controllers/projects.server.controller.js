@@ -16,6 +16,7 @@ var mongoose = require('mongoose'),
 	path = require('path'),
 	async = require('async'),
 	mv = require('mv'),
+	unzip = require('unzip2'),
 	nodemailer = require('nodemailer'),
 	archiver = require('archiver'),
 	dateFormat = require('dateformat'),
@@ -1675,4 +1676,47 @@ exports.backupProjectsById = function(req, res, next){
 		}
    	});
 
-}
+};
+
+exports.uploadBackup = function(req, res, next){
+// We are able to access req.files.file thanks to 
+    // the multiparty middleware
+    var file = req.files.file;
+
+    //var file = req.files.file;
+    var appDir = path.dirname(require.main.filename);
+    var tempPath = file.path;
+    var appDir = path.dirname(require.main.filename);
+	var archivesPath = appDir + '/public/' + 'res' + '/' + 'archives' + '/';
+	var savePath = archivesPath + file.name;
+
+    mv(tempPath, savePath, function(err) {
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+
+	    	var stream = fs.createReadStream(savePath)
+	    	stream.pipe(unzip.Extract({ path: archivesPath }));
+
+	    	stream.on('close', function(){
+
+		    	async.waterfall([
+					function(done) {
+					}
+		        	], function(err) {
+						if (err) {
+							return res.status(400).send({
+								message: errorHandler.getErrorMessage(err)
+							});
+						} else {
+							callback();
+						}
+				});
+
+			});
+
+	    }
+    });
+};
