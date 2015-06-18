@@ -1,30 +1,36 @@
 <section data-ng-controller="ReportsController">
     <div class="page-header">
         <h1>Auditions Booked</h1>
-        <div class="form-group">
-		    <div class="panel panel-default">
-		        <div class="panel-heading">
-		            <strong>Start Date Filter (Click to select date and time)</strong>
-		        </div>
-		        <div class="panel-body">
-		            <input type="date" class="form-control" data-ng-model="dateFilterStart">
-		        </div>
-		    </div>
-		</div>
-		<div class="form-group">
-		    <div class="panel panel-default">
-		        <div class="panel-heading">
-		            <strong>End Date Filter (Click to select date and time)</strong>
-		        </div>
-		        <div class="panel-body">
-		            <input type="date" class="form-control" data-ng-model="dateFilterEnd" >
-		        </div>
-		    </div>
-		</div>
-		<div class="form-group">
-			<button class="btn btn-primary" ng-click="findAuditionsBooked()">Search</button>
-		</div>
-    </div>
+        <div class="row">
+        	<div class="col-md-6">
+		        <div class="form-group">
+				    <div class="panel panel-default">
+				        <div class="panel-heading">
+				            <strong>Start Date Filter (Click to select date and time)</strong>
+				        </div>
+				        <div class="panel-body">
+				        	<datepicker ng-model="dateFilterStart" show-weeks="true" class="well well-sm"></datepicker>
+				        </div>
+				    </div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+				    <div class="panel panel-default">
+				        <div class="panel-heading">
+				            <strong>End Date Filter (Click to select date and time)</strong>
+				        </div>
+				        <div class="panel-body">
+				        	<datepicker ng-model="dateFilterEnd" show-weeks="true" class="well well-sm"></datepicker>
+				        </div>
+				    </div>
+			</div>
+			</div>
+			<div class="form-group" style="text-align:center">
+				<button class="btn btn-primary" ng-click="findAuditionsBooked()">Search</button>
+			</div>
+	    </div>
+	</div>
     <div class="row">
     	<table class="table table-striped">
     			<tr>
