@@ -114,7 +114,9 @@
                             <div class="col-lg-8 col-md-8 col-sm-8">
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-sm-6">
-                                        <strong>{{project.title}}</strong> <small>Due {{project.estimatedCompletionDate | date:'short'}} EST</small> 
+                                        <strong><a href="/#!/projects/{{project._id}}" target="_blank">{{project.title}}</a></strong> 
+
+                                        <small>Due {{project.estimatedCompletionDate | date:'short'}} EST</small> 
                                     </div>
                                     <div class="col-lg-3 col-md-3 col-sm-3">
                                         <progressbar value="calcProjectProg(project)" type="success" ng-model="progress"><b>{{calcProjectProg(project)}}%</b></progressbar>
