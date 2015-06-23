@@ -826,6 +826,10 @@ exports.create = function(req, res) {
 			},
 			// save final project document
 			function(done) {
+
+				// set project owner
+				project.owner = req.user._id;
+
 				project.save(function(err) {
 					if (err) {
 						return res.status(400).send({
@@ -1023,8 +1027,6 @@ exports.delete = function(req, res) {
 	var project = req.project;
 
 	// generate delete files list
-	var delFilesLn = project.deleteFiles.length || 0;
-	var i;
 	var appDir = path.dirname(require.main.filename) + '/public';
 	var auditionsDir = appDir + '/res/auditions/' + project._id + '/';
 	var scriptsDir = appDir + '/res/scripts/' + project._id + '/';
@@ -1048,32 +1050,40 @@ exports.delete = function(req, res) {
 
 exports.deleteById = function(req, res) {
 
-	Project.findById(req.body.projectId).populate('user', 'displayName').exec(function(err, project) {
-		if (err) return next(err);
-		if (! project) return next(new Error('Failed to load Project '));
+	Project.findById(req.body.projectId).exec(function(err, project) {
+		if (err) return console.log(err);
+		if(project){
 
-		// generate delete files list
-		var delFilesLn = project.deleteFiles.length || 0;
-		var i;
-		var appDir = path.dirname(require.main.filename) + '/public';
-		var auditionsDir = appDir + '/res/auditions/' + project._id + '/';
-		var scriptsDir = appDir + '/res/scripts/' + project._id + '/';
-		var referenceFilesDir = appDir + '/res/referenceFiles/' + project._id + '/';
+			// generate delete files list
+			var appDir = path.dirname(require.main.filename) + '/public';
+			var auditionsDir = appDir + '/res/auditions/' + project._id + '/';
+			var scriptsDir = appDir + '/res/scripts/' + project._id + '/';
+			var referenceFilesDir = appDir + '/res/referenceFiles/' + project._id + '/';
 
-		// remove all file if exists
-		rimraf.sync(auditionsDir);
-		rimraf.sync(scriptsDir);
-		rimraf.sync(referenceFilesDir);
+			// remove all file if exists
+			rimraf.sync(auditionsDir);
+			rimraf.sync(scriptsDir);
+			rimraf.sync(referenceFilesDir);
 
-		project.remove(function(err) {
-			if (err) {
-				return res.status(400).send({
-					message: errorHandler.getErrorMessage(err)
-				});
-			} else {
-				res.jsonp(project);
-			}
-		});
+			project.remove(function(err) {
+				if (err) {
+					return res.status(400).send({
+						message: errorHandler.getErrorMessage(err)
+					});
+				} else {
+					Project.find().sort('-created').populate('user', 'displayName').exec(function(err, projects) {
+						if (err) {
+							console.log(err);
+							return res.status(400).send({
+								message: errorHandler.getErrorMessage(err)
+							});
+						} else {
+							res.jsonp(projects);
+						}
+					});
+				}
+			});
+		}
 
 	});
 	
@@ -1608,7 +1618,7 @@ exports.backupProjectsById = function(req, res, next){
     	fs.mkdirSync(backupDir);
     }
 
-	async.forEach(req.body.projectList, function (projectId, callback) {
+	async.eachSeries(req.body.projectList, function (projectId, callback) {
 
 		Project.findById(projectId).populate('user', 'displayName').exec(function(err, project) {
 			if (err) return next(err);
@@ -1722,7 +1732,9 @@ var walk = function(dir, done) {
 exports.uploadBackup = function(req, res, next){
 // We are able to access req.files.file thanks to 
     // the multiparty middleware
-    var file = req.files.file, JSONobj;
+    var file = req.files.file, JSONobj, saveProj, parentPath, project;
+    var auditionsDir, scriptsDir, referenceFilesDir;
+    var auditionsBackupDir, scriptsBackupDir, referenceFilesBackupDir;
 
     //var file = req.files.file;
     var appDir = path.dirname(require.main.filename);
@@ -1738,7 +1750,7 @@ exports.uploadBackup = function(req, res, next){
 
 	// save backup package
     mv(tempPath, savePath, function(err) {
-		if (err) {
+		if (err && err !== '') {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
@@ -1750,54 +1762,128 @@ exports.uploadBackup = function(req, res, next){
 
 	    		walk(backupPath, function(err, results){
 
-	    			async.forEach(results, function (project, done) {
+	    			async.eachSeries(results, function (curSelproject, projectCallback) {
 
-	    				fs.readFile(project.path, 'utf8', function (err,data) {
-							if (err) {
-						    	return console.log(err);
-							}
+	    				parentPath = curSelproject.parentPath;
 
+	    				fs.readFile(curSelproject.path, 'utf8', function (err, data) {
+
+							// generate and insert new project object
 							JSONobj = JSON.parse(data);
 
-							// project = new Project(JSONobj);
+							delete(JSONobj.user);
 
-							// project.user = JSONobj.user;
+							project = new Project(JSONobj);
 
-							// req.project = project;
+							req.project = project;
 
-							// console.log(req.project);
+							// delete existing project if exists
+							Project.findById(project._id).exec(function(err, delProject) {
 
-							Project.collection.insert(JSONobj,{}, function(err) {
-					    		console.log(err);
-								done(project);
+								// generate delete files list
+								var auditionsDir = appDir + '/public/' + '/res/auditions/' + project._id + '/';
+								var scriptsDir = appDir + '/public/' + '/res/scripts/' + project._id + '/';
+								var referenceFilesDir = appDir + '/public/' + '/res/referenceFiles/' + project._id + '/';
+
+								// remove all file if exists
+								rimraf.sync(auditionsDir);
+								rimraf.sync(scriptsDir);
+								rimraf.sync(referenceFilesDir);
+
+								project.remove(function(err) {
+
+									project.save(function(err) {
+
+										// current file location
+										auditionsBackupDir = parentPath + '/auditions/';
+										scriptsBackupDir = parentPath + '/scripts/';
+										referenceFilesBackupDir = parentPath + '/referenceFiles/';
+
+										async.waterfall([
+											function(done) {
+												// check for associated media directories
+												fs.exists(auditionsBackupDir, function(exists) {
+													if (!exists) {
+														done(err);
+													} else {
+											    		mv(auditionsBackupDir, auditionsDir, {mkdirp: true}, function(err) {
+															done(err);
+														});
+												    }
+
+												});
+											},
+											function(done) {
+											    fs.exists(scriptsBackupDir, function(exists) {
+											    	if (!exists) {
+														done(err);
+													} else {
+
+											    		mv(scriptsBackupDir, scriptsDir, {mkdirp: true}, function(err) {
+															done(err);
+														});
+											    	}
+													
+											    });
+											},
+											function(done) {
+											    fs.exists(referenceFilesBackupDir, function(exists) {
+											    	if (!exists) {
+														done(err);
+													} else {
+											    		mv(referenceFilesBackupDir, referenceFilesDir, {mkdirp: true}, function(err) {
+															done(err);
+														});
+												    }
+													
+											    });
+											},
+
+											], function(err) {
+											if (err && err !== '') {
+												return res.status(400).send({
+													message: errorHandler.getErrorMessage(err)
+												});
+											} else {
+												projectCallback(err);
+											}
+										});
+										
+									});
+								
+								});
+
+
 							});
-
-					  //   	project.save(project, function(err) {
-					  //   		console.log(err);
-							// 	done(project);
-							// });
 
 						});
 
-	    			});
+	    			}, function (err) {
+						if( err && err !== '') {
+							return res.status(400).send({
+								message: errorHandler.getErrorMessage(err)
+							});
+						} else {
+
+							// remove backup dir
+							rimraf.sync(backupPath);
+
+							// reload project list
+							Project.find().sort('-created').populate('user', 'displayName').exec(function(err, projects) {
+								if (err) {
+									return res.status(400).send({
+										message: errorHandler.getErrorMessage(err)
+									});
+								} else {
+									res.jsonp(projects);
+								}
+							});
+
+						}
+
+					});
 
 	    		});
-
-		  //   	async.waterfall([
-				// 	function(done) {
-
-
-
-				// 	}
-		  //       	], function(err) {
-				// 		if (err) {
-				// 			return res.status(400).send({
-				// 				message: errorHandler.getErrorMessage(err)
-				// 			});
-				// 		} else {
-				// 			callback();
-				// 		}
-				// });
 
 			});
 

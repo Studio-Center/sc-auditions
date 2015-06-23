@@ -20,6 +20,9 @@ var ProjectSchema = new Schema({
 	modified: {
 		type: Date
 	},
+	owner: {
+		type: String
+	},
 	estimatedCompletionDate: {
 		type: Date,
 		required: 'Please fill an estimated completion date',

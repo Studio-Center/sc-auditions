@@ -94,12 +94,12 @@
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="list-group item-list">
-                <div data-ng-repeat="project in projects | filter:searchText | filter:searchString | orderBy:sortText:sortTextOrder | startFrom:currentPage*limit | limitTo: limit" data-ng-href="#!/projects/{{project._id}}" class="list-group-item"  ng-class="{redBG: project.status == 'In Progress' && checkPassed(project.estimatedCompletionDate), greenBg: project.status == 'Booked', lgreenBG: project.status == 'Closed - Pending Client Decision', orangeBG: project.status == 'On Hold', lgray: project.status == 'Cancelled', mgray: project.status == 'ReAuditioned', gray: project.status == 'Dead', blueBg: project.status == 'In Progress' && compareDates(project.estimatedCompletionDate),lblueBG: project.status == 'In Progress', yellowBg: project.sounders == 'No Sounders - Approved By William' && compareDates(project.estimatedCompletionDate), lyellowBg: project.sounders == 'No Sounders - Approved By William'}">
+                <div data-ng-repeat="project in projects | filter:searchText | filter:searchString | orderBy:sortText:sortTextOrder | startFrom:currentPage*limit | limitTo: limit" class="list-group-item"  ng-class="{redBG: project.status == 'In Progress' && checkPassed(project.estimatedCompletionDate), greenBg: project.status == 'Booked', lgreenBG: project.status == 'Closed - Pending Client Decision', orangeBG: project.status == 'On Hold', lgray: project.status == 'Cancelled', mgray: project.status == 'ReAuditioned', gray: project.status == 'Dead', blueBg: project.status == 'In Progress' && compareDates(project.estimatedCompletionDate),lblueBG: project.status == 'In Progress', yellowBg: project.sounders == 'No Sounders - Approved By William' && compareDates(project.estimatedCompletionDate), lyellowBg: project.sounders == 'No Sounders - Approved By William'}">
                     <div class="row">
                         <div class="col-lg-8 col-md-8 col-sm-8">
                             <div class="row">
                                 <div class="col-lg-6 col-md-6 col-sm-6">
-                                    <strong>{{project.title}}</strong> <small>Due {{project.estimatedCompletionDate | date:'short'}} EST</small> 
+                                    <strong><a target="_blank" data-ng-href="#!/projects/{{project._id}}">{{project.title}}</a></strong> <small>Due {{project.estimatedCompletionDate | date:'short'}} EST</small> 
                                 </div>
                                 <div class="col-lg-3 col-md-3 col-sm-3">
                                     <progressbar value="calcProjectProg(project)" type="success" ng-model="progress"><b>{{calcProjectProg(project)}}%</b></progressbar>
