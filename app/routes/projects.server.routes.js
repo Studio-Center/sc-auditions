@@ -38,6 +38,10 @@ module.exports = function(app) {
 	app.route('/projects/downloadallauditions')
 		.post(users.requiresLogin, projects.downloadAllAuditions);
 
+	// book all selected auditions
+	app.route('/projects/bookAuditions')
+		.post(users.requiresLogin, projects.bookAuditions);
+
 	// gather filtered list of projects by selected talent id
 	app.route('/projects/filterByTalent')
 		.post(users.requiresLogin, projects.getTalentFilteredProjects);

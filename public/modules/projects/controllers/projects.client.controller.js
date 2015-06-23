@@ -1,8 +1,8 @@
 'use strict';
 
 // Projects controller
-angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$upload', 'ngAudio', '$http', '$modal',
-	function($scope, $stateParams, $location, Authentication, Projects, $upload, ngAudio, $http, $modal ) {
+angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$upload', 'ngAudio', '$http', '$modal', '$rootScope',
+	function($scope, $stateParams, $location, Authentication, Projects, $upload, ngAudio, $http, $modal, $rootScope ) {
 		$scope.authentication = Authentication;
 
 		// rating
@@ -54,6 +54,30 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	        $scope.overStar = value;
 	        $scope.percent = 100 * (value / $scope.max);
 	        $scope.selCheckVal = value;
+      	};
+
+      	// book clients modal
+      	$scope.bookSelectedAuditions = function(){
+      		var modalInstance = $modal.open({
+		      animation: true,
+		      templateUrl: 'modules/projects/views/book-auditon-modal.client.view.html',
+		      controller: 'ProjectsModalController',
+		      resolve: {
+		      	data: function () {
+			        return {
+			        	project: $scope.project._id,
+			        	auditions: $scope.selectedAuditions
+			        }
+				}
+		      }
+		    });
+
+		    modalInstance.result.then(function (selectedItem) {
+		      //$scope.selected = selectedItem;
+		    }, function () {
+		      //$log.info('Modal dismissed at: ' + new Date());
+
+		    });
       	};
 
       	// create user modals
@@ -1067,6 +1091,12 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			});
 		};
 
+		$rootScope.$on('refreshProject', 
+			function(event, args) { 
+				$scope.findOneById(args);
+			} 
+		);
+
 		// load project in view
 		$scope.loadProject = function(){
 			this.findOne();
@@ -1526,7 +1556,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		        $scope.project = angular.extend($scope.project, data);
 		      });
 		    }
-		  };
+		};
 
-		}
+	}
 ]);

@@ -75,7 +75,9 @@
 							<tr ng-if="isDisplayed(audition.file.path)" ng-repeat="(key, audition) in project.auditions | orderBy:predicate:reverse">
 
 								<td>
-									<input type="checkbox" ng-click="selAudition(audition.file.path)" ng-checked="selCheck(audition.file.path)" ng-model="selectedAuditions" ng-true-value="{{key}}">
+									<input ng-if="!audition.booked" type="checkbox" ng-click="selAudition(audition.file.path)" ng-checked="selCheck(audition.file.path)" ng-model="selectedAuditions" ng-true-value="{{key}}">
+
+									<img ng-if="audition.booked" src="/img/green-check.png" style="width:20px;height:auto">
 								</td>
 								<td>
 									<strong>{{key+1}}.</strong> 
