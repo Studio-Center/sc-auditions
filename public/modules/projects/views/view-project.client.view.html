@@ -13,6 +13,12 @@
 					<select class="form-control" style="display:block;margin:0 auto" ng-if="permitAdminDirector()" ng-model="project.status" ng-change="updateProjectStatus()">
                         <option ng-repeat="item in statusOpts" value="{{item}}">{{item}}</option>
                     </select>
+                    <div ng-if="permitAdminDirector()" ng-controller="UsersController" data-ng-init="findFilter('production coordinator')">
+                    	<label>Owner</label>
+                    	<select class="form-control" style="display:block;margin:0 auto" ng-model="project.owner" ng-change="$parent.update()">
+	                        <option ng-repeat="user in users" ng-selected="project.owner == user._id" value="{{user._id}}">{{user.firstName}} {{user.lastName}}</option>
+	                    </select>
+                    </div>
 				</div>
 			</div>
 		</div>
