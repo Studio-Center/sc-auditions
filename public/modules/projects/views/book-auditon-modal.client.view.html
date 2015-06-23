@@ -1,0 +1,39 @@
+<section style="padding:30px">
+	<div class="modal-header">
+        <h3>Book Auditions</h3>
+    </div>
+    <div class="modal-body">
+    	<table class="table table-striped">
+			<tr>
+				<th>#</th>
+				<th>Name</th>
+				<th>Playback</th>
+			</tr>
+			<tr  ng-repeat="(key, audition) in selectedAuds">
+				<td>
+					<strong>{{key+1}}.</strong> 
+				</td>
+				<td>
+					<a href="/res/auditions/{{project._id}}/{{audition.file.name | encodeUri}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable">ngAudio</a> 
+				</td>
+				<td>
+					<span ng-show="verifyAudio(key)">
+						<button ng-click="playAudio(key, audition.file.name)" class="btn btn-primary">
+							<span ng-if="lastAudioID == key && audioStatus == 1">
+								pause
+							</span>
+							<span ng-if="lastAudioID != key || audioStatus != 1">
+								Play
+							</span>
+						</button> 
+						<button ng-click="stopAudio()" class="btn btn-primary">Stop</button>
+					</span>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="modal-footer">
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+         <button class="btn btn-primary" ng-click="bookSelected()">Book</button>
+    </div>
+</section>

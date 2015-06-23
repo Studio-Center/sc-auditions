@@ -1594,6 +1594,158 @@ exports.downloadAllAuditions = function(req, res, next){
 
 };
 
+// send email and update project status for selected booked auditions
+exports.bookAuditions = function(req, res, next){
+
+	var projectId = req.body.data.project;
+	var auditions = req.body.data.auditions;
+
+	async.waterfall([
+		// gather info for selected project
+		function(done) {
+			Project.findOne({'_id':projectId}).sort('-created').exec(function(err, project) {
+				done(err, project);
+			});
+		},
+		// update status for selected booked auditions
+		function(project, done) {
+
+			var selAuds = [];
+
+			async.eachSeries(auditions, function (audition, auditionCallback) {
+				for(var i = 0; i < project.auditions.length; ++i){
+					if(audition === project.auditions[i].file.path){
+						project.auditions[i].booked = true;
+						selAuds.push(project.auditions[i]);
+						auditionCallback();
+					}
+				}
+			}, function (err) {
+				done(err, selAuds, project);
+		   	});
+		},
+		// update project
+		function(selAuds, project, done) {
+
+			var newProject = project.toObject();
+
+			Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
+				
+				project = _.extend(project, newProject);
+
+				project.save(function(err) {
+					done(err, selAuds, project);
+				});
+
+			});
+		},
+		// gather client email, send out emails
+		function(selAuds, project, done){
+
+			var clients = [];
+
+			async.eachSeries(project.client, function (client, clientCallback) {
+
+				User.findOne({'_id':client.userId}).sort('-created').exec(function(err, clientInfo) {
+					clients.push(clientInfo);
+					clientCallback();
+				});
+
+			}, function (err) {
+				done(err, clients, selAuds, project);
+		   	});
+		},
+		function(clients, selAuds, project, done){
+
+			var clientsEmails = [];
+
+			async.eachSeries(clients, function (client, clientCallback) {
+
+				clientsEmails.push(client.email);
+				clientCallback();
+
+			}, function (err) {
+				done(err, clientsEmails, selAuds, project);
+		   	});
+		},
+		// get project owner data
+		function(clientsEmails, selAuds, project, done) {
+
+			// gather project owner data
+			var ownerId;
+			if(!project.owner){
+				ownerId = project.user;
+			} else{
+				ownerId = project.owner;
+			}
+
+			User.findOne({'_id':ownerId}).sort('-created').exec(function(err, ownerInfo) {
+				done(err, ownerInfo, clientsEmails, selAuds, project);
+			});
+		},
+		function(ownerInfo, clientsEmails, selAuds, project, done){
+
+			// generate email signature
+			var newDate = new Date(project.estimatedCompletionDate);
+			newDate = newDate.setHours(newDate.getHours() - 1);
+			newDate = dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT');
+
+			var emailSig = '';
+			if(ownerInfo.emailSignature){
+				emailSig = ownerInfo.emailSignature;
+			} else {
+				emailSig = '';
+			}
+
+			// assign booked list
+			var bookedText = '<p>';
+			for(var i = 0; i < selAuds.length; ++i){
+				bookedText += '<a href="http://' + req.headers.host + '/res/auditions/' + project._id + '/' + selAuds[i].file.name + '">' + selAuds[i].file.name + '</a><br>'
+			};
+			bookedText += '</p>';
+
+			res.render('templates/projects/booked-audition-email', {
+				project: project,
+				dueDate: newDate,
+				emailSignature: emailSig,
+				bookedText: bookedText
+			}, function(err, bookedEmailHTML) {
+				done(err, ownerInfo, clientsEmails, selAuds, project, bookedEmailHTML);
+			});
+
+		},
+		// send out talent project creation email
+		function(ownerInfo, clientsEmails, selAuds, project, bookedEmailHTML, done) {
+			// send email
+			// generate email signature
+			var newDate = new Date(project.estimatedCompletionDate);
+			newDate = newDate.setHours(newDate.getHours() - 1);
+			newDate = dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT');
+
+			var transporter = nodemailer.createTransport(config.mailer.options);
+			var emailSubject = 'Auditions Booked - ' + project.title + ' - Due ' + newDate + ' EST';
+
+			var mailOptions = {
+				to: clientsEmails,
+				cc: ownerInfo.email,
+				from: ownerInfo.email || config.mailer.from,
+				replyTo: ownerInfo.email || config.mailer.from,
+				subject: emailSubject,
+				html: bookedEmailHTML
+			};
+			transporter.sendMail(mailOptions, function(err){
+				done(err);
+			});
+		}
+		], function(err) {
+		if (err) {
+			return res.json(400, err);
+		} else {
+			return res.json(200);
+		}
+	});
+};
+
 exports.backupProjectsById = function(req, res, next){
 
 	// get app dir

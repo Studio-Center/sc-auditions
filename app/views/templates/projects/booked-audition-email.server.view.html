@@ -5,11 +5,9 @@
 </head>
 
 <body>
-
-	<p>{% autoescape false %}{{email.body}}{% endautoescape %}</p>
+	<p>These auditions for your project {{project.name}} due {{dueDate}} have been set to booked.</p>
+	{% autoescape false %}{{bookedText}}{% endautoescape %}
 
 	{% autoescape false %}{{emailSignature}}{% endautoescape %}
-
 </body>
-
 </html>
