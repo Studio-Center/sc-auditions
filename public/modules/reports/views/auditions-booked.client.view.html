@@ -33,17 +33,83 @@
 	</div>
     <div class="row">
     	<table class="table table-striped">
+			<tr>
+				<th>Project</th>
+				<th>Client</th>
+				<th>Audition Date</th>
+				<th>Production Coordinator</th>
+				<th>Status</th>
+				<th>Talent Chosen</th>
+			</tr>
+    		<tr ng-repeat="(key, project) in results.projects">
+    			<td>
+    				<a data-ng-href="#!/projects/{{project.id}}" target="_blank">{{project.name}}</a>
+    			</td>
+    			<td>
+    				<span ng-repeat="(key, client) in project.client">
+    				{{client.name}}<br>
+    				</span>
+    			</td>
+    			<td>
+    				{{project.dueDate | date:short}}
+    			</td>
+    			<td>
+    				{{project.projectCoordinator}}
+    			</td>
+    			<td>
+    				{{project.status}}
+    			</td>
+    			<td>
+    				<span ng-repeat="(key, talent) in project.talentChosen">
+    				{{talent.name}}<br>
+    				</span>
+    			</td>
+    		</tr>
+    	</table>
+
+    	<h2>Statistics</h2>
+
+    	<div ng-repeat="(key, pc) in results.pCs">
+    		<h4>{{pc.name}}</h4>
+    		<table class="table table-striped">
     			<tr>
-    				<th>Project</th>
-    				<th>Client</th>
-    				<th>Audition Date</th>
-    				<th>Production Coordinator</th>
-    				<th>Status</th>
-    				<th>Talent Chosen</th>
+    				<td>In Progress</td>
+    				<td>{{pc.totalInProgress}}</td>
     			</tr>
-	    		<tr ng-repeat="(key, talent) in callProjects">
-	    		</tr>
-	    	</table>
+				<tr>
+    				<td>On Hold</td>
+    				<td>{{pc.totalOnHold}}</td>
+    			</tr>
+				<tr>
+    				<td>Booked</td>
+    				<td>{{pc.totalBooked}}</td>
+    			</tr>
+				<tr>
+    				<td>Canceled</td>
+    				<td>{{pc.totalCanceled}}</td>
+    			</tr>
+				<tr>
+    				<td>ReAuditioned</td>
+    				<td>{{pc.totalReAuditioned}}</td>
+    			</tr>
+				<tr>
+    				<td>Dead</td>
+    				<td>{{pc.totalDead}}</td>
+    			</tr>
+				<tr>
+    				<td>Closed - Pending Client Decision</td>
+    				<td>{{pc.totalClosed}}</td>
+    			</tr>
+				<tr>
+    				<td>Total Auditions</td>
+    				<td>{{pc.totalAuditions}}</td>
+    			</tr>
+    			<tr>
+    				<td>Total Booked %</td>
+    				<td>{{pc.totalBookedPercent}}%</td>
+    			</tr>
+    		</p>
+    	</div>
         
     </div>
 </section>

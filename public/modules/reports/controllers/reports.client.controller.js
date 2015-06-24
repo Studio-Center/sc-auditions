@@ -16,5 +16,27 @@ angular.module('reports').controller('ReportsController', ['$scope', '$statePara
 
 		};
 
+		// populate auditions booked report
+		$scope.findAuditionsBooked = function(){
+
+			if($scope.dateFilterStart && $scope.dateFilterEnd){
+
+				$http.post('/reports/findAuditionsBooked',
+				{
+					dateFilterStart: $scope.dateFilterStart,
+					dateFilterEnd: $scope.dateFilterEnd
+				}).
+				success(function(data, status, headers, config) {
+					$scope.results = data;
+				});
+
+			} else {
+
+				alert('Please select a start and end date!');
+
+			}
+
+		};
+
 	}
 ]);

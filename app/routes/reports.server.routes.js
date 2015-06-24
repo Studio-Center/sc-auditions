@@ -17,6 +17,9 @@ module.exports = function(app) {
 	app.route('/reports/findMissingAuds')
 		.post(users.requiresLogin, reports.findMissingAuds);
 
+	app.route('/reports/findAuditionsBooked')
+		.post(users.requiresLogin, reports.findAuditionsBooked);
+
 	// Finish by binding the Report middleware
 	app.param('reportId', reports.reportByID);
 };
