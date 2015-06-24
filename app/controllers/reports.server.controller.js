@@ -131,6 +131,170 @@ exports.findMissingAuds = function(req, res){
 	});
 };
 
+exports.findAuditionsBooked = function(req, res){
+
+// method vars
+var statusOpts = [
+					'In Progress', 
+					'On Hold', 
+					'Booked', 
+					'Canceled', 
+					'ReAuditioned', 
+					'Dead', 
+					'Closed - Pending Client Decision', 
+					'Complete'
+				];
+// projects
+var projectsStats = [];
+var projectData = {
+	id: '',
+	name: '',
+	client: [],
+	dueDate: '',
+	projectCoordinator: '',
+	status: '',
+	talentChosen: []
+};
+// stats
+var pCStats = [];
+var pCStatsData = {
+	id: '',
+	name: '',
+	totalInProgress: 0,
+	totalOnHold: 0,
+	totalBooked: 0,
+	totalCanceled: 0,
+	totalPending: 0,
+	totalReAuditioned: 0,
+	totalDead: 0,
+	totalClosed: 0,
+	totalAuditions: 0,
+	totalBookedPercent: 0
+};
+
+// generate start dates
+var yesterday = new Date(req.body.dateFilterStart);
+	yesterday.setDate(yesterday.getDate() - 1);
+	var tomorrow = new Date(req.body.dateFilterEnd);
+	tomorrow.setDate(tomorrow.getDate() + 1);
+
+	// assign filter criteria
+	var searchCriteria = {'estimatedCompletionDate': {$gte: yesterday, $lt: tomorrow}};
+
+	// walk found projects
+	Project.find(searchCriteria).sort('-estimatedCompletionDate').populate('project', 'displayName').exec(function(err, projects) {
+
+		async.eachSeries(projects, function (project, projectCallback) {
+
+			// assign owner data
+			// gather project owner data
+			var ownerId;
+			if(!project.owner){
+				ownerId = project.user;
+			} else{
+				ownerId = project.owner;
+			}
+
+			User.findOne({'_id':ownerId}).sort('-created').exec(function(err, user) {
+				if(user){
+
+					// generate project data
+					projectData = {
+						id: project._id,
+						name: project.title,
+						client: project.client,
+						dueDate: project.estimatedCompletionDate,
+						projectCoordinator: user.displayName,
+						status: new String(project.status),
+						talentChosen: project.talent
+					};
+					projectsStats.push(projectData);
+
+					// generate or update production coordinators stats
+
+					// setup default object
+					pCStatsData = {
+						id: user._id,
+						name: user.displayName,
+						totalInProgress: 0,
+						totalOnHold: 0,
+						totalBooked: 0,
+						totalCanceled: 0,
+						totalPending: 0,
+						totalReAuditioned: 0,
+						totalDead: 0,
+						totalClosed: 0,
+						totalComplete: 0,
+						totalAuditions: 0,
+						totalBookedPercent: 0
+					};
+
+					// check for PC within stats array
+					for(var i = 0; i < pCStats.length; ++i){
+						// find existing instance of PC stats
+						if(pCStats[i].id == String(user._id)){
+							// xfer to variable
+							pCStatsData = pCStats[i];
+							// remove from array
+							pCStats.splice(i, 1);
+						}
+					};
+
+					switch(String(projectData.status)){
+						case 'In Progress':
+							++pCStatsData.totalInProgress;
+						break;
+						case 'On Hold': 
+							++pCStatsData.totalOnHold;
+						break;
+						case 'Booked': 
+							++pCStatsData.totalBooked;
+						break;
+						case 'Canceled': 
+							++pCStatsData.totalBooked;
+						break;
+						case 'ReAuditioned': 
+							++pCStatsData.totalCanceled;
+						break;
+						case 'Dead': 
+							++pCStatsData.totalDead;
+						break;
+						case 'Closed - Pending Client Decision': 
+							++pCStatsData.totalClosed;
+						break;
+					};
+
+					// update auditions count
+					++pCStatsData.totalAuditions;
+
+					// set booked percentage
+					pCStatsData.totalBookedPercent = (pCStatsData.totalBooked / pCStatsData.totalAuditions) * 100;
+
+					pCStatsData.totalBookedPercent = pCStatsData.totalBookedPercent.toFixed(2);
+
+					pCStats.push(pCStatsData);
+
+				}
+
+				projectCallback();
+
+			});
+
+		}, function (err) {
+			if( err && err !== '') {
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
+			} else {
+
+				res.jsonp({pCs: pCStats, projects: projectsStats});
+
+			}
+
+		});
+	});
+};
+
 /**
  * Create a Report
  */
