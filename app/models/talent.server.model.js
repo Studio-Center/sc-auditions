@@ -26,7 +26,7 @@ var TalentSchema = new Schema({
 		type: String
 	},
 	type: {
-		type: Array,
+		type: String,
 		required: 'Please select a Talent type',
 	},
 	exclusivity: {

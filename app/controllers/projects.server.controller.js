@@ -781,10 +781,8 @@ exports.create = function(req, res) {
 
 							// check for email flag
 							emailTalentChk = false;
-							for(var k = 0; k < talents[i].type.length; ++k){
-								if(talents[i].type[k] === 'Email'){
-									emailTalentChk = true;
-								}
+							if(talents[i].type === 'Email'){
+								emailTalentChk = true;
 							}
 
 							// verify talent needs to be emailed

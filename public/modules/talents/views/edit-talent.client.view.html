@@ -44,23 +44,21 @@
                 <div class="form-group">
                     <label class="control-label" for="type">Type</label>
                     <div class="controls">
-                        <div class="btn-group" data-toggle="buttons">
-                        <typeOptions ng-repeat="type in typeOptions">
-                            <input type="checkbox" class="btn btn-primary" ng-model="talent.type[type]" ng-click="toggleType(type)" ng-checked="talent.type.indexOf(type) > -1" btn-checkbox> {{type}}<br>
-                        </typeOptions>
+                        <div class="btn-group">
+                            <label ng-repeat="type in typeOptions" class="btn btn-primary" ng-model="talent.type" btn-radio="type">{{type}}</label>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label" for="unionStatus">Union Status</label><br/>
-                    <div class="btn-group" data-toggle="buttons">
+                    <div class="btn-group">
                         <unionOptions ng-repeat="union in unionOptions">
                             <input type="checkbox" class="btn btn-primary" ng-model="talent.unionStatus[union]" ng-click="toggleUnion(union)" ng-checked="talent.unionStatus.indexOf(union) > -1" btn-checkbox> {{union}}<br>
                         </unionOptions>
                     </div>
                 </div>
                 <div class="form-group" ng-if="checkUnionStatus(talent.unionStatus)">
-                    <div class="btn-group" data-toggle="buttons">
+                    <div class="btn-group">
                         <unionOptions ng-repeat="union in unionJoinedOpts">
                             <input type="checkbox" class="btn btn-primary" ng-model="talent.unionJoined[union]" ng-click="toggleUnionJoin(union)" ng-checked="talent.unionJoined.indexOf(union) > -1" btn-checkbox> {{union}}<br>
                         </unionOptions>
@@ -68,13 +66,13 @@
                 </div>
                 <div class="form-group">
                     <label class="control-label" for="gender">Gender</label><br/>
-                    <div class="btn-group" data-toggle="buttons">
+                    <div class="btn-group">
                         <label class="btn btn-primary" ng-model="talent.gender" btn-radio="'male'">Male</label>
                         <label class="btn btn-primary" ng-model="talent.gender" btn-radio="'female'">Female</label>
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="btn-group" data-toggle="buttons">
+                    <div class="btn-group">
                         <label class="btn btn-primary" ng-model="talent.ageRange" btn-radio="'kid'">Kid</label>
                         <label class="btn btn-primary" ng-model="talent.ageRange" btn-radio="'teen'">Teen</label>
                         <label class="btn btn-primary" ng-model="talent.ageRange" btn-radio="'adult'">Adult</label>
@@ -141,14 +139,14 @@
                 <div class="form-group">
                     <label class="control-label" for="typeCasts">Typecasts</label>
                     <script>
-                      var typecasts = angular.module("typecasts", []);
-                      typecasts.controller("TypecastsController", function($scope) {
-                          $scope.typecasts = Typecasts.query();
-                      });
+                      // var typecasts = angular.module("typecasts", []);
+                      // typecasts.controller("TypecastsController", function($scope) {
+                      //     $scope.typecasts = Typecasts.query();
+                      // });
                     </script>
                     <div class="controls" ng-module="typecasts">
                         <div ng-controller="TypecastsController" data-ng-init="find()">
-                            <div class="btn-group" data-toggle="buttons">
+                            <div class="btn-group">
                                 <typecasts data-ng-repeat="typecast in typecasts">
                                     <input type="checkbox" class="btn btn-primary" ng-model="talent.typeCasts[typecast.name]" btn-checkbox="'{{typecast.name}}'" ng-checked="talent.typeCasts.indexOf(typecast.name) > -1" ng-click="toggleTypecast(typecast.name)"> {{typecast.name}}<br>
                                 </typecasts>
