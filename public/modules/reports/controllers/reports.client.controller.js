@@ -38,5 +38,34 @@ angular.module('reports').controller('ReportsController', ['$scope', '$statePara
 
 		};
 
+		// convert local JSON to CSV for download
+		$scope.convertToCSV = function(localDoc){
+
+			if($scope.dateFilterStart && $scope.dateFilterEnd){
+
+				$http.post('/reports/convertToCSV',
+				{
+					jsonDoc: localDoc
+				}).
+				success(function(data, status, headers, config) {
+					
+					var a         = document.createElement('a');
+					a.href        = 'data:attachment/csv,' + escape(data);
+					a.target      = '_blank';
+					a.download    = 'Auditions-Booked.csv';
+
+					document.body.appendChild(a);
+					a.click();
+
+				});
+
+			} else {
+
+				//alert('Please select a start and end date!');
+
+			}
+
+		};
+
 	}
 ]);
