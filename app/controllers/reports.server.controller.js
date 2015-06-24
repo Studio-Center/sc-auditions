@@ -18,6 +18,7 @@ var mongoose = require('mongoose'),
 	mv = require('mv'),
 	nodemailer = require('nodemailer'),
 	archiver = require('archiver'),
+	json2csv = require('json2csv'),
 	dateFormat = require('dateformat'),
 	// set date and timezone
 	moment = require('moment-timezone'),
@@ -129,6 +130,96 @@ exports.findMissingAuds = function(req, res){
 			
 		}
 	});
+};
+
+exports.convertToCSV = function(req, res){
+
+	var projects = req.body.jsonDoc.projects;
+	var clients = [], talents = [];
+	var fields = [
+					'name',
+					'client',
+					'dueDate',
+					'projectCoordinator',
+					'status',
+					'talentChosen'
+				];
+
+	// cleanup client and talent lists
+	console.log();
+	async.eachSeries(projects, function (project, clientsCallback) {
+
+		clients = [];
+
+		async.eachSeries(project.client, function (client, clientCallback) {
+
+			clients.push(client.name);
+
+			clientCallback();
+
+		}, function (err) {
+			if( err && err !== '') {
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
+			} else {
+				project.client = clients.join(' : ');
+				clientsCallback();
+			}
+		});
+
+	}, function (err) {
+		if( err && err !== '') {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+
+			async.eachSeries(projects, function (project, talentsCallback) {
+
+				talents = [];
+
+				async.eachSeries(project.talentChosen, function (talent, talentCallback) {
+
+					talents.push(talent.name);
+
+					talentCallback();
+				
+				}, function (err) {
+					if( err && err !== '') {
+						return res.status(400).send({
+							message: errorHandler.getErrorMessage(err)
+						});
+					} else {
+						project.talentChosen = talents.join(' : ');
+						talentsCallback();
+					}
+
+				});
+
+			}, function (err) {
+				if( err && err !== '') {
+					return res.status(400).send({
+						message: errorHandler.getErrorMessage(err)
+					});
+				} else {
+
+					json2csv({ data: projects, fields: fields }, function(err, csv) {
+					if (err) console.log(err);
+						console.log(csv);
+						res.header("Content-Disposition", "attachment;filename=Auditions-Booked.csv"); 
+						res.type("text/csv");
+						res.send(csv);
+					});
+
+				}
+
+			});
+
+		}
+
+	});
+
 };
 
 exports.findAuditionsBooked = function(req, res){

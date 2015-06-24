@@ -20,6 +20,9 @@ module.exports = function(app) {
 	app.route('/reports/findAuditionsBooked')
 		.post(users.requiresLogin, reports.findAuditionsBooked);
 
+	app.route('/reports/convertToCSV')
+		.post(users.requiresLogin, reports.convertToCSV);
+
 	// Finish by binding the Report middleware
 	app.param('reportId', reports.reportByID);
 };

@@ -31,7 +31,10 @@
 			</div>
 	    </div>
 	</div>
-    <div class="row">
+    <div class="row" ng-if="results.projects">
+    	<div style="text-align:right">
+    		<p>{{results.projects.length}} record(s) found <a href="" ng-click="convertToCSV(results)" title="download as CSV"><img src="/img/excel.png" alt="excel document image"></a></p>
+    	</div>
     	<table class="table table-striped">
 			<tr>
 				<th>Project</th>
