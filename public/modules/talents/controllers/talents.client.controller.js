@@ -13,7 +13,7 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 		$scope.unionJoinedOpts = ['SAG/AFTRA', 'OTHER'];
 		$scope.unionSelected = [];
 		$scope.unionJoinSelected = [];
-		$scope.typeSelected = [];
+		$scope.typeSelected = 'Email';
 		$scope.selTypecasts = [];
 		// store talent project data
 		$scope.projectTalentIdx = [];
@@ -68,14 +68,7 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 			    $scope.talent.unionJoined.push(union);
 			}
 		};
-		$scope.toggleType = function(type){
-			  var idx = $scope.talent.type.indexOf(type);
-			  if (idx > -1){
-			    $scope.talent.type.splice(idx, 1);
-			  }else{
-			    $scope.talent.type.push(type);
-			}
-		};
+		
 		$scope.toggleTypecast = function(typeCast){
 			  var idx = $scope.talent.typeCasts.indexOf(typeCast);
 			  if (idx > -1){
@@ -101,14 +94,7 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 			    $scope.unionJoinSelected.push(union);
 			}
 		};
-		$scope.toggleNewType = function(type){
-			  var idx = $scope.typeSelected.indexOf(type);
-			  if (idx > -1){
-			    $scope.typeSelected.splice(idx, 1);
-			  }else{
-			    $scope.typeSelected.push(type);
-			}
-		};
+		
 		$scope.toggleNewTypecast = function(typeCast){
 			  var idx = $scope.selTypecasts.indexOf(typeCast);
 			  if (idx > -1){

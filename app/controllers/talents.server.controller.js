@@ -44,11 +44,7 @@ exports.create = function(req, res) {
 					talentData += '<p><strong>Email Alt</strong> ' + talent.email2 + '</p>';
 					talentData += '<p><strong>Phone Number</strong> ' + talent.phone + '</p>';
 					talentData += '<p><strong>Phone Number Alt</strong> ' + talent.phone2 + '</p>';
-					talentData += '<p><strong>Type</strong>';
-					for(i = 0; i < talent.type.length; ++i){
-						talentData += talent.type[i] + ' ';
-					}
-					talentData += '</p>';
+					talentData += '<p><strong>Type</strong>' + talent.type + '</p>';
 					talentData += '<p><strong>Union Status</strong> ';
 					for(i = 0; i < talent.unionStatus.length; ++i){
 						talentData += talent.unionStatus[i] + ' ';
