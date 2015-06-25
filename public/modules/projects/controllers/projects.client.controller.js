@@ -180,8 +180,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				setTimeout(
 					function(){
 						var link = document.createElement("a");
-					    link.download = data.zip;
-					    link.href = 'res/archives/' + data.zip;
+					    link.download = encodeURIComponent(data.zip);
+					    link.href = 'res/archives/' + encodeURIComponent(data.zip);
 					    link.click()
 					},
 				    1000
