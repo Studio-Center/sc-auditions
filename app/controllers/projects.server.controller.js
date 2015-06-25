@@ -1569,7 +1569,8 @@ exports.downloadAllAuditions = function(req, res, next){
 	var relativePath =  'res' + '/' + 'auditions' + '/' + req.body.project._id + '/';
     var newPath = appDir + '/public/' + relativePath;
     var savePath = appDir + '/public/' + 'res' + '/' + 'archives' + '/';
-    var newZip = savePath + req.body.project._id + '_' + req.user._id + '.zip';
+    var zipName = req.body.project.title + '.zip'
+    var newZip = savePath + zipName;
 
     //console.log(newPath);
 
@@ -1577,7 +1578,7 @@ exports.downloadAllAuditions = function(req, res, next){
 	var archive = archiver('zip');
 
 	output.on('close', function() {
-	  res.status(200).end();
+	  res.jsonp({zip:zipName});
 	});
 
     archive.directory(newPath, 'my-auditions');
