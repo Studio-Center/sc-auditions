@@ -26,10 +26,15 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="page-header jumbotron" ng-class="{redBG: project.status == 'In Progress' && checkPassed(project.estimatedCompletionDate), greenBg: project.status == 'Booked', lgreenBG: project.status == 'Closed - Pending Client Decision', orangeBG: project.status == 'On Hold', lgray: project.status == 'Cancelled', mgray: project.status == 'ReAuditioned', gray: project.status == 'Dead', blueBg: project.status == 'In Progress' && compareDates(project.estimatedCompletionDate),lblueBG: project.status == 'In Progress', yellowBg: project.sounders == 'No Sounders - Approved By William' && compareDates(project.estimatedCompletionDate), lyellowBg: project.sounders == 'No Sounders - Approved By William'}">
-					<p><strong>{{project.title}} Due {{project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST {{project.status[0]}}</strong></p>
+					<p><strong>{{project.title}} Due {{project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST 
+						- <span ng-if="project.status[0] != 'In Progress'">Auditions Complete</span><span ng-if="project.status[0] == 'In Progress'">{{project.status[0]}}</span></strong></p>
 				</div>
 			</div>
 
+		</div>
+
+		<div class="row audition" ng-if="project.auditions.length == 0">
+			<p style="text-align:center"><strong>We are working hard on your auditions, please check back soon as we will be posting them throughout the day.</strong></p>
 		</div>
 
 		<div class="row audition" ng-if="project.auditions.length > 0">
@@ -42,19 +47,7 @@
 						</div>
 					</div>
 				  	<div class="row">
-						<div class="col-md-3" style="text-align:center">
-							<a href="" ng-click="predicate = 'file.name'; reverse=false">Name</a>
-							(<a href="" ng-click="predicate = '-file.name'; reverse=false">^</a>)
-						</div>
-						<div class="col-md-3" style="text-align:center">
-							<a href="" ng-click="predicate = 'avgRating'; reverse=false">Rating</a>
-							(<a href="" ng-click="predicate = '-avgRating'; reverse=false">^</a>)
-						</div>
-						<div class="col-md-3" style="text-align:center">
-							<a href="" ng-click="predicate = 'favorite'; reverse=false">Favorite</a>
-							(<a href="" ng-click="predicate = '-favorite'; reverse=false">^</a>)
-						</div>
-						<div class="col-md-3" style="text-align:center">
+						<div class="col-md-12" style="text-align:center">
 							[ <a href="" ng-click="predicate=''">unsorted</a> ]
 						</div>
 					</div>
@@ -66,10 +59,13 @@
 								<tr>
 									<th>Sel</th>
 									<th>#</th>
-									<th>Name</th>
-									<th>Rating</th>
+									<th><a href="" ng-click="predicate = 'file.name'; reverse=false">Name</a>
+							(<a href="" ng-click="predicate = '-file.name'; reverse=false">^</a>)</th>
+									<th><a href="" ng-click="predicate = 'avgRating'; reverse=false">Rating</a>
+							(<a href="" ng-click="predicate = '-avgRating'; reverse=false">^</a>)</th>
 									<th>Playback</th>
-									<th>Favorite</th>
+									<th><a href="" ng-click="predicate = 'favorite'; reverse=false">Favorite</a>
+							(<a href="" ng-click="predicate = '-favorite'; reverse=false">^</a>)</th>
 									<th>Hide</th>
 								</tr>
 							<tr ng-if="isDisplayed(audition.file.path)" ng-repeat="(key, audition) in project.auditions | orderBy:predicate:reverse">
