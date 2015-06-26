@@ -36,6 +36,10 @@ var ProjectSchema = new Schema({
 	scopeCreep: {
 		type: Number
 	},
+	preClose: {
+		type: Boolean,
+		default: false
+	},
 	phases: {
 		type: Array,
 		default: [{

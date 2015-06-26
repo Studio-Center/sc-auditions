@@ -1071,7 +1071,7 @@ exports.deleteById = function(req, res) {
 				} else {
 					Project.find().sort('-created').populate('user', 'displayName').exec(function(err, projects) {
 						if (err) {
-							console.log(err);
+
 							return res.status(400).send({
 								message: errorHandler.getErrorMessage(err)
 							});
