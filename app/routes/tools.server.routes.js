@@ -5,9 +5,7 @@ module.exports = function(app) {
 	var tools = require('../../app/controllers/tools');
 
 	// Tools Routes
-	app.route('/tools')
-		.get(tools.list)
-		.post(users.requiresLogin, tools.create);
+	app.route('/tools');
 
 	// app.route('/tools/:toolId')
 	// 	.get(tools.read)
@@ -17,6 +15,9 @@ module.exports = function(app) {
 	// custom tools routes
 	app.route('/tools/sendtalentemails')
 		.post(users.requiresLogin, tools.sendTalentEmails);
+
+	app.route('/tools/sendPreCloseSummary')
+		.get(tools.sendPreCloseSummary);
 
 	// call list routes
 	app.route('/tools/gatherTalentsToCall')
@@ -28,6 +29,4 @@ module.exports = function(app) {
 	app.route('/tools/gatherTalentsAlreadyScheduled')
 		.post(users.requiresLogin, tools.gatherTalentsAlreadyScheduled);
 
-	// Finish by binding the Tool middleware
-	app.param('toolId', tools.toolByID);
 };

@@ -299,90 +299,264 @@ exports.gatherTalentsAlreadyScheduled = function(req, res){
 
 };
 
-/**
- * Create a Tool
- */
-exports.create = function(req, res) {
-	var tool = new Tool(req.body);
-	tool.user = req.user;
+// gather and send list of pre close summary emails
+exports.sendPreCloseSummary = function(req, res){
 
-	tool.save(function(err) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
+	// method vars
+	var emailCnt = 0;
+
+	var currentTime = new Date();
+	//currentTime.setDate(currentTime.getHours() - 1);
+	var inOneHour = new Date();
+	inOneHour.setHours(inOneHour.getHours() + 1);
+
+	var searchCriteria = {
+							'estimatedCompletionDate': 
+													{
+														$gte: currentTime, 
+														$lte: inOneHour
+													},
+							'preClose': false
+						};
+
+	// gather projects ending in the next hour
+	Project.find(searchCriteria).sort('-estimatedCompletionDate').populate('project', 'displayName').exec(function(err, projects) {
+		
+		// walk through all associated projects
+		async.eachSeries(projects, function (project, callback) {
+
+			// gather associated emails per project
+			async.waterfall([
+				// gather owner data
+				function(done) {
+					var ownerId;
+					if(!project.owner){
+						ownerId = project.user;
+					} else{
+						ownerId = project.owner;
+					}
+
+					User.findOne({'_id':ownerId}).sort('-created').exec(function(err, owner) {
+						done(err, owner);
+					});
+				},
+				// gather all producers and the talent directors
+				function(owner, done){
+
+					var searchGroups = [
+										'admin', 
+										'producer/auditions director', 
+										'production coordinator', 
+										'talent director'
+										];
+
+					User.where('roles').in(searchGroups).sort('-created').exec(function(err, producers) {
+						done(err, owner, producers);
+					});
+				},
+				// gather producers emails
+				function(owner, producers, done){
+
+					var producersEmails = [];
+
+					async.eachSeries(producers, function (producer, producerCallback) {
+
+						producersEmails.push(producers.email);
+
+						producerCallback();
+
+					}, function (err) {
+						if( err ) {
+							return res.status(400).send({
+								message: errorHandler.getErrorMessage(err)
+							});
+						} else {
+							done(err, owner, producersEmails);
+						}
+			       	});
+				},
+				// gather talent info
+				function(owner, producers, done){
+
+					// walk through all current talents assigned to project then query talent data
+					var talentIds = [];
+					for(var i = 0; i < project.talent.length; ++i){
+						talentIds[i] = project.talent[i].talentId;
+					}
+
+					Talent.where('_id').in(talentIds).sort('-created').exec(function(err, talents) {
+						done(err, talents, owner, producers);
+					});
+
+				},
+				// filter selected talents
+				function(talents, owner, producers, done){
+					var shortTblHeader = '<table><tr><th>First Name</th><th>Last Name</th></tr>';
+					var longTblHeader = '<table><tr><th>First Name</th><th>Last Name</th><th>Phone #</th><th>Alt Phone #</th><th>Location</th><th>Email</th></tr>';
+					var talentPosted = '<p>Talent Posted:</p>' + shortTblHeader, 
+						talentNotCalled = '<p>Talent Not Called:</p>' + longTblHeader, 
+						talentNotPosted = '<p>Talent Not Posted:</p>' + shortTblHeader, 
+						talentOut = '<p>Talent Out:</p>' + shortTblHeader;
+
+					async.eachSeries(talents, function (talent, talentCallback) {
+
+						for(var j = 0; j < project.talent.length; ++j){
+							if(project.talent[j].talentId === String(talent._id)){
+
+								// sort current talent into correct list
+								switch(project.talent[j].status){
+									case 'Posted':
+										talentPosted += '<tr><td>' + 
+														talent.name +
+														'</td><td>' +
+														talent.lastName +
+														'</td></tr>';
+									break;
+									case 'Cast':
+										talentNotCalled += '<tr><td>' + 
+														talent.name + ' ' + talent.lastName
+														'</td><td>' +
+														talent.parentName +
+														'</td><td>' +
+														talent.phone +
+														'</td><td>' +
+														talent.phone2 +
+														'</td><td>' +
+														talent.locationISDN +
+														'</td><td>' +
+														talent.email +
+														'</td></tr>';
+									break;
+									case 'Cast':
+									case 'Emailed':
+									case 'Scheduled':
+									case 'Message left':
+									case 'Received needs to be posted':
+										talentNotPosted += '<tr><td>' + 
+														talent.name +
+														'</td><td>' +
+														talent.lastName +
+														'</td></tr>';
+									break;
+									case 'Out':
+										talentOut += '<tr><td>' + 
+														talent.name +
+														'</td><td>' +
+														talent.lastName +
+														'</td></tr>';
+									break;
+								};
+
+								talentCallback();
+							}
+						}
+
+					}, function (err) {
+						if( err ) {
+							return res.status(400).send({
+								message: errorHandler.getErrorMessage(err)
+							});
+						} else {
+							// close all tables
+							talentPosted += '</table>';
+							talentNotCalled += '</table>';
+							talentNotPosted += '</table>';
+							talentOut += '</table>';
+
+							done(err, talentPosted, talentNotCalled, talentNotPosted, talentOut, owner, producers);
+						}
+			       	});
+				},
+				function(talentPosted, talentNotCalled, talentNotPosted, talentOut, owner, producers, done){
+
+					// generate email signature
+					var newDate = new Date(project.estimatedCompletionDate);
+					newDate = newDate.setHours(newDate.getHours() - 1);
+					newDate = dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT');
+
+					var emailSig = '';
+					if(owner.emailSignature){
+						emailSig = owner.emailSignature;
+					} else {
+						emailSig = '';
+					}
+
+					res.render('templates/projects/pre-close-summary-email', {
+						talentPosted: talentPosted, 
+						talentNotCalled: talentNotCalled, 
+						talentNotPosted: talentNotPosted, 
+						talentOut: talentOut,
+						project: project,
+						dueDate: newDate,
+						emailSignature: emailSig,
+					}, function(err, summaryEmailHTML) {
+						done(err, owner, producers, summaryEmailHTML);
+					});
+
+				},
+				// send out talent project creation email
+				function(owner, producers, summaryEmailHTML, done) {
+					// send email
+					// generate email signature
+					var newDate = new Date(project.estimatedCompletionDate);
+					newDate = newDate.setHours(newDate.getHours() - 1);
+					newDate = dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT');
+
+					var transporter = nodemailer.createTransport(config.mailer.options);
+
+					var emailSubject = project.title + ' - Pre-Close Summary (Due in 1 hr)' + ' - Due ' + newDate + ' EST';
+
+					var mailOptions = {
+						to: owner.email,
+						cc: producers,
+						from: owner.email || config.mailer.from,
+						replyTo: owner.email || config.mailer.from,
+						subject: emailSubject,
+						html: summaryEmailHTML
+					};
+					transporter.sendMail(mailOptions, function(err){
+						++emailCnt;
+						done(err);
+					});
+				},
+				// update project to prevent resending of email
+				function(done){
+
+					Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
+						if (err) return next(err);
+						if (! project) return next(new Error('Failed to load Project '));
+						req.project = project ;
+
+						// update preclose status
+						project.preClose = true;
+
+						project = _.extend(req.project, project);
+
+						project.save(function(err) {
+							done(err);
+						});
+					});
+				}
+				], function(err) {
+				if (err) {
+					return res.json(400, err);
+				} else {
+					callback();
+				}
 			});
-		} else {
-			res.jsonp(tool);
-		}
+
+		}, function (err) {
+			if( err ) {
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
+			} else {
+				res.jsonp({status: 'success', sendCount: emailCnt});
+			}
+       	});
+
 	});
-};
 
-/**
- * Show the current Tool
- */
-exports.read = function(req, res) {
-	res.jsonp(req.tool);
-};
-
-/**
- * Update a Tool
- */
-exports.update = function(req, res) {
-	var tool = req.tool ;
-
-	tool = _.extend(tool , req.body);
-
-	tool.save(function(err) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(tool);
-		}
-	});
-};
-
-/**
- * Delete an Tool
- */
-exports.delete = function(req, res) {
-	var tool = req.tool ;
-
-	tool.remove(function(err) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(tool);
-		}
-	});
-};
-
-/**
- * List of Tools
- */
-exports.list = function(req, res) { Tool.find().sort('-created').populate('user', 'displayName').exec(function(err, tools) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(tools);
-		}
-	});
-};
-
-/**
- * Tool middleware
- */
-exports.toolByID = function(req, res, next, id) { Tool.findById(id).populate('user', 'displayName').exec(function(err, tool) {
-		if (err) return next(err);
-		if (! tool) return next(new Error('Failed to load Tool ' + id));
-		req.tool = tool ;
-		next();
-	});
 };
 
 /**
