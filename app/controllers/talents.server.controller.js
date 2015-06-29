@@ -172,8 +172,10 @@ exports.create = function(req, res) {
 				], function(err) {
 				if (err) return console.log(err);
 			});
+				var socketio = req.app.get('socketio');
+				socketio.sockets.emit('talentsListUpdate'); 
 
-				res.jsonp(talent);
+				return res.jsonp(talent);
 			}
 		});
 	} else {
@@ -289,6 +291,9 @@ exports.delete = function(req, res) {
 				if (err) {
 					done(err);
 				} else {
+					var socketio = req.app.get('socketio');
+					socketio.sockets.emit('talentsListUpdate'); 
+
 					res.jsonp(talent);
 					done(err);
 				}

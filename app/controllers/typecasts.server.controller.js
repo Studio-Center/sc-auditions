@@ -24,7 +24,10 @@ exports.create = function(req, res) {
 					message: errorHandler.getErrorMessage(err)
 				});
 			} else {
-				res.jsonp(typecast);
+				var socketio = req.app.get('socketio');
+				socketio.sockets.emit('typecastsListUpdate'); 
+				
+				return res.jsonp(typecast);
 			}
 		});
 	} else {
@@ -70,6 +73,9 @@ exports.delete = function(req, res) {
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
+			var socketio = req.app.get('socketio');
+			socketio.sockets.emit('typecastsListUpdate'); 
+			
 			res.jsonp(typecast);
 		}
 	});

@@ -1,8 +1,8 @@
 'use strict';
 
 // Talents controller
-angular.module('talents').controller('TalentsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Talents', '$http', '$rootScope',
-	function($scope, $stateParams, $location, Authentication, Talents, $http, $rootScope) {
+angular.module('talents').controller('TalentsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Talents', '$http', '$rootScope', 'Socket',
+	function($scope, $stateParams, $location, Authentication, Talents, $http, $rootScope, Socket) {
 		$scope.authentication = Authentication;
 
 		// talent static options
@@ -187,6 +187,10 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 		$scope.find = function() {
 			$scope.talents = Talents.query();
 		};
+
+		Socket.on('talentsListUpdate', function() {
+			$scope.find();
+		});
 
 		// Find existing Talent
 		$scope.findOne = function() {
