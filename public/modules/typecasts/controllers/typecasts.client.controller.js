@@ -1,8 +1,8 @@
 'use strict';
 
 // Typecasts controller
-angular.module('typecasts').controller('TypecastsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Typecasts',
-	function($scope, $stateParams, $location, Authentication, Typecasts ) {
+angular.module('typecasts').controller('TypecastsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Typecasts', 'Socket',
+	function($scope, $stateParams, $location, Authentication, Typecasts, Socket ) {
 		$scope.authentication = Authentication;
 
 		// used for paginator
@@ -81,6 +81,10 @@ angular.module('typecasts').controller('TypecastsController', ['$scope', '$state
 		$scope.find = function() {
 			$scope.typecasts = Typecasts.query();
 		};
+
+		Socket.on('typecastsListUpdate', function() {
+			$scope.find();
+		});
 
 		// Find existing Typecast
 		$scope.findOne = function() {
