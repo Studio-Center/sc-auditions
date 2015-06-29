@@ -1,8 +1,8 @@
 'use strict';
 
 // Projects controller
-angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$upload', 'ngAudio', '$http', '$modal', '$rootScope',
-	function($scope, $stateParams, $location, Authentication, Projects, $upload, ngAudio, $http, $modal, $rootScope ) {
+angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$upload', 'ngAudio', '$http', '$modal', '$rootScope', 'Socket',
+	function($scope, $stateParams, $location, Authentication, Projects, $upload, ngAudio, $http, $modal, $rootScope, Socket ) {
 		$scope.authentication = Authentication;
 
 		// rating
@@ -1068,6 +1068,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.find = function() {
 			$scope.projects = Projects.query();
 		};
+
+		Socket.on('projectsListUpdate', function() {
+			$scope.find();
+		});
 
 		// find single project by id
 		$scope.findOneById = function(id) {

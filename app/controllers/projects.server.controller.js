@@ -99,8 +99,8 @@ exports.sendEmail = function(req, res){
 				});
 			},
 			], function(err) {
-					//if (err) return console.log(err);
-			});
+				//if (err) return console.log(err);
+		});
 
 	}
 };
@@ -487,14 +487,17 @@ exports.sendClientEmail = function(req, res){
 						});
 					}
 					], function(err) {
-					if (err) return res.json(400, err);
+					if (err) {
+						return res.json(400, err);
+					} else {
+						return res.json(200);
+					}
 				});
 			})();
 		}
 
 	});
-
-	return res.json(200);
+	
 };
 
 // send emails from lead form
@@ -834,7 +837,10 @@ exports.create = function(req, res) {
 							message: errorHandler.getErrorMessage(err)
 						});
 					} else {
-						res.jsonp(project);
+						// emit an event for all connected clients
+						var socketio = req.app.get('socketio');
+						socketio.sockets.emit('projectsListUpdate'); 
+						return res.jsonp(project);
 					}
 				});
 			},
@@ -896,7 +902,7 @@ var renameFiles = function(project,res){
 		var file = appDir + '/public/res/auditions/' + project._id + '/' + project.auditions[i].file.name;
 		var newFile = appDir + '/public/res/auditions/' + project._id + '/' + project.auditions[i].rename;
 
-		// move file is exists
+		// move file if exists
 		if (fs.existsSync(file) && project.auditions[i].rename !== '') {
 			mv(file, newFile, function(err) {
 		        if (err){
@@ -982,7 +988,7 @@ exports.update = function(req, res) {
 					if (err) {
 						done(err);
 					} else {
-						res.jsonp(project);
+						return res.jsonp(project);
 					}
 				});
 			}
@@ -1041,7 +1047,10 @@ exports.delete = function(req, res) {
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
-			res.jsonp(project);
+			// emit an event for all connected clients
+			var socketio = req.app.get('socketio');
+			socketio.sockets.emit('projectsListUpdate'); 
+			return res.jsonp(project);
 		}
 	});
 };
@@ -1071,12 +1080,11 @@ exports.deleteById = function(req, res) {
 				} else {
 					Project.find().sort('-created').populate('user', 'displayName').exec(function(err, projects) {
 						if (err) {
-
 							return res.status(400).send({
 								message: errorHandler.getErrorMessage(err)
 							});
 						} else {
-							res.jsonp(projects);
+							return res.jsonp(projects);
 						}
 					});
 				}
@@ -1107,7 +1115,7 @@ exports.getTalentFilteredProjects = function(req, res){
 					message: errorHandler.getErrorMessage(err)
 				});
 			} else {
-				res.jsonp(projects);
+				return res.jsonp(projects);
 			}
 		});
 	} else {
@@ -1117,7 +1125,7 @@ exports.getTalentFilteredProjects = function(req, res){
 					message: errorHandler.getErrorMessage(err)
 				});
 			} else {
-				res.jsonp(projects);
+				return res.jsonp(projects);
 			}
 		});
 	} 
@@ -1141,7 +1149,7 @@ exports.list = function(req, res) {
 					message: errorHandler.getErrorMessage(err)
 				});
 			} else {
-				res.jsonp(projects);
+				return res.jsonp(projects);
 			}
 		});
 
@@ -1163,7 +1171,7 @@ exports.list = function(req, res) {
 										message: errorHandler.getErrorMessage(err)
 									});
 								} else {
-									res.jsonp(projects);
+									return res.jsonp(projects);
 								}
 							});
 						break;
@@ -1175,7 +1183,7 @@ exports.list = function(req, res) {
 										message: errorHandler.getErrorMessage(err)
 									});
 								} else {
-									res.jsonp(projects);
+									return res.jsonp(projects);
 								}
 							});
 						break;
@@ -1187,7 +1195,7 @@ exports.list = function(req, res) {
 									});
 								} else {
 									//console.log(projects);
-									res.jsonp(projects);
+									return res.jsonp(projects);
 								}
 							});
 						break;
@@ -1199,7 +1207,7 @@ exports.list = function(req, res) {
 										message: errorHandler.getErrorMessage(err)
 									});
 								} else {
-									res.jsonp(projects);
+									return res.jsonp(projects);
 								}
 							});						
 						break;
@@ -1265,9 +1273,9 @@ exports.uploadFile = function(req, res, next){
     mv(tempPath, newPath, function(err) {
         //console.log(err);
         if (err){
-            res.status(500).end();
+            return res.status(500).end();
         }else{
-            res.status(200).end();
+            return res.status(200).end();
         }
     });
 };
@@ -1304,7 +1312,7 @@ exports.uploadScript = function(req, res, next){
     mv(tempPath, newPath, function(err) {
         //console.log(err);
         if (err){
-            res.status(500).end();
+            return res.status(500).end();
         }else{
         	Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
 				if (err) return next(err);
@@ -1331,7 +1339,7 @@ exports.uploadScript = function(req, res, next){
 							message: errorHandler.getErrorMessage(err)
 						});
 					} else {
-						res.jsonp(project);
+						return res.jsonp(project);
 					}
 				});
 			});
@@ -1372,7 +1380,7 @@ exports.uploadReferenceFile = function(req, res, next){
     mv(tempPath, newPath, function(err) {
         //console.log(err);
         if (err){
-            res.status(500).end();
+            return res.status(500).end();
         }else{
         	Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
 				if (err) return next(err);
@@ -1399,7 +1407,7 @@ exports.uploadReferenceFile = function(req, res, next){
 							message: errorHandler.getErrorMessage(err)
 						});
 					} else {
-						res.jsonp(project);
+						return res.jsonp(project);
 					}
 				});
 			});
@@ -1440,9 +1448,9 @@ exports.uploadTempReferenceFile = function(req, res, next){
 
     mv(tempPath, newPath, function(err) {
         if (err){
-            res.status(500).end();
+            return res.status(500).end();
         }else{
-            res.jsonp(referenceFiles);
+            return res.jsonp(referenceFiles);
         }
     });
 };
@@ -1478,9 +1486,9 @@ exports.uploadTempScript = function(req, res, next){
 
     mv(tempPath, newPath, function(err) {
         if (err){
-            res.status(500).end();
+            return res.status(500).end();
         }else{
-            res.jsonp(scripts);
+            return res.jsonp(scripts);
         }
     });
 };
@@ -1553,7 +1561,7 @@ exports.uploadAudition = function(req, res, next){
 							message: errorHandler.getErrorMessage(err)
 						});
 					} else {
-						res.jsonp(project);
+						return res.jsonp(project);
 					}
 				});
 			});
@@ -2028,7 +2036,7 @@ exports.uploadBackup = function(req, res, next){
 										message: errorHandler.getErrorMessage(err)
 									});
 								} else {
-									res.jsonp(projects);
+									return res.jsonp(projects);
 								}
 							});
 

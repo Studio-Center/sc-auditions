@@ -5,9 +5,7 @@ module.exports = function(app) {
 	var reports = require('../../app/controllers/reports');
 
 	// Reports Routes
-	app.route('/reports')
-		.get(reports.list)
-		.post(users.requiresLogin, reports.create);
+	app.route('/reports');
 
 	// app.route('/reports/:reportId')
 	// 	.get(reports.read)
@@ -23,6 +21,4 @@ module.exports = function(app) {
 	app.route('/reports/convertToCSV')
 		.post(users.requiresLogin, reports.convertToCSV);
 
-	// Finish by binding the Report middleware
-	app.param('reportId', reports.reportByID);
 };
