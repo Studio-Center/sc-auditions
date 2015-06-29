@@ -73,7 +73,7 @@
 								<td>
 									<input ng-if="!audition.booked" type="checkbox" ng-click="selAudition(audition.file.path)" ng-checked="selCheck(audition.file.path)" ng-model="selectedAuditions" ng-true-value="{{key}}">
 
-									<img ng-if="audition.booked" src="/img/green-check.png" style="width:40px;height:auto">
+									<img ng-if="audition.booked" src="/img/green-check.png" style="width:30px;height:auto">
 								</td>
 								<td>
 									<strong>{{key+1}}.</strong> 
@@ -85,7 +85,7 @@
 									<rating ng-model="audition.avgRating" readonly="false" ng-click="updateRating(audition.file.path, false)" max="max" on-leave="overStar = audition.avgRating" on-hover="hoveringOver(value,key)"></rating>
 									<style>
 										.glyphicon-star, .glyphicon-star-empty {
-											font-size: 40px;
+											font-size: 25px;
 										}
 									</style>
 								</td>
@@ -104,10 +104,10 @@
 								</td>
 								<td>
 									<span ng-if="audition.favorite == 1">
-										<a href="" ng-click="updateFavorite(audition.file.path, false)"><img src="/img/gold-trophy.png" alt="favorited audition"></a>
+										<a href="" ng-click="updateFavorite(audition.file.path, false)"><img style="width:35px;height:auto" src="/img/gold-trophy.png" alt="favorited audition"></a>
 									</span>
 									<span ng-if="audition.favorite != 1">
-										<a href="" ng-click="updateFavorite(audition.file.path, false)"><img src="/img/gray-trophy.png" alt="favorited audition"></a>
+										<a href="" ng-click="updateFavorite(audition.file.path, false)"><img style="width:35px;height:auto" src="/img/gray-trophy.png" alt="favorited audition"></a>
 									</span>
 								</td>
 								<td>
