@@ -60,12 +60,12 @@
 									<th>Sel</th>
 									<th>#</th>
 									<th><a href="" ng-click="predicate = 'file.name'; reverse=false">Name</a>
-							(<a href="" ng-click="predicate = '-file.name'; reverse=false">^</a>)</th>
+										(<a href="" ng-click="predicate = '-file.name'; reverse=false">^</a>)</th>
 									<th><a href="" ng-click="predicate = 'avgRating'; reverse=false">Rating</a>
-							(<a href="" ng-click="predicate = '-avgRating'; reverse=false">^</a>)</th>
+										(<a href="" ng-click="predicate = '-avgRating'; reverse=false">^</a>)</th>
 									<th>Playback</th>
 									<th><a href="" ng-click="predicate = 'favorite'; reverse=false">Favorite</a>
-							(<a href="" ng-click="predicate = '-favorite'; reverse=false">^</a>)</th>
+										(<a href="" ng-click="predicate = '-favorite'; reverse=false">^</a>)</th>
 									<th>Hide</th>
 								</tr>
 							<tr ng-if="isDisplayed(audition.file.path)" ng-repeat="(key, audition) in project.auditions | orderBy:predicate:reverse">
@@ -73,7 +73,7 @@
 								<td>
 									<input ng-if="!audition.booked" type="checkbox" ng-click="selAudition(audition.file.path)" ng-checked="selCheck(audition.file.path)" ng-model="selectedAuditions" ng-true-value="{{key}}">
 
-									<img ng-if="audition.booked" src="/img/green-check.png" style="width:20px;height:auto">
+									<img ng-if="audition.booked" src="/img/green-check.png" style="width:40px;height:auto">
 								</td>
 								<td>
 									<strong>{{key+1}}.</strong> 
@@ -83,6 +83,11 @@
 								</td>
 								<td>
 									<rating ng-model="audition.avgRating" readonly="false" ng-click="updateRating(audition.file.path, false)" max="max" on-leave="overStar = audition.avgRating" on-hover="hoveringOver(value,key)"></rating>
+									<style>
+										.glyphicon-star, .glyphicon-star-empty {
+											font-size: 40px;
+										}
+									</style>
 								</td>
 								<td>
 									<span ng-show="verifyAudio(key)">
