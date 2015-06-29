@@ -252,6 +252,7 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 			if($scope.projectsList.length > 0){
 				var con = confirm('Are you sure?');
 				if(con === true){
+
 					$http.post('/projects/backupProjectsById', {
 				        projectList: $scope.projectsList
 				    }).
@@ -260,8 +261,8 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 						setTimeout(
 							function(){
 								var link = document.createElement("a");
-							    link.download = Authentication.user._id + '_backup_bundle.zip';
-							    link.href = 'res/archives/' + Authentication.user._id + '_backup_bundle.zip';
+							    link.download = data.zippedFilename;
+							    link.href = 'res/archives/' + encodeURIComponent(data.zippedFilename);
 							    link.click()
 							},
 						    1000
