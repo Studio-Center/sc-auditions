@@ -256,6 +256,8 @@ var sendTalentEmail = function(req, res, project, talent){
 					if (err) {
 						done(err);
 					} else {
+						var socketio = req.app.get('socketio');
+						socketio.sockets.emit('projectUpdate', {id: project._id}); 
 						res.json(project);
 					}
 				});			
@@ -358,6 +360,8 @@ exports.updateSingleTalentStatus = function (req, res){
 		if (err) {
 			return res.json(400, err);
 		} else {
+			var socketio = req.app.get('socketio');
+			socketio.sockets.emit('projectUpdate', {id: project._id}); 
 			return res.json(200);
 		}
 	});
@@ -383,6 +387,8 @@ exports.updateTalentStatus = function(req, res){
 				if (err) {
 					return res.json(400, err);
 				} else {
+					var socketio = req.app.get('socketio');
+						socketio.sockets.emit('projectUpdate', {id: project._id}); 
 					res.json(200);
 				}
 			});	
@@ -988,6 +994,9 @@ exports.update = function(req, res) {
 					if (err) {
 						done(err);
 					} else {
+						var socketio = req.app.get('socketio');
+						socketio.sockets.emit('projectUpdate', {id: project._id}); 
+
 						return res.jsonp(project);
 					}
 				});
@@ -1339,6 +1348,8 @@ exports.uploadScript = function(req, res, next){
 							message: errorHandler.getErrorMessage(err)
 						});
 					} else {
+						var socketio = req.app.get('socketio');
+						socketio.sockets.emit('projectUpdate', {id: project._id}); 
 						return res.jsonp(project);
 					}
 				});
@@ -1407,6 +1418,8 @@ exports.uploadReferenceFile = function(req, res, next){
 							message: errorHandler.getErrorMessage(err)
 						});
 					} else {
+						var socketio = req.app.get('socketio');
+						socketio.sockets.emit('projectUpdate', {id: project._id}); 
 						return res.jsonp(project);
 					}
 				});
@@ -1561,6 +1574,8 @@ exports.uploadAudition = function(req, res, next){
 							message: errorHandler.getErrorMessage(err)
 						});
 					} else {
+						var socketio = req.app.get('socketio');
+						socketio.sockets.emit('projectUpdate', {id: project._id}); 
 						return res.jsonp(project);
 					}
 				});
@@ -1641,6 +1656,8 @@ exports.bookAuditions = function(req, res, next){
 				project = _.extend(project, newProject);
 
 				project.save(function(err) {
+					var socketio = req.app.get('socketio');
+						socketio.sockets.emit('projectUpdate', {id: project._id}); 
 					done(err, selAuds, project);
 				});
 

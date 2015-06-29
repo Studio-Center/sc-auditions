@@ -1088,6 +1088,14 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		};
 
+		Socket.on('projectUpdate', function(pojectData) {
+
+			if(pojectData.id === String($scope.project._id)){
+				$scope.findOne();
+			}
+
+		});
+
 		// Find existing Project
 		$scope.findOne = function() {
 			$scope.project = Projects.get({ 
