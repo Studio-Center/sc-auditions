@@ -83,11 +83,6 @@
 								</td>
 								<td>
 									<rating ng-model="audition.avgRating" readonly="false" ng-click="updateRating(audition.file.path, false)" max="max" on-leave="overStar = audition.avgRating" on-hover="hoveringOver(value,key)"></rating>
-									<style>
-										.glyphicon-star, .glyphicon-star-empty {
-											font-size: 25px;
-										}
-									</style>
 								</td>
 								<td>
 									<span ng-show="verifyAudio(key)">
@@ -120,6 +115,23 @@
 					</div>
 				</div>
 			</div>
+
+			<style>
+				.glyphicon-star, .glyphicon-star-empty {
+					font-size: 25px;
+				}
+				.table{
+					font-size: 20px;
+				}
+				@media(max-width:1000px){
+					.glyphicon-star, .glyphicon-star-empty {
+					font-size: 14px;
+					}
+					.table{
+						font-size: 14px;
+					}
+				}
+			</style>
 
 			<div class="panel panel-default">
 				<div class="panel-heading">
