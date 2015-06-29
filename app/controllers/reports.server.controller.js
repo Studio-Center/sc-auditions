@@ -206,7 +206,7 @@ exports.convertToCSV = function(req, res){
 
 					json2csv({ data: projects, fields: fields }, function(err, csv) {
 					if (err) console.log(err);
-						console.log(csv);
+
 						res.header("Content-Disposition", "attachment;filename=Auditions-Booked.csv"); 
 						res.type("text/csv");
 						res.send(csv);

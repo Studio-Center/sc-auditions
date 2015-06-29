@@ -1750,9 +1750,17 @@ exports.backupProjectsById = function(req, res, next){
 	// get app dir
 	var appDir = path.dirname(require.main.filename);
     var archivesPath = appDir + '/public/' + 'res' + '/' + 'archives' + '/';
-    var newZip = archivesPath + req.user._id + '_backup_bundle.zip';
+	var curDate = moment().format("MMM Do YY");
+	var zippedFilename = 'Auditions Project Backup Bundle - ' + curDate + '.zip';
+    var newZip = archivesPath + zippedFilename;
     var backupDir = archivesPath + req.user._id + '_backup'
     var auditionsDir, scriptsDir, referenceFilesDir, projectBuDir;
+    
+    // remove existing backup file
+    if (fs.existsSync(newZip)) {
+    	rimraf.sync(newZip);
+    }
+
     // archiver settings
     var output = fs.createWriteStream(newZip);
 	var archive = archiver('zip');
@@ -1761,7 +1769,7 @@ exports.backupProjectsById = function(req, res, next){
 	  // delete temp files
 	  rimraf.sync(backupDir);
 	  // inform user of file download
-	  res.status(200).end();
+	  res.jsonp({zippedFilename: zippedFilename});
 	});
 
 	// create backup directory
@@ -1814,13 +1822,7 @@ exports.backupProjectsById = function(req, res, next){
 			    done('');
 			}
 			], function(err) {
-				if (err) {
-					return res.status(400).send({
-						message: errorHandler.getErrorMessage(err)
-					});
-				} else {
-					callback();
-				}
+				callback(err);
 			});
 		});
 
