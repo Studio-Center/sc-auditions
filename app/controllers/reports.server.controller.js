@@ -5,7 +5,6 @@
  */
 var mongoose = require('mongoose'),
 	errorHandler = require('./errors'),
-	Report = mongoose.model('Report'),
 	Project = mongoose.model('Project'),
 	User = mongoose.model('User'),
 	Talent = mongoose.model('Talent'),
