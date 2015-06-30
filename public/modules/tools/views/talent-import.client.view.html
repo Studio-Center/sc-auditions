@@ -1,0 +1,35 @@
+<section data-ng-controller="ToolsController">
+    <div class="page-header">
+        <h1>Upload Talents</h1>
+    </div>
+    <div class="col-md-12">
+    	<div class="row">
+            <div class="col-md-12">
+                <h4>Upload Talent File: (*.csv only!)</h4>
+
+                <div ng-file-drop ng-file-select="uploadTalentFile($files)" ng-model="files" ng-model-rejected="rejFiles"
+                 drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}" class="drop-box"
+                 ng-multiple="true" ng-accept="'*.csv'"
+                 drop-available="dropAvailable">
+                    <div ng-hide="dropAvailable">File Drop not available</div>
+                    <div ng-show="dropAvailable">Drop *.csv files..</div>
+                    <div>or click to select</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" style="position:fixed;bottom:0;background:#fff;z-index:999;padding-top:5px">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <ul style="clear:both" ng-show="rejFiles.length > 0" class="response">
+                    <li class="sel-file" ng-repeat="f in rejFiles">
+                        Rejected file: {{f.name}} - size: {{f.size}}B - type: {{f.type}}
+                    </li>
+                </ul>
+                <div data-ng-bind="uploadStatus"></div>
+                <progressbar value="uploadprogress" type="success" ng-model="upload"><b>{{uploadfile}}</b></progressbar>
+            </div>
+        </div>
+    </div>
+</section>
