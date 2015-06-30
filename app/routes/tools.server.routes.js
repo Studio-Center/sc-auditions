@@ -7,11 +7,6 @@ module.exports = function(app) {
 	// Tools Routes
 	app.route('/tools');
 
-	// app.route('/tools/:toolId')
-	// 	.get(tools.read)
-	// 	.put(users.requiresLogin, tools.hasAuthorization, tools.update)
-	// 	.delete(users.requiresLogin, tools.hasAuthorization, tools.delete);
-
 	// custom tools routes
 	app.route('/tools/sendtalentemails')
 		.post(users.requiresLogin, tools.sendTalentEmails);
@@ -28,5 +23,8 @@ module.exports = function(app) {
 
 	app.route('/tools/gatherTalentsAlreadyScheduled')
 		.post(users.requiresLogin, tools.gatherTalentsAlreadyScheduled);
+
+	app.route('/tools/uploadTalentCSV')
+		.post(users.requiresLogin, tools.uploadTalentCSV);
 
 };

@@ -24,6 +24,10 @@ angular.module('tools').config(['$stateProvider',
 		state('toolBackupProjects', {
 			url: '/tools/backup-restore',
 			templateUrl: 'modules/tools/views/backup-projects.client.view.html'
+		}).
+		state('toolTalentImport', {
+			url: '/tools/talent-import',
+			templateUrl: 'modules/tools/views/talent-import.client.view.html'
 		});
 		// state('createTool', {
 		// 	url: '/tools/create',

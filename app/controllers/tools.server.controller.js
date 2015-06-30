@@ -559,6 +559,11 @@ exports.sendPreCloseSummary = function(req, res){
 
 };
 
+// upload new talents
+exports.uploadTalentCSV = function(req, res){
+
+};
+
 /**
  * Tool authorization middleware
  */
