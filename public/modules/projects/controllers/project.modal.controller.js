@@ -39,7 +39,7 @@ angular.module('projects').controller('ProjectsModalController', ['$scope', '$st
 			// load associated project
 			if(typeof $scope.data !== 'undefined'){
 				$scope.findOneById($scope.data.project);
-			};
+			}
 		});
 
 		// prune unneeded auditions

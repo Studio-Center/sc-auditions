@@ -1,3 +1,4 @@
+/*global escape: true */
 'use strict';
 
 // Reports controller
@@ -58,10 +59,6 @@ angular.module('reports').controller('ReportsController', ['$scope', '$statePara
 					a.click();
 
 				});
-
-			} else {
-
-				//alert('Please select a start and end date!');
 
 			}
 

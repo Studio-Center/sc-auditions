@@ -350,6 +350,9 @@ exports.updateSingleTalentStatus = function (req, res){
 				req.project = project;
 
 				project.save(function(err) {
+					var socketio = req.app.get('socketio');
+					socketio.sockets.emit('projectUpdate', {id: project._id}); 
+					
 					done(err);
 				});			
 
@@ -360,8 +363,7 @@ exports.updateSingleTalentStatus = function (req, res){
 		if (err) {
 			return res.json(400, err);
 		} else {
-			var socketio = req.app.get('socketio');
-			socketio.sockets.emit('projectUpdate', {id: project._id}); 
+			
 			return res.json(200);
 		}
 	});
@@ -576,6 +578,17 @@ var emailClients = function(client, email, project, req, res){
 		});
 };
 
+var moveFile = function(tempPath, newPath){
+	mv(tempPath, newPath, function(err) {
+        //console.log(err);
+        // if (err){
+        //     res.status(500).end();
+        // }else{
+        //     res.status(200).end();
+        // }
+    });
+};
+
 /**
  * Create a Project
  */
@@ -620,14 +633,7 @@ exports.create = function(req, res) {
 				    // add file path
 				    newPath += project.scripts[i].file.name;
 
-				    mv(tempPath, newPath, function(err) {
-				        //console.log(err);
-				        // if (err){
-				        //     res.status(500).end();
-				        // }else{
-				        //     res.status(200).end();
-				        // }
-				    });
+				    moveFile(tempPath, newPath);
 				}
 			}
 		}
@@ -647,14 +653,7 @@ exports.create = function(req, res) {
 				    // add file path
 				    newPath += project.referenceFiles[j].file.name;
 
-				    mv(tempPath, newPath, function(err) {
-				        //console.log(err);
-				        // if (err){
-				        //     res.status(500).end();
-				        // }else{
-				        //     res.status(200).end();
-				        // }
-				    });
+				    moveFile(tempPath, newPath);
 				}
 			}
 		}
@@ -910,13 +909,7 @@ var renameFiles = function(project,res){
 
 		// move file if exists
 		if (fs.existsSync(file) && project.auditions[i].rename !== '') {
-			mv(file, newFile, function(err) {
-		        if (err){
-		            res.status(500).end();
-		        }else{
-		            res.status(200).end();
-		        }
-		    });
+			moveFile(file, newFile);
 
 			// change stored file name
 			project.auditions[i].file.name = project.auditions[i].rename;
@@ -958,11 +951,7 @@ exports.update = function(req, res) {
 							project.auditions[i].file.name = project.auditions[i].rename;
 							project.auditions[i].rename = '';
 
-							mv(file, newFile, function(err) {
-								if (err){
-						            done(err);
-						        }
-						    });
+							moveFile(file, newFile);
 
 						}
 					}
@@ -1592,7 +1581,7 @@ exports.downloadAllAuditions = function(req, res, next){
 	var relativePath =  'res' + '/' + 'auditions' + '/' + req.body.project._id + '/';
     var newPath = appDir + '/public/' + relativePath;
     var savePath = appDir + '/public/' + 'res' + '/' + 'archives' + '/';
-    var zipName = req.body.project.title + '.zip'
+    var zipName = req.body.project.title + '.zip';
     var newZip = savePath + zipName;
 
     //console.log(newPath);
@@ -1724,8 +1713,8 @@ exports.bookAuditions = function(req, res, next){
 			// assign booked list
 			var bookedText = '<p>';
 			for(var i = 0; i < selAuds.length; ++i){
-				bookedText += '<a href="http://' + req.headers.host + '/res/auditions/' + project._id + '/' + selAuds[i].file.name + '">' + selAuds[i].file.name + '</a><br>'
-			};
+				bookedText += '<a href="http://' + req.headers.host + '/res/auditions/' + project._id + '/' + selAuds[i].file.name + '">' + selAuds[i].file.name + '</a><br>';
+			}
 			bookedText += '</p>';
 
 			res.render('templates/projects/booked-audition-email', {
@@ -1775,10 +1764,10 @@ exports.backupProjectsById = function(req, res, next){
 	// get app dir
 	var appDir = path.dirname(require.main.filename);
     var archivesPath = appDir + '/public/' + 'res' + '/' + 'archives' + '/';
-	var curDate = moment().format("MMM Do YY");
+	var curDate = moment().format('MMM Do YY');
 	var zippedFilename = 'Auditions Project Backup Bundle - ' + curDate + '.zip';
     var newZip = archivesPath + zippedFilename;
-    var backupDir = archivesPath + req.user._id + '_backup'
+    var backupDir = archivesPath + req.user._id + '_backup';
     var auditionsDir, scriptsDir, referenceFilesDir, projectBuDir;
     
     // remove existing backup file

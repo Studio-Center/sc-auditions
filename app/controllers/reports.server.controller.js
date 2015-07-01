@@ -198,8 +198,8 @@ exports.convertToCSV = function(req, res){
 					json2csv({ data: projects, fields: fields }, function(err, csv) {
 					if (err) console.log(err);
 
-						res.header("Content-Disposition", "attachment;filename=Auditions-Booked.csv"); 
-						res.type("text/csv");
+						res.header('Content-Disposition', 'attachment;filename=Auditions-Booked.csv'); 
+						res.type('text/csv');
 						res.send(csv);
 					});
 
@@ -287,7 +287,7 @@ var yesterday = new Date(req.body.dateFilterStart);
 						client: project.client,
 						dueDate: project.estimatedCompletionDate,
 						projectCoordinator: user.displayName,
-						status: new String(project.status),
+						status: String(project.status),
 						talentChosen: project.talent
 					};
 					projectsStats.push(projectData);
@@ -320,7 +320,7 @@ var yesterday = new Date(req.body.dateFilterStart);
 							// remove from array
 							pCStats.splice(i, 1);
 						}
-					};
+					}
 
 					switch(String(projectData.status)){
 						case 'In Progress':
@@ -344,7 +344,7 @@ var yesterday = new Date(req.body.dateFilterStart);
 						case 'Closed - Pending Client Decision': 
 							++pCStatsData.totalClosed;
 						break;
-					};
+					}
 
 					// update auditions count
 					++pCStatsData.totalAuditions;
