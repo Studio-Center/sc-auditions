@@ -439,70 +439,72 @@ exports.sendClientEmail = function(req, res){
 	User.where('_id').in(clientIds).sort('-created').exec(function(err, foundClients) {
 
 		// walk through and email all selected clients
-		for(var j = 0; j < foundClients.length; ++j){
+		async.eachSeries(foundClients, function (foundClient, callback) {
 
 			// wrap in anonymous function to preserve client values per iteration
-			(function(){
-				var curClient = foundClients[j];
+			var curClient = foundClient;
 
-				var client = {name: curClient.displayName};
+			var client = {name: curClient.displayName};
 
-				async.waterfall([
-					function(done) {
+			async.waterfall([
+				function(done) {
 
-						res.render(template, {
-							emailSignature: emailSig,
-							project: req.body.project,
-							client: client,
-							clientInfo: curClient,
-							audURL: 'http://' + req.headers.host,
-							dueDate: dateFormat(req.body.project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT'),
-							dueDateDay: dateFormat(req.body.project.estimatedCompletionDate, 'dddd')
-						}, function(err, clientEmailHTML) {
-							done(err, clientEmailHTML);
-						});
+					res.render(template, {
+						emailSignature: emailSig,
+						project: req.body.project,
+						client: client,
+						clientInfo: curClient,
+						audURL: 'http://' + req.headers.host,
+						dueDate: dateFormat(req.body.project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT'),
+						dueDateDay: dateFormat(req.body.project.estimatedCompletionDate, 'dddd')
+					}, function(err, clientEmailHTML) {
+						done(err, clientEmailHTML);
+					});
 
-					},
-					function(clientEmailHTML, done){
+				},
+				function(clientEmailHTML, done){
 
-						var emailSubject;
-				
-						switch(type){
-							case 'opening':
-								emailSubject = 'Your audition project: ' + req.body.project.title + ' Due ' + dateFormat(req.body.project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
-							break;
-							case 'carryover':
-								emailSubject = 'Your First Batch of ' + req.body.project.title + '  Auditions - Studio Center';
-							break;
-							case 'closing':
-								emailSubject = 'Your Audition Project ' + req.body.project.title + ' is Complete';
-							break;
-						}
-
-						// send email
-						var transporter = nodemailer.createTransport(config.mailer.options);
-
-						var mailOptions = {
-											to: curClient.email,
-											from: req.user.email || config.mailer.from,
-											replyTo: req.user.email || config.mailer.from,
-											subject: emailSubject,
-											html: clientEmailHTML
-										};
-
-						transporter.sendMail(mailOptions, function(){
-							done(err);
-						});
+					var emailSubject;
+			
+					switch(type){
+						case 'opening':
+							emailSubject = 'Your audition project: ' + req.body.project.title + ' Due ' + dateFormat(req.body.project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
+						break;
+						case 'carryover':
+							emailSubject = 'Your First Batch of ' + req.body.project.title + '  Auditions - Studio Center';
+						break;
+						case 'closing':
+							emailSubject = 'Your Audition Project ' + req.body.project.title + ' is Complete';
+						break;
 					}
-					], function(err) {
-					if (err) {
-						return res.json(400, err);
-					} else {
-						return res.json(200);
-					}
+
+					// send email
+					var transporter = nodemailer.createTransport(config.mailer.options);
+
+					var mailOptions = {
+										to: curClient.email,
+										from: req.user.email || config.mailer.from,
+										replyTo: req.user.email || config.mailer.from,
+										subject: emailSubject,
+										html: clientEmailHTML
+									};
+
+					transporter.sendMail(mailOptions, function(){
+						done(err);
+					});
+				}
+				], function(err) {
+				callback(err);
+			});
+		}, function (err) {
+			if( err ) {
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
 				});
-			})();
-		}
+			} else {
+				return res.status(200).send();
+			}
+       	});
 
 	});
 	
@@ -1133,6 +1135,64 @@ exports.getTalentFilteredProjects = function(req, res){
 /**
  * List of Projects
  */
+var performLoadList = function(req, res, allowedRoles, i, j){
+
+	var curUserId = String(req.user._id);
+
+	if(req.user.roles[i] === allowedRoles[j]){
+
+		switch(allowedRoles[j]){
+			case 'user':
+				Project.find({'user._id': curUserId}).sort('-created').populate('user', 'displayName').exec(function(err, projects) {
+					if (err) {
+						return res.status(400).send({
+							message: errorHandler.getErrorMessage(err)
+						});
+					} else {
+						return res.jsonp(projects);
+					}
+				});
+			break;
+			case 'talent':
+			// talent does not currently have access, added to permit later access
+				Project.find({'talent': { $elemMatch: { 'talentId': curUserId}}}).sort('-created').populate('user', 'displayName').exec(function(err, projects) {
+					if (err) {
+						return res.status(400).send({
+							message: errorHandler.getErrorMessage(err)
+						});
+					} else {
+						return res.jsonp(projects);
+					}
+				});
+			break;
+			case 'client':
+				Project.find({'client': { $elemMatch: { 'userId': curUserId}}}).sort('-created').populate('user', 'displayName').exec(function(err, projects) {
+					if (err) {
+						return res.status(400).send({
+							message: errorHandler.getErrorMessage(err)
+						});
+					} else {
+						//console.log(projects);
+						return res.jsonp(projects);
+					}
+				});
+			break;
+			case 'client-client':
+				//console.log(curUserId);
+				Project.find({'clientClient': { $elemMatch: { 'userId': curUserId}}}).sort('-created').populate('user', 'displayName').exec(function(err, projects) {
+					if (err) {
+						return res.status(400).send({
+							message: errorHandler.getErrorMessage(err)
+						});
+					} else {
+						return res.jsonp(projects);
+					}
+				});						
+			break;
+		}
+
+	}
+};
 exports.list = function(req, res) { 
 
 	// permit certain user roles full access
@@ -1155,63 +1215,10 @@ exports.list = function(req, res) {
 	} else {
 
 		allowedRoles = ['user', 'talent', 'client', 'client-client'];
-		var curUserId = String(req.user._id);
 
 		for(var i = 0; i < req.user.roles.length; ++i){
 			for(var j = 0; j < allowedRoles.length; ++j){
-				if(req.user.roles[i] === allowedRoles[j]){
-
-					switch(allowedRoles[j]){
-						case 'user':
-							Project.find({'user._id': curUserId}).sort('-created').populate('user', 'displayName').exec(function(err, projects) {
-								if (err) {
-									return res.status(400).send({
-										message: errorHandler.getErrorMessage(err)
-									});
-								} else {
-									return res.jsonp(projects);
-								}
-							});
-						break;
-						case 'talent':
-						// talent does not currently have access, added to permit later access
-							Project.find({'talent': { $elemMatch: { 'talentId': curUserId}}}).sort('-created').populate('user', 'displayName').exec(function(err, projects) {
-								if (err) {
-									return res.status(400).send({
-										message: errorHandler.getErrorMessage(err)
-									});
-								} else {
-									return res.jsonp(projects);
-								}
-							});
-						break;
-						case 'client':
-							Project.find({'client': { $elemMatch: { 'userId': curUserId}}}).sort('-created').populate('user', 'displayName').exec(function(err, projects) {
-								if (err) {
-									return res.status(400).send({
-										message: errorHandler.getErrorMessage(err)
-									});
-								} else {
-									//console.log(projects);
-									return res.jsonp(projects);
-								}
-							});
-						break;
-						case 'client-client':
-							//console.log(curUserId);
-							Project.find({'clientClient': { $elemMatch: { 'userId': curUserId}}}).sort('-created').populate('user', 'displayName').exec(function(err, projects) {
-								if (err) {
-									return res.status(400).send({
-										message: errorHandler.getErrorMessage(err)
-									});
-								} else {
-									return res.jsonp(projects);
-								}
-							});						
-						break;
-					}
-
-				}
+				performLoadList(req, res, allowedRoles, i, j);
 			}
 		}
 

@@ -58,44 +58,41 @@ exports.sendTalentEmails = function(req, res){
 					},
 					function(talentEmailHTML, done) {
 						// walk through all available telent and send emails
-						for(var i = 0; i < talents.length; ++i){
+						async.eachSeries(talents, function (talent, callback) {
 
-							// anon func to capture state variables
-							(function(){
+							var curTalent = talent;
 
-								var curTalent = talents[i];
+							// check for talent preferred contact
+							var idx = curTalent.type.indexOf('Email');
+							if (idx > -1){
 
-								// check for talent preferred contact
-								var idx = curTalent.type.indexOf('Email');
-								if (idx > -1){
-
-									// add both email addresses if talent has backup
-									var talentEmails = [];
-									talentEmails[0] = curTalent.email;
-									if(typeof curTalent.email2 !== 'undefined' && curTalent.email2.length > 0){
-										talentEmails[1] = curTalent.email2;
-									}
-
-									// send email
-									var transporter = nodemailer.createTransport(config.mailer.options);
-
-									var mailOptions = {
-														to: talentEmails,
-														from: req.user.email || config.mailer.from,
-														replyTo: req.user.email || config.mailer.from,
-														subject: email.subject,
-														html: talentEmailHTML
-													};
-
-									transporter.sendMail(mailOptions, function(){
-										//done(err);
-									});
-										
+								// add both email addresses if talent has backup
+								var talentEmails = [];
+								talentEmails[0] = curTalent.email;
+								if(typeof curTalent.email2 !== 'undefined' && curTalent.email2.length > 0){
+									talentEmails[1] = curTalent.email2;
 								}
 
-						})();
-					}
-					done('');
+								// send email
+								var transporter = nodemailer.createTransport(config.mailer.options);
+
+								var mailOptions = {
+													to: talentEmails,
+													from: req.user.email || config.mailer.from,
+													replyTo: req.user.email || config.mailer.from,
+													subject: email.subject,
+													html: talentEmailHTML
+												};
+
+								transporter.sendMail(mailOptions, function(){
+									callback(err);
+								});
+									
+							}
+
+						}, function (err) {
+							done(err);
+				       	});
 				}
 				], function(err) {
 					if(err){
@@ -140,12 +137,9 @@ exports.sendTalentEmails = function(req, res){
 					},
 					function(talentEmailHTML, done) {
 						// walk through all available telent and send emails
-						for(var i = 0; i < talents.length; ++i){
+						async.eachSeries(talents, function (talent, callback) {
 
-							// anon func to capture state variables
-							(function(){
-
-								var curTalent = talents[i];
+								var curTalent = talent;
 
 								// check for talent preferred contact
 								var idx = curTalent.type.indexOf('Email');
@@ -170,14 +164,14 @@ exports.sendTalentEmails = function(req, res){
 													};
 
 									transporter.sendMail(mailOptions, function(){
-										//done(err);
+										callback(err);
 									});
 										
 								}
 
-						})();
-					}
-					done('');
+						}, function (err) {
+							done(err);
+				       	});
 				}
 				], function(err) {
 					if(err){
@@ -212,12 +206,12 @@ var gatherTalentsSearch = function(req, res, filter){
 		} else {
 			
 			// walk through found projects
-			async.forEach(projects, function (project, callback) {
+			async.eachSeries(projects, function (project, callback) {
 				// walk through found talents
 				if(typeof project.talent !== 'undefined'){
 
 					// walk through project found talent
-					async.forEach(project.talent, function (talent, talentCallback) {
+					async.eachSeries(project.talent, function (talent, talentCallback) {
 
 						if(typeof talent !== 'undefined'){
 
