@@ -1,8 +1,8 @@
 'use strict';
 
 // Projects controller
-angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$upload', 'ngAudio', '$http', '$modal', '$rootScope', 'Socket',
-	function($scope, $stateParams, $location, Authentication, Projects, $upload, ngAudio, $http, $modal, $rootScope, Socket ) {
+angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$upload', 'ngAudio', '$http', '$modal', '$rootScope', 'Socket', 'moment',
+	function($scope, $stateParams, $location, Authentication, Projects, $upload, ngAudio, $http, $modal, $rootScope, Socket, moment ) {
 		$scope.authentication = Authentication;
 
 		// rating
@@ -159,7 +159,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       		return true;
       	};
       	$scope.isDisplayed = function(filename){
-      		if($scope.hideSelected == true){
+      		if($scope.hideSelected === true){
 	      		for(var i = 0; i < $scope.hideList.length; ++i){
 	      			if($scope.hideList[i] === filename){
 	      				return false;
@@ -906,7 +906,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.update = function(redirect) {
 			var project = $scope.project;
 			// determine if update should result in user redirect
-			var redirect = typeof redirect === 'undefined' ? true : redirect;
+			redirect = typeof redirect === 'undefined' ? true : redirect;
 
 
 			project.$update(function() {
@@ -923,7 +923,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		// update audition rating
 		$scope.updateRating = function(path, redirect){
 			// determine if update should result in user redirect
-			var redirect = typeof redirect === 'undefined' ? true : redirect;
+			redirect = typeof redirect === 'undefined' ? true : redirect;
 
 			// console.log($scope.rate[key]);
 			var key, ratingCnt = 0, avgRating = 0;
@@ -973,7 +973,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		// update audition rating
 		$scope.updateFavorite = function(path, redirect){
 			// determine if update should result in user redirect
-			var redirect = typeof redirect === 'undefined' ? true : redirect;
+			redirect = typeof redirect === 'undefined' ? true : redirect;
 
 			// console.log($scope.rate[key]);
 			var key, favoriteVal = 1;

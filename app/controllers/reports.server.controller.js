@@ -314,7 +314,7 @@ var yesterday = new Date(req.body.dateFilterStart);
 					// check for PC within stats array
 					for(var i = 0; i < pCStats.length; ++i){
 						// find existing instance of PC stats
-						if(pCStats[i].id == String(user._id)){
+						if(String(pCStats[i].id) === String(user._id)){
 							// xfer to variable
 							pCStatsData = pCStats[i];
 							// remove from array

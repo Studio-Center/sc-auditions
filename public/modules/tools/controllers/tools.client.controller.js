@@ -6,6 +6,7 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 		$scope.authentication = Authentication;
 
 		// scope variables
+		$scope.verifySelected = [];
 		$scope.rejFiles = [];
 		$scope.files = [];
 		$scope.emailClients = [];
@@ -15,6 +16,7 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 						subject: '',
 						body: ''
 					};
+		$scope.locations = ['Offsite', 'Las Vegas', 'New York', 'Richmond', 'Santa Monica', 'Virginia Beach', 'Washington DC'];
 
 		// call list vals
 		$scope.talentStatus = ['Cast', 'Emailed', 'Scheduled', 'Message left', 'Out', 'Received needs to be posted', 'Posted', 'Not Posted (Bad Read)'];
@@ -61,16 +63,34 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 		};
 		$scope.talentLookup = function(id){
 			for(var i = 0; i < $scope.talents.length; ++i){
-				if($scope.talents[i]._id == id){
+				if($scope.talents[i]._id === id){
 					return $scope.talents[i].name + ' ' + $scope.talents[i].lastName;
 				}
 			}
 		};
+
+		$scope.toggleEmailTalentList = function(talent){
+			var idx = $scope.verifySelected.indexOf(talent);
+			if (idx > -1){
+			    $scope.verifySelected.splice(idx, 1);
+			}else{
+			    $scope.verifySelected.push(talent);
+			}
+		};
+		$scope.emailTalentListChk = function(talent){
+			for(var i = 0; i < $scope.verifySelected.length; ++i){
+				if(String($scope.verifySelected[i]) === String(talent)){
+					return true;
+				}
+			}
+		};
+
 		$scope.removeSelectedTalents = function(){
 			var idx;
+
 			for(var i = 0; i < $scope.verifySelected.length; ++i){
-				for(var j = 0; j < $scope.emailClients.length; ++j){
-					if($scope.verifySelected[i] == $scope.emailClients[j]){
+				for(var j = 0; j < $scope.emailClients.length; ++j){					
+					if(String($scope.verifySelected[i]) === String($scope.emailClients[j])){
 						idx = $scope.emailClients.indexOf($scope.emailClients[j]);
 						if (idx > -1){
 						    $scope.emailClients.splice(idx, 1);
@@ -100,20 +120,6 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 				}
 			}
 		};
-		$scope.$watch('selected', function(verifySelected){
-		    // reset to nothing, could use `splice` to preserve non-angular references
-		    $scope.verifySelected = [];
-
-		    if( ! verifySelected ){
-		        // sometimes selected is null or undefined
-		        return;
-		    }
-
-		    // here's the magic
-		    angular.forEach(verifySelected, function(val){
-		        $scope.verifySelected.push( val );
-		    });
-		});
 
 		// call list methods
 		Socket.on('callListUpdate', function(talentsData) {
@@ -134,8 +140,7 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 		// gather list of talents to call
 		$scope.talentLookupData = function(id){
 			for(var i = 0; i < $scope.talents.length; ++i){
-				console.log($scope.talents[i]);
-				if($scope.talents[i]._id == id){
+				if(String($scope.talents[i]._id) === String(id)){
 					return $scope.talents[i];
 				}
 			}
