@@ -73,7 +73,7 @@ exports.sendTalentEmails = function(req, res){
 									var talentEmails = [];
 									talentEmails[0] = curTalent.email;
 									if(typeof curTalent.email2 !== 'undefined' && curTalent.email2.length > 0){
-										talentEmails[1] = curTalent.email2
+										talentEmails[1] = curTalent.email2;
 									}
 
 									// send email
@@ -155,7 +155,7 @@ exports.sendTalentEmails = function(req, res){
 									var talentEmails = [];
 									talentEmails[0] = curTalent.email;
 									if(typeof curTalent.email2 !== 'undefined' && curTalent.email2.length > 0){
-										talentEmails[1] = curTalent.email2
+										talentEmails[1] = curTalent.email2;
 									}
 
 									// send email
@@ -413,7 +413,7 @@ exports.sendPreCloseSummary = function(req, res){
 									break;
 									case 'Cast':
 										talentNotCalled += '<tr><td>' + 
-														talent.name + ' ' + talent.lastName
+														talent.name + ' ' + talent.lastName +
 														'</td><td>' +
 														talent.parentName +
 														'</td><td>' +
@@ -444,7 +444,7 @@ exports.sendPreCloseSummary = function(req, res){
 														talent.lastName +
 														'</td></tr>';
 									break;
-								};
+								}
 
 								talentCallback();
 							}
@@ -522,8 +522,6 @@ exports.sendPreCloseSummary = function(req, res){
 				function(done){
 
 					Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
-						if (err) return next(err);
-						if (! project) return next(new Error('Failed to load Project '));
 						req.project = project ;
 
 						// update preclose status

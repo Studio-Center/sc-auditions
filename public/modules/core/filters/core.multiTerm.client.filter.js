@@ -8,5 +8,5 @@ angular.module('core').filter('multiTerm', function($filter){
             console.log(wordArray[i]);
         }
         return inputArray;
-    }
+    };
 });

@@ -67,14 +67,15 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 			}
 		};
 		$scope.removeSelectedTalents = function(){
+			var idx;
 			for(var i = 0; i < $scope.verifySelected.length; ++i){
 				for(var j = 0; j < $scope.emailClients.length; ++j){
 					if($scope.verifySelected[i] == $scope.emailClients[j]){
-						var idx = $scope.emailClients.indexOf($scope.emailClients[j]);
+						idx = $scope.emailClients.indexOf($scope.emailClients[j]);
 						if (idx > -1){
 						    $scope.emailClients.splice(idx, 1);
 						}
-						var idx = $scope.verifySelected.indexOf($scope.emailClients[j]);
+						idx = $scope.verifySelected.indexOf($scope.emailClients[j]);
 						if (idx > -1){
 						    $scope.verifySelected.splice(idx, 1);
 						}
@@ -233,18 +234,22 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 					var concon = confirm('Are you sure you\'re sure?');
 					if(concon === true){
 						for(i = 0; i < $scope.projectsList.length; ++i){
-							$http.post('/projects/deleteProjectById', {
-						        projectId: $scope.projectsList[i]
-						    }).
-							success(function(data, status, headers, config) {
-								$scope.projects = Projects.query()
-							});
+							performDeleteProject(i);
 						}
 					}
 				}
 			} else {
 				alert('You must first select some projects!');
 			}
+		};
+
+		var performDeleteProject = function(i){
+			$http.post('/projects/deleteProjectById', {
+		        projectId: $scope.projectsList[i]
+		    }).
+			success(function(data, status, headers, config) {
+				$scope.projects = Projects.query();
+			});
 		};
 
 		// backup projects methods
@@ -260,10 +265,10 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 						// download backup file on completion
 						setTimeout(
 							function(){
-								var link = document.createElement("a");
+								var link = document.createElement('a');
 							    link.download = data.zippedFilename;
 							    link.href = 'res/archives/' + encodeURIComponent(data.zippedFilename);
-							    link.click()
+							    link.click();
 							},
 						    1000
 						);
@@ -277,44 +282,48 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 			//$files: an array of files selected, each file has name, size, and type.
 
 			for (var i = 0; i < $files.length; i++) {
-			  var file = $files[i];
+				var file = $files[i];
 
-			  console.log(file);
+				performUploadBackupFile(file, i, $files);
+			}
+		};
 
-			  $scope.upload = $upload.upload({
+		var performUploadBackupFile = function(file, i, $files){
+			$scope.upload = $upload.upload({
 			    url: 'projects/uploadBackup', //upload.php script, node.js route, or servlet url 
 			    data: {},
 			    file: file, // or list of files ($files) for html5 only 
-			  }).progress(function(evt) {
+			}).progress(function(evt) {
 			    $scope.uploadStatus = i + ' of ' + $files.length + ' files uploaded';
 			  	$scope.uploadfile = evt.config.file.name;
 			    $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
-			  }).success(function(data, status, headers, config) {
+			}).success(function(data, status, headers, config) {
 			    // file is uploaded successfully 
-			  });
-			 }
+			});
 		};
 
 		$scope.uploadTalentFile = function($files){
 			//$files: an array of files selected, each file has name, size, and type.
 
 			for (var i = 0; i < $files.length; i++) {
-			  var file = $files[i];
+				var file = $files[i];
 
-			  console.log(file);
+				performUploadTalentFile(file, i, $files);
+			}
+		};
 
-			  $scope.upload = $upload.upload({
+		var performUploadTalentFile = function(file, i, $files){
+			$scope.upload = $upload.upload({
 			    url: 'tools/uploadTalentCSV', //upload.php script, node.js route, or servlet url 
 			    data: {},
 			    file: file, // or list of files ($files) for html5 only 
-			  }).progress(function(evt) {
+			}).progress(function(evt) {
 			    $scope.uploadStatus = i + ' of ' + $files.length + ' files uploaded';
 			  	$scope.uploadfile = evt.config.file.name;
 			    $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
-			  }).success(function(data, status, headers, config) {
+			}).success(function(data, status, headers, config) {
 			    // file is uploaded successfully 
-			  });
-			 }
+			});
 		};
 
 	}

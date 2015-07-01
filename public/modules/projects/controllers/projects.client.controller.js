@@ -67,7 +67,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			        return {
 			        	project: $scope.project._id,
 			        	auditions: $scope.selectedAuditions
-			        }
+			        };
 				}
 		      }
 		    });
@@ -157,7 +157,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       		}
 
       		return true;
-      	}
+      	};
       	$scope.isDisplayed = function(filename){
       		if($scope.hideSelected == true){
 	      		for(var i = 0; i < $scope.hideList.length; ++i){
@@ -179,10 +179,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				// wait one second for archive processing on server
 				setTimeout(
 					function(){
-						var link = document.createElement("a");
+						var link = document.createElement('a');
 					    link.download = encodeURIComponent(data.zip);
 					    link.href = 'res/archives/' + encodeURIComponent(data.zip);
-					    link.click()
+					    link.click();
 					},
 				    1000
 				);
@@ -1147,7 +1147,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				// set progress bar values
 				return perc;
 			}
-		}
+		};
 
 		$scope.$watch('project', function(val){
 
@@ -1390,45 +1390,37 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	    for (var i = 0; i < $files.length; i++) {
 	      var file = $files[i];
 
-	      $scope.upload = $upload.upload({
+	      performScriptUpload(file, i, $files);
+    	 }
+	  	};
+
+	  	var performScriptUpload = function(file, i, $files){
+	  		$scope.upload = $upload.upload({
 	        url: 'projects/uploads/script', //upload.php script, node.js route, or servlet url 
 	        //method: 'POST' or 'PUT', 
-	        //headers: {'header-key': 'header-value'}, 
-	        //withCredentials: true, 
 	        data: {project: $scope.project},
 	        file: file, // or list of files ($files) for html5 only 
-	        //fileName: 'doc.jpg' or ['1.jpg', '2.jpg', ...] // to modify the name of the file(s) 
-	        // customize file formData name ('Content-Desposition'), server side file variable name.  
-	        //fileFormDataName: myFile, //or a list of names for multiple files (html5). Default is 'file'  
-	        // customize how data is added to formData. See #40#issuecomment-28612000 for sample code 
-	        //formDataAppender: function(formData, key, val){} 
 	      }).progress(function(evt) {
 	        $scope.uploadStatus = i + ' of ' + $files.length + ' files uploaded';
 	      	$scope.uploadfile = evt.config.file.name;
 	        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
 	      }).success(function(data, status, headers, config) {
 	        // file is uploaded successfully 
-	        //console.log(data)
-	        // update project store
 			$scope.project = angular.extend($scope.project, data);
 	      });
-	      //.error(...) 
-	      //.then(success, error, progress);  
-	      // access or attach event listeners to the underlying XMLHttpRequest. 
-	      //.xhr(function(xhr){xhr.upload.addEventListener(...)}) 
-    	 }
-	    /* alternative way of uploading, send the file binary with the file's content-type.
-	       Could be used to upload files to CouchDB, imgur, etc... html5 FileReader is needed. 
-	       It could also be used to monitor the progress of a normal http post/put request with large data*/
-	    // $scope.upload = $upload.http({...})  see 88#issuecomment-31366487 for sample code. 
 	  	};
 
 	  	$scope.uploadTempScript = function($files) {
 	    //$files: an array of files selected, each file has name, size, and type. 
 	    for (var i = 0; i < $files.length; i++) {
-	      var file = $files[i];
+	    	var file = $files[i];
 
-	      $scope.upload = $upload.upload({
+	    		performUploadTempScript(file, i, $files);
+    		}
+	  	};
+
+	  	var performUploadTempScript = function(file, i, $files){
+  		  $scope.upload = $upload.upload({
 	        url: 'projects/uploads/script/temp', //upload.php script, node.js route, or servlet url 
 	        data: {project: $scope.project},
 	        file: file, // or list of files ($files) for html5 only 
@@ -1441,7 +1433,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	        //console.log(data);
 	        $scope.scripts.push(data[0]);
 	      });
-    	 }
 	  	};
 
 	  	// set published status
@@ -1460,41 +1451,49 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	    //$files: an array of files selected, each file has name, size, and type.
 
 	    for (var i = 0; i < $files.length; i++) {
-	      var file = $files[i];
+		    var file = $files[i];
 
-	      $scope.upload = $upload.upload({
-	        url: 'projects/uploads/referenceFile', //upload.php script, node.js route, or servlet url 
-	        data: {project: $scope.project},
-	        file: file, // or list of files ($files) for html5 only 
-	      }).progress(function(evt) {
-	        $scope.uploadStatus = i + ' of ' + $files.length + ' files uploaded';
-	      	$scope.uploadfile = evt.config.file.name;
-	        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
-	      }).success(function(data, status, headers, config) {
-			$scope.project = angular.extend($scope.project, data);
-	      });
-    	 }
+		    	performUploadReferenceFile(file, i, $files);
+	    	}
+	  	};
+
+	  	var performUploadReferenceFile = function(file, i, $files){
+		  	$scope.upload = $upload.upload({
+		        url: 'projects/uploads/referenceFile', //upload.php script, node.js route, or servlet url 
+		        data: {project: $scope.project},
+		        file: file, // or list of files ($files) for html5 only 
+		    }).progress(function(evt) {
+		        $scope.uploadStatus = i + ' of ' + $files.length + ' files uploaded';
+		      	$scope.uploadfile = evt.config.file.name;
+		        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
+		    }).success(function(data, status, headers, config) {
+				$scope.project = angular.extend($scope.project, data);
+		    });
 	  	};
 
 	  	$scope.uploadTempReferenceFile = function($files) {
 		    //$files: an array of files selected, each file has name, size, and type. 
 		    for (var i = 0; i < $files.length; i++) {
-		      var file = $files[i];
+		    	var file = $files[i];
 
-			    $scope.upload = $upload.upload({
-			        url: 'projects/uploads/referenceFile/temp', //upload.php script, node.js route, or servlet url 
-			        data: {project: $scope.project},
-			        file: file, // or list of files ($files) for html5 only 
-			    }).progress(function(evt) {
-			        $scope.uploadStatus = i + ' of ' + $files.length + ' files uploaded';
-			      	$scope.uploadfile = evt.config.file.name;
-			        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
-			    }).success(function(data, status, headers, config) {
-			        // file is uploaded successfully 
-			        //console.log(data);
-			        $scope.referenceFiles.push(data[0]);
-			    });
+			    performUploadTempReferenceFile(file, i, $files);
 	    	}
+	  	};
+
+	  	var performUploadTempReferenceFile = function(file, i, $files){
+	  		$scope.upload = $upload.upload({
+		        url: 'projects/uploads/referenceFile/temp', //upload.php script, node.js route, or servlet url 
+		        data: {project: $scope.project},
+		        file: file, // or list of files ($files) for html5 only 
+		    }).progress(function(evt) {
+		        $scope.uploadStatus = i + ' of ' + $files.length + ' files uploaded';
+		      	$scope.uploadfile = evt.config.file.name;
+		        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
+		    }).success(function(data, status, headers, config) {
+		        // file is uploaded successfully 
+		        //console.log(data);
+		        $scope.referenceFiles.push(data[0]);
+		    });
 	  	};
 
 	  	$scope.delTempReferenceFile = function(idx){
@@ -1554,20 +1553,25 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		    //$files: an array of files selected, each file has name, size, and type. 
 		    for (var i = 0; i < $files.length; i++) {
-		      var file = $files[i];
-		      $scope.upload = $upload.upload({
+		    	var file = $files[i];
+		    
+		    	performUploadAudition(file, i, $files);
+		    }
+		};
+
+		var performUploadAudition = function(file, i, $files){
+			$scope.upload = $upload.upload({
 		        url: 'projects/uploads/audition', //upload.php script, node.js route, or servlet url 
 		        data: {project: $scope.project},
 		        file: file, // or list of files ($files) for html5 only 
-		      }).progress(function(evt) {
+		    }).progress(function(evt) {
 		      	$scope.uploadStatus = i + ' of ' + $files.length + ' files uploaded';
 		      	$scope.uploadfile = evt.config.file.name;
 		        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
-		      }).success(function(data, status, headers, config) {
+		    }).success(function(data, status, headers, config) {
 		        // file is uploaded successfully 
 		        $scope.project = angular.extend($scope.project, data);
-		      });
-		    }
+		    });
 		};
 
 	}
