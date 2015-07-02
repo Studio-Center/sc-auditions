@@ -15,7 +15,7 @@
                     </select>
                     <div ng-if="permitAdmin()" ng-controller="UsersController" data-ng-init="findFilter('production coordinator')">
                     	<label>Owner</label>
-                    	<select class="form-control" style="display:block;margin:0 auto" ng-model="project.owner" ng-change="$parent.update()">
+                    	<select class="form-control" style="display:block;margin:0 auto" ng-model="project.owner" ng-change="$parent.update(false)">
 	                        <option ng-repeat="user in users" ng-selected="project.owner == user._id" value="{{user._id}}">{{user.firstName}} {{user.lastName}}</option>
 	                    </select>
                     </div>
@@ -37,7 +37,7 @@
 		            	<strong>Notes</strong>
 		        	</div>
 		        	<fieldset>
-						<select class="form-control" style="display:block;margin:0 auto" ng-if="permitAdminDirector()" ng-class="{blueBg: project.sounders == 'Sounders', yellowBg: project.sounders == 'No Sounders - Approved By William'}" ng-model="project.sounders" ng-change="update()">
+						<select class="form-control" style="display:block;margin:0 auto" ng-if="permitAdminDirector()" ng-class="{blueBg: project.sounders == 'Sounders', yellowBg: project.sounders == 'No Sounders - Approved By William'}" ng-model="project.sounders" ng-change="update(false)">
 	                        <option ng-repeat="item in soundersOpts" value="{{item}}">{{item}}</option>
 	                    </select>
                 	</fieldset>
@@ -335,7 +335,7 @@
 								</fieldset>
 								<fieldset ng-show="showRename">
 									<input type="text" ng-model="project.auditions[key].rename" placeholder="Enter new filename" class="form-control">
-									<button ng-click="update();showRename = 0;" class="btn btn-primary">Update</button><button ng-click="showRename = 0;" class="btn btn-primary">Cancel</button>
+									<button ng-click="update(false);showRename = 0;" class="btn btn-primary">Update</button><button ng-click="showRename = 0;" class="btn btn-primary">Cancel</button>
 								</fieldset>
 								<fieldset>
 									<label>Published</label>
