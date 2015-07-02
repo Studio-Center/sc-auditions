@@ -1090,7 +1090,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		Socket.on('projectUpdate', function(pojectData) {
 
-			if(pojectData.id === String($scope.project._id)){
+			if(String(pojectData.id) === String($scope.project._id)){
 				$scope.findOne();
 			}
 
