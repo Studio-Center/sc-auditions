@@ -3,6 +3,8 @@
 module.exports = function(app) {
 	var users = require('../../app/controllers/users');
 	var tools = require('../../app/controllers/tools');
+	var multiparty = require('connect-multiparty'),
+	multipartyMiddleware = multiparty();
 
 	// Tools Routes
 	app.route('/tools');
@@ -25,6 +27,9 @@ module.exports = function(app) {
 		.post(users.requiresLogin, tools.gatherTalentsAlreadyScheduled);
 
 	app.route('/tools/uploadTalentCSV')
-		.post(users.requiresLogin, tools.uploadTalentCSV);
+		.post(users.requiresLogin, multipartyMiddleware, tools.uploadTalentCSV);
+
+	app.route('/tools/processGoogleSheet')
+		.post(users.requiresLogin, tools.processGoogleSheet);
 
 };
