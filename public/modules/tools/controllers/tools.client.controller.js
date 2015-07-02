@@ -6,6 +6,7 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 		$scope.authentication = Authentication;
 
 		// scope variables
+		$scope.alerts = [];
 		$scope.verifySelected = [];
 		$scope.rejFiles = [];
 		$scope.files = [];
@@ -27,6 +28,13 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 		$scope.selectAll = '';
 		$scope.projects = [];
 		$scope.projectsList = [];
+
+		// spreadsheet processing
+		$scope.google = {
+			spreadsheetkey: '',
+			username: '',
+			password: ''
+		};
 
 		// used for paginator
 		$scope.Math = window.Math;
@@ -318,7 +326,7 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 		};
 
 		var performUploadTalentFile = function(file, i, $files){
-			$scope.upload = $upload.upload({
+			$scope.upload = $upload.upload({processGoogleSheet()
 			    url: 'tools/uploadTalentCSV', //upload.php script, node.js route, or servlet url 
 			    data: {},
 			    file: file, // or list of files ($files) for html5 only 
@@ -329,6 +337,27 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 			}).success(function(data, status, headers, config) {
 			    // file is uploaded successfully 
 			});
+		};
+
+		$scope.processGoogleSheet = function(){
+
+			// verify all three required fields are populated
+			if($scope.google.spreadsheetkey !== '' && $scope.google.username !== '' && $scope.google.password !== ''){
+
+				$http.post('/tools/processGoogleSheet', {
+			        email: $scope.email,
+			        emailClients: $scope.emailClients
+			    }).
+				success(function(data, status, headers, config) {
+					alert('Talent has been emailed!');
+				});
+
+			} else {
+
+				$scope.alerts.push({msg: 'Pelase make sure that you have populated the three required fields!'});
+
+			}
+
 		};
 
 	}
