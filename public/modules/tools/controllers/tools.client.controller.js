@@ -6,6 +6,7 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 		$scope.authentication = Authentication;
 
 		// scope variables
+		$scope.failed = [];
 		$scope.alerts = [];
 		$scope.verifySelected = [];
 		$scope.rejFiles = [];
@@ -34,6 +35,11 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 			spreadsheetkey: '',
 			username: '',
 			password: ''
+		};
+
+		// alerts
+		$scope.closeAlert = function(index) {
+		    $scope.alerts.splice(index, 1);
 		};
 
 		// used for paginator
@@ -326,7 +332,7 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 		};
 
 		var performUploadTalentFile = function(file, i, $files){
-			$scope.upload = $upload.upload({processGoogleSheet()
+			$scope.upload = $upload.upload({
 			    url: 'tools/uploadTalentCSV', //upload.php script, node.js route, or servlet url 
 			    data: {},
 			    file: file, // or list of files ($files) for html5 only 
@@ -335,26 +341,28 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 			  	$scope.uploadfile = evt.config.file.name;
 			    $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
 			}).success(function(data, status, headers, config) {
-			    // file is uploaded successfully 
+				$scope.failed = data.failed;
+			    $scope.alerts.push({type: data.status, msg: 'Updated talents ' + data.updatedTalents + ' - New talents ' + data.newTalents + ' - Failed talents ' + data.failed.length});
 			});
 		};
 
 		$scope.processGoogleSheet = function(){
 
+			$scope.alerts = [];
+
 			// verify all three required fields are populated
-			if($scope.google.spreadsheetkey !== '' && $scope.google.username !== '' && $scope.google.password !== ''){
+			if($scope.google.spreadsheetkey !== ''){
 
 				$http.post('/tools/processGoogleSheet', {
-			        email: $scope.email,
-			        emailClients: $scope.emailClients
+			        google: $scope.google
 			    }).
 				success(function(data, status, headers, config) {
-					alert('Talent has been emailed!');
+					$scope.alerts.push({type: 'success', msg: 'All talents have been imported into the database.'});
 				});
 
 			} else {
 
-				$scope.alerts.push({msg: 'Pelase make sure that you have populated the three required fields!'});
+				$scope.alerts.push({type: 'danger', msg: 'Pelase make sure that you have populated the field!'});
 
 			}
 

@@ -18,7 +18,6 @@ var mongoose = require('mongoose'),
 	nodemailer = require('nodemailer'),
 	archiver = require('archiver'),
 	dateFormat = require('dateformat'),
-	GoogleSpreadsheet = require('google-spreadsheet'),
 	// set date and timezone
 	moment = require('moment-timezone'),
 	now = new Date();
@@ -553,6 +552,137 @@ exports.sendPreCloseSummary = function(req, res){
 
 // upload new talents
 exports.uploadTalentCSV = function(req, res){
+
+	// import counts
+	var newTalents = 0;
+	var updatedTalents = 0;
+	var failedImports = [];
+
+	// parse uploaded CSV
+	var file = req.files.file;
+	var tempPath = file.path;
+	
+	var Converter = require('csvtojson').Converter;
+	var fileStream = fs.createReadStream(tempPath);
+
+	var converter = new Converter({constructResult:true});
+	//end_parsed will be emitted once parsing finished 
+	converter.on('end_parsed', function (jsonObj) {
+
+	   async.eachSeries(jsonObj, function (talent, talentCallback) {
+
+	   		var unionStatus = (talent.US === '' ? '' : (talent.US === 'U' ? ['union'] : ['union','non-union']));
+
+	   		// cerate new talent
+	   		var talent = {
+				name: talent['first name'],
+				lastName: talent['last name'],
+				email: talent.email,
+				email2: talent['email alt'],
+				phone: talent.phone,
+				phone2: talent['phone alt'],
+				type: talent.type,
+				gender: talent.gender,
+				ageRange: talent.ageRange,
+				unionStatus: unionStatus,
+				lastNameCode: talent.lastNameCode,
+				locationISDN: talent.locationISDN
+			};
+	   		var newTalent = new Talent(talent);
+	   		
+			talent.user = req.user;
+
+			// check for missing import data
+			var failed = 0;
+			var failedReason = {
+				name: 0,
+				lastName: 0,
+				type: 0,
+				gender: 0,
+				ageRange: 0,
+				unionStatus: 0,
+				lastNameCode: 0,
+				locationISDN: 0
+			}
+			if(newTalent.name === ''){
+				++failed;
+				failedReason.name = 1;
+			}
+			if(newTalent.lastName === ''){
+				++failed;
+				failedReason.lastName = 1;
+			}
+			if(newTalent.type === ''){
+				++failed;
+				failedReason.type = 1;
+			}
+			if(newTalent.gender === ''){
+				++failed;
+				failedReason.gender = 1;
+			}
+			if(newTalent.ageRange === ''){
+				++failed;
+				failedReason.ageRange = 1;
+			}
+			if(newTalent.unionStatus === ''){
+				++failed;
+				failedReason.unionStatus = 1;
+			}
+			if(newTalent.lastNameCode === ''){
+				++failed;
+				failedReason.lastNameCode = 1;
+			}
+			if(newTalent.locationISDN === ''){
+				++failed;
+				failedReason.locationISDN = 1;
+			}
+
+			// check for existing talent before saving new one
+			if(failed === 0){
+				Talent.findOne({'name': newTalent.name, lastName: newTalent.lastName}).populate('user', 'displayName').exec(function(err, talent) {
+
+					if(talent !== null){
+						++updatedTalents;
+						newTalent = newTalent.toObject();
+						talent = _.extend(talent, newTalent);
+					} else {
+						++newTalents;
+						talent = newTalent;
+					}
+
+					talent.save(function(err) {
+
+			   			talentCallback();
+
+			   		});
+
+				});
+
+			} else {
+				failedImports.push({name: newTalent.name + ' ' + newTalent.lastName, reason: failedReason});
+				talentCallback();
+			}
+
+	   	}, function (err) {
+			if( err ) {
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
+			} else {
+				res.jsonp({status: 'success', updatedTalents: updatedTalents, newTalents: newTalents, failed: failedImports});
+			}
+	   	});
+	});
+
+	//read from file 
+	fileStream.pipe(converter);
+
+};
+
+// gather spreadsheet from Google
+exports.processGoogleSheet = function(req, res){
+	
+	// add code lateer
 
 };
 
