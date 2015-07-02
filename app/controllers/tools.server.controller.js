@@ -574,7 +574,7 @@ exports.uploadTalentCSV = function(req, res){
 	   		var unionStatus = (talent.US === '' ? '' : (talent.US === 'U' ? ['union'] : ['union','non-union']));
 
 	   		// cerate new talent
-	   		var talent = {
+	   		var talentData = {
 				name: talent['first name'],
 				lastName: talent['last name'],
 				email: talent.email,
@@ -588,7 +588,7 @@ exports.uploadTalentCSV = function(req, res){
 				lastNameCode: talent.lastNameCode,
 				locationISDN: talent.locationISDN
 			};
-	   		var newTalent = new Talent(talent);
+	   		var newTalent = new Talent(talentData);
 	   		
 			talent.user = req.user;
 
@@ -603,7 +603,7 @@ exports.uploadTalentCSV = function(req, res){
 				unionStatus: 0,
 				lastNameCode: 0,
 				locationISDN: 0
-			}
+			};
 			if(newTalent.name === ''){
 				++failed;
 				failedReason.name = 1;
