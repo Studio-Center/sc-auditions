@@ -15,6 +15,7 @@ module.exports = {
 			css: [
 				'public/lib/bootstrap/dist/css/bootstrap.css',
 				'public/lib/bootstrap/dist/css/bootstrap-theme.css',
+				'public/lib/bootstrapaccessibilityplugin/plugins/css/bootstrap-accessibility.css',
 				'public/lib/soundmanager/demo/demo/play-mp3-links/css/inlineplayer.css',
 				'public/lib/soundmanager/demo/flashblock/flashblock.css',
 				'public/lib/angular-bootstrap-datetimepicker/src/css/datetimepicker.css',
@@ -34,7 +35,8 @@ module.exports = {
 				'public/lib/angular-touch/angular-touch.js', 
 				//'public/lib/angular-sanitize/angular-sanitize.js', 
 				'public/lib/angular-ui-router/release/angular-ui-router.js',
-				'public/lib/bootstrap/dist/js/bootstrap.min.js', 
+				'public/lib/bootstrap/dist/js/bootstrap.min.js',
+				'public/lib/bootstrapaccessibilityplugin/plugins/js/bootstrap-accessibility.min.js', 
 				'public/lib/angular-ui-utils/ui-utils.js',
 				'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
 				'public/lib/ngAudio/app/angular.audio.js',
