@@ -1,3 +1,7 @@
+/* bootstrap hacks */
+.btn-primary:active, .btn-primary.active{
+	background:#000;
+}
 .content {
 	margin-top: 50px;
 }
