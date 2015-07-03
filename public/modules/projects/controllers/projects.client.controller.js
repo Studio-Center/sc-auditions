@@ -98,12 +98,12 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		      }
 		    });
 
-		    modalInstance.result.then(function (selectedItem) {
-		      //$scope.selected = selectedItem;
-		    }, function () {
-		      //$log.info('Modal dismissed at: ' + new Date());
+		    // modalInstance.result.then(function (selectedItem) {
+		    //   //$scope.selected = selectedItem;
+		    // }, function () {
+		    //   //$log.info('Modal dismissed at: ' + new Date());
 
-		    });
+		    // });
 		};
 		// create talent modal
 		$scope.createTalent = function(){

@@ -39,15 +39,9 @@
             <strong>Clients for the project</strong>
         </div>
         <div class="panel-body">
-            <script>
-              var users = angular.module("users", []);
-              users.controller("UsersController", function($scope) {
-                  $scope.users = Users.query();
-              });
-            </script>
             <div class="controls" ng-module="users">
                 <div style="text-align:center">
-                    <button class="btn btn-primary" ng-click="createClient('client')">Create Client</button>
+                    <a class="btn btn-primary" ng-click="createClient('client')">Create Client</a>
                 </div>
                 <div ng-controller="UsersController" data-ng-init="findFilter('client')">
                     <label>Search:</label> <input ng-model="filterClient" class="form-control">
