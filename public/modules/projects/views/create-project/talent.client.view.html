@@ -89,10 +89,10 @@
                                 <li ng-class="{disabled: currentPage == 0}">
                                     <a href ng-click="currentPage=currentPage-1">« Prev</a>
                                 </li>
-                                <li ng-repeat="n in range(0, Math.floor(talents.length/limit))" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                                <li ng-repeat="n in range(0, Math.floor(filtered.length/limit))" ng-class="{active: n == currentPage}" ng-click="setPage()">
                                     <a href ng-bind="n + 1">1</a>
                                 </li>
-                                <li ng-class="{disabled: currentPage == Math.floor(talents.length/limit)}">
+                                <li ng-class="{disabled: currentPage == Math.floor(filtered.length/limit)}">
                                     <a href ng-click="currentPage=currentPage+1">Next »</a>
                                 </li>
                             </ul>
@@ -116,7 +116,7 @@
                                 </div>
                             </div>
                         </li>
-                        <li class="list-group-item" ng-repeat="(key, talent) in talents | multiTerm:searchUnions:'AND' | filter:searchText:startsWith | filter:searchString | startFrom:currentPage*limit | limitTo: limit">
+                        <li class="list-group-item" ng-repeat="(key, talent) in filtered = (talents | multiTerm:searchUnions:'AND' | filter:searchText:startsWith | filter:searchString) | startFrom:currentPage*limit | limitTo: limit">
                             <div class="row">
                                 <div class="col-lg-1 col-md-1 col-sm-1">
                                     <input type="checkbox" value="{{talent._id}}" ng-click="updateCreateTalent(talent._id, talent.name + ' ' + talent.lastName, talent.email)" ng-checked="checkCreateTalent(talent._id)"> 
@@ -141,10 +141,10 @@
                                 <li ng-class="{disabled: currentPage == 0}">
                                     <a href ng-click="currentPage=currentPage-1">« Prev</a>
                                 </li>
-                                <li ng-repeat="n in range(0, Math.floor(talents.length/limit))" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                                <li ng-repeat="n in range(0, Math.floor(filtered.length/limit))" ng-class="{active: n == currentPage}" ng-click="setPage()">
                                     <a href ng-bind="n + 1">1</a>
                                 </li>
-                                <li ng-class="{disabled: currentPage == Math.floor(talents.length/limit)}">
+                                <li ng-class="{disabled: currentPage == Math.floor(filtered.length/limit)}">
                                     <a href ng-click="currentPage=currentPage+1">Next »</a>
                                 </li>
                             </ul>
