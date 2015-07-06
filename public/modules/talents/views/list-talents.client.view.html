@@ -71,10 +71,10 @@
                 <li ng-class="{disabled: currentPage == 0}">
                     <a href ng-click="currentPage=currentPage-1">« Prev</a>
                 </li>
-                <li ng-repeat="n in range(0, Math.floor(talents.length/limit))" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                <li ng-repeat="n in range(0, Math.floor(filtered.length/limit))" ng-class="{active: n == currentPage}" ng-click="setPage()">
                     <a href ng-bind="n + 1">1</a>
                 </li>
-                <li ng-class="{disabled: currentPage == Math.floor(talents.length/limit)}">
+                <li ng-class="{disabled: currentPage == Math.floor(filtered.length/limit)}">
                     <a href ng-click="currentPage=currentPage+1">Next »</a>
                 </li>
             </ul>
@@ -82,7 +82,7 @@
         </div>
     </div>
     <div class="list-group item-list">
-        <a data-ng-repeat="talent in talents | multiTerm:searchUnions:'AND' | filter:searchText:startsWith | filter:searchString | startFrom:currentPage*limit | limitTo: limit" data-ng-href="#!/talents/{{talent._id}}" class="list-group-item">
+        <a data-ng-repeat="talent in filtered = (talents | multiTerm:searchUnions:'AND' | filter:searchText:startsWith | filter:searchString) | startFrom:currentPage*limit | limitTo: limit" data-ng-href="#!/talents/{{talent._id}}" class="list-group-item">
             <small class="list-group-item-text">
                 Added
                 <span data-ng-bind="talent.created | amDateFormat:'MM/DD/YY h:mm:ss a'"></span>
@@ -102,10 +102,10 @@
                 <li ng-class="{disabled: currentPage == 0}">
                     <a href ng-click="currentPage=currentPage-1">« Prev</a>
                 </li>
-                <li ng-repeat="n in range(0, Math.floor(talents.length/limit))" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                <li ng-repeat="n in range(0, Math.floor(filtered.length/limit))" ng-class="{active: n == currentPage}" ng-click="setPage()">
                     <a href ng-bind="n + 1">1</a>
                 </li>
-                <li ng-class="{disabled: currentPage == Math.floor(talents.length/limit)}">
+                <li ng-class="{disabled: currentPage == Math.floor(filtered.length/limit)}">
                     <a href ng-click="currentPage=currentPage+1">Next »</a>
                 </li>
             </ul>
