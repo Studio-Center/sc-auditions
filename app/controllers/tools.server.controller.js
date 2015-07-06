@@ -354,7 +354,7 @@ exports.sendPreCloseSummary = function(req, res){
 
 					async.eachSeries(producers, function (producer, producerCallback) {
 
-						producersEmails.push(producers.email);
+						producersEmails.push(producer.email);
 
 						producerCallback();
 
@@ -507,6 +507,7 @@ exports.sendPreCloseSummary = function(req, res){
 						subject: emailSubject,
 						html: summaryEmailHTML
 					};
+
 					transporter.sendMail(mailOptions, function(err){
 						++emailCnt;
 						done(err);
