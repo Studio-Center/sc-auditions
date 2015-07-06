@@ -258,6 +258,7 @@ var sendTalentEmail = function(req, res, project, talent){
 					} else {
 						var socketio = req.app.get('socketio');
 						socketio.sockets.emit('projectUpdate', {id: project._id}); 
+						socketio.sockets.emit('callListUpdate', {filter: ''}); 
 						res.json(project);
 					}
 				});			
@@ -352,7 +353,8 @@ exports.updateSingleTalentStatus = function (req, res){
 				project.save(function(err) {
 					var socketio = req.app.get('socketio');
 					socketio.sockets.emit('projectUpdate', {id: project._id}); 
-					
+					socketio.sockets.emit('callListUpdate', {filter: ''}); 
+
 					done(err);
 				});			
 
@@ -391,6 +393,7 @@ exports.updateTalentStatus = function(req, res){
 				} else {
 					var socketio = req.app.get('socketio');
 						socketio.sockets.emit('projectUpdate', {id: project._id}); 
+						socketio.sockets.emit('callListUpdate', {filter: ''}); 
 					res.json(200);
 				}
 			});	
@@ -846,7 +849,8 @@ exports.create = function(req, res) {
 					} else {
 						// emit an event for all connected clients
 						var socketio = req.app.get('socketio');
-						socketio.sockets.emit('projectsListUpdate'); 
+						socketio.sockets.emit('projectsListUpdate'); // emit an event for all connected clients
+						socketio.sockets.emit('callListUpdate', {filter: ''}); 
 						return res.jsonp(project);
 					}
 				});
@@ -987,6 +991,7 @@ exports.update = function(req, res) {
 					} else {
 						var socketio = req.app.get('socketio');
 						socketio.sockets.emit('projectUpdate', {id: project._id}); 
+						socketio.sockets.emit('callListUpdate', {filter: ''}); 
 
 						return res.jsonp(project);
 					}
@@ -1346,6 +1351,7 @@ exports.uploadScript = function(req, res, next){
 					} else {
 						var socketio = req.app.get('socketio');
 						socketio.sockets.emit('projectUpdate', {id: project._id}); 
+						socketio.sockets.emit('callListUpdate', {filter: ''}); 
 						return res.jsonp(project);
 					}
 				});
@@ -1416,6 +1422,7 @@ exports.uploadReferenceFile = function(req, res, next){
 					} else {
 						var socketio = req.app.get('socketio');
 						socketio.sockets.emit('projectUpdate', {id: project._id}); 
+						socketio.sockets.emit('callListUpdate', {filter: ''}); 
 						return res.jsonp(project);
 					}
 				});
@@ -1572,6 +1579,7 @@ exports.uploadAudition = function(req, res, next){
 					} else {
 						var socketio = req.app.get('socketio');
 						socketio.sockets.emit('projectUpdate', {id: project._id}); 
+						socketio.sockets.emit('callListUpdate', {filter: ''}); 
 						return res.jsonp(project);
 					}
 				});
@@ -1654,6 +1662,7 @@ exports.bookAuditions = function(req, res, next){
 				project.save(function(err) {
 					var socketio = req.app.get('socketio');
 						socketio.sockets.emit('projectUpdate', {id: project._id}); 
+						socketio.sockets.emit('callListUpdate', {filter: ''}); 
 					done(err, selAuds, project);
 				});
 

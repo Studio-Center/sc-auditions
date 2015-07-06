@@ -148,6 +148,11 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 		    	case 'Scheduled':
 		    		$scope.alreadyScheduledTalents = talentsData.talents;
 		    	break;
+		    	default:
+		    		$scope.gatherTalentsToCall();
+					$scope.gatherTalentsMessagesLeft();
+					$scope.gatherTalentsAlreadyScheduled();
+		    	break;
 		    }
 
 		});
