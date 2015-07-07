@@ -44,7 +44,3 @@ angular.module('talents').filter('tel', function () {
     };
 });
 
-function Ctrl($scope){
-    $scope.phoneNumber =  4085265552;
-
-}
