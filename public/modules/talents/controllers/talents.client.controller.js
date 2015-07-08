@@ -199,9 +199,6 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 			});
 		};
 
-		// refresh list of talents on refresh emit
-		$rootScope.$on('refreshTalent', $scope.find());
-
 		// load talent assigned projects
 		$scope.findTalentProjects = function(){
 
