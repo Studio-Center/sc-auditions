@@ -27,7 +27,7 @@
 			<div class="col-lg-6 col-md-6 col-sm-6">
 				<div class="panel panel-default">
 					<div class="panel-heading"><strong>Description &amp; Specs</strong></div>
-					<div class="panel-body" data-ng-bind="project.description"></div>
+					<div class="panel-body" ng-bind-html="project.description | linky:'_blank'"></div>
 				</div>
 			</div>
 			
@@ -51,8 +51,8 @@
 							<h5 ng-if="ditem.deleted === false"><strong>{{ditem.date | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST - {{ditem.username}}</strong></h5>
 							<div class="clearfix">
 								<button ng-show="authentication.user._id === ditem.userid && ditem.deleted === false" style="float:right" class="btn btn-danger" ng-click="deleteDiscussion(key)">Delete</button>
-								<p ng-if="ditem.deleted === true" class="strike-if" data-ng-bind="ditem.item"></p>
-								<p ng-if="ditem.deleted === false" data-ng-bind="ditem.item"></p>
+								<div ng-if="ditem.deleted === true" class="strike-if" ng-bind-html="ditem.item | linky:'_blank'"></div>
+								<p ng-if="ditem.deleted === false" ng-bind-html="ditem.item | linky:'_blank'"></p>
 							</div>
 						</div>
 					</div>
