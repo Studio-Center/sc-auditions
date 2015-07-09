@@ -279,86 +279,102 @@ var yesterday = new Date(req.body.dateFilterStart);
 
 			User.findOne({'_id':ownerId}).sort('-created').exec(function(err, user) {
 				if(user){
+					var talentBooked = [];
 
-					// generate project data
-					projectData = {
-						id: project._id,
-						name: project.title,
-						client: project.client,
-						dueDate: project.estimatedCompletionDate,
-						projectCoordinator: user.displayName,
-						status: String(project.status),
-						talentChosen: project.talent
-					};
-					projectsStats.push(projectData);
+					async.eachSeries(project.talent, function (talent, talentCallback) {
 
-					// generate or update production coordinators stats
-
-					// setup default object
-					pCStatsData = {
-						id: user._id,
-						name: user.displayName,
-						totalInProgress: 0,
-						totalOnHold: 0,
-						totalBooked: 0,
-						totalCanceled: 0,
-						totalPending: 0,
-						totalReAuditioned: 0,
-						totalDead: 0,
-						totalClosed: 0,
-						totalComplete: 0,
-						totalAuditions: 0,
-						totalBookedPercent: 0
-					};
-
-					// check for PC within stats array
-					for(var i = 0; i < pCStats.length; ++i){
-						// find existing instance of PC stats
-						if(String(pCStats[i].id) === String(user._id)){
-							// xfer to variable
-							pCStatsData = pCStats[i];
-							// remove from array
-							pCStats.splice(i, 1);
+						if(talent.booked === true){
+							talentBooked.push(talent);
 						}
-					}
 
-					switch(String(projectData.status)){
-						case 'In Progress':
-							++pCStatsData.totalInProgress;
-						break;
-						case 'On Hold': 
-							++pCStatsData.totalOnHold;
-						break;
-						case 'Booked': 
-							++pCStatsData.totalBooked;
-						break;
-						case 'Canceled': 
-							++pCStatsData.totalBooked;
-						break;
-						case 'ReAuditioned': 
-							++pCStatsData.totalCanceled;
-						break;
-						case 'Dead': 
-							++pCStatsData.totalDead;
-						break;
-						case 'Closed - Pending Client Decision': 
-							++pCStatsData.totalClosed;
-						break;
-					}
+						talentCallback();
 
-					// update auditions count
-					++pCStatsData.totalAuditions;
+					}, function (err) {
 
-					// set booked percentage
-					pCStatsData.totalBookedPercent = (pCStatsData.totalBooked / pCStatsData.totalAuditions) * 100;
+						// generate project data
+						projectData = {
+							id: project._id,
+							name: project.title,
+							client: project.client,
+							dueDate: project.estimatedCompletionDate,
+							projectCoordinator: user.displayName,
+							status: String(project.status),
+							talentChosen: talentBooked
+						};
+						projectsStats.push(projectData);
 
-					pCStatsData.totalBookedPercent = pCStatsData.totalBookedPercent.toFixed(2);
+						// generate or update production coordinators stats
 
-					pCStats.push(pCStatsData);
+						// setup default object
+						pCStatsData = {
+							id: user._id,
+							name: user.displayName,
+							totalInProgress: 0,
+							totalOnHold: 0,
+							totalBooked: 0,
+							totalCanceled: 0,
+							totalPending: 0,
+							totalReAuditioned: 0,
+							totalDead: 0,
+							totalClosed: 0,
+							totalComplete: 0,
+							totalAuditions: 0,
+							totalBookedPercent: 0
+						};
 
+						// check for PC within stats array
+						for(var i = 0; i < pCStats.length; ++i){
+							// find existing instance of PC stats
+							if(String(pCStats[i].id) === String(user._id)){
+								// xfer to variable
+								pCStatsData = pCStats[i];
+								// remove from array
+								pCStats.splice(i, 1);
+							}
+						}
+
+						switch(String(projectData.status)){
+							case 'In Progress':
+								++pCStatsData.totalInProgress;
+							break;
+							case 'On Hold': 
+								++pCStatsData.totalOnHold;
+							break;
+							case 'Booked': 
+								++pCStatsData.totalBooked;
+							break;
+							case 'Canceled': 
+								++pCStatsData.totalBooked;
+							break;
+							case 'ReAuditioned': 
+								++pCStatsData.totalCanceled;
+							break;
+							case 'Dead': 
+								++pCStatsData.totalDead;
+							break;
+							case 'Closed - Pending Client Decision': 
+								++pCStatsData.totalClosed;
+							break;
+						}
+
+						// update auditions count
+						++pCStatsData.totalAuditions;
+
+						// set booked percentage
+						pCStatsData.totalBookedPercent = (pCStatsData.totalBooked / pCStatsData.totalAuditions) * 100;
+
+						pCStatsData.totalBookedPercent = pCStatsData.totalBookedPercent.toFixed(2);
+
+						pCStats.push(pCStatsData);
+
+					projectCallback();
+
+				});
+				
+				} else {
+					projectCallback();
 				}
 
-				projectCallback();
 
 			});
 

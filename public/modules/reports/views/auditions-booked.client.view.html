@@ -9,7 +9,7 @@
 				            <strong>Start Date Filter (Click to select date)</strong>
 				        </div>
 				        <div class="panel-body">
-				        	<datepicker ng-model="dateFilterStart" show-weeks="true" class="well well-sm"></datepicker>
+				        	<datepicker ng-model="dateFilterStart" show-weeks="false" class="well well-sm"></datepicker>
 				        </div>
 				    </div>
 				</div>
@@ -21,7 +21,7 @@
 				            <strong>End Date Filter (Click to select date)</strong>
 				        </div>
 				        <div class="panel-body">
-				        	<datepicker ng-model="dateFilterEnd" show-weeks="true" class="well well-sm"></datepicker>
+				        	<datepicker ng-model="dateFilterEnd" show-weeks="false" class="well well-sm"></datepicker>
 				        </div>
 				    </div>
 			</div>
@@ -63,9 +63,12 @@
     				{{project.status}}
     			</td>
     			<td>
-    				<span ng-repeat="(key, talent) in project.talentChosen">
+    				<span ng-if="project.talentChosen.length > 0" ng-repeat="(key, talent) in project.talentChosen">
     				{{talent.name}}<br>
     				</span>
+                    <span ng-if="project.talentChosen.length == 0">
+                        None Selected
+                    </span>
     			</td>
     		</tr>
     	</table>
