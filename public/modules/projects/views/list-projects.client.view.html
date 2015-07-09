@@ -1,7 +1,7 @@
 <section data-ng-controller="ProjectsController" data-ng-init="find()">
     <div class="page-header">
         <h1>Projects</h1>
-        <a data-ng-show="permitAdminDirector()" class="btn btn-default" href="#!/projects/create">Create New Project</a>
+        <a data-ng-show="permitAdminProductionCoordinator()" class="btn btn-default" href="#!/projects/create">Create New Project</a>
         <a ng-show="permitClient() === true" class="btn btn-default" href="#!/projects/new-audition-form">Start A New Audition Project</a>
     </div>
     <div class="row">
