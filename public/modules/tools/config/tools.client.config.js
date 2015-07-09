@@ -8,7 +8,7 @@ angular.module('tools').run(['Menus',
 		Menus.addSubMenuItem('topbar', 'tools', 'Call List', 'tools/call-list');
 		Menus.addSubMenuItem('topbar', 'tools', 'Email Talent', 'tools/email-talent');
 		Menus.addSubMenuItem('topbar', 'tools', 'Backup/Restore', 'tools/backup-restore');
-		Menus.addSubMenuItem('topbar', 'tools', 'Delete Projects', 'tools/delete-projects');
+		Menus.addSubMenuItem('topbar', 'tools', 'Delete Projects', 'tools/delete-projects', false, false, ['admin', 'production coordinator']);
 		Menus.addSubMenuItem('topbar', 'tools', 'Talent Import', 'tools/talent-import');
 	}
 ]);
