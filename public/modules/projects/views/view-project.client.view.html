@@ -376,7 +376,7 @@
 							</li>
 						</ul>
 						
-						<accordion close-others="oneAtATime">
+						<accordion close-others="oneAtATime" ng-if="permitAdminProductionCoordinator()">
 							<accordion-group is-open="statusInt.open">
 							<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
 								<h4 class="panel-title accordion-toggle">
@@ -458,7 +458,7 @@
 						<ul class="list-group">
 							<li class="list-group-item" ng-repeat="(key, member) in project.clientClient"><a target="_blank" href="/#!/usersedit/{{member.userId}}">{{member.name}}</a></li>
 						</ul>
-						<accordion close-others="oneAtATime">
+						<accordion close-others="oneAtATime" ng-if="permitAdminProductionCoordinator()">
 							<accordion-group is-open="statusInt.open">
 							<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
 								<h4 class="panel-title accordion-toggle">
