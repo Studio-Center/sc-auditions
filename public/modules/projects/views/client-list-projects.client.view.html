@@ -61,7 +61,7 @@
 									<th>#</th>
 									<th><a href="" ng-click="predicate = 'file.name'; reverse=false">Name</a>
 										(<a href="" ng-click="predicate = '-file.name'; reverse=false">^</a>)</th>
-									<th><a href="" ng-click="predicate = 'avgRating'; reverse=false">Rating</a>
+									<th class="rating-clmn"><a href="" ng-click="predicate = 'avgRating'; reverse=false">Rating</a>
 										(<a href="" ng-click="predicate = '-avgRating'; reverse=false">^</a>)</th>
 									<th>Playback</th>
 									<th><a href="" ng-click="predicate = 'favorite'; reverse=false">Favorite</a>
@@ -81,7 +81,7 @@
 								<td>
 									<a href="/res/auditions/{{project._id}}/{{audition.file.name | encodeUri}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable">ngAudio</a> 
 								</td>
-								<td class="rating-clmn">
+								<td>
 									<rating ng-model="audition.avgRating" readonly="false" ng-click="updateRating(audition.file.path, false)" max="max" on-leave="overStar = audition.avgRating" on-hover="hoveringOver(value,key)"></rating>
 								</td>
 								<td>
