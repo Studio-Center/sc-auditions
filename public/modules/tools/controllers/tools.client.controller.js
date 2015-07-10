@@ -148,10 +148,14 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 		    	case 'Scheduled':
 		    		$scope.alreadyScheduledTalents = talentsData.talents;
 		    	break;
+		    	case 'Emailed':
+		    		$scope.emailedTalents = talentsData.talents;
+		    	break;
 		    	default:
 		    		$scope.gatherTalentsToCall();
 					$scope.gatherTalentsMessagesLeft();
 					$scope.gatherTalentsAlreadyScheduled();
+					$scope.gatherEmailedTalent();
 		    	break;
 		    }
 
@@ -186,6 +190,14 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 			$http.post('/tools/gatherTalentsAlreadyScheduled').
 			success(function(data, status, headers, config) {
 				$scope.alreadyScheduledTalents = data;
+			});
+
+		};
+		$scope.gatherEmailedTalent = function(){
+
+			$http.post('/tools/gatherEmailedTalent').
+			success(function(data, status, headers, config) {
+				$scope.emailedTalents = data;
 			});
 
 		};
