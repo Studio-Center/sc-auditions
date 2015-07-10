@@ -81,7 +81,7 @@
 								<td>
 									<a href="/res/auditions/{{project._id}}/{{audition.file.name | encodeUri}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable">ngAudio</a> 
 								</td>
-								<td>
+								<td class="rating-clmn">
 									<rating ng-model="audition.avgRating" readonly="false" ng-click="updateRating(audition.file.path, false)" max="max" on-leave="overStar = audition.avgRating" on-hover="hoveringOver(value,key)"></rating>
 								</td>
 								<td>
@@ -117,6 +117,9 @@
 			</div>
 
 			<style>
+				.rating-clmn{
+					width:145px;
+				}
 				.glyphicon-star, .glyphicon-star-empty {
 					font-size: 25px;
 				}
@@ -124,6 +127,9 @@
 					font-size: 20px;
 				}
 				@media(max-width:1000px){
+					.rating-clmn{
+						width:90px;
+					}
 					.glyphicon-star, .glyphicon-star-empty {
 					font-size: 14px;
 					}
