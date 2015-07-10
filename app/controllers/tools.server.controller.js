@@ -291,6 +291,9 @@ exports.gatherTalentsAlreadyScheduled = function(req, res){
 	gatherTalentsSearch(req, res, 'Scheduled');
 
 };
+exports.gatherEmailedTalent = function(req, res){
+	gatherTalentsSearch(req, res, 'Emailed');
+}
 
 // gather and send list of pre close summary emails
 exports.sendPreCloseSummary = function(req, res){

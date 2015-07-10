@@ -26,6 +26,9 @@ module.exports = function(app) {
 	app.route('/tools/gatherTalentsAlreadyScheduled')
 		.post(users.requiresLogin, tools.gatherTalentsAlreadyScheduled);
 
+	app.route('/tools/gatherEmailedTalent')
+		.post(users.requiresLogin, tools.gatherEmailedTalent);
+
 	app.route('/tools/uploadTalentCSV')
 		.post(users.requiresLogin, multipartyMiddleware, tools.uploadTalentCSV);
 

@@ -26,7 +26,7 @@
 	    			<td><a href="/#!/projects/{{talent.project._id}}" target="_blank">{{talent.project.title}}</a></td>
 	    			<td>{{talent.project.estimatedCompletionDate | date:'short'}}</td>
 					<td><select ng-model="callProjects[key].status" style="width:100px" ng-change="updateStatus(talent.data._id,talent.project._id, callProjects[key].status)" ng-options="item for item in talentStatus"></select></td>
-					<td><button class="btn btn-primary" ng-click="emailCallListTalent(talent,talent.project._id)">Email</button></td>
+					<td><button class="btn btn-primary" ng-click="emailCallListTalent(talent,talent.project._id)"><img style="width:30px;height:auto" src="/img/envelope.png" alt="envelope image"></button></td>
 	    		</tr>
     		</table>
     	</div>
@@ -55,7 +55,7 @@
 	    			<td><a href="/#!/projects/{{talent.project._id}}" target="_blank">{{talent.project.title}}</a></td>
 	    			<td>{{talent.project.estimatedCompletionDate | date:'short'}}</td>
 					<td><select ng-model="messagedTalents[key].status" style="width:100px" ng-change="updateStatus(talent.data._id,talent.project._id, messagedTalents[key].status)" ng-options="item for item in talentStatus"></select></td>
-					<td><button class="btn btn-primary" ng-click="emailCallListTalent(talent,talent.project._id)">Email</button></td>
+					<td><button class="btn btn-primary" ng-click="emailCallListTalent(talent,talent.project._id)"><img style="width:30px;height:auto" src="/img/envelope.png" alt="envelope image"></button></td>
 	    		</tr>
     		</table>
     	</div>
@@ -84,9 +84,38 @@
 	    			<td><a href="/#!/projects/{{talent.project._id}}" target="_blank">{{talent.project.title}}</a></td>
 	    			<td>{{talent.project.estimatedCompletionDate | date:'short'}}</td>
 					<td><select ng-model="alreadyScheduledTalents[key].status" style="width:100px" ng-change="updateStatus(talent.data._id,talent.project._id, alreadyScheduledTalents[key].status)" ng-options="item for item in talentStatus"></select></td>
-					<td><button class="btn btn-primary" ng-click="emailCallListTalent(talent,talent.project._id)">Email</button></td>
+					<td><button class="btn btn-primary" ng-click="emailCallListTalent(talent,talent.project._id)"><img style="width:30px;height:auto" src="/img/envelope.png" alt="envelope image"></button></td>
 	    		</tr>
     		</table>
     	</div>
+    </div>
+    <div class="col-md-12" data-ng-init="gatherEmailedTalent()">
+        <h3>Emailed Talent</h3>
+        <div class="row">
+            <table class="table table-striped">
+                <tr>
+                    <th>Talent Name</th>
+                    <th>Parent Name</th>
+                    <th>Phone #</th>
+                    <th>Alt Phone #</th>
+                    <th>Location</th>
+                    <th>Project</th>
+                    <th>Due Time/Date</th>
+                    <th>Status</th>
+                    <th>Email</th>
+                </tr>
+                <tr ng-repeat="(key, talent) in emailedTalents">
+                    <td>{{talent.data.name}} {{talent.data.lastName}}</td>
+                    <td>{{talent.data.parentName}}</td>
+                    <td>{{talent.data.phone}}</td>
+                    <td>{{talent.data.phone2}}</td>
+                    <td>{{talent.data.locationISDN}}</td>
+                    <td><a href="/#!/projects/{{talent.project._id}}" target="_blank">{{talent.project.title}}</a></td>
+                    <td>{{talent.project.estimatedCompletionDate | date:'short'}}</td>
+                    <td><select ng-model="emailedTalents[key].status" style="width:100px" ng-change="updateStatus(talent.data._id,talent.project._id, emailedTalents[key].status)" ng-options="item for item in talentStatus"></select></td>
+                    <td><button class="btn btn-primary" ng-click="emailCallListTalent(talent,talent.project._id)"><img style="width:30px;height:auto" src="/img/envelope.png" alt="envelope image"></button></td>
+                </tr>
+            </table>
+        </div>
     </div>
 </section>
