@@ -109,7 +109,7 @@
                                 </div>
                             </div>
                         </li>
-                        <li class="list-group-item" ng-repeat="(key, talent) in filtered = (talents | multiTerm:searchUnions:'AND' | filter:searchText:startsWith | filter:searchString) | startFrom:currentPage*limit | limitTo: limit">
+                        <li class="list-group-item" ng-repeat="(key, talent) in filtered = (talents | multiTerm:searchUnions:'AND' | filter:searchText:startsWith | multiTermFull:searchString:'AND') | startFrom:currentPage*limit | limitTo: limit">
                             <div class="row">
                                 <div class="col-lg-1 col-md-1 col-sm-1">
                                     <input type="checkbox" value="{{talent._id}}" ng-click="updateCreateTalent(talent._id, talent.name + ' ' + talent.lastName, talent.email)" ng-checked="checkCreateTalent(talent._id)"> 
