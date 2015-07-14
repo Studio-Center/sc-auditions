@@ -237,7 +237,7 @@
 													</div>
 												</div>
 											</li>
-											<li class="list-group-item" ng-repeat="(key, talent) in talents | filter:filterTeam | startFrom:currentPage*limit | limitTo: limit"> 
+											<li class="list-group-item" ng-repeat="(key, talent) in talents | multiTermFull:filterTeam:'AND' | startFrom:currentPage*limit | limitTo: limit"> 
 												<div class="row">
 													<div class="col-lg-1 col-md-1 col-sm-1">
 														<input type="checkbox" value="{{talent._id}}" ng-click="updateTalent(talent._id, talent.name + ' ' + talent.lastName, talent.email)" ng-checked="checkTalent(talent._id)">
