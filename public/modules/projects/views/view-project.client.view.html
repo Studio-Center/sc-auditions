@@ -350,13 +350,11 @@
 				</accordion-group>
 				</accordion>
 			</div>
-
-			
 		</div>
 		
 		<div class="row">
 			<div class="col-lg-6 col-md-6 col-sm-6">
-				<accordion close-others="oneAtATime" data-ng-show="permitAdminDirector()">
+				<accordion close-others="oneAtATime" data-ng-show="permitAdminProductionCoordinatorDirector()">
 					<accordion-group is-open="status.open">
 					<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
 						<h4 class="panel-title accordion-toggle">
@@ -448,7 +446,7 @@
 					</accordion-group>
 				</accordion>
 
-				<accordion close-others="oneAtATime" data-ng-show="permitAdminDirector() || permitClient()">
+				<accordion close-others="oneAtATime" data-ng-show="permitAdminProductionCoordinatorDirector() || permitClient()">
 					<accordion-group is-open="status.open">
 					<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
 						<h4 class="panel-title accordion-toggle">
