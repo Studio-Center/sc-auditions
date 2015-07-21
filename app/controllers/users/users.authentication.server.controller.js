@@ -86,6 +86,8 @@ exports.appsignin = function(req, res, next) {
 					res.status(400).send(err);
 				} else {
 
+					user = user.toObject();
+
 					// Great, user has successfully authenticated, so we can generate and send them a token.	
 					var expires = moment().add(7, 'days').valueOf()				
 					var token = jwt.encode(
