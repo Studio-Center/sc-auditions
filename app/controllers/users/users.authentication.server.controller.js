@@ -7,7 +7,10 @@ var _ = require('lodash'),
 	errorHandler = require('../errors'),
 	mongoose = require('mongoose'),
 	passport = require('passport'),
-	User = mongoose.model('User');
+	User = mongoose.model('User'),
+	moment = require('moment'),
+	url = require('url'),
+	jwt = require('jwt-simple');
 
 /**
  * Signup
@@ -67,6 +70,116 @@ exports.signin = function(req, res, next) {
 			});
 		}
 	})(req, res, next);
+};
+
+exports.appsignin = function(req, res, next) {
+	passport.authenticate('local', function(err, user, info) {
+		if (err || !user) {
+			res.status(400).send(info);
+		} else {
+			// Remove sensitive data before login
+			user.password = undefined;
+			user.salt = undefined;
+
+			req.login(user, function(err) {
+				if (err) {
+					res.status(400).send(err);
+				} else {
+
+					// Great, user has successfully authenticated, so we can generate and send them a token.	
+					var expires = moment().add(7, 'days').valueOf()				
+					var token = jwt.encode(
+						{
+							iss: user.id,
+							exp: expires
+						}, 
+						req.app.get('jwtTokenSecret')
+					);						
+
+					// set token var
+					user.token = token;
+					// assign expires
+					user.expires = expires;
+
+					res.jsonp(user);
+				}
+			});
+		}
+	})(req, res, next);
+};
+
+exports.token = function(req, res, next){
+
+	var user = req.user;
+
+	if (user) {	
+
+		// Great, user has successfully authenticated, so we can generate and send them a token.	
+		var expires = moment().add(7, 'days').valueOf()				
+		var token = jwt.encode(
+			{
+				iss: user.id,
+				exp: expires
+			}, 
+			req.app.get('jwtTokenSecret')
+		);						
+		res.json({
+			token : token,
+			expires : expires,
+			user : user.toJSON()
+		});
+	} else {						
+		// The password is wrong...
+		res.send('Authentication error', 401)
+	}
+};
+
+// process authorization via jwt token
+exports.jwtauth = function(req, res, next){
+
+	// Parse the URL, we might need this
+	var parsed_url = url.parse(req.url, true)
+
+	/**
+	 * Take the token from:
+	 * 
+	 *  - the POST value access_token
+	 *  - the GET parameter access_token
+	 *  - the x-access-token header
+	 *    ...in that order.
+	 */
+	var token = (req.body && req.body.access_token) || parsed_url.query.access_token || req.headers["x-access-token"];
+
+	if (token) {
+
+		try {
+			var decoded = jwt.decode(token, req.app.get('jwtTokenSecret'));
+
+			if (decoded.exp <= Date.now()) {
+				res.end('Access token has expired', 400)				
+			}
+
+			User.findById(decoded.iss).populate('user', 'displayName').exec(function(err, user) {
+
+				req.login(user, function(err) {
+					if (!err) {					
+						req.user = user									
+						return next()
+					}
+				});
+
+			});
+
+		} catch (err) {	
+			console.log(err);		
+			return next()
+		}
+
+	} else {
+
+		next()
+
+	}
 };
 
 /**

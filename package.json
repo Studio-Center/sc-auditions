@@ -36,6 +36,7 @@
     "helmet": "~0.4.0",
     "jquery": "^2.1.1",
     "json2csv": "^2.4.3",
+    "jwt-simple": "^0.3.0",
     "lodash": "~2.4.1",
     "method-override": "~2.2.0",
     "moment": "^2.10.3",
