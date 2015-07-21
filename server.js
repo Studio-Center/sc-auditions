@@ -4,7 +4,8 @@
  */
 var init = require('./config/init')(),
 	config = require('./config/config'),
-	mongoose = require('mongoose');
+	mongoose = require('mongoose'),
+	jwt = require('jwt-simple');
 
 /**
  * Main application entry file.
@@ -21,6 +22,10 @@ var db = mongoose.connect(config.db, function(err) {
 
 // Init the express application
 var app = require('./config/express')(db);
+
+
+// Set the secret for encoding/decoding JWT tokens
+app.set('jwtTokenSecret', 'studiocenter-auditions-jwt');
 
 // Bootstrap passport config
 require('./config/passport')();

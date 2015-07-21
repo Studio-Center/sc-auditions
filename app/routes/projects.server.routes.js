@@ -13,11 +13,11 @@ module.exports = function(app) {
 
 	// list projects for clients
 	app.route('/projects-client')
-		.get(users.requiresLogin, projects.list);
+		.get(users.jwtauth, users.requiresLogin, projects.list);
 
 	app.route('/projects/:projectId')
-		.get(users.requiresLogin, projects.read)
-		.put(users.requiresLogin, projects.update)
+		.get(users.jwtauth, users.requiresLogin, projects.read)
+		.put(users.jwtauth, users.requiresLogin, projects.update)
 		.delete(users.requiresLogin, projects.hasAuthorization, projects.delete);
 
 	// custom delete method for delete tool

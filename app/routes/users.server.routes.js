@@ -10,7 +10,7 @@ module.exports = function(app) {
 	var users = require('../../app/controllers/users');
 
 	// Setting up the users profile api
-	app.route('/users/me').get(users.me);
+	app.route('/users/me').get(users.jwtauth, users.me);
 
 	app.route('/users/:userId')
 		.put(users.update);
@@ -42,6 +42,8 @@ module.exports = function(app) {
 	// Setting up the users authentication api
 	app.route('/auth/signup').post(users.signup);
 	app.route('/auth/signin').post(users.signin);
+	app.route('/auth/appsignin').post(users.appsignin);
+	app.route('/auth/token').get(users.token);
 	app.route('/auth/signout').get(users.signout);
 
 	// Setting the facebook oauth routes
