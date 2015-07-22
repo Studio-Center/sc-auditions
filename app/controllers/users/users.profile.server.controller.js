@@ -60,6 +60,17 @@ exports.updateAdmin = function(req, res) {
 	//console.log(req.body);
 	var adminUserId = req.user._id;
 
+	// define email signature
+	var emailSig = '';
+	if(req.user.emailSignature){
+		emailSig = req.user.emailSignature;
+	} else {
+		emailSig = '';
+	}
+
+	// store admins email address
+	var adminEmail = req.user.email;
+
 	// load edited user data
 	User.findById(req.body._id).populate('user', 'displayName').exec(function(err, user) {
 		if (user) {
@@ -76,20 +87,26 @@ exports.updateAdmin = function(req, res) {
 					});
 				} else {
 
-					var transporter = nodemailer.createTransport(config.mailer.options);
-					
-					// configure email body
-					var emailBody = 'First Name: ' + user.firstName + '\n';
-					emailBody += 'Last Name: ' + user.lastName + '\n';
-					emailBody += 'Email: ' + user.email + '\n';
-					emailBody += 'Username: ' + user.username + '\n';
+					var template = 'templates/users/client-updated-email';
 
-					// send email notification of update
-					transporter.sendMail({
-					    from: config.mailer.from,
-					    to: user.email,
-					    subject: 'SC Auditions ' + user.displayName + ' account update',
-					    text: emailBody
+					// send new user email
+					res.render(template, {
+						emailSignature: emailSig,
+						user: user,
+						audURL: 'http://' + req.headers.host,
+					}, function(err, clientEmailHTML) {
+
+						var transporter = nodemailer.createTransport(config.mailer.options);
+
+						// send email notification of update
+						transporter.sendMail({
+						    to: user.email,
+							from: adminEmail || config.mailer.from,
+							replyTo: adminEmail || config.mailer.from,
+						    subject: 'Studio Center Auditions - Client Information Updated',
+						    html: clientEmailHTML
+						});
+
 					});
 
 					// reload admin user data
