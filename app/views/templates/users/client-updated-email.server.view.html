@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+</head>
+
+<body>
+
+	<p>Dear {{user.firstName}}, </p>
+
+<p>Your Studio Center Client Account has been updated!</p>
+
+<p>Click this link to get started! <a href="http://www.studiocenterauditions.com">http://www.studiocenterauditions.com</a>.</p>
+
+<p>Your User Name is: {{user.username}}</p>
+
+<p>If you have any questions, shoot me an email and I’ll be sure to help you out!</p>
+
+<p>Thank you for your business! </p>
+
+{% autoescape false %}{{emailSignature}}{% endautoescape %}
+
+</body>
+
+</html>
