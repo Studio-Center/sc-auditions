@@ -164,9 +164,20 @@ exports.delete = function(req, res) {
 
 // allow admin user to create account 
 exports.create = function(req, res) {
+	
 	// For security measurement we remove the roles from the req.body object
-
 	var adminUserId = req.user._id;
+
+	// define email signature
+	var emailSig = '';
+	if(req.user.emailSignature){
+		emailSig = req.user.emailSignature;
+	} else {
+		emailSig = '';
+	}
+
+	// store admins email address
+	var adminEmail = req.user.email;
 
 	// Init Variables
 	var user = new User(req.body);
@@ -183,6 +194,32 @@ exports.create = function(req, res) {
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
+
+			// emailSubject = 'Your First Batch of ' + req.body.project.title + '  Auditions - Studio Center';
+
+			// template = 'templates/users/client-welcome-email';
+
+			// // send new user email
+			// res.render(template, {
+			// 	emailSignature: emailSig,
+			// 	user: user,
+			// 	audURL: 'http://' + req.headers.host,
+			// }, function(err, clientEmailHTML) {
+				
+			// 	var mailOptions = {
+			// 		to: user.email,
+			// 		from: adminEmail || config.mailer.from,
+			// 		replyTo: adminEmail || config.mailer.from,
+			// 		subject: emailSubject,
+			// 		html: clientEmailHTML
+			// 	};
+
+			// 	transporter.sendMail(mailOptions, function(){
+			// 		done(err);
+			// 	});
+
+			// });
+
 			// Remove sensitive data before login
 			user.password = undefined;
 			user.salt = undefined;
@@ -197,6 +234,7 @@ exports.create = function(req, res) {
 							if (err) {
 								res.status(400).send(err);
 							} else {
+								// return user json object
 								res.jsonp(user);
 							}
 						});
