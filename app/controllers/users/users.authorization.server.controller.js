@@ -48,7 +48,7 @@ exports.requiresLogin = function(req, res, next) {
 exports.hasAuthorization = function(roles, res, next) {
 	var _this = this;
 
-	var allowedRoles = ['admin','producer/auditions director'];
+	var allowedRoles = ['admin','producer/auditions director','production coordinator'];
 
 	if (_.intersection(roles.user.roles, allowedRoles).length) {
 		return next();
