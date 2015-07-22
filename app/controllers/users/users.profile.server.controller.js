@@ -164,8 +164,8 @@ exports.delete = function(req, res) {
 
 // allow admin user to create account 
 exports.create = function(req, res) {
-	
 	// For security measurement we remove the roles from the req.body object
+
 	var adminUserId = req.user._id;
 
 	// define email signature
@@ -178,6 +178,8 @@ exports.create = function(req, res) {
 
 	// store admins email address
 	var adminEmail = req.user.email;
+
+	var savedPassword = req.body.password;
 
 	// Init Variables
 	var user = new User(req.body);
@@ -195,30 +197,31 @@ exports.create = function(req, res) {
 			});
 		} else {
 
-			// emailSubject = 'Your First Batch of ' + req.body.project.title + '  Auditions - Studio Center';
+			var template = 'templates/users/client-welcome-email';
 
-			// template = 'templates/users/client-welcome-email';
+			// send new user email
+			res.render(template, {
+				emailSignature: emailSig,
+				user: user,
+				password: savedPassword,
+				audURL: 'http://' + req.headers.host,
+			}, function(err, clientEmailHTML) {
 
-			// // send new user email
-			// res.render(template, {
-			// 	emailSignature: emailSig,
-			// 	user: user,
-			// 	audURL: 'http://' + req.headers.host,
-			// }, function(err, clientEmailHTML) {
+				var emailSubject = 'Studio Center Auditions - Client Login Information';
+
+				var transporter = nodemailer.createTransport(config.mailer.options);
 				
-			// 	var mailOptions = {
-			// 		to: user.email,
-			// 		from: adminEmail || config.mailer.from,
-			// 		replyTo: adminEmail || config.mailer.from,
-			// 		subject: emailSubject,
-			// 		html: clientEmailHTML
-			// 	};
+				var mailOptions = {
+					to: user.email,
+					from: adminEmail || config.mailer.from,
+					replyTo: adminEmail || config.mailer.from,
+					subject: emailSubject,
+					html: clientEmailHTML
+				};
 
-			// 	transporter.sendMail(mailOptions, function(){
-			// 		done(err);
-			// 	});
+				transporter.sendMail(mailOptions, function(){});
 
-			// });
+			});
 
 			// Remove sensitive data before login
 			user.password = undefined;
