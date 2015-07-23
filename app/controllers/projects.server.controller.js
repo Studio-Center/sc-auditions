@@ -2049,7 +2049,7 @@ exports.uploadBackup = function(req, res, next){
 						} else {
 
 							// remove backup dir
-							rimraf.sync(backupPath);
+							//rimraf.sync(backupPath);
 
 							// reload project list
 							Project.find().sort('-created').populate('user', 'displayName').exec(function(err, projects) {
