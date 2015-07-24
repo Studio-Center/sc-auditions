@@ -31,10 +31,9 @@
         </div>
         <div class="form-group">
           <div class="panel panel-default">
-            <div class="panel-heading"> <strong>Scripts (PDF only!)</strong> </div>
+            <div class="panel-heading"> <strong>Scripts (Any file type)</strong> </div>
             <div class="panel-body">
               <div ng-if="rejFiles.length > 0">
-                <h4 style="text-align:center">Please make sure upload is a PDF</h4>
                 <ul style="clear:both" ng-show="rejFiles.length > 0" class="response">
                   <li class="sel-file" ng-repeat="f in rejFiles"> Rejected file: {{f.name}} - size: {{f.size}}B - type: {{f.type}} </li>
                 </ul>
@@ -42,17 +41,17 @@
               <div class="clearfix" style="padding-bottom:5px">
                 <div ng-file-drop ng-file-select="uploadTempScript($files)" ng-model="files" ng-model-rejected="rejFiles"
                    drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}" class="drop-box"
-                   ng-multiple="true" ng-accept="'*.pdf'"
+                   ng-multiple="true" ng-accept="'*'"
                    drop-available="dropAvailable">
                   <div ng-hide="dropAvailable">File Drop not available</div>
-                  <div ng-show="dropAvailable">Drop PDF</div>
+                  <div ng-show="dropAvailable">Drop File</div>
                   <div>or click to select</div>
                 </div>
               </div>
               <ul class="list-group">
                 <li class="list-group-item" ng-repeat="(key, script) in scripts">
                   <div class="row">
-                  <div class="col-lg-11 col-md-11 col-sm-11"> <strong>{{key+1}}.</strong> <a href="/res/scripts/temp/{{script.file.name | encodeUri}}" target="_blank" data-ng-bind="script.file.name"></a> <a href="/res/scripts/temp/{{script.file.name}}" target="_blank"><img src="/img/Adobe-Acrobat-icon.png" alt="download PDF"></a> </div>
+                  <div class="col-lg-11 col-md-11 col-sm-11"> <strong>{{key+1}}.</strong> <a href="/res/scripts/temp/{{script.file.name | encodeUri}}" target="_blank" data-ng-bind="script.file.name"></a> </div>
                   <div class="col-lg-1 col-md-1 col-sm-1">
                     <button data-ng-show="permitAdminDirector()" ng-click="delTempScript(key)" target="_blank" class="btn btn-danger">Delete</button>
                   </div>
