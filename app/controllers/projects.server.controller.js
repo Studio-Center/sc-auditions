@@ -232,9 +232,9 @@ var sendTalentEmail = function(req, res, project, talent){
 			// update talent email status 
 			for(var i = 0; i < project.talent.length; ++i){
 				if(project.talent[i].talentId === talent.talentId){
-					console.log(project.talent[i].status);
+					//console.log(project.talent[i].status);
 					project.talent[i].status = 'Emailed';
-					console.log(project.talent[i].status);
+					//console.log(project.talent[i].status);
 					done('', email, talentInfo);
 				}
 			}
@@ -1270,7 +1270,7 @@ exports.list = function(req, res) {
 
 		Project.find().sort('-created').populate('user', 'displayName').exec(function(err, projects) {
 			if (err) {
-				console.log(err);
+				//console.log(err);
 				return res.status(400).send({
 					message: errorHandler.getErrorMessage(err)
 				});
