@@ -5,8 +5,20 @@
 </head>
 
 <body>
-	<p>These auditions for your project {{project.title}} due {{dueDate}} have been set to booked.</p>
+
+	Dear {{user.firstName}}:
+
+	Your audition project: {{project.title}} has been booked!
+
+	Here are links to your selections;
+
 	{% autoescape false %}{{bookedText}}{% endautoescape %}
+
+	<p>You can review the project by logging in to our dedicated auditions website at <a href="http://www.studiocenterauditions.com">http://www.studiocenterauditions.com</a>.
+
+	<p>We’ll be contacting you shortly about scheduling these awesome talent!</p>
+
+	<p>Thank you so much for working with us!</p>
 
 	{% autoescape false %}{{emailSignature}}{% endautoescape %}
 </body>
