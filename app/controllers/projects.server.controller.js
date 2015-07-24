@@ -1718,6 +1718,8 @@ exports.bookAuditions = function(req, res, next){
 
 			var newProject = project.toObject();
 
+			newProject.status = 'Booked';
+
 			Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
 				
 				project = _.extend(project, newProject);
