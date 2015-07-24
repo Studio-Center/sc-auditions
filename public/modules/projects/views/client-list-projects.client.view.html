@@ -1,4 +1,4 @@
-<section data-ng-controller="ProjectsController" data-ng-init="find();findOne()">
+<section data-ng-controller="ProjectsController" data-ng-init="find();findOne();curRatings()">
 	<div class="row" style="margin-top:20px">
 		<div class="col-md-12">
 			<div class="text-center">
@@ -82,7 +82,7 @@
 									<a href="/res/auditions/{{project._id}}/{{audition.file.name | encodeUri}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable">ngAudio</a> 
 								</td>
 								<td>
-									<rating ng-model="audition.avgRating" readonly="false" ng-click="updateRating(audition.file.path, false)" max="max" on-leave="overStar = lookUpRating(key)" on-hover="hoveringOver(value,key)"></rating>
+									<rating ng-model="audition.curRating" readonly="false" ng-click="updateRating(audition.file.path, false)" max="max" on-leave="overStar = lookUpRating(key)" on-hover="hoveringOver(value,key)"></rating>
 								</td>
 								<td>
 									<span ng-show="verifyAudio(key)">
