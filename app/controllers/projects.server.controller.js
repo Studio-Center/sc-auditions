@@ -244,7 +244,7 @@ var sendTalentEmail = function(req, res, project, talent){
 		function(email, talentInfo, done){
 			emailTalent(talent, talentInfo, email, project, req, res);
 
-			var newProject = project.toObject();
+			var newProject = project;
 
 			Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
 				
