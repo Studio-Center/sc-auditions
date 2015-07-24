@@ -140,6 +140,16 @@
 				<div class="panel-heading">
 					<div class="row">
 						<div class="col-md-4" style="text-align:center">
+							<a href="" class="btn btn-primary" ng-click="downloadAllAuditions()">Download All</a>
+						</div>
+						
+						<div class="col-md-4" style="text-align:center">
+							<div ng-if="bookSelectedShow()">
+								<a href="" class="btn btn-primary" ng-click="bookSelectedAuditions()">Book Selected</a>
+							</div>
+						</div>
+						
+						<div class="col-md-4" style="text-align:center">
 							<a href="" class="btn btn-primary" ng-click="hideSelectedAuditions()">
 								<span ng-if="hideSelected == false">
 								Hide Selected
@@ -148,14 +158,6 @@
 								Show Hidden
 								</span>
 							</a>
-						</div>
-						<div class="col-md-4" style="text-align:center">
-							<div ng-if="bookSelectedShow()">
-								<a href="" class="btn btn-primary" ng-click="bookSelectedAuditions()">Book Selected</a>
-							</div>
-						</div>
-						<div class="col-md-4" style="text-align:center">
-							<a href="" class="btn btn-primary" ng-click="downloadAllAuditions()">Download All</a>
 						</div>
 					</div>
 
