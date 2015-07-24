@@ -1091,14 +1091,25 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			$scope.projects = Projects.query();
 		};
 
+		// dynamically update project view
 		Socket.on('projectsListUpdate', function() {
 
-			// merge existing open project with updated project
-			$http.post('/projects/getproject', {
-				id: $scope.project._id
-			}).success(function(data, status, headers, config) {
-				$scope.project = angular.extend($scope.project, data);
-			});
+			var allowRoles = ['admin', 'producer/auditions director', 'production coordinator', 'talent director'];
+
+			for(var i = 0; i < Authentication.user.roles.length; ++i){
+				for(var j = 0; j < allowRoles.length; ++j){
+					if(Authentication.user.roles[i] === allowRoles[j]) {
+
+						// merge existing open project with updated project
+						$http.post('/projects/getproject', {
+							id: $scope.project._id
+						}).success(function(data, status, headers, config) {
+							$scope.project = angular.extend($scope.project, data);
+						});
+
+					}
+				}
+			}
 
 		});
 
