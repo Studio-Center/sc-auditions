@@ -6,15 +6,15 @@
 
 <body>
 
-	Dear {{user.firstName}}:
+	<p>Dear {{user.firstName}}:</p>
 
-	Your audition project: {{project.title}} has been booked!
+	<p>Your audition project: {{project.title}} has been booked!</p>
 
-	Here are links to your selections;
+	<p>Here are links to your selections;</p>
 
 	{% autoescape false %}{{bookedText}}{% endautoescape %}
 
-	<p>You can review the project by logging in to our dedicated auditions website at <a href="http://www.studiocenterauditions.com">http://www.studiocenterauditions.com</a>.
+	<p>You can review the project by logging in to our dedicated auditions website at <a href="http://www.studiocenterauditions.com">http://www.studiocenterauditions.com</a>.</p>
 
 	<p>We’ll be contacting you shortly about scheduling these awesome talent!</p>
 
