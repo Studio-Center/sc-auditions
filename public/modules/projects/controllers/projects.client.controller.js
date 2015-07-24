@@ -955,6 +955,15 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		// client update
 
 		// update audition rating
+		$scope.curRatings = function(){
+			for(var j = 0; j < $scope.project.auditions.length; ++j){
+				for(var i = 0; i < $scope.project.auditions[j].rating.length; ++i){
+					if($scope.project.auditions[j].rating[i].userId === Authentication.user._id){
+						$scope.project.auditions[j].curRating = $scope.project.auditions[j].rating[i].value;
+					}
+				}
+			}
+		};
 		$scope.lookUpRating = function(key){
 			for(var i = 0; i < $scope.project.auditions[key].rating.length; ++i){
 				if($scope.project.auditions[key].rating[i].userId === Authentication.user._id){
@@ -982,6 +991,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					// toggle existing rating if found
 					if($scope.project.auditions[key].rating[i].userId === Authentication.user._id){
 						$scope.project.auditions[key].rating.splice(i,1);
+						$scope.project.auditions[key].curRating = $scope.selCheckVal;
 					} else {
 						// gather average rating
 						avgRating += $scope.project.auditions[key].rating[i].value;
@@ -1008,7 +1018,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			$scope.project.auditions[key].avgRating = avgRating;
 
 			// update project store
-			$scope.update(redirect);
+			$scope.updateNoRefresh();
 		};
 
 		// update audition rating
@@ -1144,6 +1154,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 			// retrieve selected project
 			$scope.findOne();
+
+			// update selected rating
+			$scope.curRatings();
 
 		};
 
