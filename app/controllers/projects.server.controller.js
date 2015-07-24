@@ -278,6 +278,19 @@ var sendTalentEmail = function(req, res, project, talent){
 
 };
 
+// gather project data
+exports.getproject = function(req, res){
+
+	Project.findById(req.body.id).populate('user', 'displayName').exec(function(err, project) {
+		if (err) {
+			return res.json(400, err);
+		} else {
+			res.jsonp(project);
+		}
+	});
+
+};
+
 // send talent project start email
 exports.sendTalentEmail = function(req, res){
 

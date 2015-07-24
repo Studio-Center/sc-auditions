@@ -1092,7 +1092,14 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		};
 
 		Socket.on('projectsListUpdate', function() {
-			$scope.find();
+
+			// merge existing open project with updated project
+			$http.post('/projects/getproject', {
+				id: $scope.project._id
+			}).success(function(data, status, headers, config) {
+				$scope.project = angular.extend($scope.project, data);
+			});
+
 		});
 
 		// find single project by id
