@@ -955,6 +955,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		// client update
 
 		// update audition rating
+		$scope.lookUpRating = function(key){
+			for(var i = 0; i < $scope.project.auditions[key].rating.length; ++i){
+				if($scope.project.auditions[key].rating[i].userId === Authentication.user._id){
+					return $scope.project.auditions[key].rating[i].value;
+				}
+			}
+		};
 		$scope.updateRating = function(path, redirect){
 			// determine if update should result in user redirect
 			redirect = typeof redirect === 'undefined' ? true : redirect;
