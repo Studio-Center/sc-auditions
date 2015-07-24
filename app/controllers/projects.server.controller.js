@@ -1799,6 +1799,7 @@ exports.bookAuditions = function(req, res, next){
 			bookedText += '</p>';
 
 			res.render('templates/projects/booked-audition-email', {
+				user: req.user,
 				project: project,
 				dueDate: newDate,
 				emailSignature: emailSig,
@@ -1817,7 +1818,7 @@ exports.bookAuditions = function(req, res, next){
 			newDate = dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT');
 
 			var transporter = nodemailer.createTransport(config.mailer.options);
-			var emailSubject = 'Auditions Booked - ' + project.title + ' - Due ' + newDate + ' EST';
+			var emailSubject = 'Auditions Booked - ' + project.title;
 
 			var mailOptions = {
 				to: clientsEmails,
