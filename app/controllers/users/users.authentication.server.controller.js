@@ -89,7 +89,7 @@ exports.appsignin = function(req, res, next) {
 					user = user.toObject();
 
 					// Great, user has successfully authenticated, so we can generate and send them a token.	
-					var expires = moment().add(7, 'days').valueOf()				
+					var expires = moment().add(7, 'days').valueOf();
 					var token = jwt.encode(
 						{
 							iss: user.id,
@@ -117,7 +117,7 @@ exports.token = function(req, res, next){
 	if (user) {	
 
 		// Great, user has successfully authenticated, so we can generate and send them a token.	
-		var expires = moment().add(7, 'days').valueOf()				
+		var expires = moment().add(7, 'days').valueOf();
 		var token = jwt.encode(
 			{
 				iss: user.id,
@@ -132,7 +132,7 @@ exports.token = function(req, res, next){
 		});
 	} else {						
 		// The password is wrong...
-		res.send('Authentication error', 401)
+		res.send('Authentication error', 401);
 	}
 };
 
@@ -140,7 +140,7 @@ exports.token = function(req, res, next){
 exports.jwtauth = function(req, res, next){
 
 	// Parse the URL, we might need this
-	var parsed_url = url.parse(req.url, true)
+	var parsed_url = url.parse(req.url, true);
 
 	/**
 	 * Take the token from:
@@ -150,7 +150,7 @@ exports.jwtauth = function(req, res, next){
 	 *  - the x-access-token header
 	 *    ...in that order.
 	 */
-	var token = (req.body && req.body.access_token) || parsed_url.query.access_token || req.headers["x-access-token"];
+	var token = (req.body && req.body.access_token) || parsed_url.query.access_token || req.headers['x-access-token'];
 
 	if (token) {
 
@@ -158,15 +158,15 @@ exports.jwtauth = function(req, res, next){
 			var decoded = jwt.decode(token, req.app.get('jwtTokenSecret'));
 
 			if (decoded.exp <= Date.now()) {
-				res.end('Access token has expired', 400)				
+				res.end('Access token has expired', 400);
 			}
 
 			User.findById(decoded.iss).populate('user', 'displayName').exec(function(err, user) {
 
 				req.login(user, function(err) {
 					if (!err) {					
-						req.user = user									
-						return next()
+						req.user = user;
+						return next();
 					}
 				});
 
@@ -174,12 +174,12 @@ exports.jwtauth = function(req, res, next){
 
 		} catch (err) {	
 			console.log(err);		
-			return next()
+			return next();
 		}
 
 	} else {
 
-		next()
+		next();
 
 	}
 };
