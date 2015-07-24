@@ -940,6 +940,17 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			});
 		};
 
+		$scope.updateNoRefresh = function(){
+
+			// merge existing open project with updated project
+			$http.post('/projects/updateNoRefresh', {
+				project: $scope.project
+			}).success(function(data, status, headers, config) {
+				$scope.project = angular.extend($scope.project, data);
+			});
+
+		};
+
 		// client update
 
 		// update audition rating
@@ -1018,7 +1029,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			$scope.project.auditions[key].favorite = favoriteVal;
 
 			// update project store
-			$scope.update(redirect);
+			$scope.updateNoRefresh();
 		};
 
 		// update phase options
