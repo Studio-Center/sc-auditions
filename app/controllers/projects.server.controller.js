@@ -417,6 +417,40 @@ exports.updateTalentStatus = function(req, res){
 
 };
 
+// update talent status
+exports.updateNoRefresh = function(req, res){
+
+	var allowedRoles = ['admin','producer/auditions director', 'production coordinator','client','client-client'];
+
+	// validate user interaction
+	if (_.intersection(req.user.roles, allowedRoles).length) {
+
+		var project = req.body.project;
+
+		Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
+
+			project = _.extend(project, req.body.project);
+
+			req.project = project;
+
+			project.save(function(err) {
+				if (err) {
+					return res.json(400, err);
+				} else {
+					var socketio = req.app.get('socketio');
+						socketio.sockets.emit('projectUpdate', {id: project._id}); 
+						socketio.sockets.emit('callListUpdate', {filter: ''}); 
+
+					res.jsonp(project);
+				}
+			});	
+
+		});
+
+	}
+
+};
+
 // send client email based on user button click
 exports.sendClientEmail = function(req, res){
 
@@ -546,6 +580,7 @@ exports.lead = function(req, res){
 	    text: emailBody
 	});
 
+	return res.status(200).send();
 };
 
 var emailClients = function(client, email, project, req, res){

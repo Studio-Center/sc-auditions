@@ -24,6 +24,9 @@ module.exports = function(app) {
 	app.route('/projects/getproject')
 		.post(users.requiresLogin, projects.hasAuthorization, projects.getproject);
 
+	app.route('/projects/updateNoRefresh')
+		.post(users.requiresLogin, projects.updateNoRefresh);
+
 	// custom delete method for delete tool
 	app.route('/projects/deleteProjectById')
 		.post(users.requiresLogin, projects.hasAuthorization, projects.deleteById);
