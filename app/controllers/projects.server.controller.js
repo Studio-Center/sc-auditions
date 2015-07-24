@@ -571,13 +571,28 @@ exports.lead = function(req, res){
 	emailBody += 'Email: ' + req.body.email + '\n';
 	emailBody += 'Description: ' + req.body.describe + '\n';
 
+	//var file = req.files.file;
+    var appDir = path.dirname(require.main.filename);
+    var relativePath =  'res' + '/' + 'scripts' + '/temp/';
+    var newPath = appDir + '/public/' + relativePath;
+
+	var attachements = [];
+	
+	for(var i = 0; i < req.body.scripts.length; ++i){
+		attachements[i] = {
+			filename: req.body.scripts[i].file.name,
+			path: newPath + req.body.scripts[i].file.name
+		}
+	}
+
 	// send email
 	var transporter = nodemailer.createTransport(config.mailer.options);
 	transporter.sendMail({
 	    from: config.mailer.from,
 	    to: 'rob@studiocenter.com',
 	    subject: 'Start a new Audition Project Form Submission',
-	    text: emailBody
+	    text: emailBody,
+	    attachments: attachements
 	});
 
 	return res.status(200).send();
