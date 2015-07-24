@@ -445,7 +445,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			        company: $scope.newLead.company,
 			        phone: $scope.newLead.phone,
 			        email: $scope.newLead.email,
-			        describe: $scope.newLead.describe
+			        describe: $scope.newLead.describe,
+			        scripts: $scope.scripts
 			    }).
 				success(function(data, status, headers, config) {
             	$location.path('/projects/new-audition-form/thanks');
