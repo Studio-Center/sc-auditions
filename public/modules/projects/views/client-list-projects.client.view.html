@@ -47,13 +47,22 @@
 								<tr>
 									<th>Sel</th>
 									<th>#</th>
-									<th><a href="" ng-click="predicate = 'file.name'; reverse=false">Name</a>
-										(<a href="" ng-click="predicate = '-file.name'; reverse=false">^</a>)</th>
-									<th class="rating-clmn"><a href="" ng-click="predicate = 'avgRating'; reverse=false">Rating</a>
-										(<a href="" ng-click="predicate = '-avgRating'; reverse=false">^</a>)</th>
+									<th>
+										<span><a href="" ng-click="predicate = (predicate == 'file.name' ? '-file.name' : 'file.name'); reverse=false">Name</a></span>
+										<span ng-if="predicate == '-file.name'">(^)</span>
+										<span ng-if="predicate == 'file.name'">(V)</span>
+									</th>
+									<th class="rating-clmn">
+										<span><a href="" ng-click="predicate = (predicate == 'avgRating' ? '-avgRating' : 'avgRating'); reverse=false">Rating</a></span>
+										<span ng-if="predicate == '-avgRating'">(^)</span>
+										<span ng-if="predicate == 'avgRating'">(V)</span>
+									</th>
 									<th>Playback</th>
-									<th><a href="" ng-click="predicate = 'favorite'; reverse=false">Favorite</a>
-										(<a href="" ng-click="predicate = '-favorite'; reverse=false">^</a>)</th>
+									<th>
+										<span><a href="" ng-click="predicate = (predicate == 'favorite' ? '-favorite' : 'favorite'); reverse=false">Favorite</a></span>
+										<span ng-if="predicate == '-favorite'">(^)</span>
+										<span ng-if="predicate == 'favorite'">(V)</span>
+									</th>
 									<th>Hide</th>
 								</tr>
 							<tr ng-if="isDisplayed(audition.file.path)" ng-repeat="(key, audition) in project.auditions | orderBy:predicate:reverse">

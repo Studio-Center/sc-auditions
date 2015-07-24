@@ -36,6 +36,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		// projects client portal
 		$scope.selectedAuditions = [];
 		$scope.hideList = [];
+		// filter vars
+		$scope.predicate = '';
+		$scope.reverse = '';
 
 		// used for paginator
 		$scope.Math = window.Math;
