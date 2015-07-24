@@ -1123,11 +1123,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		// dynamically update project view
 		Socket.on('projectsListUpdate', function() {
 
-			var allowRoles = ['admin', 'producer/auditions director', 'production coordinator', 'talent director'];
-
-			for(var i = 0; i < Authentication.user.roles.length; ++i){
-				for(var j = 0; j < allowRoles.length; ++j){
-					if(Authentication.user.roles[i] === allowRoles[j]) {
+			
 
 						// merge existing open project with updated project
 						$http.post('/projects/getproject', {
@@ -1136,9 +1132,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 							$scope.project = angular.extend($scope.project, data);
 						});
 
-					}
-				}
-			}
+				
 
 		});
 
