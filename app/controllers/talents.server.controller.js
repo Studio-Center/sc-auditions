@@ -10,6 +10,7 @@ var mongoose = require('mongoose'),
 	config = require('../../config/config'),
 	async = require('async'),
 	nodemailer = require('nodemailer'),
+	sgTransport = require('nodemailer-sendgrid-transport'),
 	dateFormat = require('dateformat'),
 	now = new Date();
 
@@ -94,7 +95,7 @@ exports.create = function(req, res) {
 					var emailSubject = 'NEW TALENT ADDITION TO VO ROSTER:  ' + talent.name + ' ' + talent.lastName;
 
 					// send email
-					var transporter = nodemailer.createTransport(config.mailer.options);
+					var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
 
 					var mailOptions = {
 										to: 'Dave@studiocenter.com',
@@ -124,7 +125,7 @@ exports.create = function(req, res) {
 					var emailSubject = 'NEW TALENT ADDITION TO VO ROSTER:  ' + talent.name + ' ' + talent.lastName;
 
 					// send email
-					var transporter = nodemailer.createTransport(config.mailer.options);
+					var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
 
 					var mailOptions = {
 										to: 'Ken@studiocenter.com',
@@ -154,7 +155,7 @@ exports.create = function(req, res) {
 					var emailSubject = 'NEW TALENT ADDITION TO VO ROSTER:  ' + talent.name + ' ' + talent.lastName;
 
 					// send email
-					var transporter = nodemailer.createTransport(config.mailer.options);
+					var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
 
 					var mailOptions = {
 										to: 'Kevin@studiocenter.com',
@@ -241,7 +242,7 @@ exports.delete = function(req, res) {
 			var emailSubject = 'TALENT TERMINATED FROM VO ROSTER: ' + talent.name + ' ' + talent.lastName;
 
 			// send email
-			var transporter = nodemailer.createTransport(config.mailer.options);
+			var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
 
 			var mailOptions = {
 								to: 'Dave@studiocenter.com',
@@ -271,7 +272,7 @@ exports.delete = function(req, res) {
 			var emailSubject = 'TALENT TERMINATED FROM VO ROSTER: ' + talent.name + ' ' + talent.lastName;
 
 			// send email
-			var transporter = nodemailer.createTransport(config.mailer.options);
+			var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
 
 			var mailOptions = {
 								to: 'Ken@studiocenter.com',

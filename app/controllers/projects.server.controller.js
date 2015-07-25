@@ -18,6 +18,7 @@ var mongoose = require('mongoose'),
 	mv = require('mv'),
 	unzip = require('unzip-wrapper'),
 	nodemailer = require('nodemailer'),
+	sgTransport = require('nodemailer-sendgrid-transport'),
 	archiver = require('archiver'),
 	dateFormat = require('dateformat'),
 	// set date and timezone
@@ -85,7 +86,7 @@ exports.sendEmail = function(req, res){
 			},
 			function(emailHTML, email, bcc, done) {
 				// send email
-				var transporter = nodemailer.createTransport(config.mailer.options);
+				var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
 				var mailOptions = {
 				    to: email.to,
 				    bcc: bcc,
@@ -143,7 +144,7 @@ var emailTalent = function(selTalent, talentInfo, email, project, req, res){
 		// send out talent project creation email
 		function(talentEmailHTML, done) {
 			// send email
-			var transporter = nodemailer.createTransport(config.mailer.options);
+			var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
 			var emailSubject = '';
 			var newDate = new Date(project.estimatedCompletionDate);
 			newDate = newDate.setHours(newDate.getHours() - 1);
@@ -529,7 +530,7 @@ exports.sendClientEmail = function(req, res){
 					}
 
 					// send email
-					var transporter = nodemailer.createTransport(config.mailer.options);
+					var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
 
 					var mailOptions = {
 										to: curClient.email,
@@ -586,7 +587,7 @@ exports.lead = function(req, res){
 	}
 
 	// send email
-	var transporter = nodemailer.createTransport(config.mailer.options);
+	var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
 	transporter.sendMail({
 	    from: config.mailer.from,
 	    to: 'rob@studiocenter.com',
@@ -629,7 +630,7 @@ var emailClients = function(client, email, project, req, res){
 				var emailSubject = 'Your audition project:  ' + project.title + ' Due ' + dateFormat(project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
 
 				// send email
-				var transporter = nodemailer.createTransport(config.mailer.options);
+				var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
 
 				var mailOptions = {
 									to: client.email,
@@ -826,7 +827,7 @@ exports.create = function(req, res) {
 			// send out regular project creation email
 			function(emailHTML, email, done) {
 				// send email
-				var transporter = nodemailer.createTransport(config.mailer.options);
+				var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
 				
 				var mailOptions = {
 					to: email.to,
@@ -1817,7 +1818,7 @@ exports.bookAuditions = function(req, res, next){
 			newDate = newDate.setHours(newDate.getHours() - 1);
 			newDate = dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT');
 
-			var transporter = nodemailer.createTransport(config.mailer.options);
+			var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
 			var emailSubject = 'Auditions Booked - ' + project.title;
 
 			var mailOptions = {
