@@ -40,6 +40,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.predicate = '';
 		$scope.reverse = '';
 
+		$scope.updatePred = function(pred){
+			$scope.predicate = pred;
+		};
+
 		// used for paginator
 		$scope.Math = window.Math;
 		$scope.currentPage = 0;
