@@ -5,6 +5,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	function($scope, $stateParams, $location, Authentication, Projects, $upload, ngAudio, $http, $modal, $rootScope, Socket ) {
 		$scope.authentication = Authentication;
 
+		$scope.project = {};
 		// rating
 		$scope.max = 5;
 		$scope.isReadonly = false;
@@ -1130,16 +1131,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		// dynamically update project view
 		Socket.on('projectsListUpdate', function() {
 
-			
-
-						// merge existing open project with updated project
-						$http.post('/projects/getproject', {
-							id: $scope.project._id
-						}).success(function(data, status, headers, config) {
-							$scope.project = angular.extend($scope.project, data);
-						});
-
-				
+			$scope.find();
 
 		});
 
@@ -1164,7 +1156,12 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		Socket.on('projectUpdate', function(pojectData) {
 
 			if(String(pojectData.id) === String($scope.project._id)){
-				$scope.findOne();
+				// merge existing open project with updated project
+				$http.post('/projects/getproject', {
+					id: $scope.project._id
+				}).success(function(data, status, headers, config) {
+					$scope.project = angular.extend($scope.project, data);
+				});
 			}
 
 		});
