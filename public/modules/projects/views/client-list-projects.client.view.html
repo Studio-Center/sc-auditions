@@ -42,24 +42,24 @@
 			<div class="panel panel-default">
 				
 				<div class="panel-body">
-					<div class="row">
+					<div class="row">{{predicate}}
 							<table class="table table-striped">
 								<tr>
 									<th>Sel</th>
 									<th>#</th>
 									<th>
-										<span><a href="" ng-click="predicate = (predicate == 'file.name' ? '-file.name' : 'file.name'); reverse=false">Name</a></span>
+										<span><a href="" ng-click="updatePred(predicate == 'file.name' ? '-file.name' : 'file.name'); reverse=false">Name</a></span>
 										<span ng-if="predicate == '-file.name'">(^)</span>
 										<span ng-if="predicate == 'file.name'">(V)</span>
 									</th>
 									<th class="rating-clmn">
-										<span><a href="" ng-click="predicate = (predicate == 'curRating' ? '-curRating' : 'curRating'); reverse=false">Rating</a></span>
+										<span><a href="" ng-click="updatePred(predicate == 'curRating' ? '-curRating' : 'curRating'); reverse=false">Rating</a></span>
 										<span ng-if="predicate == '-curRating'">(^)</span>
 										<span ng-if="predicate == 'curRating'">(V)</span>
 									</th>
 									<th>Playback</th>
 									<th>
-										<span><a href="" ng-click="predicate = (predicate == 'favorite' ? '-favorite' : 'favorite'); reverse=false">Favorite</a></span>
+										<span><a href="" ng-click="updatePred(predicate == 'favorite' ? '-favorite' : 'favorite'); reverse=false">Favorite</a></span>
 										<span ng-if="predicate == '-favorite'">(^)</span>
 										<span ng-if="predicate == 'favorite'">(V)</span>
 									</th>
