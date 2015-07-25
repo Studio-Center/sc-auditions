@@ -16,6 +16,7 @@ var mongoose = require('mongoose'),
 	async = require('async'),
 	mv = require('mv'),
 	nodemailer = require('nodemailer'),
+	sgTransport = require('nodemailer-sendgrid-transport'),
 	archiver = require('archiver'),
 	dateFormat = require('dateformat'),
 	// set date and timezone
@@ -74,7 +75,7 @@ exports.sendTalentEmails = function(req, res){
 								}
 
 								// send email
-								var transporter = nodemailer.createTransport(config.mailer.options);
+								var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
 
 								var mailOptions = {
 													to: talentEmails,
@@ -153,7 +154,7 @@ exports.sendTalentEmails = function(req, res){
 									}
 
 									// send email
-									var transporter = nodemailer.createTransport(config.mailer.options);
+									var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
 
 									var mailOptions = {
 														to: talentEmails,
@@ -498,7 +499,7 @@ exports.sendPreCloseSummary = function(req, res){
 					newDate = newDate.setHours(newDate.getHours() - 1);
 					newDate = dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT');
 
-					var transporter = nodemailer.createTransport(config.mailer.options);
+					var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
 
 					var emailSubject = project.title + ' - Pre-Close Summary (Due in 1 hr)' + ' - Due ' + newDate + ' EST';
 

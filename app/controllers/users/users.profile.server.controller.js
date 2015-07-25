@@ -9,7 +9,8 @@ var _ = require('lodash'),
 	passport = require('passport'),
 	User = mongoose.model('User'),
 	config = require('../../../config/config'),
-	nodemailer = require('nodemailer');
+	nodemailer = require('nodemailer'),
+	sgTransport = require('nodemailer-sendgrid-transport');
 
 /**
  * Update user details
@@ -96,7 +97,7 @@ exports.updateAdmin = function(req, res) {
 						audURL: 'http://' + req.headers.host,
 					}, function(err, clientEmailHTML) {
 
-						var transporter = nodemailer.createTransport(config.mailer.options);
+						var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
 
 						// send email notification of update
 						transporter.sendMail({
@@ -226,7 +227,7 @@ exports.create = function(req, res) {
 
 				var emailSubject = 'Studio Center Auditions - Client Login Information';
 
-				var transporter = nodemailer.createTransport(config.mailer.options);
+				var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
 				
 				var mailOptions = {
 					to: user.email,
