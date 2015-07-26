@@ -70,6 +70,7 @@ exports.forgot = function(req, res, next) {
 			var mailOptions = {
 				to: user.email,
 				from: config.mailer.from,
+				cc: 'audition­notification@studiocenter.com',
 				subject: 'Password Reset',
 				html: emailHTML
 			};
@@ -172,6 +173,7 @@ exports.reset = function(req, res, next) {
 			var mailOptions = {
 				to: user.email,
 				from: config.mailer.from,
+				cc: 'audition­notification@studiocenter.com',
 				subject: 'Your password has been changed',
 				html: emailHTML
 			};
