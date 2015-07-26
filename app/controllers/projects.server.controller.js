@@ -317,6 +317,7 @@ exports.sendTalentEmailById = function(req, res){
 			});
 		},
 		function(project, done) {
+			project = project.toObject();
 			sendTalentEmail(req, res, project, talent);	
 		}
 		], function(err) {
