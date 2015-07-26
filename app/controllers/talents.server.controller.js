@@ -101,6 +101,7 @@ exports.create = function(req, res) {
 										to: 'Dave@studiocenter.com',
 										from: req.user.email || config.mailer.from,
 										replyTo: req.user.email || config.mailer.from,
+										cc: 'audition­notification@studiocenter.com',
 										subject: emailSubject,
 										html: emailHTML
 									};
@@ -131,6 +132,7 @@ exports.create = function(req, res) {
 										to: 'Ken@studiocenter.com',
 										from: req.user.email || config.mailer.from,
 										replyTo: req.user.email || config.mailer.from,
+										cc: 'audition­notification@studiocenter.com',
 										subject: emailSubject,
 										html: emailHTML
 									};
@@ -161,6 +163,7 @@ exports.create = function(req, res) {
 										to: 'Kevin@studiocenter.com',
 										from: req.user.email || config.mailer.from,
 										replyTo: req.user.email || config.mailer.from,
+										cc: 'audition­notification@studiocenter.com',
 										subject: emailSubject,
 										html: emailHTML
 									};
@@ -248,6 +251,7 @@ exports.delete = function(req, res) {
 								to: 'Dave@studiocenter.com',
 								from: req.user.email || config.mailer.from,
 								replyTo: req.user.email || config.mailer.from,
+								cc: 'audition­notification@studiocenter.com',
 								subject: emailSubject,
 								html: emailHTML
 							};
@@ -278,6 +282,7 @@ exports.delete = function(req, res) {
 								to: 'Ken@studiocenter.com',
 								from: req.user.email || config.mailer.from,
 								replyTo: req.user.email || config.mailer.from,
+								cc: 'audition­notification@studiocenter.com',
 								subject: emailSubject,
 								html: emailHTML
 							};

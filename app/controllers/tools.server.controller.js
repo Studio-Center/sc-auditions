@@ -81,6 +81,7 @@ exports.sendTalentEmails = function(req, res){
 													to: talentEmails,
 													from: req.user.email || config.mailer.from,
 													replyTo: req.user.email || config.mailer.from,
+													cc: 'audition­notification@studiocenter.com',
 													subject: email.subject,
 													html: talentEmailHTML
 												};
@@ -160,6 +161,7 @@ exports.sendTalentEmails = function(req, res){
 														to: talentEmails,
 														from: req.user.email || config.mailer.from,
 														replyTo: req.user.email || config.mailer.from,
+														cc: 'audition­notification@studiocenter.com',
 														subject: email.subject,
 														html: talentEmailHTML
 													};
@@ -505,7 +507,7 @@ exports.sendPreCloseSummary = function(req, res){
 
 					var mailOptions = {
 						to: owner.email,
-						cc: producers,
+						cc: [producers, 'audition­notification@studiocenter.com'],
 						from: owner.email || config.mailer.from,
 						replyTo: owner.email || config.mailer.from,
 						subject: emailSubject,
