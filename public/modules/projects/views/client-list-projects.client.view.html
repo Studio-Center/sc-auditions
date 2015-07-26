@@ -66,7 +66,7 @@
 									</th>
 									<th>Hide</th>
 								</tr>
-							<tr ng-if="isDisplayed(audition.file.path)" ng-repeat="(key, audition) in project.auditions | orderBy:predicate:reverse">
+							<tr ng-if="isDisplayed(audition.file.path)" ng-repeat="(key, audition) in project.auditions | filter:{published:true} | orderBy:predicate:reverse">
 
 								<td>
 									<input style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin:10px" ng-if="!audition.booked" type="checkbox" ng-click="selAudition(audition.file.path)" ng-checked="selCheck(audition.file.path)" ng-model="selectedAuditions" ng-true-value="{{key}}">
