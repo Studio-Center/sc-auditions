@@ -756,6 +756,7 @@ exports.create = function(req, res) {
 				});
 			},
 			function(admins, directors, coordinators, talentdirectors, done) {
+
 				var email =  {
 								projectId: '',
 								to: [],
@@ -836,14 +837,14 @@ exports.create = function(req, res) {
 				var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
 				
 				var mailOptions = {
-					to: email.to,
-					bcc: email.bcc,
-					cc: 'audition­notification@studiocenter.com',
+					to: email.bcc,
+					cc: ['audition­notification@studiocenter.com'],
 					from: req.user.email || config.mailer.from,
 					replyTo: req.user.email || config.mailer.from,
 					subject: email.subject,
 					html: emailHTML
 				};
+
 				transporter.sendMail(mailOptions , function(err) {
 					done(err, email);
 				});
@@ -927,7 +928,7 @@ exports.create = function(req, res) {
 				});
 			},
 			], function(err) {
-			//if (err) return console.log(err);
+			if (err) return console.log(err);
 		});
 
 	} else {
