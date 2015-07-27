@@ -6,6 +6,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.authentication = Authentication;
 
 		$scope.project = {};
+		$scope.discussion = '';
 		// rating
 		$scope.max = 5;
 		$scope.isReadonly = false;
@@ -1393,26 +1394,29 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		// save discussion item
 		$scope.saveDiscussion = function(){
-			var now = new Date();
-			var item = {date: now.toJSON(), userid: Authentication.user._id, username: Authentication.user.displayName, item: this.discussion, deleted: false};
 
-			$scope.project.discussion.push(item);
+			if(typeof $scope.discussion !== 'undefined' && this.discussion !== ''){
+				var now = new Date();
+				var item = {date: now.toJSON(), userid: Authentication.user._id, username: Authentication.user.displayName, item: $scope.discussion, deleted: false};
 
-			// send update email
-			$scope.gatherToAddresses('saveDiscussion');
-		    $scope.email.subject = $scope.project.title + ' discussion added';
-		    $scope.email.message = 'Discussion Item: ' + this.discussion + '<br>';
-		    $scope.email.message += 'Project: ' + $scope.project.title + '<br>';
-		    $scope.email.message += 'Added by: ' + Authentication.user.displayName + '<br>';
-		    $scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '<br>';
+				$scope.project.discussion.push(item);
 
-			$scope.discussion = '';
+				// send update email
+				$scope.gatherToAddresses('saveDiscussion');
+			    $scope.email.subject = $scope.project.title + ' discussion added';
+			    $scope.email.message = 'Discussion Item: ' + $scope.discussion + '<br>';
+			    $scope.email.message += 'Project: ' + $scope.project.title + '<br>';
+			    $scope.email.message += 'Added by: ' + Authentication.user.displayName + '<br>';
+			    $scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '<br>';
 
-		    $http.post('/projects/sendemail', {
-				email: $scope.email
-			});
-			// update project store
-			$scope.update();
+				$scope.discussion = '';
+
+			    $http.post('/projects/sendemail', {
+					email: $scope.email
+				});
+				// update project store
+				$scope.update();
+			}
 		};
 
 		$scope.deleteDiscussion = function(key){
