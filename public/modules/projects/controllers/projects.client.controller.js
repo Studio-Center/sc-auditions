@@ -619,7 +619,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			var talent = {'talentId': talentId, 'name': talentName, 'email': email, 'booked': false, 'status': 'Cast', part: $scope.parts[talentId] || '', regular: true, requested: false};
 
 			// check for existing item
-			var found = 0;
+			var found = 0, selTalent;
 			for(var i = 0; i < $scope.project.talent.length; ++i){
 				if($scope.project.talent[i].talentId === talentId){
 					// reset requested to false
@@ -644,8 +644,16 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				$scope.project.talent.push(talent);
 			}
 
+			$http.post('/projects/sendTalentEmail', {
+		        talent: talent,
+		        project: $scope.project
+		    }).
+			success(function(data, status, headers, config) {
+				$scope.project = angular.extend($scope.project, data);
+			});
+
 			// update project store
-			$scope.update();
+			//$scope.update();
 		};
 		$scope.updateRequestTalent = function(talentId, talentName, email){
 			// gen talent object
@@ -677,8 +685,16 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				$scope.project.talent.push(talent);
 			}
 
+			$http.post('/projects/sendTalentEmail', {
+		        talent: talent,
+		        project: $scope.project
+		    }).
+			success(function(data, status, headers, config) {
+				$scope.project = angular.extend($scope.project, data);
+			});
+
 			// update project store
-			$scope.update();
+			//$scope.update();
 		};
 		$scope.updateCreateTalent = function(talentId, talentName, email){
 			// gen talent object
