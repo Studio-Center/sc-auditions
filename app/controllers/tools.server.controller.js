@@ -144,8 +144,7 @@ exports.sendTalentEmails = function(req, res){
 								var curTalent = talent;
 
 								// check for talent preferred contact
-								var idx = curTalent.type.indexOf('Email');
-								if (idx > -1){
+								if(curTalent.type.toLowerCase() === 'email'){
 
 									// add both email addresses if talent has backup
 									var talentEmails = [];

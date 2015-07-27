@@ -862,30 +862,32 @@ exports.create = function(req, res) {
 
 					Talent.where('_id').in(talentIds).sort('-created').exec(function(err, talents) {
 
-						for(i = 0; i < talents.length; ++i){
+						async.eachSeries(talents, function (talent, talentCallback) {
 
 							// check for email flag
 							emailTalentChk = false;
-							if(talents[i].type === 'Email'){
+							if(talent.type.toLowerCase() === 'email'){
 								emailTalentChk = true;
 							}
 
 							// verify talent needs to be emailed
 							if(emailTalentChk === true){
 								for(j = 0; j < project.talent.length; ++j){
-									if(project.talent[j].talentId === String(talents[i]._id)){
+									if(project.talent[j].talentId === String(talent._id)){
 										// email talent
-										emailTalent(project.talent[j], talents[i], email, project, req, res);
+										emailTalent(project.talent[j], talent, email, project, req, res);
 										// update talent status as needed
 										project.talent[j].status = 'Emailed';
 									}
 								}							
 							}
 
+							talentCallback();
 
-						}
+						}, function (err) {
+							done('', email);
+					   	});
 
-						done(err, email);
 					});
 
 				} else {
