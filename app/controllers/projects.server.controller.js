@@ -508,7 +508,7 @@ exports.sendClientEmail = function(req, res){
 						project: req.body.project,
 						client: client,
 						clientInfo: curClient,
-						audURL: 'http://' + req.headers.host,
+						audURL: 'http://' + req.headers.host + '/#!/signin',
 						dueDate: dateFormat(req.body.project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT'),
 						dueDateDay: dateFormat(req.body.project.estimatedCompletionDate, 'dddd')
 					}, function(err, clientEmailHTML) {
@@ -624,7 +624,7 @@ var emailClients = function(client, email, project, req, res){
 					project: project,
 					client: client,
 					clientInfo: clientInfo,
-					audURL: 'http://' + req.headers.host,
+					audURL: 'http://' + req.headers.host + '/#!/signin',
 					dueDate: dateFormat(project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT')
 				}, function(err, clientEmailHTML) {
 					done(err, clientInfo, clientEmailHTML);
