@@ -24,7 +24,7 @@
 	    			<td>{{talent.data.phone2}}</td>
 	    			<td>{{talent.data.locationISDN}}</td>
 	    			<td><a href="/#!/projects/{{talent.project._id}}" target="_blank">{{talent.project.title}}</a></td>
-	    			<td>{{talent.project.estimatedCompletionDate | date:'short'}}</td>
+	    			<td>{{talent.project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm a'}}</td>
 					<td><select ng-model="callProjects[key].status" style="width:100px" ng-change="updateStatus(talent.data._id,talent.project._id, callProjects[key].status)" ng-options="item for item in talentStatus"></select></td>
 					<td><button class="btn btn-primary" ng-click="emailCallListTalent(talent,talent.project._id)"><img style="width:30px;height:auto" src="/img/envelope.png" alt="envelope image"></button></td>
 	    		</tr>
@@ -53,7 +53,7 @@
 	    			<td>{{talent.data.phone2}}</td>
 	    			<td>{{talent.data.locationISDN}}</td>
 	    			<td><a href="/#!/projects/{{talent.project._id}}" target="_blank">{{talent.project.title}}</a></td>
-	    			<td>{{talent.project.estimatedCompletionDate | date:'short'}}</td>
+	    			<td>{{talent.project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm a'}}</td>
 					<td><select ng-model="messagedTalents[key].status" style="width:100px" ng-change="updateStatus(talent.data._id,talent.project._id, messagedTalents[key].status)" ng-options="item for item in talentStatus"></select></td>
 					<td><button class="btn btn-primary" ng-click="emailCallListTalent(talent,talent.project._id)"><img style="width:30px;height:auto" src="/img/envelope.png" alt="envelope image"></button></td>
 	    		</tr>
@@ -82,7 +82,7 @@
 	    			<td>{{talent.data.phone2}}</td>
 	    			<td>{{talent.data.locationISDN}}</td>
 	    			<td><a href="/#!/projects/{{talent.project._id}}" target="_blank">{{talent.project.title}}</a></td>
-	    			<td>{{talent.project.estimatedCompletionDate | date:'short'}}</td>
+	    			<td>{{talent.project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm a'}}</td>
 					<td><select ng-model="alreadyScheduledTalents[key].status" style="width:100px" ng-change="updateStatus(talent.data._id,talent.project._id, alreadyScheduledTalents[key].status)" ng-options="item for item in talentStatus"></select></td>
 					<td><button class="btn btn-primary" ng-click="emailCallListTalent(talent,talent.project._id)"><img style="width:30px;height:auto" src="/img/envelope.png" alt="envelope image"></button></td>
 	    		</tr>
@@ -111,7 +111,7 @@
                     <td>{{talent.data.phone2}}</td>
                     <td>{{talent.data.locationISDN}}</td>
                     <td><a href="/#!/projects/{{talent.project._id}}" target="_blank">{{talent.project.title}}</a></td>
-                    <td>{{talent.project.estimatedCompletionDate | date:'short'}}</td>
+                    <td>{{talent.project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm a'}}</td>
                     <td><select ng-model="emailedTalents[key].status" style="width:100px" ng-change="updateStatus(talent.data._id,talent.project._id, emailedTalents[key].status)" ng-options="item for item in talentStatus"></select></td>
                     <td><button class="btn btn-primary" ng-click="emailCallListTalent(talent,talent.project._id)"><img style="width:30px;height:auto" src="/img/envelope.png" alt="envelope image"></button></td>
                 </tr>
