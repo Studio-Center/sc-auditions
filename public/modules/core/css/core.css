@@ -56,14 +56,15 @@
 }
 .lblueBG{
 	background:#91b4e8 !important;
+	color:#000;
 }
 .yellowBg{
 	background:#ffff00 !important;
-	color:#fff !important;
+	color:#000;
 }
 .lyellowBg{
 	background:#ffffb2 !important;
-	color:#fff !important;
+	color:#000;
 }
 .greenBg{
 	background:#4ceb5a !important;
@@ -71,6 +72,7 @@
 }
 .lgreenBG{
 	background:#9afca5 !important;
+	color:#000;
 }
 .orangeBG{
 	background:#fc7200 !important;
