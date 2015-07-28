@@ -30,7 +30,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.newLead = {};
 		$scope.referenceFiles = [];
 		$scope.scripts = [];
-		$scope.newProject = {notifyClient: true};
+		$scope.newProject = {
+			title: '',
+			estimatedCompletionDate: '',
+			notifyClient: true
+		};
 		$scope.parts = [];
 		$scope.toggleRefs = false;
 		$scope.selectedMainClients = [];
