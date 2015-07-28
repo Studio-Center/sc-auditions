@@ -161,5 +161,5 @@
         <span ng-if="talent.length == 0"><h4>Please add talent to continue.</h4></span>
     </div>
 <div class="form-group" ng-if="scripts.length > 0 && newProject.estimatedCompletionDate && newProject.title.length > 0 && client.length > 0 && talent.length > 0">
-    <input type="submit" value="Create Project" class="btn btn-primary" style="display:block;margin:0 auto">
+    <input type="submit" value="Create Project" ng-click="hide = 1" class="btn btn-primary" style="display:block;margin:0 auto" ng-show="hide == 0">
 </div>

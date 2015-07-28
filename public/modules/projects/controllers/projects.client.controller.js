@@ -8,6 +8,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.project = {};
 		$scope.discussion = '';
 		// rating
+		$scope.hide = 0;
 		$scope.max = 5;
 		$scope.isReadonly = false;
 		$scope.ratings = [];
