@@ -4,10 +4,7 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-	Schema = mongoose.Schema,
-	// set date and timezone
-	moment = require('moment-timezone'),
-	now = new Date();
+	Schema = mongoose.Schema;
 
 /**
  * Project Schema
