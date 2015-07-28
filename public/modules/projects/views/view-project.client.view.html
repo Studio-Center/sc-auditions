@@ -156,7 +156,7 @@
 					            <div class="controls" ng-module="talents">
 					                <div ng-controller="TalentsController" data-ng-init="getOne(member.talentId)">
 
-										<a target="_blank" href="/#!/talents/{{member.talentId}}">{{talent.name}} {{talent.lastName | limitTo: 1}}</a> 
+										<a target="_blank" href="/#!/talents/{{member.talentId}}">{{talent.name}} {{talent.lastNameCode}}</a> 
 
 										- {{talent.locationISDN}}
 
