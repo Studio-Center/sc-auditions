@@ -153,6 +153,13 @@
 <div data-ng-show="error" class="text-danger">
     <strong data-ng-bind="error"></strong>
 </div>
-<div class="form-group">
-    <input type="submit" class="btn btn-primary" style="display:block;margin:0 auto">
+<div class="redBG" style="padding:10px 5px;text-align:center" ng-if="scripts.length == 0 || newProject.estimatedCompletionDate.length == 0 || newProject.title.length == 0 || client.length == 0 || talent.length == 0">
+        <span ng-if="newProject.title.length == 0"><h4>Please add a project title to continue.</h4></span>
+        <span ng-if="newProject.estimatedCompletionDate.length == 0"><h4>Please add a end date to continue.</h4></span>
+        <span ng-if="client.length == 0"><h4>Please add clients to continue.</h4></span>
+        <span ng-if="scripts.length == 0"><h4>Please add a script file to continue.</h4></span>
+        <span ng-if="talent.length == 0"><h4>Please add talent to continue.</h4></span>
+    </div>
+<div class="form-group" ng-if="scripts.length > 0 && newProject.estimatedCompletionDate && newProject.title.length > 0 && client.length > 0 && talent.length > 0">
+    <input type="submit" value="Create Project" class="btn btn-primary" style="display:block;margin:0 auto">
 </div>
