@@ -497,7 +497,7 @@ exports.sendPreCloseSummary = function(req, res){
 					// send email
 					// generate email signature
 					var newDate = new Date(project.estimatedCompletionDate);
-					newDate = newDate.setHours(newDate.getHours() - 1);
+					newDate = newDate.setHours(newDate.getHours());
 					newDate = dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT');
 
 					var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
