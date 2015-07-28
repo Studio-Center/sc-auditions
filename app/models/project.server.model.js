@@ -4,9 +4,7 @@
  * Module dependencies.
  */
 var mongoose = require('mongoose'),
-	Schema = mongoose.Schema,
-	// set date and timezone
-	now = new Date();
+	Schema = mongoose.Schema;
 
 /**
  * Project Schema
@@ -14,7 +12,7 @@ var mongoose = require('mongoose'),
 var ProjectSchema = new Schema({
 	created: {
 		type: Date,
-		default: now
+		default: Date.now
 	},
 	modified: {
 		type: Date
@@ -45,21 +43,21 @@ var ProjectSchema = new Schema({
 						name: 'Casting',
 						status: 'complete',
 						options: ['in progress','complete'],
-						startDate: now.toJSON(),
+						startDate: Date.now,
 						endDate: ''
 					},
 					{
 						name: 'Talent Notification',
 						status: 'in progress',
 						options: ['in progress','complete'],
-						startDate: now.toJSON(),
+						startDate: Date.now,
 						endDate: ''
 					},
 					{
 						name: 'Posting and Publishing',
 						status: 'in progress',
 						options: ['in progress','Holding for more talent','Holding For Requested Talent','complete'],
-						startDate: now.toJSON(),
+						startDate: Date.now,
 						endDate: ''
 					}
 				]
