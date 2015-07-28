@@ -838,7 +838,7 @@ exports.create = function(req, res) {
 				
 				var mailOptions = {
 					to: email.bcc,
-					cc: ['audition­notification@studiocenter.com'],
+					cc: 'audition­notification@studiocenter.com',
 					from: req.user.email || config.mailer.from,
 					replyTo: req.user.email || config.mailer.from,
 					subject: email.subject,
