@@ -61,20 +61,20 @@
                             <div class="text-center">
                             <ul class="pagination">
                                 <li ng-class="{disabled: currentPage == 0}">
-                                    <a href ng-click="currentPage=currentPage-1">« Prev</a>
+                                    <a href ng-click="changePage(currentPage-1)">« Prev</a>
                                 </li>
-                                <li ng-repeat="n in range(0, Math.floor(filteredUsers.length/limit))" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                                <li ng-repeat="n in range(0, Math.floor(filtered.length/limit))" ng-class="{active: n == currentPage}" ng-click="setPage()">
                                     <a href ng-bind="n + 1">1</a>
                                 </li>
-                                <li ng-class="{disabled: currentPage == Math.floor(filteredUsers.length/limit)}">
-                                    <a href ng-click="currentPage=currentPage+1">Next »</a>
+                                <li ng-class="{disabled: currentPage == Math.floor(filtered.length/limit)}">
+                                    <a href ng-click="changePage(currentPage+1)">Next »</a>
                                 </li>
                             </ul>
                             </div>
                         </div>
                     </div>
                     <ul class="list-group">
-                        <li class="list-group-item" ng-repeat="(key, user) in filteredUsers = (users | filter:filterClient) | startFrom:currentPage*limit | limitTo: limit"><input type="checkbox" value="{{user._id}}" ng-click="updateCreateClient(user._id, user.displayName, user.email)" ng-checked="checkClientUsersCreate(user._id)"> {{user.firstName}} {{user.lastName}}</li>
+                        <li class="list-group-item" ng-repeat="(key, user) in filtered = (users | filter:filterClient) | startFrom:currentPage*limit | limitTo: limit"><input type="checkbox" value="{{user._id}}" ng-click="updateCreateClient(user._id, user.displayName, user.email)" ng-checked="checkClientUsersCreate(user._id)"> {{user.firstName}} {{user.lastName}}</li>
                     </ul>
                     
                     <div class="row">
@@ -82,13 +82,13 @@
                             <div class="text-center">
                             <ul class="pagination">
                                 <li ng-class="{disabled: currentPage == 0}">
-                                    <a href ng-click="currentPage=currentPage-1">« Prev</a>
+                                    <a href ng-click="changePage(currentPage-1)">« Prev</a>
                                 </li>
-                                <li ng-repeat="n in range(0, Math.floor(filteredUsers.length/limit))" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                                <li ng-repeat="n in range(0, Math.floor(filtered.length/limit))" ng-class="{active: n == currentPage}" ng-click="setPage()">
                                     <a href ng-bind="n + 1">1</a>
                                 </li>
-                                <li ng-class="{disabled: currentPage == Math.floor(filteredUsers.length/limit)}">
-                                    <a href ng-click="currentPage=currentPage+1">Next »</a>
+                                <li ng-class="{disabled: currentPage == Math.floor(filtered.length/limit)}">
+                                    <a href ng-click="changePage(currentPage+1)">Next »</a>
                                 </li>
                             </ul>
                             </div>

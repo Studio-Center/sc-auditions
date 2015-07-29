@@ -80,13 +80,13 @@
                             <div class="text-center">
                             <ul class="pagination">
                                 <li ng-class="{disabled: currentPage == 0}">
-                                    <a href ng-click="currentPage=currentPage-1">« Prev</a>
+                                    <a href ng-click="changePage(currentPage-1)">« Prev</a>
                                 </li>
                                 <li ng-repeat="n in range(0, Math.floor(filtered.length/limit))" ng-class="{active: n == currentPage}" ng-click="setPage()">
                                     <a href ng-bind="n + 1">1</a>
                                 </li>
                                 <li ng-class="{disabled: currentPage == Math.floor(filtered.length/limit)}">
-                                    <a href ng-click="currentPage=currentPage+1">Next »</a>
+                                    <a href ng-click="changePage(currentPage+1)">Next »</a>
                                 </li>
                             </ul>
                             </div>
@@ -132,13 +132,13 @@
                             <div class="text-center">
                             <ul class="pagination">
                                 <li ng-class="{disabled: currentPage == 0}">
-                                    <a href ng-click="currentPage=currentPage-1">« Prev</a>
+                                    <a href ng-click="changePage(currentPage-1)">« Prev</a>
                                 </li>
                                 <li ng-repeat="n in range(0, Math.floor(filtered.length/limit))" ng-class="{active: n == currentPage}" ng-click="setPage()">
                                     <a href ng-bind="n + 1">1</a>
                                 </li>
                                 <li ng-class="{disabled: currentPage == Math.floor(filtered.length/limit)}">
-                                    <a href ng-click="currentPage=currentPage+1">Next »</a>
+                                    <a href ng-click="changePage(currentPage+1)">Next »</a>
                                 </li>
                             </ul>
                             </div>
