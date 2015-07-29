@@ -736,27 +736,28 @@ exports.create = function(req, res) {
 
 		// send project creation email
 		async.waterfall([
+			// function(done) {
+			// 	User.find({'roles':'admin'}).sort('-created').exec(function(err, admins) {
+			// 		done(err, admins);
+			// 	});
+			// },
+			// function(admins, done) {
+			// 	User.find({'roles':'producer/auditions director'}).sort('-created').exec(function(err, directors) {
+			// 		done(err, admins, directors);
+			// 	});
+			// },
+			// function(admins, directors, done) {
+			// 	User.find({'roles':'production coordinator'}).sort('-created').exec(function(err, coordinators) {
+			// 		done(err, admins, directors, coordinators);
+			// 	});
+			// },
+			// function(admins, directors, coordinators, done) {
+			// 	User.find({'roles':'talent director'}).sort('-created').exec(function(err, talentdirectors) {
+			// 		done(err, admins, directors, coordinators, talentdirectors);
+			// 	});
+			// },
+			//function(admins, directors, coordinators, talentdirectors, done) {
 			function(done) {
-				User.find({'roles':'admin'}).sort('-created').exec(function(err, admins) {
-					done(err, admins);
-				});
-			},
-			function(admins, done) {
-				User.find({'roles':'producer/auditions director'}).sort('-created').exec(function(err, directors) {
-					done(err, admins, directors);
-				});
-			},
-			function(admins, directors, done) {
-				User.find({'roles':'production coordinator'}).sort('-created').exec(function(err, coordinators) {
-					done(err, admins, directors, coordinators);
-				});
-			},
-			function(admins, directors, coordinators, done) {
-				User.find({'roles':'talent director'}).sort('-created').exec(function(err, talentdirectors) {
-					done(err, admins, directors, coordinators, talentdirectors);
-				});
-			},
-			function(admins, directors, coordinators, talentdirectors, done) {
 
 				var email =  {
 								projectId: '',
@@ -770,19 +771,19 @@ exports.create = function(req, res) {
 							};
 				var i;
 
-				// add previously queried roles to email list
-				for(i = 0; i < admins.length; ++i){
-					email.bcc.push(admins[i].email);
-				}
-				for(i = 0; i < directors.length; ++i){
-					email.bcc.push(directors[i].email);
-				}
-				for(i = 0; i < coordinators.length; ++i){
-					email.bcc.push(coordinators[i].email);
-				}
-				for(i = 0; i < talentdirectors.length; ++i){
-					email.bcc.push(talentdirectors[i].email);
-				}
+				// // add previously queried roles to email list
+				// for(i = 0; i < admins.length; ++i){
+				// 	email.bcc.push(admins[i].email);
+				// }
+				// for(i = 0; i < directors.length; ++i){
+				// 	email.bcc.push(directors[i].email);
+				// }
+				// for(i = 0; i < coordinators.length; ++i){
+				// 	email.bcc.push(coordinators[i].email);
+				// }
+				// for(i = 0; i < talentdirectors.length; ++i){
+				// 	email.bcc.push(talentdirectors[i].email);
+				// }
 
 				email.subject = 'Audition Project Created - ' + project.title + ' - Due ' + dateFormat(project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
 
@@ -838,7 +839,7 @@ exports.create = function(req, res) {
 				var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
 				
 				var mailOptions = {
-					to: email.bcc,
+					to: req.user.email,
 					cc: 'audition­notification@studiocenter.com',
 					from: req.user.email || config.mailer.from,
 					replyTo: req.user.email || config.mailer.from,
