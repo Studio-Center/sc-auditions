@@ -482,13 +482,6 @@ exports.sendClientEmail = function(req, res){
 		}
 	}
 
-	var emailSig = '';
-	if(req.user.emailSignature){
-		emailSig = req.user.emailSignature;
-	} else {
-		emailSig = '';
-	}
-
 	// query required data then email clients
 	User.where('_id').in(clientIds).sort('-created').exec(function(err, foundClients) {
 
@@ -501,7 +494,26 @@ exports.sendClientEmail = function(req, res){
 			var client = {name: curClient.displayName};
 
 			async.waterfall([
-				function(done) {
+				function(clientEmailHTML, done) {
+					User.find({'_id':req.body.project.owner}).sort('-created').exec(function(err, owner) {
+						done(err, owner);
+					});
+				},
+				function(clientEmailHTML, owner, done) {
+					User.find({'roles':'producer/auditions director'}).sort('-created').exec(function(err, directors) {
+						done(err, owner, directors);
+					});
+				},
+				function(owner, directors, done) {
+
+					var emailSig = '';
+					if(owner.emailSignature){
+						emailSig = owner.emailSignature;
+					} else if(req.user.emailSignature){
+						emailSig = req.user.emailSignature;
+					} else {
+						emailSig = '';
+					}
 
 					res.render(template, {
 						emailSignature: emailSig,
@@ -512,19 +524,9 @@ exports.sendClientEmail = function(req, res){
 						dueDate: dateFormat(req.body.project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT'),
 						dueDateDay: dateFormat(req.body.project.estimatedCompletionDate, 'dddd')
 					}, function(err, clientEmailHTML) {
-						done(err, clientEmailHTML);
-					});
-
-				},
-				function(clientEmailHTML, done) {
-					User.find({'_id':req.body.project.owner}).sort('-created').exec(function(err, owner) {
-						done(err, clientEmailHTML, owner);
-					});
-				},
-				function(clientEmailHTML, owner, done) {
-					User.find({'roles':'producer/auditions director'}).sort('-created').exec(function(err, directors) {
 						done(err, clientEmailHTML, owner, directors);
 					});
+
 				},
 				function(clientEmailHTML, owner, directors, done){
 
