@@ -537,9 +537,13 @@ exports.sendClientEmail = function(req, res){
 
 					var bccList = [];
 					for(i = 0; i < directors.length; ++i){
-						if(req.user.email != directors[i].email) bccList.push(directors[i].email);
+						if(req.user.email != directors[i].email && owner.email != directors[i].email) {
+							bccList.push(directors[i].email);
+						}
 					}
+					// inject user and owner into bcc list
 					bccList.push(req.user.email);
+					bccList.push(owner.email);
 
 					var emailSubject;
 			
