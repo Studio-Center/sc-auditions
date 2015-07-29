@@ -28,6 +28,9 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
 	    		$scope.currentPage = page;
 	    	}
 	    };
+	    $scope.$watch('filtered', function(val){
+	    	$scope.currentPage = 0;
+	    }, true);
 
 		// Find a list of Users
 		$scope.find = function() {

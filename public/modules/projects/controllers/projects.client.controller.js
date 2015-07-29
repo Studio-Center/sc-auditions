@@ -73,6 +73,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	    		$scope.currentPage = page;
 	    	}
 	    };
+	    $scope.$watch('filtered', function(val){
+	    	$scope.currentPage = 0;
+	    }, true);
 
 		$scope.hoveringOver = function(value,key,object) {
 	        $scope.overStar = value;

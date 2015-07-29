@@ -47,6 +47,9 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 	    		$scope.currentPage = page;
 	    	}
 	    };
+	    $scope.$watch('filtered', function(val){
+	    	$scope.currentPage = 0;
+	    }, true);
 
 		// user access rules
 		$scope.permitAdminDirector = function(){
