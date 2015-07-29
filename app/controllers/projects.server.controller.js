@@ -540,6 +540,7 @@ exports.sendClientEmail = function(req, res){
 										from: req.user.email || config.mailer.from,
 										replyTo: req.user.email || config.mailer.from,
 										cc: 'audition­notification@studiocenter.com',
+										bcc: req.user.email || config.mailer.from,
 										subject: emailSubject,
 										html: clientEmailHTML
 									};
