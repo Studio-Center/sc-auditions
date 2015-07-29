@@ -64,6 +64,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	    $scope.setPage = function () {
 	        $scope.currentPage = this.n;
 	    };
+	    $scope.changePage = function(page){
+	    	$scope.currentPage = page;
+	    };
 
 		$scope.hoveringOver = function(value,key,object) {
 	        $scope.overStar = value;
