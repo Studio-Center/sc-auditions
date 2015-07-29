@@ -56,7 +56,13 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
+        
+    </div>
+    <div class="row">
+        <div class="col-lg-2 col-md-2 col-sm-2">
+            <p style="margin-top:27px">{{filtered.length}} Project(s) Found</p>
+        </div>
+        <div class="col-lg-10 col-md-10 col-sm-10">
             <div class="text-center">
             <ul class="pagination">
                 <li ng-class="{disabled: currentPage == 0}">
@@ -95,7 +101,10 @@
                 </a>
             </div>
             <div class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="col-lg-2 col-md-2 col-sm-2">
+                    <p style="margin-top:27px">{{filtered.length}} Project(s) Found</p>
+                </div>
+                <div class="col-lg-10 col-md-10 col-sm-10">
                     <div class="text-center">
                     <ul class="pagination">
                         <li ng-class="{disabled: currentPage == 0}">
