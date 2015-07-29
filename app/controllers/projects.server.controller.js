@@ -516,7 +516,18 @@ exports.sendClientEmail = function(req, res){
 					});
 
 				},
-				function(clientEmailHTML, done){
+				function(clientEmailHTML, done) {
+					User.find({'roles':'producer/auditions director'}).sort('-created').exec(function(err, directors) {
+						done(err, clientEmailHTML, directors);
+					});
+				},
+				function(clientEmailHTML, directors, done){
+
+					var bccList = [];
+					for(i = 0; i < directors.length; ++i){
+						if(req.user.email != directors[i].email) bccList.push(directors[i].email);
+					}
+					bccList.push(req.user.email);
 
 					var emailSubject;
 			
@@ -540,7 +551,7 @@ exports.sendClientEmail = function(req, res){
 										from: req.user.email || config.mailer.from,
 										replyTo: req.user.email || config.mailer.from,
 										cc: 'audition­-notification@studiocenter.com',
-										bcc: req.user.email || config.mailer.from,
+										bcc: bccList || config.mailer.from,
 										subject: emailSubject,
 										html: clientEmailHTML
 									};
