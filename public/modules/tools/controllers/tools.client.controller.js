@@ -37,6 +37,12 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 			password: ''
 		};
 
+		$scope.predicate = '';
+
+		$scope.updatePred = function(pred){
+			$scope.predicate = pred;
+		};
+
 		// alerts
 		$scope.closeAlert = function(index) {
 		    $scope.alerts.splice(index, 1);
