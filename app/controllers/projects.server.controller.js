@@ -494,12 +494,12 @@ exports.sendClientEmail = function(req, res){
 			var client = {name: curClient.displayName};
 
 			async.waterfall([
-				function(clientEmailHTML, done) {
+				function(done) {
 					User.find({'_id':req.body.project.owner}).sort('-created').exec(function(err, owner) {
 						done(err, owner);
 					});
 				},
-				function(clientEmailHTML, owner, done) {
+				function(owner, done) {
 					User.find({'roles':'producer/auditions director'}).sort('-created').exec(function(err, directors) {
 						done(err, owner, directors);
 					});
