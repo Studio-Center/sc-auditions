@@ -46,6 +46,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		// filter vars
 		$scope.predicate = '';
 		$scope.reverse = '';
+		$scope.searchText = {};
 
 		$scope.updatePred = function(pred){
 			$scope.predicate = pred;
@@ -272,7 +273,17 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       		}
    			return true;
      	};
+     	$scope.defaults = function(){
+     		var allowRoles = ['producer/auditions director'];
 
+			for(var i = 0; i < Authentication.user.roles.length; ++i){
+				for(var j = 0; j < allowRoles.length; ++j){
+					if(Authentication.user.roles[i] === allowRoles[j]) {
+						$scope.searchText.status = 'In Progress';
+					}
+				}
+			}
+     	};
 		// verify users
 		$scope.permitAdmin = function(){
 			var allowRoles = ['admin'];
