@@ -55,6 +55,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		// used for paginator
 		$scope.Math = window.Math;
 		$scope.currentPage = 0;
+		$scope.filtered = [];
+		$scope.limit;
 		$scope.range = function(min, max, step){
 		    step = step || 1;
 		    var input = [];
@@ -65,7 +67,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	        $scope.currentPage = this.n;
 	    };
 	    $scope.changePage = function(page){
-	    	$scope.currentPage = page;
+	    	var curSel = page * $scope.limit;
+
+	    	if(curSel < $scope.filtered.length && curSel >= 0){
+	    		$scope.currentPage = page;
+	    	}
 	    };
 
 		$scope.hoveringOver = function(value,key,object) {
