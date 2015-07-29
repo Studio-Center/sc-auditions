@@ -495,7 +495,8 @@ exports.sendClientEmail = function(req, res){
 
 			async.waterfall([
 				function(done) {
-					User.find({'_id':req.body.project.owner}).sort('-created').exec(function(err, owner) {
+					var ownerId = req.body.project.owner || req.body.project.user._id;
+					User.find({'_id':ownerId}).sort('-created').exec(function(err, owner) {
 						if(err){
 							done(err, '');
 						} else {
