@@ -1386,6 +1386,21 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}
 		};
 
+		$scope.updatePlayCnt = function(filename){
+			// set play count
+			for(var i = 0; i < $scope.project.auditions.length; ++i){
+				if($scope.project.auditions[i].file.name === filename){
+					if(typeof $scope.project.auditions[i].playCnt === 'undefined'){
+						$scope.project.auditions[i].playCnt = 1;
+					} else {
+						$scope.project.auditions[i].playCnt += 1;
+					}
+				}
+			}
+
+			$scope.updateNoRefresh();
+		};
+
 		$scope.playAudio = function(key, filename){
 			
 			// check media file play state
@@ -1401,6 +1416,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			if(typeof $scope.audio === 'object' && key === $scope.lastAudioID && $scope.audioStatus === 0){
 				$scope.audio.play();
 				$scope.audioStatus = 1;
+				$scope.updatePlayCnt(filename);
 				//console.log('play');
 				return;
 			}
@@ -1408,6 +1424,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				$scope.audio.play();
 				$scope.audioStatus = 1;
 				//console.log('play');
+				$scope.updatePlayCnt(filename);
 				return;
 			}
 
@@ -1435,8 +1452,12 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 			//console.log('load');
 
+			$scope.updatePlayCnt(filename);
+
 			$scope.audio.play();
 			$scope.lastAudioID = key;
+
+			
 		};
 
 		// save discussion item
