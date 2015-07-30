@@ -1,12 +1,17 @@
-<section data-ng-controller="ProjectsController" data-ng-init="find();findOne();curRatings()">
-	<div class="row" style="margin-top:20px">
+<style>
+.content .container{
+  width:100%;
+  padding:0;
+}
+</style>
+<img src="/img/auditions-new-proj-banner.jpg" class="img-responsive" style="width:100%;height:auto" alt="studio center auditions banner">
+<div class="row">
+  <div class="col-md-8 col-md-offset-2" style="padding-bottom:75px"><section data-ng-controller="ProjectsController" data-ng-init="find();findOne();curRatings()">
+	<div class="row" style="margin-top:-65px;padding-bottom:45px">
 		<div class="col-md-12">
 			<div class="text-center">
 				<p>
-					<a class="btn btn-primary btn-lg" href="#!/projects/new-audition-form" target="_blank">Start A New Audition Project</a>
-				</p>
-				<p>
-					<img style="display:block;margin:0 auto" class="img-responsive" src="/img/sc-logo-black.png" alt="Studio Center logo image">
+					<a href="#!/projects/new-audition-form" target="_blank"><img style="display:block;margin:0 auto" class="img-responsive" src="/img/new-project-button.png" alt="new project button"></a>
 				</p>
 			</div>
 		</div>
@@ -25,7 +30,7 @@
 
 		<div class="row">
 			<div class="col-md-12">
-				<div class="page-header jumbotron" ng-class="{redBG: project.status == 'In Progress' && checkPassed(project.estimatedCompletionDate), greenBg: project.status == 'Booked', lgreenBG: project.status == 'Closed - Pending Client Decision', orangeBG: project.status == 'On Hold', lgray: project.status == 'Cancelled', mgray: project.status == 'ReAuditioned', gray: project.status == 'Dead', blueBg: project.status == 'In Progress' && compareDates(project.estimatedCompletionDate),lblueBG: project.status == 'In Progress', yellowBg: project.sounders == 'No Sounders - Approved By William' && compareDates(project.estimatedCompletionDate), lyellowBg: project.sounders == 'No Sounders - Approved By William'}">
+				<div class="page-header jumbotron text-center" style="border:10px solid #e1e1e1;border-radius:0" ng-class="{redBG: project.status == 'In Progress' && checkPassed(project.estimatedCompletionDate), greenBg: project.status == 'Booked', lgreenBG: project.status == 'Closed - Pending Client Decision', orangeBG: project.status == 'On Hold', lgray: project.status == 'Cancelled', mgray: project.status == 'ReAuditioned', gray: project.status == 'Dead', blueBg: project.status == 'In Progress' && compareDates(project.estimatedCompletionDate),lblueBG: project.status == 'In Progress', yellowBg: project.sounders == 'No Sounders - Approved By William' && compareDates(project.estimatedCompletionDate), lyellowBg: project.sounders == 'No Sounders - Approved By William'}">
 					<p><strong>{{project.title}} Due {{project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST 
 						- <span ng-if="project.status[0] != 'In Progress'">Auditions Complete</span><span ng-if="project.status[0] == 'In Progress'">{{project.status[0]}}</span></strong></p>
 				</div>
@@ -172,3 +177,6 @@
 	</div>
 
 </section>
+
+</div>
+</div>
