@@ -91,13 +91,15 @@
 									<span ng-show="verifyAudio(key)">
 										<button ng-click="playAudio(key, audition.file.name)" class="btn btn-primary">
 											<span ng-if="lastAudioID == key && audioStatus == 1">
-												pause
+												<img src="/img/Aqua-Pause-icon.png" style="width:35px;height:auto" alt="play icon">
 											</span>
 											<span ng-if="lastAudioID != key || audioStatus != 1">
-												Play
+												<img src="/img/aqua-play-icon.png" style="width:35px;height:auto" alt="play icon">
 											</span>
 										</button> 
-										<button ng-click="stopAudio()" class="btn btn-primary">Stop</button>
+										<button ng-click="stopAudio()" class="btn btn-primary" ng-if="lastAudioID == key && audioStatus == 1">
+											<img src="/img/Aqua-Stop-icon.png" style="width:35px;height:auto" alt="play icon">
+										</button>
 									</span>
 								</td>
 								<td style="text-align:center">
