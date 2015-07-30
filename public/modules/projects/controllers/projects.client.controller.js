@@ -1389,6 +1389,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.playAudio = function(key, filename){
 			
 			// check media file play state
+			if(key !== $scope.lastAudioID){
+				$scope.audio.stop();
+			}
 			if(typeof $scope.audio === 'object' && key === $scope.lastAudioID && $scope.audioStatus === 1){
 				$scope.audio.pause();
 				$scope.audioStatus = 0;
