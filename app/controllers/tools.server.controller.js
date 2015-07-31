@@ -197,7 +197,8 @@ var gatherTalentsSearch = function(req, res, filter){
 									$elemMatch: { 
 										'status': filter
 									} 
-								}
+								},
+						'status': { $nin: ['Closed - Pending Client Decision','Canceled','Dead','Complete']} 
 						};
 
 	Project.find(searchCriteria).sort('-estimatedCompletionDate').populate('project', 'displayName').exec(function(err, projects) {
