@@ -187,7 +187,7 @@
 									<span ng-show="member.requested == true">R</span>
 								</td>
 								<td>
-									<select ng-model="project.talent[key].status" ng-init="project.talent[key].status = project.talent[key].status || talentStatus[0]" style="width:100px" ng-change="$parent.updateTalentStatus(key)" ng-options="item for item in talentStatus"></select>
+									<select class="form-control" ng-model="project.talent[key].status" ng-init="project.talent[key].status = project.talent[key].status || talentStatus[0]" style="width:100px" ng-change="$parent.updateTalentStatus(key)" ng-options="item for item in talentStatus"></select>
 								</td>
 								<td>
 									{{project.talent[key].part}}
