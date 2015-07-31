@@ -154,24 +154,27 @@
 		        		<div class="table-responsive">
 		        		<table class="table table-striped">
 							<tr>
-								<th>
+								<th><!--
 									<a href="" ng-click="updatePred(predicate == 'name' ? '-name' : 'name'); reverse=false">Name</a></span>
 	                                <span ng-if="predicate == '-name'">(^)</span>
-	                                <span ng-if="predicate == 'name'">(V)</span>
+	                                <span ng-if="predicate == 'name'">(V)</span>-->
+	                                Name
 								</th>
 								<th>
 									Location
 								</th>
 								<th>Requested</th>
 								<th>
-									<a href="" ng-click="updatePred(predicate == 'status' ? '-status' : 'status'); reverse=false">Status</a></span>
+									<!--<a href="" ng-click="updatePred(predicate == 'status' ? '-status' : 'status'); reverse=false">Status</a></span>
 	                                <span ng-if="predicate == '-status'">(^)</span>
-	                                <span ng-if="predicate == 'status'">(V)</span>
+	                                <span ng-if="predicate == 'status'">(V)</span>-->
+	                                Status
 								</th>
 								<th>
-									<a href="" ng-click="updatePred(predicate == 'part' ? '-part' : 'part'); reverse=false">Part</a></span>
+									<!--<a href="" ng-click="updatePred(predicate == 'part' ? '-part' : 'part'); reverse=false">Part</a></span>
 	                                <span ng-if="predicate == '-part'">(^)</span>
-	                                <span ng-if="predicate == 'part'">(V)</span>
+	                                <span ng-if="predicate == 'part'">(V)</span>-->
+	                                Part
 								</th>
 								<th>Email</th>
 								<th>Booked</th>
@@ -187,7 +190,7 @@
 									<span ng-show="member.requested == true">R</span>
 								</td>
 								<td>
-									<select class="form-control" ng-model="project.talent[key].status" ng-init="project.talent[key].status = project.talent[key].status || talentStatus[0]" style="width:100px" ng-change="$parent.updateTalentStatus(key)" ng-options="item for item in talentStatus"></select>
+									<select class="form-control" ng-model="$parent.project.talent[key].status" ng-init="$parent.project.talent[key].status = project.talent[key].status || talentStatus[0]" style="width:100px" ng-change="$parent.updateTalentStatus(key)" ng-options="item for item in talentStatus"></select>
 								</td>
 								<td>
 									{{project.talent[key].part}}
