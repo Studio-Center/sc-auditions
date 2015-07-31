@@ -109,3 +109,15 @@
 .ta-hidden-input{
 	display: none;
 }
+/* client only */
+.create-project{
+	margin-top:-65px;
+	padding-bottom:45px
+}
+@media(max-width: 1160px){
+	.create-project{
+		background:#000;
+		margin-top:0px;
+		padding-bottom:0px
+	}
+}
