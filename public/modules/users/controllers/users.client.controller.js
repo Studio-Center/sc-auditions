@@ -102,6 +102,7 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
 				username: this.username,
 				phone: this.phone,
 				password: this.password,
+				notes: notes,
 				roles: this.roles
 			};
 
