@@ -34,7 +34,7 @@
 			<div class="col-lg-6 col-md-6 col-sm-6">
 				<div class="panel panel-default" data-ng-show="permitAdminProductionCoordinatorDirector()">
 					<div class="panel-heading">
-		            	<strong>Notes</strong>
+		            	<strong>Notes ({{project.discussion.length}})</strong>
 		        	</div>
 		        	<fieldset>
 						<select class="form-control" style="display:block;margin:0 auto" ng-if="permitAdminProductionCoordinatorDirector()" ng-class="{blueBg: project.sounders == 'Sounders', yellowBg: project.sounders == 'No Sounders - Approved By William'}" ng-model="project.sounders" ng-change="update(false)">
@@ -66,7 +66,7 @@
 					<accordion-group is-open="status.open">
 					<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
 						<h4 class="panel-title accordion-toggle">
-			            	Scripts<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+			            	Scripts ({{project.scripts.length}}) <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
 			            </h4>
 		        	</accordion-heading>
 						<div data-ng-show="permitAdminDirector()" class="clearfix" style="padding-bottom:5px">
@@ -105,7 +105,7 @@
 					<accordion-group is-open="toggleRefs">
 					<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
 						<h4 class="panel-title accordion-toggle">
-			            	Reference Files<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+			            	Reference Files ({{project.referenceFiles.length}})<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
 			            </h4>
 		        	</accordion-heading>
 
@@ -148,7 +148,7 @@
 					<accordion-group is-open="status.open">
 					<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
 						<h4 class="panel-title accordion-toggle">
-		     	       		Talent<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+		     	       		Talent ({{project.talent.length}})<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
 		     	       	</h4>
 		        	</accordion-heading>
 						<ul class="list-group">
@@ -285,7 +285,7 @@
 					<accordion-group is-open="status.open">
 					<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
 						<h4 class="panel-title accordion-toggle">
-			            	Auditions<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+			            	Auditions ({{project.auditions.length}})<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
 			            </h4>
 		        	</accordion-heading>
 				 		<div data-ng-show="permitAdminDirector()" class="clearfix" style="padding-bottom:5px">
@@ -364,7 +364,7 @@
 					<accordion-group is-open="status.open">
 					<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
 						<h4 class="panel-title accordion-toggle">
-		            		Main Clients<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+		            		Main Clients ({{project.client.length}})<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
 		            	</h4>
 		        	</accordion-heading>
 
@@ -456,7 +456,7 @@
 					<accordion-group is-open="status.open">
 					<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
 						<h4 class="panel-title accordion-toggle">
-		            		Additional Clients<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+		            		Additional Clients ({{project.clientClient.length}})<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
 		            	</h4>
 		        	</accordion-heading>
 						<ul class="list-group">
