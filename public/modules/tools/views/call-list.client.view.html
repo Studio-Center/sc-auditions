@@ -43,7 +43,7 @@
             				<th>Email</th>
             			</tr>
         	    		<tr ng-repeat="(key, talent) in callProjects | orderBy:predicate:reverse">
-        	    			<td>{{talent.data.name}} {{talent.data.lastName}}</td>
+        	    			<td><a target="_blank" href="/#!/talents/{{talent.data._id}}">{{talent.data.name}} {{talent.data.lastName}}</a></td>
         	    			<td>{{talent.data.parentName}}</td>
         	    			<td>{{talent.data.phone}}</td>
         	    			<td>{{talent.data.phone2}}</td>
@@ -101,7 +101,7 @@
             				<th>Email</th>
             			</tr>
         	    		<tr ng-repeat="(key, talent) in messagedTalents | orderBy:predicate:reverse">
-        	    			<td>{{talent.data.name}} {{talent.data.lastName}}</td>
+        	    			<td><a target="_blank" href="/#!/talents/{{talent.data._id}}">{{talent.data.name}} {{talent.data.lastName}}</a></td>
         	    			<td>{{talent.data.parentName}}</td>
         	    			<td>{{talent.data.phone}}</td>
         	    			<td>{{talent.data.phone2}}</td>
@@ -157,7 +157,7 @@
             				<th>Email</th>
             			</tr>
         	    		<tr ng-repeat="(key, talent) in alreadyScheduledTalents | orderBy:predicate:reverse">
-        	    			<td>{{talent.data.name}} {{talent.data.lastName}}</td>
+        	    			<td><a target="_blank" href="/#!/talents/{{talent.data._id}}">{{talent.data.name}} {{talent.data.lastName}}</a></td>
         	    			<td>{{talent.data.parentName}}</td>
         	    			<td>{{talent.data.phone}}</td>
         	    			<td>{{talent.data.phone2}}</td>
@@ -213,7 +213,7 @@
                             <th>Email</th>
                         </tr>
                         <tr ng-repeat="(key, talent) in emailedTalents | orderBy:predicate:reverse">
-                            <td>{{talent.data.name}} {{talent.data.lastName}}</td>
+                            <td><a target="_blank" href="/#!/talents/{{talent.data._id}}">{{talent.data.name}} {{talent.data.lastName}}</a></td>
                             <td>{{talent.data.parentName}}</td>
                             <td>{{talent.data.phone}}</td>
                             <td>{{talent.data.phone2}}</td>
