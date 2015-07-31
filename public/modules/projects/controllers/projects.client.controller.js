@@ -297,6 +297,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}
      	};
 		// verify users
+		$scope.isOwner = function(){
+			if(String($scope.project.owner) === String(Authentication.user._id) || String($scope.project.user._id) === String(Authentication.user._id)){
+				return true;
+			} else {
+				return false;
+			}
+		};
 		$scope.permitAdmin = function(){
 			var allowRoles = ['admin'];
 
