@@ -40,6 +40,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.toggleRefs = false;
 		$scope.selectedMainClients = [];
 		$scope.rejFiles = [];
+		$scope.talentStatus = [];
 		// projects client portal
 		$scope.selectedAuditions = [];
 		$scope.hideList = [];
@@ -796,10 +797,28 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		};
 
-		$scope.updateTalentStatus = function(key){
+		$scope.updateTalentStatus = function(talentId, status){
 
-			// update project store
-			$scope.update();
+			for(var i = 0; i < $scope.project.talent.length; ++i){
+				if(String($scope.project.talent[i].talentId) === String(talentId)){
+					$scope.project.talent[i].status = status;
+
+					// update project store
+					$scope.update();
+				}
+			}
+
+			
+		};
+
+		$scope.getTalentStatus = function(talentId){
+
+			for(var i = 0; i < $scope.project.talent.length; ++i){
+				if(String($scope.project.talent[i].talentId) === String(talentId)){
+					 return $scope.project.talent[i].status;
+				}
+			}
+
 		};
 
 		$scope.updateTeam = function(userId, displayName, email){
