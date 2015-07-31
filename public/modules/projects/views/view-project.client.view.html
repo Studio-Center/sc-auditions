@@ -151,6 +151,7 @@
 		     	       		Talent ({{project.talent.length}})<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
 		     	       	</h4>
 		        	</accordion-heading>
+		        		<div class="table-responsive">
 		        		<table class="table table-striped">
 							<tr>
 								<th>
@@ -199,7 +200,7 @@
 								</td>
 							</tr>
 						</table>
-
+						</div>
 						<accordion close-others="oneAtATime" data-ng-show="permitAdminTalentDirectorProdCoord()">
 							<accordion-group is-open="statusInt.open">
 							<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
@@ -244,6 +245,7 @@
 									            </div>
 									        </div>
 									    </div>
+									    <div class="table-responsive">
 									    <table class="table table-striped">
 											<tr>
 												<th><b>C</b></th>
@@ -267,6 +269,7 @@
 												</td>
 											</tr>
 										</table>
+										</div>
 										<div class="row">
 									        <div class="col-lg-12 col-md-12 col-sm-12">
 									            <div class="text-center">
