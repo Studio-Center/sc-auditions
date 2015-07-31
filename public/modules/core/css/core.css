@@ -117,7 +117,7 @@
 @media(max-width: 1160px){
 	.create-project{
 		background:#000;
-		margin-top:0px;
-		padding-bottom:0px
+		margin-top:0;
+		padding-bottom:0;
 	}
 }

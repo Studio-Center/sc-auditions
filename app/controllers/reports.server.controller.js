@@ -29,7 +29,7 @@ exports.findMissingAuds = function(req, res){
 	var callTalents = {}, talentId, missingCnt = 0;
 
 	var yesterday = new Date(req.body.dateFilter);
-	yesterday.setDate(yesterday.getDate() - 1);
+	//yesterday.setDate(yesterday.getDate() - 1);
 	var tomorrow = new Date(req.body.dateFilter);
 	tomorrow.setDate(tomorrow.getDate() + 1);
 
