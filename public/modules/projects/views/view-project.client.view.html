@@ -153,15 +153,29 @@
 		        	</accordion-heading>
 		        		<table class="table table-striped">
 							<tr>
-								<th>Name</th>
-								<th>Location</th>
+								<th>
+									<a href="" ng-click="updatePred(predicate == 'name' ? '-name' : 'name'); reverse=false">Name</a></span>
+	                                <span ng-if="predicate == '-name'">(^)</span>
+	                                <span ng-if="predicate == 'name'">(V)</span>
+								</th>
+								<th>
+									Location
+								</th>
 								<th>Requested</th>
-								<th>Status</th>
-								<th>Part</th>
+								<th>
+									<a href="" ng-click="updatePred(predicate == 'status' ? '-status' : 'status'); reverse=false">Status</a></span>
+	                                <span ng-if="predicate == '-status'">(^)</span>
+	                                <span ng-if="predicate == 'status'">(V)</span>
+								</th>
+								<th>
+									<a href="" ng-click="updatePred(predicate == 'part' ? '-part' : 'part'); reverse=false">Part</a></span>
+	                                <span ng-if="predicate == '-part'">(^)</span>
+	                                <span ng-if="predicate == 'part'">(V)</span>
+								</th>
 								<th>Email</th>
 								<th>Booked</th>
 							</tr>
-							<tr ng-repeat="(key, member) in project.talent" ng-module="talents" ng-controller="TalentsController" data-ng-init="getOne(member.talentId)">
+							<tr ng-repeat="(key, member) in project.talent | orderBy:predicate:reverse" ng-module="talents" ng-controller="TalentsController" data-ng-init="getOne(member.talentId)">
 								<td>
 									<a target="_blank" href="/#!/talents/{{member.talentId}}">{{talent.name}} {{talent.lastNameCode}}</a> 
 								</td>
