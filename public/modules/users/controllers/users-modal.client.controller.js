@@ -25,7 +25,7 @@ angular.module('users').controller('UsersModalController', ['$scope', '$statePar
 				username: this.username,
 				phone: this.phone,
 				password: this.password,
-				notes: notes,
+				notes: this.notes,
 				roles: this.roles
 			};
 

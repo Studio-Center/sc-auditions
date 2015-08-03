@@ -2,6 +2,7 @@
 	<div class="page-header">
 		<h1 data-ng-bind="useredit.displayName"></h1>
 		<p class="list-group-item-heading">Company: {{useredit.company}}<br> Name: {{useredit.displayName}}<br> Username: {{useredit.username}}<br> Email: {{useredit.email}}<br> Phone: {{useredit.phone}}</p>
+		<p>Notes: {{user.notes}}</p>
 	</div>
 	<div class="pull-right" ng-show="authentication.user.roles[0] === 'admin'">
 		<a class="btn btn-primary" href="/#!/usersedit/{{useredit._id}}/edit">
