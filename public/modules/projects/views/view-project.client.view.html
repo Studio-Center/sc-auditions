@@ -109,7 +109,7 @@
 			            </h4>
 		        	</accordion-heading>
 
-						<div data-ng-show="permitAdminDirector()" class="clearfix" style="padding-bottom:5px">
+						<div data-ng-show="permitAdminProductionCoordinatorDirector() || isOwner()" class="clearfix" style="padding-bottom:5px">
 							<h4>Upload Reference: </h4>
 
 							<div ng-file-drop ng-file-select="uploadReferenceFile($files)" ng-model="files" ng-model-rejected="rejFiles"
@@ -129,7 +129,7 @@
 										<strong>{{key+1}}.</strong> <a href="/res/referenceFiles/{{project._id}}/{{referenceFile.file.name | encodeUri}}" target="_blank" data-ng-bind="referenceFile.file.name"></a> 
 									</div>
 									<div class="col-lg-1 col-md-1 col-sm-1">
-										<button data-ng-show="permitAdminDirector() || isOwner()" ng-click="delReferenceFile(key)" target="_blank" class="btn btn-danger">Delete</button>
+										<button data-ng-show="permitAdminProductionCoordinatorDirector() || isOwner()" ng-click="delReferenceFile(key)" target="_blank" class="btn btn-danger">Delete</button>
 									</div>
 								</div>
 							</li>
