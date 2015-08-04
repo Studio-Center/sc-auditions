@@ -12,16 +12,32 @@
 	            </div>
 	        </div>
 	        <div class="col-lg-2 col-md-2 col-sm-2">
-	            <label>union</label> <input type="checkbox" ng-model="searchText.unionStatus" ng-true-value="!non-union" ng-false-value="" class="form-control">
+	        	<div class="checkbox">
+	    			<label>
+	            		<input type="checkbox" ng-model="searchText.unionStatus" ng-true-value="!non-union" ng-false-value=""> union
+	            	</label>
+	            </div>
 	        </div>
 	        <div class="col-lg-2 col-md-2 col-sm-2">
-	            <label>non-union</label> <input type="checkbox" ng-model="searchText.unionStatus" ng-true-value="!union" ng-false-value="" class="form-control">
+	        	<div class="checkbox">
+	    			<label>
+	            		<input type="checkbox" ng-model="searchText.unionStatus" ng-true-value="!union" ng-false-value=""> non-union
+	            	</label>
+	            </div>
 	        </div>
 	        <div class="col-lg-3 col-md-3 col-sm-3">
-	            <label>union and non-union</label> <input type="checkbox" ng-model="searchUnions" ng-true-value="union non-union" ng-false-value="" class="form-control">
+	        	<div class="checkbox">
+	    			<label>
+	            		<input type="checkbox" ng-model="searchUnions" ng-true-value="union non-union" ng-false-value=""> union and non-union
+	            	</label>
+	            </div>
 	        </div>
 	        <div class="col-lg-2 col-md-2 col-sm-2">
-	            <label>Emailer</label> <input type="checkbox" ng-model="searchText.type" ng-true-value="email" ng-false-value="" class="form-control">
+	        	<div class="checkbox">
+	    			<label>
+	            		<input type="checkbox" ng-model="searchText.type" ng-true-value="email" ng-false-value=""> Emailer
+	            	</label>
+	            </div>
 	        </div>
 	    </div>
 	    <div class="row">
@@ -39,13 +55,25 @@
 	            </select>
 	        </div>
 	        <div class="col-lg-2 col-md-2 col-sm-2">
-	            <label>British</label> <input type="checkbox" ng-model="searchText.typeCasts" ng-true-value="british" ng-false-value="" class="form-control">
+	        	<div class="checkbox">
+	    			<label>
+	            		<input type="checkbox" ng-model="searchText.typeCasts" ng-true-value="british" ng-false-value=""> British
+	            	</label>
+	            </div>
 	        </div>
 	        <div class="col-lg-2 col-md-2 col-sm-2">
-	            <label>Spanish</label> <input type="checkbox" ng-model="searchText.typeCasts" ng-true-value="spanish" ng-false-value="" class="form-control">
+	        	<div class="checkbox">
+	    			<label>
+	            		<input type="checkbox" ng-model="searchText.typeCasts" ng-true-value="spanish" ng-false-value=""> Spanish
+	            	</label>
+	            </div>
 	        </div>
 	        <div class="col-lg-2 col-md-2 col-sm-2">
-	            <label>Foreign Language</label> <input type="checkbox" ng-model="searchText.typeCasts" ng-true-value="foreign language" ng-false-value="" class="form-control">
+	        	<div class="checkbox">
+	    			<label>
+	            		<input type="checkbox" ng-model="searchText.typeCasts" ng-true-value="foreign language" ng-false-value=""> Foreign Language
+	            	</label>
+	            </div>
 	        </div>
 	    </div>
 	    <div class="row">
@@ -123,23 +151,28 @@
     				<input type="checkbox" ng-click="toggleEmailTalentList(talent)" ng-checked="emailTalentListChk(talent)" value="{{talent}}"> {{talentLookup(talent)}}
     			</div>
     		</div>
-	    	<button type="button" class="btn btn-primary" ng-click="removeSelectedTalents()">Remove Selected</button>
+	    	<button ng-show="emailClients.length > 0" type="button" class="btn btn-primary" ng-click="removeSelectedTalents()">Remove Selected</button>
     	</div>
     	<div class="row">
-    		<label for="email.subject">Email All</label>
-    		<input type="checkbox" name="email.all" ng-model="email.all" class="form-control">
+    		<div class="checkbox">
+	    		<label>
+	    			<input type="checkbox" name="email.all" ng-model="email.all"> Email All
+	    		</label>
+    		</div>
     	</div>
-    	<div class="row">
-    		<h3>Send Email</h3>
-    		<label for="email.subject">Email Subject</label>
-    		<input type="text" name="email.subject" ng-model="email.subject" class="form-control">
-    	</div>
-    	<div class="row">
-    		<label for="email.body">Email Body</label>
-    		<div text-angular ng-model="email.body"></div>
-    	</div>
-    	<div class="row" style="text-align:center">
-    		<button type="button" class="btn btn-primary" ng-click="sendTalentEmails()">Send</button>
+    	<div class="row" ng-show="emailClients.length > 0 || email.all">
+	    	<div class="row">
+	    		<h3>Send Email</h3>
+	    		<label for="email.subject">Email Subject</label>
+	    		<input type="text" name="email.subject" ng-model="email.subject" class="form-control">
+	    	</div>
+	    	<div class="row">
+	    		<label for="email.body">Email Body</label>
+	    		<div text-angular ng-model="email.body"></div>
+	    	</div>
+	    	<div class="row" style="text-align:center">
+	    		<button type="button" class="btn btn-primary" ng-click="sendTalentEmails()">Send</button>
+	    	</div>
     	</div>
     </div>
 </section>
