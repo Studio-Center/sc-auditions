@@ -390,8 +390,8 @@
 						</div>
 
 						<ul class="list-group">
-							<li class="list-group-item" ng-repeat="(key, member) in project.client">
-								<input type="checkbox" ng-model="selectedMainClients[key]" ng-true-value="{{member.userId}}"> <a target="_blank" href="/#!/usersedit/{{member.userId}}">{{member.name}} {{member.company}}</a>
+							<li class="list-group-item" ng-repeat="(key, member) in project.client" ng-module="users" ng-controller="UsersController" data-ng-init="getOne(member.userId)">
+								<input type="checkbox" ng-model="selectedMainClients[key]" ng-true-value="{{member.userId}}"> <a target="_blank" href="/#!/usersedit/{{member.userId}}">{{member.name}} {{member.company}}</a> - {{useredit.company}}
 							</li>
 						</ul>
 						
@@ -475,7 +475,9 @@
 		            	</h4>
 		        	</accordion-heading>
 						<ul class="list-group">
-							<li class="list-group-item" ng-repeat="(key, member) in project.clientClient"><a target="_blank" href="/#!/usersedit/{{member.userId}}">{{member.name}}</a></li>
+							<li class="list-group-item" ng-repeat="(key, member) in project.clientClient" ng-module="users" ng-controller="UsersController" data-ng-init="getOne(member.userId)">
+								<a target="_blank" href="/#!/usersedit/{{member.userId}}">{{member.name}}</a> - {{useredit.company}}
+							</li>
 						</ul>
 						<accordion close-others="oneAtATime" ng-if="permitAdminProductionCoordinator()">
 							<accordion-group is-open="statusInt.open">

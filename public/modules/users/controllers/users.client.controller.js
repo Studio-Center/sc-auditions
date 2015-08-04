@@ -55,6 +55,12 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
 			});
 		};
 
+		$scope.getOne = function(userId) {
+			$scope.useredit = UsersEdit.get({ 
+				userIdEdit: userId
+			});
+		};
+
 		// Update existing User
 		$scope.update = function(isValid) {
 			if (isValid){
