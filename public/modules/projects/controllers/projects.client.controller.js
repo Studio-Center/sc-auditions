@@ -1,8 +1,8 @@
 'use strict';
 
 // Projects controller
-angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$upload', 'ngAudio', '$http', '$modal', '$rootScope', 'Socket',
-	function($scope, $stateParams, $location, Authentication, Projects, $upload, ngAudio, $http, $modal, $rootScope, Socket ) {
+angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$upload', 'ngAudio', '$http', '$modal', '$rootScope', 'Socket', '$cookies', '$window',
+	function($scope, $stateParams, $location, Authentication, Projects, $upload, ngAudio, $http, $modal, $rootScope, Socket, $cookies, $window ) {
 		$scope.authentication = Authentication;
 
 		$scope.project = {};
@@ -48,6 +48,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.predicate = '';
 		$scope.reverse = '';
 		$scope.searchText = {};
+
+		// on close check
+		$scope.$on('$locationChangeStart', function( event ) {
+
+			// nothing for the moment
+
+		});
 
 		$scope.updatePred = function(pred){
 			$scope.predicate = pred;
@@ -1263,7 +1270,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.$watch('newProject.estimatedCompletionDate', function(val){
 			var now = new Date();
 
-			if($scope.newProject.estimatedCompletionDate < now){
+			if($scope.newProject.estimatedCompletionDate !== '' && $scope.newProject.estimatedCompletionDate < now){
 				$scope.dateNotice = 'Date selected passed. Please select a future date and time!';
 			} else {
 				$scope.dateNotice = '';
