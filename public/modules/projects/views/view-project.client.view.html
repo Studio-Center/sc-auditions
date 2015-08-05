@@ -88,7 +88,9 @@
 								<div class="row">
                     				<div class="col-lg-10 col-md-10 col-sm-10">
 										<strong>{{key+1}}.</strong> <a href="/res/scripts/{{project._id}}/{{script.file.name | encodeUri}}" target="_blank" data-ng-bind="script.file.name"></a> 
-										<a href="/res/scripts/{{project._id}}/{{script.file.name}}" target="_blank"><img src="/img/Adobe-Acrobat-icon.png" alt="download PDF" download></a>
+										<a href="/res/scripts/{{project._id}}/{{script.file.name}}" target="_blank">
+											<img src="/img/Adobe-Acrobat-icon.png" alt="download PDF" download="{{script.file.name}}">
+										</a>
 									</div>
 									<div class="col-lg-1 col-md-1 col-sm-1">
 										<button data-ng-show="permitAdminDirector() || isOwner()" ng-click="delScript(key)" target="_blank" class="btn btn-danger">Delete</button>
@@ -126,7 +128,7 @@
 							<li class="list-group-item" ng-repeat="(key, referenceFile) in project.referenceFiles">
 								<div class="row">
                     				<div class="col-lg-10 col-md-10 col-sm-10">
-										<strong>{{key+1}}.</strong> <a href="/res/referenceFiles/{{project._id}}/{{referenceFile.file.name | encodeUri}}" target="_blank" data-ng-bind="referenceFile.file.name"></a> <a href="/res/referenceFiles/{{project._id}}/{{referenceFile.file.name | encodeUri}}" target="_blank" download>download</a>
+										<strong>{{key+1}}.</strong> <a href="/res/referenceFiles/{{project._id}}/{{referenceFile.file.name | encodeUri}}" target="_blank" data-ng-bind="referenceFile.file.name" download="{{referenceFile.file.name}}"></a> 
 									</div>
 									<div class="col-lg-1 col-md-1 col-sm-1">
 										<button data-ng-show="permitAdminProductionCoordinatorDirector() || isOwner()" ng-click="delReferenceFile(key)" target="_blank" class="btn btn-danger">Delete</button>
