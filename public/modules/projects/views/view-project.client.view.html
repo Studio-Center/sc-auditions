@@ -352,6 +352,13 @@
 									{{project.auditions[key].playCnt}}
 								</fieldset>
 								<fieldset>
+									<label>Talent: </talent>
+									<select ng-model="project.auditions[key].talent" ng-change="$parent.updateNoRefresh()">
+				                        <option ng-repeat="talent in project.talent" ng-selected="project.auditions[key].talent == talent.talentId" value="{{talent.talentId}}">{{talent.name}}</option>
+				                    </select>
+				                    
+								</fieldset>
+								<fieldset>
 									<label>Published</label>
 									<input type="checkbox" value="true" ng-click="updatePublished(key)" ng-model="project.auditions[key].published">
 								</fieldset>
