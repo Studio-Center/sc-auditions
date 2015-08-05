@@ -74,7 +74,13 @@
                         </div>
                     </div>
                     <ul class="list-group">
-                        <li class="list-group-item" ng-repeat="(key, user) in filtered = (users | filter:filterClient) | startFrom:currentPage*limit | limitTo: limit"><input type="checkbox" value="{{user._id}}" ng-click="updateCreateClient(user._id, user.displayName, user.email)" ng-checked="checkClientUsersCreate(user._id)"> {{user.firstName}} {{user.lastName}}</li>
+                        <li class="list-group-item" ng-repeat="(key, user) in filtered = (users | filter:filterClient) | startFrom:currentPage*limit | limitTo: limit">
+                            <input type="checkbox" value="{{user._id}}" ng-click="updateCreateClient(user._id, user.displayName, user.email)" ng-checked="checkClientUsersCreate(user._id)"> 
+                            <a target="_blank" href="/#!/usersedit/{{user._id}}">
+                                {{user.firstName}} {{user.lastName}}
+                            </a>
+                            - {{user.company}}
+                        </li>
                     </ul>
                     
                     <div class="row">
