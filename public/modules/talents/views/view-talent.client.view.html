@@ -6,13 +6,25 @@
 		<div><strong>Parent Name</strong> {{talent.parentName}}</div>
 		<div><strong>Gender</strong> {{talent.gender}} {{talent.ageRange}}</div>
 		<div><strong>Email</strong> 
-			<span ng-if="talent.email"><a href="mailto:{{talent.email}}">{{talent.email}}</a></span>
+			<span ng-if="talent.email">
+				<a href="mailto:{{talent.email}}">{{talent.email}}</a>
+			</span>
 		</div>
 		<div><strong>Email Alt</strong> 
-			<span ng-if="talent.email2"><a href="mailto:{{talent.email2}}">{{talent.email2}}</a></span>
+			<span ng-if="talent.email2">
+				<a href="mailto:{{talent.email2}}">{{talent.email2}}</a>
+			</span>
 		</div>
-		<div><strong>Phone Number</strong> {{talent.phone | tel}}</div>
-		<div><strong>Phone Number Alt</strong> {{talent.phone2 | tel}}</div>
+		<div><strong>Phone Number</strong>
+			<span ng-if="talent.phone">
+				<a href="tel:{{talent.phone}}">{{talent.phone | tel}}</a>
+			</span>
+		</div>
+		<div><strong>Phone Number Alt</strong>
+			<span ng-if="talent.phone2">
+				<a href="tel:{{talent.phone2}}">{{talent.phone2 | tel}}</a>
+			</span>
+		</div>
 		<div><strong>Type</strong> {{talent.type}} </div>
 		<div><strong>Union Status</strong> 
 		<span ng-repeat="(key, usval) in talent.unionStatus">{{usval}} </span>

@@ -46,8 +46,16 @@
         	    		<tr ng-repeat="(key, talent) in callProjects | orderBy:predicate:reverse">
         	    			<td><a target="_blank" href="/#!/talents/{{talent.data._id}}">{{talent.data.name}} {{talent.data.lastName}}</a></td>
         	    			<td>{{talent.data.parentName}}</td>
-        	    			<td>{{talent.data.phone}}</td>
-        	    			<td>{{talent.data.phone2}}</td>
+        	    			<td>
+                                <span ng-if="talent.data.phone">
+                                    <a href="tel:{{talent.data.phone}}">{{talent.data.phone | tel}}</a>
+                                </span>
+                            </td>
+        	    			<td>
+                                <span ng-if="talent.data.phone2">
+                                    <a href="tel:{{talent.data.phone2}}">{{talent.data.phone2 | tel}}</a>
+                                </span>
+                            </td>
         	    			<td>{{talent.data.locationISDN}}</td>
         	    			<td><a href="/#!/projects/{{talent.project._id}}" target="_blank">{{talent.project.title}}</a></td>
         	    			<td>{{talent.project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm a'}}</td>
@@ -106,8 +114,16 @@
         	    		<tr ng-repeat="(key, talent) in messagedTalents | orderBy:predicate:reverse">
         	    			<td><a target="_blank" href="/#!/talents/{{talent.data._id}}">{{talent.data.name}} {{talent.data.lastName}}</a></td>
         	    			<td>{{talent.data.parentName}}</td>
-        	    			<td>{{talent.data.phone}}</td>
-        	    			<td>{{talent.data.phone2}}</td>
+        	    			<td>
+                                <span ng-if="talent.data.phone">
+                                    <a href="tel:{{talent.data.phone}}">{{talent.data.phone | tel}}</a>
+                                </span>
+                            </td>
+                            <td>
+                                <span ng-if="talent.data.phone2">
+                                    <a href="tel:{{talent.data.phone2}}">{{talent.data.phone2 | tel}}</a>
+                                </span>
+                            </td>
         	    			<td>{{talent.data.locationISDN}}</td>
         	    			<td><a href="/#!/projects/{{talent.project._id}}" target="_blank">{{talent.project.title}}</a></td>
         	    			<td>{{talent.project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm a'}}</td>
@@ -164,8 +180,16 @@
         	    		<tr ng-repeat="(key, talent) in alreadyScheduledTalents | orderBy:predicate:reverse">
         	    			<td><a target="_blank" href="/#!/talents/{{talent.data._id}}">{{talent.data.name}} {{talent.data.lastName}}</a></td>
         	    			<td>{{talent.data.parentName}}</td>
-        	    			<td>{{talent.data.phone}}</td>
-        	    			<td>{{talent.data.phone2}}</td>
+        	    			<td>
+                                <span ng-if="talent.data.phone">
+                                    <a href="tel:{{talent.data.phone}}">{{talent.data.phone | tel}}</a>
+                                </span>
+                            </td>
+                            <td>
+                                <span ng-if="talent.data.phone2">
+                                    <a href="tel:{{talent.data.phone2}}">{{talent.data.phone2 | tel}}</a>
+                                </span>
+                            </td>
         	    			<td>{{talent.data.locationISDN}}</td>
         	    			<td><a href="/#!/projects/{{talent.project._id}}" target="_blank">{{talent.project.title}}</a></td>
         	    			<td>{{talent.project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm a'}}</td>
@@ -222,8 +246,16 @@
                         <tr ng-repeat="(key, talent) in emailedTalents | orderBy:predicate:reverse">
                             <td><a target="_blank" href="/#!/talents/{{talent.data._id}}">{{talent.data.name}} {{talent.data.lastName}}</a></td>
                             <td>{{talent.data.parentName}}</td>
-                            <td>{{talent.data.phone}}</td>
-                            <td>{{talent.data.phone2}}</td>
+                            <td>
+                                <span ng-if="talent.data.phone">
+                                    <a href="tel:{{talent.data.phone}}">{{talent.data.phone | tel}}</a>
+                                </span>
+                            </td>
+                            <td>
+                                <span ng-if="talent.data.phone2">
+                                    <a href="tel:{{talent.data.phone2}}">{{talent.data.phone2 | tel}}</a>
+                                </span>
+                            </td>
                             <td>{{talent.data.locationISDN}}</td>
                             <td><a href="/#!/projects/{{talent.project._id}}" target="_blank">{{talent.project.title}}</a></td>
                             <td>{{talent.project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm a'}}</td>
