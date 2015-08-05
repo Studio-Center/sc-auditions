@@ -452,7 +452,13 @@
 									        </div>
 									    </div>
 										<ul class="list-group">
-											<li class="list-group-item" ng-repeat="(key, user) in filtered = (users | filter:filterClient) | startFrom:currentPage*limit | limitTo: limit"><input type="checkbox" value="{{user._id}}" ng-click="updateClient(user._id, user.displayName, user.email)" ng-checked="checkClientUsers(user._id)"> <a target="_blank" href="/#!/usersedit/{{user._id}}">{{user.displayName}}</a></li>
+											<li class="list-group-item" ng-repeat="(key, user) in filtered = (users | filter:filterClient) | startFrom:currentPage*limit | limitTo: limit">
+												<input type="checkbox" value="{{user._id}}" ng-click="updateClient(user._id, user.displayName, user.email)" ng-checked="checkClientUsers(user._id)"> 
+												<a target="_blank" href="/#!/usersedit/{{user._id}}">
+													{{user.displayName}}
+												</a>
+												 - {{user.company}}
+											</li>
 										</ul>
 										<div class="row">
 									        <div class="col-lg-12 col-md-12 col-sm-12">
@@ -488,7 +494,9 @@
 		        	</accordion-heading>
 						<ul class="list-group">
 							<li class="list-group-item" ng-repeat="(key, member) in project.clientClient" ng-module="users" ng-controller="UsersController" data-ng-init="getOne(member.userId)">
-								<a target="_blank" href="/#!/usersedit/{{member.userId}}">{{member.name}}</a> - {{useredit.company}}
+								<a target="_blank" href="/#!/usersedit/{{member.userId}}">
+									{{member.name}}
+								</a> - {{useredit.company}}
 							</li>
 						</ul>
 						<accordion close-others="oneAtATime" ng-if="permitAdminProductionCoordinator()">
@@ -536,7 +544,11 @@
 									        </div>
 									    </div>
 										<ul class="list-group">
-											<li class="list-group-item" ng-repeat="(key, user) in filtered = (users | filter:filterClientClient) | startFrom:currentPage*limit | limitTo: limit"><input type="checkbox" value="{{user._id}}" ng-click="updateClientClient(user._id, user.displayName, user.email)" ng-checked="checkClientClientUsers(user._id)"> <a target="_blank" href="/#!/usersedit/{{user._id}}">{{user.displayName}}</a></li>
+											<li class="list-group-item" ng-repeat="(key, user) in filtered = (users | filter:filterClientClient) | startFrom:currentPage*limit | limitTo: limit">
+												<input type="checkbox" value="{{user._id}}" ng-click="updateClientClient(user._id, user.displayName, user.email)" ng-checked="checkClientClientUsers(user._id)"> 
+												<a target="_blank" href="/#!/usersedit/{{user._id}}">{{user.displayName}}</a>
+												 - {{user.company}}
+											</li>
 										</ul>
 										<div class="row">
 									        <div class="col-lg-12 col-md-12 col-sm-12">
