@@ -476,7 +476,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
         		$scope.project.discussion.push(item);
 
         		// update project store
-				$scope.update();
+				//$scope.update();
+				$scope.updateNoRefresh();
         	}).
 			error(function(data, status, headers, config) {
 				alert('An error occured while sending client emails. Please contact your administrator.');
@@ -811,7 +812,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					$scope.project.talent[i].status = status;
 
 					// update project store
-					$scope.update();
+					//$scope.update();
+					$scope.updateNoRefresh();
 				}
 			}
 
@@ -846,7 +848,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}
 
 			// update project store
-			$scope.update();
+			//$scope.update();
+			$scope.updateNoRefresh();
 		};
 
 		$scope.updateClientClient = function(userId, displayName, email){
@@ -867,7 +870,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}
 
 			// update project store
-			$scope.update();
+			//$scope.update();
+			$scope.updateNoRefresh();
 		};
 
 		$scope.updateClient = function(userId, displayName, email){
@@ -888,7 +892,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}
 
 			// update project store
-			$scope.update();
+			//$scope.update();
+			$scope.updateNoRefresh();
 		};
 
 		$scope.updateCreateClient = function(userId, displayName, email){
@@ -914,7 +919,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			$scope.project.talent[key].booked = !$scope.project.talent[key].booked;
 
 			// update project store
-			$scope.update();
+			//$scope.update();
+			$scope.updateNoRefresh();
 		};
 
 		// save audition note item
@@ -926,7 +932,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			$scope.project.auditions[key].discussion.push(item);
 
 			// update project store
-			$scope.update();
+			//$scope.update();
+			$scope.updateNoRefresh();
 		};
 
 		// update auditions approval status
@@ -948,7 +955,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}
 
 			// update project store
-			$scope.update();
+			//$scope.update();
+			$scope.updateNoRefresh();
 		};
 
 		// save audition note item
@@ -960,7 +968,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			$scope.project.scripts[key].discussion.push(item);
 
 			// update project store
-			$scope.update();
+			//$scope.update();
+			$scope.updateNoRefresh();
 		};
 
 		// Create new Project
@@ -1173,7 +1182,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}
 
 			// update project store
-			$scope.update();
+			//$scope.update();
+			$scope.updateNoRefresh();
 		};
 
 		$scope.updateProjectStatus = function(){
@@ -1199,7 +1209,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			// }
 
 			// update project store
-			$scope.update();
+			//$scope.update();
+			$scope.updateNoRefresh();
 		};
 		// Find a list of Projects
 		$scope.find = function() {
@@ -1516,7 +1527,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					email: $scope.email
 				});
 				// update project store
-				$scope.update();
+				//$scope.update();
+				$scope.updateNoRefresh();
 			}
 		};
 
@@ -1528,7 +1540,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			$scope.project.discussion[selVal].deleted = true;
 
 			// update project store
-			$scope.update();
+			//$scope.update();
+			$scope.updateNoRefresh();
 		};
 
 		$scope.delScript = function(idx){
@@ -1544,7 +1557,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				$scope.project.scripts.splice(idx, 1);
 
 				// update project store
-				$scope.update();
+				//$scope.update();
+				$scope.updateNoRefresh();
 				
 			}
 		};
@@ -1619,7 +1633,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	  		}
 
 	  		// update project store
-			$scope.update();
+			//$scope.update();
+			$scope.updateNoRefresh();
 	  	};
 
 		$scope.uploadReferenceFile = function($files) {
@@ -1694,7 +1709,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				$scope.project.referenceFiles.splice(idx, 1);
 
 				// update project store
-				$scope.update();
+				//$scope.update();
+				$scope.updateNoRefresh();
 				
 			}
 		};
@@ -1716,7 +1732,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				$scope.project.auditions.splice(idx, 1);
 
 				// update project store
-				$scope.update();
+				//$scope.update();
+				$scope.updateNoRefresh();
 				
 			}
 		};
