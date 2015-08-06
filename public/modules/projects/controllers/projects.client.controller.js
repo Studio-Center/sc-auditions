@@ -176,33 +176,50 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       		$scope.hideSelected = !$scope.hideSelected;
       	};
       	$scope.hideAudition = function(filename){
-      		$scope.hideList.push(filename);
+      		// $scope.hideList.push(filename);
+      		// get audition id
+      		for(var i = 0; i < $scope.project.auditions.length; ++i){
+      			if($scope.project.auditions[i].file.path === filename){
+      				$scope.project.auditions[i].hidden = true;
+      				$scope.updateNoRefresh();
+      			}
+      		}
       	};
       	$scope.showAudition = function(filename){
-			var idx = $scope.hideList.indexOf(filename);
-			if (idx > -1){
-			    $scope.hideList.splice(idx, 1);
-			}
+			// var idx = $scope.hideList.indexOf(filename);
+			// if (idx > -1){
+			//     $scope.hideList.splice(idx, 1);
+			// }
+			// get audition id
+			for(var i = 0; i < $scope.project.auditions.length; ++i){
+      			if($scope.project.auditions[i].file.path === filename){
+      				$scope.project.auditions[i].hidden = false;
+      				$scope.updateNoRefresh();
+      			}
+      		}
       	};
       	$scope.isHidden = function(filename){
-      		for(var i = 0; i < $scope.hideList.length; ++i){
-      			if($scope.hideList[i] === filename){
-      				return false;
+
+      		for(var i = 0; i < $scope.project.auditions.length; ++i){
+      			if($scope.project.auditions[i].file.path === filename){
+      				return true;
       			}
       		}
 
-      		return true;
+      		return false;
       	};
       	$scope.isDisplayed = function(filename){
-      		if($scope.hideSelected === true){
-	      		for(var i = 0; i < $scope.hideList.length; ++i){
-	      			if($scope.hideList[i] === filename){
-	      				return false;
-	      			}
-	      		}
+      		for(var i = 0; i < $scope.project.auditions.length; ++i){
+      			if($scope.project.auditions[i].file.path === filename){
+      				if($scope.project.auditions[i].hidden === true && $scope.hideSelected == true){
+      					return false;
+      				} else {
+      					return true;
+      				}
+      			}
       		}
 
-      		return true;
+      		return false;
       	};
       	$scope.downloadAllAuditions = function(){
 
@@ -1051,10 +1068,12 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		// update audition rating
 		$scope.curRatings = function(){
-			for(var j = 0; j < $scope.project.auditions.length; ++j){
-				for(var i = 0; i < $scope.project.auditions[j].rating.length; ++i){
-					if($scope.project.auditions[j].rating[i].userId === Authentication.user._id){
-						$scope.project.auditions[j].curRating = $scope.project.auditions[j].rating[i].value;
+			if(typeof $scope.project !== 'undefined' && typeof $scope.project.auditions !== 'undefined'){
+				for(var j = 0; j < $scope.project.auditions.length; ++j){
+					for(var i = 0; i < $scope.project.auditions[j].rating.length; ++i){
+						if($scope.project.auditions[j].rating[i].userId === Authentication.user._id){
+							$scope.project.auditions[j].curRating = $scope.project.auditions[j].rating[i].value;
+						}
 					}
 				}
 			}

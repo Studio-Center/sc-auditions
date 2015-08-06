@@ -111,8 +111,8 @@
 									</span>
 								</td>
 								<td>
-									<button ng-click="hideAudition(audition.file.path)" ng-show="isHidden(audition.file.path) == true" class="btn btn-primary">Hide</button>
-									<button ng-click="showAudition(audition.file.path)" ng-show="isHidden(audition.file.path) == false" class="btn btn-danger">Show</button>
+									<button ng-click="hideAudition(audition.file.path)" ng-show="audition.hidden == false" class="btn btn-primary">Hide</button>
+									<button ng-click="showAudition(audition.file.path)" ng-show="audition.hidden == true" class="btn btn-danger">Show</button>
 								</td>
 
 							</tr>
