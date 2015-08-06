@@ -327,6 +327,9 @@
 									<strong>{{key+1}}.</strong> <a href="/res/auditions/{{project._id}}/{{audition.file.name | encodeUri}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable">ngAudio</a> 
 								</fieldset>
 								<fieldset>
+									<div ng-show="audition.hidden == true">
+										<p style="font-size:18px;color:red;font-weight:700">HIDDEN BY CLIENT</p>
+									</div>
 									<span ng-show="verifyAudio(key)">
 										<button ng-click="playAudio(key, audition.file.name)" class="btn btn-primary">
 											<span ng-if="lastAudioID == key && audioStatus == 1">
