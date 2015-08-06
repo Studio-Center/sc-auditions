@@ -1609,7 +1609,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	        data: {project: $scope.project},
 	        file: file, // or list of files ($files) for html5 only 
 	      }).progress(function(evt) {
-	        $scope.uploadStatus = i + ' of ' + $files.length + ' files uploaded';
+	        $scope.uploadStatus = i + ' of ' + ($files.length - 1) + ' files uploaded';
 	      	$scope.uploadfile = evt.config.file.name;
 	        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
 	      }).success(function(data, status, headers, config) {
@@ -1633,7 +1633,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	        data: {project: $scope.project},
 	        file: file, // or list of files ($files) for html5 only 
 	      }).progress(function(evt) {
-	        $scope.uploadStatus = i + ' of ' + $files.length + ' files uploaded';
+	        $scope.uploadStatus = i + ' of ' + ($files.length - 1) + ' files uploaded';
 	      	$scope.uploadfile = evt.config.file.name;
 	        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
 	      }).success(function(data, status, headers, config) {
@@ -1672,7 +1672,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		        data: {project: $scope.project},
 		        file: file, // or list of files ($files) for html5 only 
 		    }).progress(function(evt) {
-		        $scope.uploadStatus = i + ' of ' + $files.length + ' files uploaded';
+		        $scope.uploadStatus = i + ' of ' + ($files.length - 1) + ' files uploaded';
 		      	$scope.uploadfile = evt.config.file.name;
 		        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
 		    }).success(function(data, status, headers, config) {
@@ -1695,7 +1695,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		        data: {project: $scope.project},
 		        file: file, // or list of files ($files) for html5 only 
 		    }).progress(function(evt) {
-		        $scope.uploadStatus = i + ' of ' + $files.length + ' files uploaded';
+		        $scope.uploadStatus = i + ' of ' + ($files.length - 1) + ' files uploaded';
 		      	$scope.uploadfile = evt.config.file.name;
 		        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
 		    }).success(function(data, status, headers, config) {
@@ -1776,7 +1776,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		        data: {project: $scope.project},
 		        file: file, // or list of files ($files) for html5 only 
 		    }).progress(function(evt) {
-		      	$scope.uploadStatus = i + ' of ' + $files.length + ' files uploaded';
+		      	$scope.uploadStatus = i + ' of ' + ($files.length - 1) + ' files uploaded';
 		      	$scope.uploadfile = evt.config.file.name;
 		        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
 		    }).success(function(data, status, headers, config) {
