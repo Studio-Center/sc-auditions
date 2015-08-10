@@ -154,13 +154,13 @@ var emailTalent = function(selTalent, talentInfo, email, project, req, res){
 				dueDate: newDate,
 				part: part,
 				requestedTxt: requestedTxt
-			}, function(err, owner, talentEmailHTML) {
-				done(err, owner, talentEmailHTML);
+			}, function(err, talentEmailHTML) {
+				done(err, talentEmailHTML, owner);
 			});
 
 		},
 		// send out talent project creation email
-		function(owner, talentEmailHTML, done) {
+		function(talentEmailHTML, owner, done) {
 			// send email
 			var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
 			var emailSubject = '';
@@ -185,6 +185,7 @@ var emailTalent = function(selTalent, talentInfo, email, project, req, res){
 				subject: emailSubject,
 				html: talentEmailHTML
 			};
+
 			transporter.sendMail(mailOptions, function(err){
 				done(err);
 			});
