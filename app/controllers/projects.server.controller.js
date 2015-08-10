@@ -132,11 +132,18 @@ var emailTalent = function(selTalent, talentInfo, email, project, req, res){
 				}
 			}
 
+			// add requested text if needed
+			var requestedTxt = '';
+			if(selTalent.requested === true){
+				requestedTxt = 'REQUESTED ';
+			}
+
 			res.render('templates/projects/new-project-talent-email', {
 				email: email,
 				emailSignature: emailSig,
 				dueDate: newDate,
-				part: part
+				part: part,
+				requestedTxt: requestedTxt
 			}, function(err, talentEmailHTML) {
 				done(err, talentEmailHTML);
 			});
