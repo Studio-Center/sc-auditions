@@ -41,6 +41,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.selectedMainClients = [];
 		$scope.rejFiles = [];
 		$scope.talentStatus = [];
+		$scope.talentBooked = [];
 		// projects client portal
 		$scope.selectedAuditions = [];
 		$scope.hideList = [];
@@ -950,13 +951,33 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		};
 
-		$scope.toggleBooked = function(key){
-			$scope.project.talent[key].booked = !$scope.project.talent[key].booked;
+		$scope.toggleBooked = function(talentId){
 
-			// update project store
-			//$scope.update();
-			$scope.updateNoRefresh();
+			for(var i = 0; i < $scope.project.talent.length; ++i){
+				if($scope.project.talent[i].talentId === talentId){
+
+					$scope.project.talent[i].booked = !$scope.project.talent[i].booked;
+
+					// update project store
+					//$scope.update();
+					$scope.updateNoRefresh();
+
+				}
+			}
 		};
+
+		// gather booked data
+		$scope.getBooked = function(talentId){
+
+			for(var i = 0; i < $scope.project.talent.length; ++i){
+				if($scope.project.talent[i].talentId === talentId){
+					if($scope.project.talent[i].booked === true){
+						return true;
+					}
+				}
+			}
+
+		}
 
 		// save audition note item
 		$scope.saveAudtionNote = function(key){

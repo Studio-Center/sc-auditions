@@ -198,7 +198,7 @@
 									<button class="btn btn-primary" ng-click="$parent.sendTalentEmail(member.talentId)"><img style="width:30px;height:auto" src="/img/envelope.png" alt="envelope image"></button>
 								</td>
 								<td>
-									<input type="checkbox" data-ng-model="project.talent[key].booked" ng-checked="project.talent[key].booked" ng-click="$parent.toggleBooked(key)">
+									<input type="checkbox" data-ng-model="talentBooked[key]" ng-checked="$parent.getBooked(member.talentId)" ng-click="$parent.toggleBooked(member.talentId)">
 								</td>
 							</tr>
 						</table>
