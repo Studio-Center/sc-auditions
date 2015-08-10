@@ -111,6 +111,16 @@ var emailTalent = function(selTalent, talentInfo, email, project, req, res){
 
 	async.waterfall([
 		function(done) {
+			var ownerId = project.owner || project.user._id;
+			User.findOne({'_id':ownerId}).sort('-created').exec(function(err, owner) {
+				if(err){
+					done(err, '');
+				} else {
+					done(err, owner);
+				}
+			});
+		},
+		function(owner, done) {
 
 			var newDate = new Date(project.estimatedCompletionDate);
 			newDate = newDate.setHours(newDate.getHours() - 1);
@@ -119,8 +129,8 @@ var emailTalent = function(selTalent, talentInfo, email, project, req, res){
 
 			// generate email signature
 			var emailSig = '';
-			if(req.user.emailSignature){
-				emailSig = req.user.emailSignature;
+			if(owner.emailSignature){
+				emailSig = owner.emailSignature;
 			} else {
 				emailSig = '';
 			}
@@ -144,13 +154,13 @@ var emailTalent = function(selTalent, talentInfo, email, project, req, res){
 				dueDate: newDate,
 				part: part,
 				requestedTxt: requestedTxt
-			}, function(err, talentEmailHTML) {
-				done(err, talentEmailHTML);
+			}, function(err, owner, talentEmailHTML) {
+				done(err, owner, talentEmailHTML);
 			});
 
 		},
 		// send out talent project creation email
-		function(talentEmailHTML, done) {
+		function(owner, talentEmailHTML, done) {
 			// send email
 			var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
 			var emailSubject = '';
@@ -169,8 +179,8 @@ var emailTalent = function(selTalent, talentInfo, email, project, req, res){
 
 			var mailOptions = {
 				to: talentInfo.email,
-				from: req.user.email || config.mailer.from,
-				replyTo: req.user.email || config.mailer.from,
+				from: owner.email || config.mailer.from,
+				replyTo: owner.email || config.mailer.from,
 				cc: 'audition­-notification@studiocenter.com',
 				subject: emailSubject,
 				html: talentEmailHTML
