@@ -448,18 +448,25 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		};
 
 		// send talent project welcome email
-		$scope.sendTalentEmail = function(talent){
+		$scope.sendTalentEmail = function(talentId){
 
-			$http.post('/projects/sendtalentemail', {
-		        talent: talent,
-		        project: $scope.project
-		    }).
-			success(function(data, status, headers, config) {
-				alert('Selected talent has been emailed.');
+			// find selected talent
+			for(var i = 0; i < $scope.project.talent.length; ++i){
+				if($scope.project.talent[i].talentId === talentId){
 
-				// update project store
-				$scope.project = data;
-			});
+					$http.post('/projects/sendtalentemail', {
+				        talent: $scope.project.talent[i],
+				        project: $scope.project
+				    }).
+					success(function(data, status, headers, config) {
+						alert('Selected talent has been emailed.');
+
+						// update project store
+						$scope.project = data;
+					});
+
+				}
+			};
 
 		};
 
