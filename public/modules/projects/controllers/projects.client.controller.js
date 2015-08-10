@@ -221,6 +221,17 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
       		return false;
       	};
+      	$scope.hiddenAudsCnt = function(){
+      		var hidCnt = 0;
+
+      		for(var i = 0; i < $scope.project.auditions.length; ++i){
+  				if($scope.project.auditions[i].hidden === true){
+  					hidCnt += 1;;
+  				}
+      		}
+
+      		return hidCnt;
+      	};
       	$scope.downloadAllAuditions = function(){
 
 			$http.post('/projects/downloadallauditions', {
