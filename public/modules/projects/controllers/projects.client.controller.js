@@ -1,8 +1,8 @@
 'use strict';
 
 // Projects controller
-angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$upload', 'ngAudio', '$http', '$modal', '$rootScope', 'Socket', '$cookies', '$window', 
-	function($scope, $stateParams, $location, Authentication, Projects, $upload, ngAudio, $http, $modal, $rootScope, Socket, $cookies, $window ) {
+angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$upload', 'ngAudio', 'ngAudioGlobals', '$http', '$modal', '$rootScope', 'Socket', '$cookies', '$window', 
+	function($scope, $stateParams, $location, Authentication, Projects, $upload, ngAudio, ngAudioGlobals, $http, $modal, $rootScope, Socket, $cookies, $window ) {
 		$scope.authentication = Authentication;
 
 		$scope.project = {};
@@ -14,6 +14,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.ratings = [];
 		$scope.ratingsAvg = [];
 		// static project options
+		ngAudioGlobals.unlock = false;
 		$scope.auditions = [];
 		$scope.projProgress = [];
 		$scope.selCheckVal = 0;
