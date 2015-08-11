@@ -41,6 +41,10 @@ angular.module('projects').config(['$stateProvider', '$urlRouterProvider',
 			url: '/projects/new-audition-form/thanks',
 			templateUrl: 'modules/projects/views/new-audition-project-thanks.client.view.html'
 		}).
+		state('talentAuditionUploadProject', {
+			url: '/projects/talent-upload/:projectId/:talentId',
+			templateUrl: 'modules/projects/views/talent-audition-upload.client.view.html'
+		}).
 		state('viewProject', {
 			url: '/projects/:projectId',
 			templateUrl: 'modules/projects/views/view-project.client.view.html'
