@@ -17,7 +17,7 @@
     "jquery": "^2.1.1",
     "ng-file-upload": "~3.0.2",
     "ng-file-upload-shim": "~3.0.2",
-    "ngAudio": "~1.4.1",
+    "ngAudio": "~1.7.0",
     "audio5js": "latest",
     "moment": "~2.10.3",
     "angular-bootstrap-datetimepicker": "latest",
