@@ -1509,20 +1509,20 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			if(key !== $scope.lastAudioID && typeof $scope.audio === 'object'){
 				$scope.audio.stop();
 			}
-			if(typeof $scope.audio === 'object' && key === $scope.lastAudioID && $scope.audioStatus === 1){
+			if(typeof $scope.audio === 'object' && key === $scope.lastAudioID && $scope.audioStatus === 1 && typeof $scope.audio === 'object'){
 				$scope.audio.pause();
 				$scope.audioStatus = 0;
 				//console.log('pause');
 				return;
 			}
-			if(typeof $scope.audio === 'object' && key === $scope.lastAudioID && $scope.audioStatus === 0){
+			if(typeof $scope.audio === 'object' && key === $scope.lastAudioID && $scope.audioStatus === 0 && typeof $scope.audio === 'object'){
 				$scope.audio.play();
 				$scope.audioStatus = 1;
 				$scope.updatePlayCnt(filename);
 				//console.log('play');
 				return;
 			}
-			if(typeof $scope.audio === 'object' && key === $scope.lastAudioID && $scope.audioStatus === 2){
+			if(typeof $scope.audio === 'object' && key === $scope.lastAudioID && $scope.audioStatus === 2 && typeof $scope.audio === 'object'){
 				$scope.audio.play();
 				$scope.audioStatus = 1;
 				//console.log('play');
