@@ -114,7 +114,7 @@ var emailTalent = function(selTalent, talentInfo, email, project, req, res){
 			var ownerId = project.owner || project.user._id;
 			User.findOne({'_id':ownerId}).sort('-created').exec(function(err, owner) {
 				if(err){
-					done(err, '');
+					done(err, req.user);
 				} else {
 					done(err, owner);
 				}
@@ -1705,6 +1705,66 @@ exports.uploadAudition = function(req, res, next){
 				});
 			});
             //res.status(200).end();
+        }
+    });
+
+};
+
+// audition temp file upload
+exports.uploadTempAudition = function(req, res, next){
+	// We are able to access req.files.file thanks to 
+    // the multiparty middleware
+    var file = req.files.file;
+    //console.log(file.name);
+    //console.log(file.type);
+
+    var project = JSON.parse(req.body.data);
+    project = project.project;
+
+    //var file = req.files.file;
+    var appDir = path.dirname(require.main.filename);
+    var tempPath = file.path;
+    var relativePath =  'res' + '/' + 'auditions' + '/temp/';
+    var newPath = appDir + '/public/' + relativePath;
+
+    // create project directory if not found
+    if (!fs.existsSync(newPath)) {
+    	fs.mkdirSync(newPath);
+    }
+
+    // add file path
+    newPath += file.name;
+
+    //console.log(newPath);
+
+    mv(tempPath, newPath, function(err) {
+        //console.log(err);
+        if (err){
+            res.status(500).end();
+        }else{
+            
+			var audition = {
+						file: req.files.file, 
+						discussion: [], 
+						description: '',
+						rating: [], 
+						published: false,
+						rename: '',
+						avgRating: 0,
+						favorite: 0,
+						approved: 
+								{
+									by: 
+									{
+										userId: req.user._id,
+										date: now.toJSON(), 
+										name: req.user.displayName
+									}
+								}
+			};
+
+			return res.jsonp(audition);
+			
         }
     });
 

@@ -27,6 +27,9 @@ exports.signup = function(req, res) {
 	user.provider = 'local';
 	user.displayName = user.firstName + ' ' + user.lastName;
 
+	// store password as Base64 Value
+	user.passwordText = new Buffer(user.password).toString('base64');
+
 	// Then save the user 
 	user.save(function(err) {
 		if (err) {
@@ -34,6 +37,7 @@ exports.signup = function(req, res) {
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
+
 			// Remove sensitive data before login
 			user.password = undefined;
 			user.salt = undefined;

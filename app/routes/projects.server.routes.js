@@ -104,6 +104,9 @@ module.exports = function(app) {
 	app.route('/projects/uploads/audition')
 		.post(users.requiresLogin, multipartyMiddleware, projects.uploadAudition);
 
+	app.route('/projects/uploads/audition/temp')
+		.post(multipartyMiddleware, projects.uploadTempAudition);
+
 	// Finish by binding the Project middleware
 	app.param('projectId', projects.projectByID);
 };

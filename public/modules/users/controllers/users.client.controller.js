@@ -7,6 +7,8 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
 
 		$scope.roleOpts = ['user', 'admin', 'producer/auditions director', 'production coordinator', 'talent director', 'client', 'client-client'];
 
+		// various values
+
 		// used for paginator
 		$scope.Math = window.Math;
 		$scope.currentPage = 0;
@@ -47,6 +49,11 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
 				$scope.findFilter(args);
 			} 
 		);
+
+		$scope.decodedPass = function(encodedPass){
+			console.log(encodedPass);
+			return new Buffer(encodedPass, 'base64').toString('ascii');
+		};
 
 		// Find existing Users
 		$scope.findOne = function() {
