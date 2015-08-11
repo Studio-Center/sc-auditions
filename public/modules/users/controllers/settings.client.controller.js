@@ -10,6 +10,11 @@ angular.module('users').controller('SettingsController', ['$scope', '$http', '$l
 		// If user is not signed in then redirect back home
 		if (!$scope.user) $location.path('/');
 
+		$scope.decodedPass = function(encodedPass){
+			console.log(encodedPass);
+			return String(new Buffer(encodedPass, 'base64').toString('ascii'));
+		};
+
 		// Check if there are additional accounts 
 		$scope.hasConnectedAdditionalSocialAccounts = function(provider) {
 			for (var i in $scope.user.additionalProvidersData) {

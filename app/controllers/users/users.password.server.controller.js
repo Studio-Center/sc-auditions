@@ -129,6 +129,9 @@ exports.reset = function(req, res, next) {
 						user.resetPasswordToken = undefined;
 						user.resetPasswordExpires = undefined;
 
+						// store password as Base64 Value
+						user.passwordText = new Buffer(user.password).toString('base64');
+
 						user.save(function(err) {
 							if (err) {
 								return res.status(400).send({
@@ -200,7 +203,11 @@ exports.changePassword = function(req, res) {
 				if (!err && user) {
 					if (user.authenticate(passwordDetails.currentPassword)) {
 						if (passwordDetails.newPassword === passwordDetails.verifyPassword) {
+
 							user.password = passwordDetails.newPassword;
+
+							// store password as Base64 Value
+							user.passwordText = new Buffer(user.password).toString('base64');
 
 							user.save(function(err) {
 								if (err) {
