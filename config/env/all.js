@@ -26,6 +26,7 @@ module.exports = {
 				'public/lib/modernizer/modernizr.js',
 				'public/lib/moment-timezone/moment-timezone-with-data.min.js',
 				'public/lib/angular/angular.js',
+				'public/lib/angular-base64/angular-base64.min.js',
 				'public/lib/angular-route/angular-route.min.js',
 				'public/lib/angular-moment/angular-moment.min.js',
 				'public/lib/ng-file-upload/angular-file-upload-shim.min.js',

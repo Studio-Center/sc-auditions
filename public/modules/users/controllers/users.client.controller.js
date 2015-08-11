@@ -1,8 +1,8 @@
 'use strict';
 
 // Users controller
-angular.module('users').controller('UsersController', ['$scope', '$stateParams', '$location', 'Authentication', 'UsersEdit', 'UsersFind', '$http', '$rootScope',
-	function($scope, $stateParams, $location, Authentication, UsersEdit, UsersFind, $http, $rootScope) {
+angular.module('users').controller('UsersController', ['$scope', '$stateParams', '$location', 'Authentication', 'UsersEdit', 'UsersFind', '$http', '$rootScope', '$base64',
+	function($scope, $stateParams, $location, Authentication, UsersEdit, UsersFind, $http, $rootScope, $base64) {
 		$scope.authentication = Authentication;
 
 		$scope.roleOpts = ['user', 'admin', 'producer/auditions director', 'production coordinator', 'talent director', 'client', 'client-client'];
@@ -51,8 +51,9 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
 		);
 
 		$scope.decodedPass = function(encodedPass){
-			console.log(encodedPass);
-			return new Buffer(encodedPass, 'base64').toString('ascii');
+			var convertedPass = $base64.decode(encodedPass);
+
+			return convertedPass;
 		};
 
 		// Find existing Users
