@@ -1557,11 +1557,16 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 			$scope.updatePlayCnt(filename);
 
-			$scope.audio.play();
+			// store current audio key
 			$scope.lastAudioID = key;
 
 			
 		};
+
+		// play audio on load
+		$scope.$watch('audio', function(val){
+			$scope.audio.play();
+		});
 
 		// save discussion item
 		$scope.saveDiscussion = function(){
