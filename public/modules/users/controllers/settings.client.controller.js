@@ -11,7 +11,10 @@ angular.module('users').controller('SettingsController', ['$scope', '$http', '$l
 		if (!$scope.user) $location.path('/');
 
 		$scope.decodedPass = function(encodedPass){
-			var convertedPass = $base64.decode(encodedPass);
+			var convertedPass = '';
+			if(typeof encodedPass !== 'undefined'){
+				convertedPass = $base64.decode(encodedPass);
+			}
 
 			return convertedPass;
 		};

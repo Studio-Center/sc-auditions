@@ -10,7 +10,7 @@
 			Phone: {{useredit.phone}}</p>
 		<p>Notes: {{user.notes}}</p>
 	</div>
-	<div class="pull-right" ng-show="authentication.user.roles[0] === 'admin'">
+	<div class="pull-right" ng-show="authentication.user.roles[0] === 'admin' || authentication.user.roles[0] === 'production coordinator'">
 		<a class="btn btn-primary" href="/#!/usersedit/{{useredit._id}}/edit">
 			<i class="glyphicon glyphicon-edit"></i>
 		</a>
