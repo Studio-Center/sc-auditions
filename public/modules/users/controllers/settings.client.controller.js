@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('users').controller('SettingsController', ['$scope', '$http', '$location', 'Users', 'Authentication',
-	function($scope, $http, $location, Users, Authentication) {
+angular.module('users').controller('SettingsController', ['$scope', '$http', '$location', 'Users', 'Authentication', '$base64',
+	function($scope, $http, $location, Users, Authentication, $base64) {
 		$scope.user = Authentication.user;
 
 		// custom arrays
@@ -11,8 +11,9 @@ angular.module('users').controller('SettingsController', ['$scope', '$http', '$l
 		if (!$scope.user) $location.path('/');
 
 		$scope.decodedPass = function(encodedPass){
-			console.log(encodedPass);
-			return String(new Buffer(encodedPass, 'base64').toString('ascii'));
+			var convertedPass = $base64.decode(encodedPass);
+
+			return convertedPass;
 		};
 
 		// Check if there are additional accounts 
