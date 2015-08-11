@@ -30,7 +30,7 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 		$scope.Math = window.Math;
 		$scope.currentPage = 0;
 		$scope.filtered = [];
-		$scope.limit;
+		$scope.limit = 0;
 		$scope.range = function(min, max, step){
 		    step = step || 1;
 		    var input = [];
