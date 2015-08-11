@@ -244,10 +244,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				// wait one second for archive processing on server
 				setTimeout(
 					function(){
-						var link = document.createElement('a');
-					    link.download = encodeURIComponent(data.zip);
-					    link.href = 'res/archives/' + encodeURIComponent(data.zip);
-					    link.click();
+						window.open('res/archives/' + encodeURIComponent(data.zip), '_blank', ''); 
 					},
 				    1000
 				);
