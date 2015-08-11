@@ -51,7 +51,10 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
 		);
 
 		$scope.decodedPass = function(encodedPass){
-			var convertedPass = $base64.decode(encodedPass);
+			var convertedPass = '';
+			if(typeof encodedPass !== 'undefined'){
+				convertedPass = $base64.decode(encodedPass);
+			}
 
 			return convertedPass;
 		};
