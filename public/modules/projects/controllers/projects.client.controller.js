@@ -65,7 +65,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.Math = window.Math;
 		$scope.currentPage = 0;
 		$scope.filtered = [];
-		$scope.limit;
+		$scope.limit = 0;
 		$scope.range = function(min, max, step){
 		    step = step || 1;
 		    var input = [];
@@ -212,7 +212,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       	$scope.isDisplayed = function(filename){
       		for(var i = 0; i < $scope.project.auditions.length; ++i){
       			if($scope.project.auditions[i].file.path === filename){
-      				if($scope.project.auditions[i].hidden === true && $scope.hideSelected == true){
+      				if($scope.project.auditions[i].hidden === true && $scope.hideSelected === true){
       					return false;
       				} else {
       					return true;
@@ -227,7 +227,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
       		for(var i = 0; i < $scope.project.auditions.length; ++i){
   				if($scope.project.auditions[i].hidden === true){
-  					hidCnt += 1;;
+  					hidCnt += 1;
   				}
       		}
 
@@ -452,11 +452,12 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.sendTalentEmail = function(talentId){
 
 			// find selected talent
-			for(var i = 0; i < $scope.project.talent.length; ++i){
-				if($scope.project.talent[i].talentId === talentId){
+			angular.forEach($scope.project.talent, function(talent, key) {
+
+				if(talent.talentId === talentId){
 
 					$http.post('/projects/sendtalentemail', {
-				        talent: $scope.project.talent[i],
+				        talent: talent,
 				        project: $scope.project
 				    }).
 					success(function(data, status, headers, config) {
@@ -467,7 +468,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					});
 
 				}
-			};
+
+			});
 
 		};
 
@@ -483,7 +485,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
         		alert('Clients Emailed ' + type + ' Email ');
         		$scope.selectedMainClients = [];
 
-				var note, now = moment(new Date()).format();
+				var note, now = Date.now();
 				var item = {
 							date: now, 
 							userid: '', 
@@ -977,7 +979,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				}
 			}
 
-		}
+		};
 
 		// save audition note item
 		$scope.saveAudtionNote = function(key){
