@@ -633,7 +633,7 @@ exports.lead = function(req, res){
 		attachements[i] = {
 			filename: req.body.scripts[i].file.name,
 			path: newPath + req.body.scripts[i].file.name
-		}
+		};
 	}
 
 	// send email
