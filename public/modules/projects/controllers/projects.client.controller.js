@@ -1,7 +1,7 @@
 'use strict';
 
 // Projects controller
-angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$upload', 'ngAudio', '$http', '$modal', '$rootScope', 'Socket', '$cookies', '$window',
+angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$upload', 'ngAudio', '$http', '$modal', '$rootScope', 'Socket', '$cookies', '$window', 
 	function($scope, $stateParams, $location, Authentication, Projects, $upload, ngAudio, $http, $modal, $rootScope, Socket, $cookies, $window ) {
 		$scope.authentication = Authentication;
 
@@ -14,6 +14,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.ratings = [];
 		$scope.ratingsAvg = [];
 		// static project options
+		$scope.auditions = [];
 		$scope.projProgress = [];
 		$scope.selCheckVal = 0;
 		$scope.client = [];
@@ -1721,15 +1722,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		    });
 	  	};
 
-	  	$scope.uploadTempReferenceFile = function($files) {
-		    //$files: an array of files selected, each file has name, size, and type. 
-		    for (var i = 0; i < $files.length; i++) {
-		    	var file = $files[i];
-
-			    performUploadTempReferenceFile(file, i, $files);
-	    	}
-	  	};
-
 	  	var performUploadTempReferenceFile = function(file, i, $files){
 	  		$scope.upload = $upload.upload({
 		        url: 'projects/uploads/referenceFile/temp', //upload.php script, node.js route, or servlet url 
@@ -1744,6 +1736,15 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		        //console.log(data);
 		        $scope.referenceFiles.push(data[0]);
 		    });
+	  	};
+
+	  	$scope.uploadTempReferenceFile = function($files) {
+		    //$files: an array of files selected, each file has name, size, and type. 
+		    for (var i = 0; i < $files.length; i++) {
+		    	var file = $files[i];
+
+			    performUploadTempReferenceFile(file, i, $files);
+	    	}
 	  	};
 
 	  	$scope.delTempReferenceFile = function(idx){
@@ -1798,19 +1799,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}
 		};
 
-		$scope.uploadAudition = function($files) {
-
-			// tell audio system to reload files
-			$scope.loadAudio = 0;
-
-		    //$files: an array of files selected, each file has name, size, and type. 
-		    for (var i = 0; i < $files.length; i++) {
-		    	var file = $files[i];
-		    
-		    	performUploadAudition(file, i, $files);
-		    }
-		};
-
 		var performUploadAudition = function(file, i, $files){
 			$scope.upload = $upload.upload({
 		        url: 'projects/uploads/audition', //upload.php script, node.js route, or servlet url 
@@ -1824,6 +1812,56 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		        // file is uploaded successfully 
 		        $scope.project = angular.extend($scope.project, data);
 		    });
+		};
+		$scope.uploadAudition = function($files) {
+
+			// tell audio system to reload files
+			$scope.loadAudio = 0;
+
+		    //$files: an array of files selected, each file has name, size, and type. 
+		    for (var i = 0; i < $files.length; i++) {
+		    	var file = $files[i];
+		    
+		    	performUploadAudition(file, i, $files);
+		    }
+		};
+
+		var performUploadTempAuditionFile = function(file, i, $files){
+	  		$scope.upload = $upload.upload({
+		        url: 'projects/uploads/audition/temp', //upload.php script, node.js route, or servlet url 
+		        data: {project: $scope.project},
+		        file: file, // or list of files ($files) for html5 only 
+		    }).progress(function(evt) {
+		        $scope.uploadStatus = (i + 1) + ' of ' + $files.length + ' files uploaded';
+		      	$scope.uploadfile = evt.config.file.name;
+		        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
+		    }).success(function(data, status, headers, config) {
+		        // file is uploaded successfully 
+		        //console.log(data);
+		        $scope.auditions.push(data[0]);
+		    });
+	  	};
+
+	  	$scope.uploadTempAudition = function($files) {
+	    //$files: an array of files selected, each file has name, size, and type. 
+	    for (var i = 0; i < $files.length; i++) {
+	    	var file = $files[i];
+
+	    		performUploadTempAuditionFile(file, i, $files);
+    		}
+	  	};
+
+		// perform talent audition uploads
+		$scope.submitAuditions = function(){
+			//console.log($stateParams.talentId);
+
+			//$files: an array of files selected, each file has name, size, and type. 
+		    for (var i = 0; i < $files.length; i++) {
+		    	var file = $files[i];
+		    
+		    	performUploadTempAuditionFile(file, i, $files);
+		    }
+
 		};
 
 	}

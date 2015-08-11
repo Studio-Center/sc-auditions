@@ -180,7 +180,10 @@
 							</tr>
 							<tr ng-repeat="(key, member) in project.talent | orderBy:predicate:reverse" ng-module="talents" ng-controller="TalentsController" data-ng-init="getOne(member.talentId)">
 								<td>
-									<a target="_blank" href="/#!/talents/{{member.talentId}}">{{talent.name}} {{talent.lastNameCode}}</a> 
+									<a target="_blank" href="/#!/talents/{{member.talentId}}">
+										{{talent.name}} {{talent.lastNameCode}}
+									</a> 
+									<a target="_blank" href="/#!/projects/talent-upload/{{project._id}}/{{member.talentId}}" title="talent auditions upload link">^</a>
 								</td>
 								<td>
 									{{talent.locationISDN}}
