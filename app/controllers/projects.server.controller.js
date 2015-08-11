@@ -112,7 +112,6 @@ var emailTalent = function(selTalent, talentInfo, email, project, req, res){
 	async.waterfall([
 		function(done) {
 			var ownerId = project.owner || project.user._id;
-			console.log(ownerId);
 			User.findOne({'_id':ownerId}).sort('-created').exec(function(err, owner) {
 				if(err){
 					done(err, req.user);
