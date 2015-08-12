@@ -2351,7 +2351,7 @@ exports.uploadTalentAudition = function(req, res, next){
 				project.save(function(err) {
 
 					var socketio = req.app.get('socketio');
-						socketio.sockets.emit('projectUpdate', {id: updatedProject._id}); 
+						socketio.sockets.emit('projectUpdate', {id: project._id}); 
 						socketio.sockets.emit('callListUpdate', {filter: ''}); 
 
 					done(err);
