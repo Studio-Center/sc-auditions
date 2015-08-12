@@ -1,6 +1,6 @@
 <section style="padding:30px">
 	<div class="modal-header">
-        <h3>Book Auditions</h3>
+        <h3>Talent {{data.talent.name}} {{data.talent.lastName}} Submissions</h3>
     </div>
     <div class="modal-body">
     	<table class="table table-striped">
@@ -9,16 +9,16 @@
 				<th>Name</th>
 				<th>Playback</th>
 			</tr>
-			<tr  ng-repeat="(key, audition) in selectedAuds">
+			<tr  ng-repeat="(key, audition) in data.talent.submissions">
 				<td>
 					<strong>{{key+1}}.</strong> 
 				</td>
 				<td>
-					<a href="/res/auditions/{{project._id}}/{{audition.file.name | encodeUri}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable">ngAudio</a> 
+					<a href="/res/talentUploads/{{data.projectId}}/{{data.talent.talentId}}/{{audition.file.name | encodeUri}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable">ngAudio</a> 
 				</td>
 				<td>
 					<span ng-show="verifyAudio(key)">
-						<button ng-click="playAudio(key, audition.file.name)" class="btn btn-primary">
+						<button ng-click="playAudio(key, audition.file.name, '/res/talentUploads/'+data.projectId+'/'+data.talent.talentId)" class="btn btn-primary">
 							<span ng-if="lastAudioID == key && audioStatus == 1">
 								<img src="/img/Aqua-Pause-icon.png" style="width:35px;height:auto" alt="play icon">
 							</span>
@@ -35,7 +35,6 @@
 		</table>
 	</div>
 	<div class="modal-footer">
-        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-         <button class="btn btn-primary" ng-click="bookSelected()">Book</button>
+        <button class="btn btn-warning" ng-click="cancel()">Close</button>
     </div>
 </section>

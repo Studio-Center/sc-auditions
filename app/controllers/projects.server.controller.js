@@ -1002,7 +1002,7 @@ var deleteFiles = function(project){
 	for(var i = 0; i < project.deleteFiles.length; ++i){
 		var file = appDir + '/public' + project.deleteFiles[i];
 
-		// remove file is exists
+		// remove file if exists
 		if (fs.existsSync(file)) {
 			fs.unlinkSync(file);
 		}
@@ -1757,9 +1757,9 @@ exports.uploadTempAudition = function(req, res, next){
 								{
 									by: 
 									{
-										userId: req.user._id,
+										userId: '',
 										date: now.toJSON(), 
-										name: req.user.displayName
+										name: ''
 									}
 								}
 			};
@@ -2256,4 +2256,120 @@ exports.uploadBackup = function(req, res, next){
 
 	    }
     });
+};
+
+// upload talent auditions
+exports.uploadTalentAudition = function(req, res, next){
+
+	// method vals
+	var tempPath, savePath, key = 0;
+
+	// gather submitted vals
+	var project = req.body.project;
+	var auditions = req.body.auditions;
+	var talentId = req.body.talent;
+
+	// get app dir
+	var appDir = path.dirname(require.main.filename);
+    var auditionsPath = appDir + '/public/' + 'res' + '/' + 'auditions' + '/' + 'temp' + '/';
+    var talentUploadPath = appDir + '/public/' + 'res' + '/' + 'talentUploads' + '/' + project._id + '/';
+    var talentUploadTalentPath = talentUploadPath + talentId + '/';
+
+    // create project directory if not found
+    if (!fs.existsSync(talentUploadPath)) {
+    	fs.mkdirSync(talentUploadPath);
+    }
+    if (!fs.existsSync(talentUploadTalentPath)) {
+    	fs.mkdirSync(talentUploadTalentPath);
+    }
+
+	// walk through submitted auditions
+	async.waterfall([
+		function(done) {
+
+			async.eachSeries(auditions, function (audition, auditionCallback) {
+				
+				// move submitted auditions to new location
+				tempPath = auditionsPath + audition.file.name;
+				savePath = talentUploadTalentPath + audition.file.name;
+
+				mv(tempPath, savePath, function(err) {
+
+					// remove file if exists
+					if (fs.existsSync(tempPath)) {
+						fs.unlinkSync(tempPath);
+					}
+
+					auditionCallback(err);
+				});
+
+			}, function (err) {
+				done(err);
+		   	});
+
+		},
+		// reload project for most recent data
+		function(done){
+			Project.findById(project._id).exec(function(err, updatedProject) {
+				done(err, updatedProject);
+			});
+		},
+		// update project with submitted auds
+		function(updatedProject, done){
+
+			for(var i = 0; i < updatedProject.talent.length; ++i){
+
+				if(updatedProject.talent[i].talentId === talentId){
+
+					if(typeof updatedProject.talent[i].submissions === 'undefined'){
+
+						updatedProject.talent[i].submissions = auditions;
+						done('', updatedProject);
+
+					} else {
+
+						for(var j = 0; j < auditions.length; ++j){
+							updatedProject.talent[i].submissions.push(auditions[j]);
+						}
+						done('', updatedProject);
+
+					}
+
+				}
+
+			}
+
+		},
+		// save updated project
+		function(updatedProject, done){
+
+			Project.findById(project._id).exec(function(err, project) {
+
+				project = _.extend(project, updatedProject.toObject());
+				//console.log(updatedProject);
+
+				project.save(function(err) {
+
+					var socketio = req.app.get('socketio');
+						socketio.sockets.emit('projectUpdate', {id: updatedProject._id}); 
+						socketio.sockets.emit('callListUpdate', {filter: ''}); 
+
+					done(err);
+
+				});
+
+			});
+
+		}
+		], function(err) {
+			if (err) {
+				console.log(err);
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
+			} else {
+				return res.jsonp({'status':'success'});
+			}
+	});
+
 };

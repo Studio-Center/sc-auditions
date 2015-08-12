@@ -74,35 +74,82 @@ angular.module('projects').controller('ProjectsModalController', ['$scope', '$st
 			return false;
 		};
 
-		$scope.playAudio = function(key, filename){
+		$scope.stopAudio = function(){
+			if(typeof $scope.audio === 'object'){
+				$scope.audio.stop();
+				$scope.audioStatus = 2;
+			}
+		};
+
+		$scope.playAudio = function(key, filename, fileDir){
+
+			var fileName = '';
 			
 			// check media file play state
-			if(typeof $scope.audio === 'object' && key === $scope.lastAudioID && $scope.audioStatus === 1){
+			if(key !== $scope.lastAudioID && typeof $scope.audio === 'object'){
+				$scope.audio.stop();
+			}
+			if(typeof $scope.audio === 'object' && key === $scope.lastAudioID && $scope.audioStatus === 1 && typeof $scope.audio === 'object'){
 				$scope.audio.pause();
 				$scope.audioStatus = 0;
+				//console.log('pause');
 				return;
 			}
-			if(typeof $scope.audio === 'object' && key === $scope.lastAudioID && $scope.audioStatus === 0){
+			if(typeof $scope.audio === 'object' && key === $scope.lastAudioID && $scope.audioStatus === 0 && typeof $scope.audio === 'object'){
 				$scope.audio.play();
 				$scope.audioStatus = 1;
+				$scope.updatePlayCnt(filename);
+				//console.log('play');
 				return;
 			}
-			if(typeof $scope.audio === 'object' && key === $scope.lastAudioID && $scope.audioStatus === 2){
+			if(typeof $scope.audio === 'object' && key === $scope.lastAudioID && $scope.audioStatus === 2 && typeof $scope.audio === 'object'){
 				$scope.audio.play();
 				$scope.audioStatus = 1;
+				//console.log('play');
+				$scope.updatePlayCnt(filename);
 				return;
 			}
+
+			// // disable previous
+			// if(typeof $scope.audio === 'object'){
+			// 	if(key !== $scope.lastAudioID){
+			// 		$scope.audio[$scope.lastAudioID].stop();
+			// 	}
+			// }
 
 			// assign file name
-			var fileName = '/res/auditions/' + $scope.project._id + '/' + filename;
+			if(typeof fileDir === 'undefined'){
+				fileName = '/res/auditions/' + $scope.project._id + '/' + filename;
+			} else {
+				fileName = fileDir + '/' + filename
+			}
 
-			$scope.audio = ngAudio.load(fileName);
-			$scope.audio.unbind();
-			$scope.audioStatus = 1;	
+			// if(typeof $scope.audio === 'object'){
+			// 	if($scope.audio.id !== fileName){
+			// 		$scope.audio = ngAudio.load(fileName);
+			// 		$scope.audio.unbind();
+			// 		$scope.audioStatus = 1;
+			// 	}
+			// } else {
+				$scope.audio = ngAudio.load(fileName);
+				$scope.audio.unbind();
+				$scope.audioStatus = 1;	
+			// }
 
-			$scope.audio.play();
+			//console.log('load');
+
+			$scope.updatePlayCnt(filename);
+
+			// store current audio key
 			$scope.lastAudioID = key;
+
+			
 		};
+
+		// play audio on load
+		$scope.$watch('audio', function(val){
+			$scope.audio.play();
+		});
 
 		// assign selected items as booked then send out appropriate emails
 		$scope.bookSelected = function(){
