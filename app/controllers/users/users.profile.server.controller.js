@@ -204,6 +204,9 @@ exports.create = function(req, res) {
 	var user = new User(req.body);
 	var message = null;
 
+	// store password as Base64 Value
+	user.passwordText = new Buffer(savedPassword).toString('base64');
+
 	// Add missing user fields
 	user.provider = 'local';
 	user.displayName = user.firstName + ' ' + user.lastName;
