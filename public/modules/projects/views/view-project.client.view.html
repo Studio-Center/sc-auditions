@@ -333,6 +333,9 @@
 								<fieldset>
 									<strong>{{key+1}}.</strong> <a href="/res/auditions/{{project._id}}/{{audition.file.name | encodeUri}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable">ngAudio</a> 
 								</fieldset>
+								<fieldset ng-module="users" ng-controller="UsersController" data-ng-init="getOne(audition.approved.by.userId)">
+									<strong>Posted by:</strong> {{useredit.displayName}}
+								</fieldset>
 								<fieldset>
 									<div ng-show="audition.hidden == true">
 										<p style="font-size:18px;color:red;font-weight:700">HIDDEN BY CLIENT</p>
