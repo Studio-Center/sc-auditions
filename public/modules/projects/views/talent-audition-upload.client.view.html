@@ -1,57 +1,91 @@
 <section data-ng-controller="ProjectsController" data-ng-init="findOne()">
-    <div class="page-header">
-        <h1>Talent Audition Upload</h1>
-    </div>
-    <div class="col-md-12" style="padding-bottom:75px">
-    	<form name="newAuditionProjectForm" data-ng-submit="submitAuditions()" class="signin form-horizontal" autocomplete="off">
-			<div class="form-group">
-			  <div class="panel panel-default">
-			    <div class="panel-heading"> <strong>Audition Files (MP3 only please!)</strong> </div>
-			    <div class="panel-body">
-			      <div ng-if="rejFiles.length > 0">
-			        <ul style="clear:both" ng-show="rejFiles.length > 0" class="response">
-			          <li class="sel-file" ng-repeat="f in rejFiles"> Rejected file: {{f.name}} - size: {{f.size}}B - type: {{f.type}} </li>
-			        </ul>
-			      </div>
-			      <div class="clearfix" style="padding-bottom:5px">
-			        <div ng-file-drop ng-file-select="uploadTempAudition($files)" ng-model="files" ng-model-rejected="rejFiles"
-			           drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}" class="drop-box"
-			           ng-multiple="true" ng-accept="'*.mp3'"
-			           drop-available="dropAvailable">
-			          <div ng-hide="dropAvailable">File Drop not available</div>
-			          <div ng-show="dropAvailable">Drop File(s)</div>
-			          <div>or click to select</div>
-			        </div>
-			      </div>
-			      <ul class="list-group">
-			        <li class="list-group-item" ng-repeat="(key, script) in scripts">
-			          <div class="row">
-			          <div class="col-lg-11 col-md-11 col-sm-11"> <strong>{{key+1}}.</strong> <a href="/res/scripts/temp/{{script.file.name | encodeUri}}" target="_blank" data-ng-bind="script.file.name"></a> </div>
-			          <div class="col-lg-1 col-md-1 col-sm-1">
-			            <button data-ng-show="permitAdminDirector()" ng-click="delTempScript(key)" target="_blank" class="btn btn-danger">Delete</button>
-			          </div>
-			        </li>
-			      </ul>
-			    </div>
-			 </div>
-			 <div class="form-group" style="text-align:center">
-	          <input type="submit" value="Submit" class="btn btn-default" ng-disabled="myForm.newLead.$dirty && myForm.newLead.$invalid ||
-	  myForm.email.$dirty && myForm.email.$invalid">
+	<div ng-show="project._id">
+	    <div class="page-header">
+	        <h1>Talent Audition Upload</h1>
+	        <h3 ng-module="talents" ng-controller="TalentsController" data-ng-init="findOne()">
+	        	Welcome {{talent.name}} {{talent.lastName}}! 
+	        </h3>
+	        <h4>
+	        	Please upload your auditions using the form below.
+	        </h4>
+	        <p>Your Script(s):</p>
+	        <ul>
+	        	<li class="list-group-item" ng-repeat="(key, script) in project.scripts">
+	        		<strong>{{key+1}}.</strong> 
+	        		<a href="/res/scripts/{{project._id}}/{{script.file.name | encodeUri}}" target="_blank" data-ng-bind="script.file.name"></a> 
+					<a href="/res/scripts/{{project._id}}/{{script.file.name}}" target="_blank">
+						<img src="/img/Adobe-Acrobat-icon.png" alt="download PDF" download="{{script.file.name}}">
+					</a>
+	        	</li>
+	        </ul>
+	    </div>
+	    <div class="col-md-12" style="padding-bottom:75px">
+	    	<form name="newAuditionProjectForm" data-ng-submit="submitTalentAuditions()" class="signin form-horizontal" autocomplete="off">
+				<div class="form-group">
+				  <div class="panel panel-default">
+				    <div class="panel-heading"> <strong>Audition Files (MP3 only please!)</strong> </div>
+				    <div class="panel-body">
+				      <div ng-if="rejFiles.length > 0">
+				        <ul style="clear:both" ng-show="rejFiles.length > 0" class="response">
+				          <li class="sel-file" ng-repeat="f in rejFiles"> Rejected file: {{f.name}} - size: {{f.size}}B - type: {{f.type}} </li>
+				        </ul>
+				      </div>
+				      <div class="clearfix" style="padding-bottom:5px">
+				        <div ng-file-drop ng-file-select="uploadTempAudition($files)" ng-model="files" ng-model-rejected="rejFiles"
+				           drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}" class="drop-box"
+				           ng-multiple="true" ng-accept="'*.mp3'"
+				           drop-available="dropAvailable">
+				          <div ng-hide="dropAvailable">File Drop not available</div>
+				          <div ng-show="dropAvailable">Drop File(s)</div>
+				          <div>or click to select</div>
+				        </div>
+				      </div>
+				      <ul class="list-group">
+				        <li class="list-group-item" ng-repeat="(key, audition) in auditions">
+				          <div class="row">
+				          <div class="col-lg-11 col-md-11 col-sm-11"> 
+				          	<strong>{{key+1}}.</strong> 
+				          	<a href="/res/auditions/temp/{{audition.file.name | encodeUri}}" target="_blank" data-ng-bind="audition.file.name"></a> 
+				          	<span ng-show="verifyAudio(key)">
+								<a ng-click="playAudioNoTrack(key, audition.file.name, '/res/auditions/temp')" class="btn btn-primary">
+									<span ng-if="lastAudioID == key && audioStatus == 1">
+										<img src="/img/Aqua-Pause-icon.png" style="width:35px;height:auto" alt="play icon">
+									</span>
+									<span ng-if="lastAudioID != key || audioStatus != 1">
+										<img src="/img/aqua-play-icon.png" style="width:35px;height:auto" alt="play icon">
+									</span>
+								</a> 
+								<a ng-click="stopAudio()" class="btn btn-primary" ng-if="lastAudioID == key && audioStatus == 1">
+									<img src="/img/Aqua-Stop-icon.png" style="width:35px;height:auto" alt="play icon">
+								</a>
+							</span>
+				          </div>
+				          <div class="col-lg-1 col-md-1 col-sm-1">
+				            <a ng-click="delTempAudition(key)" target="_blank" class="btn btn-danger">Delete</a>
+				          </div>
+				        </li>
+				      </ul>
+				    </div>
+				 </div>
+				 <div class="form-group" style="text-align:center">
+		          <input type="submit" value="Submit" class="btn btn-default" ng-disabled="myForm.newLead.$dirty && myForm.newLead.$invalid ||
+		  myForm.email.$dirty && myForm.email.$invalid">
+		        </div>
+		        <div data-ng-show="error" class="text-danger"> <strong data-ng-bind="error"></strong> </div>
+	      	</form>
+	    </div>
+	    <div class="container" style="position:fixed;bottom:0;background:#fff;z-index:999;padding-top:5px">
+	        <div class="row">
+	            <div class="col-lg-12 col-md-12 col-sm-12">
+	                <ul style="clear:both" ng-show="rejFiles.length > 0" class="response">
+	                    <li class="sel-file" ng-repeat="f in rejFiles">
+	                        Rejected file: {{f.name}} - size: {{f.size}}B - type: {{f.type}}
+	                    </li>
+	                </ul>
+	                <div data-ng-bind="uploadStatus"></div>
+	                <progressbar value="uploadprogress" type="success" ng-model="upload"><b>{{uploadfile}}</b></progressbar>
+	            </div>
 	        </div>
-	        <div data-ng-show="error" class="text-danger"> <strong data-ng-bind="error"></strong> </div>
-      	</form>
-    </div>
-    <div class="container" style="position:fixed;bottom:0;background:#fff;z-index:999;padding-top:5px">
-        <div class="row" data-ng-show="permitAdminDirector()">
-            <div class="col-lg-12 col-md-12 col-sm-12">
-                <ul style="clear:both" ng-show="rejFiles.length > 0" class="response">
-                    <li class="sel-file" ng-repeat="f in rejFiles">
-                        Rejected file: {{f.name}} - size: {{f.size}}B - type: {{f.type}}
-                    </li>
-                </ul>
-                <div data-ng-bind="uploadStatus"></div>
-                <progressbar value="uploadprogress" type="success" ng-model="upload"><b>{{uploadfile}}</b></progressbar>
-            </div>
-        </div>
-    </div>
+	    </div>
+	</div>
 </section>

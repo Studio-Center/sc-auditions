@@ -177,6 +177,7 @@
 								</th>
 								<th>Email</th>
 								<th>Booked</th>
+								<th></th>
 							</tr>
 							<tr ng-repeat="(key, member) in project.talent | orderBy:predicate:reverse" ng-module="talents" ng-controller="TalentsController" data-ng-init="getOne(member.talentId)">
 								<td>
@@ -202,6 +203,9 @@
 								</td>
 								<td>
 									<input type="checkbox" data-ng-model="talentBooked[key]" ng-checked="$parent.getBooked(member.talentId)" ng-click="$parent.toggleBooked(member.talentId)">
+								</td>
+								<td>
+									<button ng-show="member.submissions" target="_blank" href="#" ng-click="talentSubmissionsModal(member)" title="talent auditions upload link">></button>
 								</td>
 							</tr>
 						</table>
@@ -350,7 +354,7 @@
 									<button data-ng-show="permitAdminDirector()" ng-click="delAudition(key)" class="btn btn-danger">Delete</button>
 								</fieldset>
 								<fieldset ng-show="showRename">
-									<input type="text" ng-model="project.auditions[key].rename" placeholder="Enter new filename" class="form-control">
+									<input type="text" ng-model="project.auditions[key].rename" ng-init="project.auditions[key].rename = project.auditions[key].file.name" placeholder="Enter new filename" class="form-control">
 									<button ng-click="update(false);showRename = 0;" class="btn btn-primary">Update</button><button ng-click="showRename = 0;" class="btn btn-primary">Cancel</button>
 								</fieldset>
 								<fieldset ng-if="project.auditions[key].playCnt">

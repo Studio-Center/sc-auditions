@@ -1504,7 +1504,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			$scope.updateNoRefresh();
 		};
 
-		$scope.playAudio = function(key, filename){
+		$scope.playAudio = function(key, filename, fileDir){
+
+			var fileName = '';
 			
 			// check media file play state
 			if(key !== $scope.lastAudioID && typeof $scope.audio === 'object'){
@@ -1539,7 +1541,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			// }
 
 			// assign file name
-			var fileName = '/res/auditions/' + $scope.project._id + '/' + filename;
+			if(typeof fileDir === 'undefined'){
+				fileName = '/res/auditions/' + $scope.project._id + '/' + filename;
+			} else {
+				fileName = fileDir + '/' + filename
+			}
 
 			// if(typeof $scope.audio === 'object'){
 			// 	if($scope.audio.id !== fileName){
@@ -1556,6 +1562,50 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			//console.log('load');
 
 			$scope.updatePlayCnt(filename);
+
+			// store current audio key
+			$scope.lastAudioID = key;
+
+			
+		};
+
+		$scope.playAudioNoTrack = function(key, filename, fileDir){
+
+			var fileName = '';
+			
+			// check media file play state
+			if(key !== $scope.lastAudioID && typeof $scope.audio === 'object'){
+				$scope.audio.stop();
+			}
+			if(typeof $scope.audio === 'object' && key === $scope.lastAudioID && $scope.audioStatus === 1 && typeof $scope.audio === 'object'){
+				$scope.audio.pause();
+				$scope.audioStatus = 0;
+				//console.log('pause');
+				return;
+			}
+			if(typeof $scope.audio === 'object' && key === $scope.lastAudioID && $scope.audioStatus === 0 && typeof $scope.audio === 'object'){
+				$scope.audio.play();
+				$scope.audioStatus = 1;
+				//console.log('play');
+				return;
+			}
+			if(typeof $scope.audio === 'object' && key === $scope.lastAudioID && $scope.audioStatus === 2 && typeof $scope.audio === 'object'){
+				$scope.audio.play();
+				$scope.audioStatus = 1;
+				//console.log('play');
+				return;
+			}
+
+			// assign file name
+			if(typeof fileDir === 'undefined'){
+				fileName = '/res/auditions/' + $scope.project._id + '/' + filename;
+			} else {
+				fileName = fileDir + '/' + filename
+			}
+
+			$scope.audio = ngAudio.load(fileName);
+			$scope.audio.unbind();
+			$scope.audioStatus = 1;	
 
 			// store current audio key
 			$scope.lastAudioID = key;
@@ -1841,7 +1891,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		    }).success(function(data, status, headers, config) {
 		        // file is uploaded successfully 
 		        //console.log(data);
-		        $scope.auditions.push(data[0]);
+		        $scope.auditions.push(data);
 		    });
 	  	};
 
@@ -1851,21 +1901,68 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	    	var file = $files[i];
 
 	    		performUploadTempAuditionFile(file, i, $files);
+
     		}
 	  	};
 
+	  	// delete uploaded temp audition
+	  	$scope.delTempAudition = function(key){
+
+	  		var file = '/res/auditions/temp/' + $scope.auditions[key].file.name;
+
+			$http.post('/projects/deletefile', {
+		        fileLocation: file
+		    });
+
+		    $scope.auditions.splice(key, 1);
+
+	  	};
+
 		// perform talent audition uploads
-		$scope.submitAuditions = function(){
+		$scope.submitTalentAuditions = function(){
 			//console.log($stateParams.talentId);
 
-			//$files: an array of files selected, each file has name, size, and type. 
-		    for (var i = 0; i < $files.length; i++) {
-		    	var file = $files[i];
-		    
-		    	performUploadTempAuditionFile(file, i, $files);
-		    }
+			if(confirm('Are you sure?') === true){
+
+				$http.post('/projects/uploads/talentAuditions', {
+		       		auditions: $scope.auditions,
+		       		project: $scope.project,
+		       		talent: $stateParams.talentId
+		    	}).success(function(data, status, headers, config) {
+			        // file is uploaded successfully 
+			        //console.log(data);
+			        $scope.auditions = [];
+
+			        alert('Auditions have been submitted. Thank you!')
+			    });
+
+			}
 
 		};
+
+		// talent uploads modal
+      	$scope.talentSubmissionsModal = function(talent){
+      		var modalInstance = $modal.open({
+		      animation: true,
+		      templateUrl: 'modules/projects/views/talent-submissions-modal.client.view.html',
+		      controller: 'ProjectsModalController',
+		      resolve: {
+		      	data: function () {
+			        return {
+			        	talent: talent,
+			        	projectId: $scope.project._id
+			        };
+				}
+		      }
+		    });
+
+		    modalInstance.result.then(function (selectedItem) {
+		      //$scope.selected = selectedItem;
+		    }, function () {
+		      //$log.info('Modal dismissed at: ' + new Date());
+
+		    });
+      	};
 
 	}
 ]);

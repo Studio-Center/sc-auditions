@@ -16,7 +16,7 @@ module.exports = function(app) {
 		.get(users.jwtauth, users.requiresLogin, projects.list);
 
 	app.route('/projects/:projectId')
-		.get(users.jwtauth, users.requiresLogin, projects.read)
+		.get(users.jwtauth, projects.read)
 		.put(users.jwtauth, users.requiresLogin, projects.update)
 		.delete(users.requiresLogin, projects.hasAuthorization, projects.delete);
 
@@ -106,6 +106,9 @@ module.exports = function(app) {
 
 	app.route('/projects/uploads/audition/temp')
 		.post(multipartyMiddleware, projects.uploadTempAudition);
+
+	app.route('/projects/uploads/talentAuditions')
+		.post(multipartyMiddleware, projects.uploadTalentAudition);
 
 	// Finish by binding the Project middleware
 	app.param('projectId', projects.projectByID);
