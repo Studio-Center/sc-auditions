@@ -475,10 +475,20 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		// send various client emails
 		$scope.sendClientEmail = function(type){
 
+			// update email count
+    		if(typeof $scope.project.counts === 'undefined'){
+    			$scope.project.counts = {};
+    		}
+    		if(typeof $scope.project.counts[type] === 'undefined'){
+    			$scope.project.counts[type] = 0;
+    		}
+    		$scope.project.counts[type] += 1;
+
 			$http.post('/projects/sendclientemail', {
 		        type: type,
 		        project: $scope.project,
-		        clients: $scope.selectedMainClients
+		        clients: $scope.selectedMainClients,
+		        count: $scope.project.counts[type]
 		    }).
 			success(function(data, status, headers, config) {
         		alert('Clients Emailed ' + type + ' Email ');
@@ -492,6 +502,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 							item: '', 
 							deleted: false
 						};
+
+				
 
         		// add note
         		switch(type){
@@ -607,12 +619,12 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 			// attach team to email chain
 			// grant all team members access to all email communications
-			for(var k = 0; k < $scope.project.team.length; ++k){
-				if($scope.project.team[k].email !== '' && re.test($scope.project.team[k].email)){
-					emailCnt += 1;
-					toEmails[emailCnt] = $scope.project.team[k].email;
-				}
-			}
+			// for(var k = 0; k < $scope.project.team.length; ++k){
+			// 	if($scope.project.team[k].email !== '' && re.test($scope.project.team[k].email)){
+			// 		emailCnt += 1;
+			// 		toEmails[emailCnt] = $scope.project.team[k].email;
+			// 	}
+			// }
 			// check for accounts associated 
 			$scope.email.to = toEmails;
 		};
