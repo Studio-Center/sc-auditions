@@ -120,6 +120,9 @@ var ProjectSchema = new Schema({
 	},
 	deleteFiles: {
 		type: Array
+	},
+	counts: {
+		type: Object
 	}
 });
 

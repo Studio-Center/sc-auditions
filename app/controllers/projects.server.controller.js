@@ -474,12 +474,29 @@ exports.updateNoRefresh = function(req, res){
 
 };
 
+// convert number to word
+var a = ['','First ','Second ','Third ','Fourth ', 'Fifth ','Sixth ','Seventh ','Eighth ','Ninth ','Tenth ','Eleventh ','Twelfth ','Thirteenth ','Fourteenth ','Fifteenth ','Sixteenth ','Seventeenth ','Eighteenth ','Nineteenth '];
+var b = ['', '', 'twenty','thirty','forty','fifty', 'sixty','seventy','eighty','ninety'];
+
+function inWords (num) {
+    if ((num = num.toString()).length > 9) return 'overflow';
+    var n = ('000000000' + num).substr(-9).match(/^(\d{2})(\d{2})(\d{2})(\d{1})(\d{2})$/);
+    if (!n) return; var str = '';
+    str += (n[1] != 0) ? (a[Number(n[1])] || b[n[1][0]] + ' ' + a[n[1][1]]) : '';
+    str += (n[2] != 0) ? (a[Number(n[2])] || b[n[2][0]] + ' ' + a[n[2][1]]) : '';
+    str += (n[3] != 0) ? (a[Number(n[3])] || b[n[3][0]] + ' ' + a[n[3][1]])  : '';
+    str += (n[4] != 0) ? (a[Number(n[4])] || b[n[4][0]] + ' ' + a[n[4][1]]) : '';
+    str += (n[5] != 0) ? ((str != '') ? 'and ' : '') + (a[Number(n[5])] || b[n[5][0]] + ' ' + a[n[5][1]]) : '';
+    return str;
+}
+
 // send client email based on user button click
 exports.sendClientEmail = function(req, res){
 
 	// determine email type
 	var template;
 	var type = req.body.type;
+	var emlCnt = req.body.count;
 
 	switch(type){
 		case 'opening':
@@ -492,6 +509,7 @@ exports.sendClientEmail = function(req, res){
 			template = 'templates/projects/closing-email';
 		break;
 	}
+
 
 	// gather clients ids
 	var clientIds = [];
@@ -571,7 +589,7 @@ exports.sendClientEmail = function(req, res){
 							emailSubject = 'Your audition project: ' + req.body.project.title + ' Due ' + dateFormat(req.body.project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
 						break;
 						case 'carryover':
-							emailSubject = 'Your First Batch of ' + req.body.project.title + '  Auditions - Studio Center';
+							emailSubject = 'Your '+inWords(emlCnt)+' Batch of ' + req.body.project.title + '  Auditions - Studio Center';
 						break;
 						case 'closing':
 							emailSubject = 'Your Audition Project ' + req.body.project.title + ' is Complete';
