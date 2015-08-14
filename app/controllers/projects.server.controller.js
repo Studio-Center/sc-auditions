@@ -446,6 +446,65 @@ exports.updateTalentStatus = function(req, res){
 
 };
 
+// update talent note
+exports.updateTalentNote = function (req, res){
+
+	var projectId = req.body.projectId;
+	var talentId = req.body.talentId;
+	var newNote = req.body.note;
+
+	async.waterfall([
+		// gather info for selected talent
+		function(done) {
+			Project.findOne({'_id':projectId}).sort('-created').exec(function(err, project) {
+				done(err, project);
+			});
+		},
+		// update talent email status
+		function(project, done){
+
+			// update talent email status 
+			for(var i = 0; i < project.talent.length; ++i){
+				if(project.talent[i].talentId === talentId){
+					project.talent[i].note = newNote;
+					done('', project);
+				}
+			}
+
+		},
+		// email selected talent
+		function(project, done){
+
+			var newProject = project.toObject();
+
+			Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
+				
+				project = _.extend(project, newProject);
+
+				req.project = project;
+
+				project.save(function(err) {
+					var socketio = req.app.get('socketio');
+					socketio.sockets.emit('projectUpdate', {id: project._id}); 
+					socketio.sockets.emit('callListUpdate', {filter: ''}); 
+
+					done(err);
+				});			
+
+			});
+
+		}
+		], function(err) {
+		if (err) {
+			return res.json(400, err);
+		} else {
+			
+			return res.json(200);
+		}
+	});
+
+};
+
 // update talent status
 exports.updateNoRefresh = function(req, res){
 

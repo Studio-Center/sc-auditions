@@ -76,6 +76,8 @@ module.exports = function(app) {
 		.post(users.requiresLogin, projects.sendTalentEmailById);
 	app.route('/projects/updateSingleTalentStatus')
 		.post(users.requiresLogin, projects.updateSingleTalentStatus);
+	app.route('/projects/updateTalentNote')
+		.post(users.requiresLogin, projects.updateTalentNote);
 
 	// app.route('/projects/uploads')
 	// 	.post(users.requiresLogin, multipartyMiddleware, projects.uploadFile);

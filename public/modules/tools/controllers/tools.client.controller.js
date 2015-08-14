@@ -25,6 +25,7 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 		$scope.callTalents = [];
 		$scope.messagedTalents = [];
 		$scope.alreadyScheduledTalents = [];
+		$scope.talentNote = [];
 		// delete projects vals
 		$scope.selectAll = '';
 		$scope.projects = [];
@@ -391,21 +392,21 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 
 		};
 
-		$scope.getTalentNote = function(talentId, project){
+		$scope.saveTalentNote = function(talentId, projectId){
 
-			if(typeof project !== 'undefined'){
-				if(typeof project.talent !== 'undefined'){
-					for(var i = 0; i < project.talent.length; ++i){
-						if(project.talent[i].talentId === talentId){
+			// new note
+			var newNote = $scope.talentNote[talentId][projectId];
 
-							return project.talent[i].note;
-							
-						}
-					}
-				}
-			}
+			$http.post('/projects/updateTalentNote', {
+		        talentId: talentId,
+		        projectId: projectId,
+		        note: newNote
+		    }).
+			success(function(data, status, headers, config) {
+				//$scope.alerts.push({type: 'success', msg: 'All talents have been imported into the database.'});
+			});
 
-		}
+		};
 
 	}
 ]);
