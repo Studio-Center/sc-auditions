@@ -728,6 +728,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					// remove talent if no longer selected
 					if($scope.project.talent[i].regular === false && $scope.project.talent[i].requested === false){
 						$scope.project.talent.splice(i, 1);
+						$scope.updateNoRefresh();
+						return;
 					}
 					found = 1;
 				}
@@ -769,6 +771,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					// remove talent if no longer selected
 					if($scope.project.talent[i].regular === false && $scope.project.talent[i].requested === false){
 						$scope.project.talent.splice(i, 1);
+						$scope.updateNoRefresh();
+						return;
 					}
 					found = 1;
 				}
