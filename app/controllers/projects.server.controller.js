@@ -255,7 +255,9 @@ var sendTalentEmail = function(req, res, project, talent){
 			for(var i = 0; i < project.talent.length; ++i){
 				if(project.talent[i].talentId === talent.talentId){
 					//console.log(project.talent[i].status);
-					project.talent[i].status = 'Emailed';
+					if(talentInfo.type.toLowerCase() === 'email'){
+						project.talent[i].status = 'Emailed';
+					}
 					//console.log(project.talent[i].status);
 					done('', email, talentInfo);
 				}
@@ -264,28 +266,32 @@ var sendTalentEmail = function(req, res, project, talent){
 		},
 		// email selected talent
 		function(email, talentInfo, done){
-			emailTalent(talent, talentInfo, email, project, req, res);
+			if(talentInfo.type.toLowerCase() === 'email'){
+				emailTalent(talent, talentInfo, email, project, req, res);
 
-			var newProject = project;
+				var newProject = project;
 
-			Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
-				
-				project = _.extend(project, newProject);
+				Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
+					
+					project = _.extend(project, newProject);
 
-				req.project = project;
+					req.project = project;
 
-				project.save(function(err) {
-					if (err) {
-						done(err);
-					} else {
-						var socketio = req.app.get('socketio');
-						socketio.sockets.emit('projectUpdate', {id: project._id}); 
-						socketio.sockets.emit('callListUpdate', {filter: ''}); 
-						res.json(project);
-					}
-				});			
+					project.save(function(err) {
+						if (err) {
+							done(err);
+						} else {
+							var socketio = req.app.get('socketio');
+							socketio.sockets.emit('projectUpdate', {id: project._id}); 
+							socketio.sockets.emit('callListUpdate', {filter: ''}); 
+							res.json(project);
+						}
+					});			
 
-			});
+				});
+			} else {
+				done('');
+			}
 
 		}
 		], function(err) {
