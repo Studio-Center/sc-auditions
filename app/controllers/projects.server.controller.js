@@ -266,32 +266,32 @@ var sendTalentEmail = function(req, res, project, talent){
 		},
 		// email selected talent
 		function(email, talentInfo, done){
+			// only send email to talent if that is the preferred contact method
 			if(talentInfo.type.toLowerCase() === 'email'){
 				emailTalent(talent, talentInfo, email, project, req, res);
-
-				var newProject = project;
-
-				Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
-					
-					project = _.extend(project, newProject);
-
-					req.project = project;
-
-					project.save(function(err) {
-						if (err) {
-							done(err);
-						} else {
-							var socketio = req.app.get('socketio');
-							socketio.sockets.emit('projectUpdate', {id: project._id}); 
-							socketio.sockets.emit('callListUpdate', {filter: ''}); 
-							res.json(project);
-						}
-					});			
-
-				});
-			} else {
-				done('');
 			}
+
+			var newProject = project;
+
+			Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
+				
+				project = _.extend(project, newProject);
+
+				req.project = project;
+
+				project.save(function(err) {
+					if (err) {
+						done(err);
+					} else {
+						var socketio = req.app.get('socketio');
+						socketio.sockets.emit('projectUpdate', {id: project._id}); 
+						socketio.sockets.emit('callListUpdate', {filter: ''}); 
+						res.json(project);
+					}
+				});			
+
+			});
+
 
 		}
 		], function(err) {
