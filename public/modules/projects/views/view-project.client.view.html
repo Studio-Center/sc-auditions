@@ -142,6 +142,130 @@
 			</div>
 			
 		</div>
+
+		<div class="row">
+
+			<div class="col-lg-12 col-md-12 col-sm-12">		
+				<accordion close-others="oneAtATime">
+					<accordion-group is-open="status.open">
+					<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
+						<h4 class="panel-title accordion-toggle">
+			            	Auditions ({{project.auditions.length}})<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+			            </h4>
+		        	</accordion-heading>
+				 		<div data-ng-show="permitAdminDirector()" class="clearfix" style="padding-bottom:5px">
+							<h4>Upload Audition Files: (*.mp3 only!)</h4>
+
+							<div ng-file-drop ng-file-select="uploadAudition($files)" ng-model="files" ng-model-rejected="rejFiles"
+	                         drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}" class="drop-box"
+	                         ng-multiple="true" ng-accept="'*.mp3'"
+	                         drop-available="dropAvailable">
+	                            <div ng-hide="dropAvailable">File Drop not available</div>
+	                            <div ng-show="dropAvailable">Drop *.mp3 files..</div>
+	                            <div>or click to select</div>
+	                        </div>
+
+						</div>
+						<div ng-if="project.auditions" style="text-align:center;padding:10px 0">
+							<a href="" class="btn btn-primary" ng-click="downloadAllAuditions()">Download All</a>
+						</div>
+						<div class="table-responsive">
+							<table class="table table-striped">
+								<tr>
+									<th>
+										#
+									</th>
+									<th>
+										File
+									</th>
+									<th>
+										Playback
+									</th>
+									<th>
+										Plays
+									</th>
+									<th>
+										Talent
+									</th>
+									<td>
+										Rating
+									</th>
+									<th>
+										Published
+									</th>
+									<th>
+										Booked
+									</th>
+									<th>
+										Favorited
+									</th>
+								</tr>
+								<tr ng-repeat="(key, audition) in project.auditions">
+									<td>
+										{{key+1}}
+									</td>
+									<td>
+										<a href="/res/auditions/{{project._id}}/{{audition.file.name | encodeUri}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable">ngAudio</a> 
+										<p ng-module="users" ng-controller="UsersController" data-ng-init="getOne(audition.approved.by.userId)">
+											<strong>Posted by:</strong> {{useredit.displayName}}
+										</p>
+										<p ng-show="audition.hidden == true" style="font-size:18px;color:red;font-weight:700">HIDDEN BY CLIENT</p>
+										<button ng-show="showRename === 0" ng-click="showRename = 1" class="btn btn-primary">Rename</button>
+										
+
+										<div ng-show="showRename">
+											<input type="text" ng-model="project.auditions[key].rename" ng-init="project.auditions[key].rename = project.auditions[key].file.name" placeholder="Enter new filename" class="form-control">
+											<button ng-click="update(false);showRename = 0;" class="btn btn-primary">Update</button><button ng-click="showRename = 0;" class="btn btn-primary">Cancel</button>
+										</div>
+										<button data-ng-show="permitAdminDirector()" ng-click="delAudition(key)" class="btn btn-danger">Delete</button>
+									</td>
+									<td>
+										<span ng-show="verifyAudio(key)">
+											<button ng-click="playAudio(key, audition.file.name)" class="btn btn-primary">
+												<span ng-if="lastAudioID == key && audioStatus == 1">
+													<img src="/img/Aqua-Pause-icon.png" style="width:35px;height:auto" alt="play icon">
+												</span>
+												<span ng-if="lastAudioID != key || audioStatus != 1">
+													<img src="/img/aqua-play-icon.png" style="width:35px;height:auto" alt="play icon">
+												</span>
+											</button> 
+											<button ng-click="stopAudio()" class="btn btn-primary" ng-if="lastAudioID == key && audioStatus == 1">
+												<img src="/img/Aqua-Stop-icon.png" style="width:35px;height:auto" alt="play icon">
+											</button>
+										</span>
+									</td>
+									<td>
+										<p ng-if="project.auditions[key].playCnt">
+											{{project.auditions[key].playCnt}}
+										</p>
+									</td>
+									<td>
+										<select ng-model="project.auditions[key].talent" ng-change="$parent.updateNoRefresh()">
+					                        <option ng-repeat="talent in project.talent" ng-selected="project.auditions[key].talent == talent.talentId" value="{{talent.talentId}}">{{talent.name}}</option>
+					                    </select>
+					                </td>
+					                <td>
+					                	<rating ng-model="audition.avgRating" readonly="false" ng-click="updateRating(audition.file.path, false)" max="max" on-leave="overStar = audition.avgRating" on-hover="hoveringOver(value,key)"></rating>
+										<p data-ng-show="audition.avgRating">Average: <br>
+											<rating ng-model="audition.avgRating" readonly="true" max="max" on-leave="overStar = audition.avgRating" ></rating>
+									</td>
+									<td>
+										<input type="checkbox" value="true" ng-click="updatePublished(key)" ng-model="project.auditions[key].published">
+									</td>
+									<td>
+										<img ng-if="audition.booked" src="/img/green-check.png" style="width:20px;height:auto">
+									</td>
+									<td>
+										<img ng-if="audition.favorite == 1" src="/img/gold-trophy.png" alt="favorited audition">
+									</td>
+								</tr>
+							</table>
+						</div>
+						
+				</accordion-group>
+				</accordion>
+			</div>
+		</div>
 		
 		<div class="row">
 
@@ -309,130 +433,6 @@
 				</accordion>
 			</div>
 
-		</div>
-
-		<div class="row">
-
-			<div class="col-lg-12 col-md-12 col-sm-12">		
-				<accordion close-others="oneAtATime">
-					<accordion-group is-open="status.open">
-					<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
-						<h4 class="panel-title accordion-toggle">
-			            	Auditions ({{project.auditions.length}})<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
-			            </h4>
-		        	</accordion-heading>
-				 		<div data-ng-show="permitAdminDirector()" class="clearfix" style="padding-bottom:5px">
-							<h4>Upload Audition Files: (*.mp3 only!)</h4>
-
-							<div ng-file-drop ng-file-select="uploadAudition($files)" ng-model="files" ng-model-rejected="rejFiles"
-	                         drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}" class="drop-box"
-	                         ng-multiple="true" ng-accept="'*.mp3'"
-	                         drop-available="dropAvailable">
-	                            <div ng-hide="dropAvailable">File Drop not available</div>
-	                            <div ng-show="dropAvailable">Drop *.mp3 files..</div>
-	                            <div>or click to select</div>
-	                        </div>
-
-						</div>
-						<div ng-if="project.auditions" style="text-align:center;padding:10px 0">
-							<a href="" class="btn btn-primary" ng-click="downloadAllAuditions()">Download All</a>
-						</div>
-						<div class="table-responsive">
-							<table class="table table-striped">
-								<tr>
-									<th>
-										#
-									</th>
-									<th>
-										File
-									</th>
-									<th>
-										Playback
-									</th>
-									<th>
-										Plays
-									</th>
-									<th>
-										Talent
-									</th>
-									<td>
-										Rating
-									</th>
-									<th>
-										Published
-									</th>
-									<th>
-										Booked
-									</th>
-									<th>
-										Favorited
-									</th>
-								</tr>
-								<tr ng-repeat="(key, audition) in project.auditions">
-									<td>
-										{{key+1}}
-									</td>
-									<td>
-										<a href="/res/auditions/{{project._id}}/{{audition.file.name | encodeUri}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable">ngAudio</a> 
-										<p ng-module="users" ng-controller="UsersController" data-ng-init="getOne(audition.approved.by.userId)">
-											<strong>Posted by:</strong> {{useredit.displayName}}
-										</p>
-										<p ng-show="audition.hidden == true" style="font-size:18px;color:red;font-weight:700">HIDDEN BY CLIENT</p>
-										<button ng-show="showRename === 0" ng-click="showRename = 1" class="btn btn-primary">Rename</button>
-										
-
-										<div ng-show="showRename">
-											<input type="text" ng-model="project.auditions[key].rename" ng-init="project.auditions[key].rename = project.auditions[key].file.name" placeholder="Enter new filename" class="form-control">
-											<button ng-click="update(false);showRename = 0;" class="btn btn-primary">Update</button><button ng-click="showRename = 0;" class="btn btn-primary">Cancel</button>
-										</div>
-										<button data-ng-show="permitAdminDirector()" ng-click="delAudition(key)" class="btn btn-danger">Delete</button>
-									</td>
-									<td>
-										<span ng-show="verifyAudio(key)">
-											<button ng-click="playAudio(key, audition.file.name)" class="btn btn-primary">
-												<span ng-if="lastAudioID == key && audioStatus == 1">
-													<img src="/img/Aqua-Pause-icon.png" style="width:35px;height:auto" alt="play icon">
-												</span>
-												<span ng-if="lastAudioID != key || audioStatus != 1">
-													<img src="/img/aqua-play-icon.png" style="width:35px;height:auto" alt="play icon">
-												</span>
-											</button> 
-											<button ng-click="stopAudio()" class="btn btn-primary" ng-if="lastAudioID == key && audioStatus == 1">
-												<img src="/img/Aqua-Stop-icon.png" style="width:35px;height:auto" alt="play icon">
-											</button>
-										</span>
-									</td>
-									<td>
-										<p ng-if="project.auditions[key].playCnt">
-											{{project.auditions[key].playCnt}}
-										</p>
-									</td>
-									<td>
-										<select ng-model="project.auditions[key].talent" ng-change="$parent.updateNoRefresh()">
-					                        <option ng-repeat="talent in project.talent" ng-selected="project.auditions[key].talent == talent.talentId" value="{{talent.talentId}}">{{talent.name}}</option>
-					                    </select>
-					                </td>
-					                <td>
-					                	<rating ng-model="audition.avgRating" readonly="false" ng-click="updateRating(audition.file.path, false)" max="max" on-leave="overStar = audition.avgRating" on-hover="hoveringOver(value,key)"></rating>
-										<p data-ng-show="audition.avgRating">Average: <br>
-											<rating ng-model="audition.avgRating" readonly="true" max="max" on-leave="overStar = audition.avgRating" ></rating>
-									</td>
-									<td>
-										<input type="checkbox" value="true" ng-click="updatePublished(key)" ng-model="project.auditions[key].published">
-									</td>
-									<td>
-										<img ng-if="audition.booked" src="/img/green-check.png" style="width:20px;height:auto">
-									</td>
-									<td>
-										<img ng-if="audition.favorite == 1" src="/img/gold-trophy.png" alt="favorited audition">
-									</td>
-								</tr>
-							</table>
-						</div>
-						
-				</accordion-group>
-				</accordion>
-			</div>
 		</div>
 		
 		<div class="row">
