@@ -166,6 +166,11 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 		    	break;
 		    }
 
+		 //    $scope.gatherTalentsToCall();
+			// $scope.gatherTalentsMessagesLeft();
+			// $scope.gatherTalentsAlreadyScheduled();
+			// $scope.gatherEmailedTalent();
+
 		});
 		// gather list of talents to call
 		$scope.talentLookupData = function(id){
@@ -234,6 +239,7 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 				$scope.gatherTalentsToCall();
 				$scope.gatherTalentsMessagesLeft();
 				$scope.gatherTalentsAlreadyScheduled();
+				$scope.gatherEmailedTalent();
 			});
 
 		};

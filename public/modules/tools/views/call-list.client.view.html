@@ -323,7 +323,10 @@
                                 </textarea>
                                 <button style="float:right" class="btn btn-primary" ng-click="saveTalentNote(talent.data._id, talent.project._id)">Save</button>
                             </td>
-                            <td><select class="form-control" ng-model="emailedTalents[key].status" style="width:100px" ng-change="updateStatus(talent.data._id,talent.project._id, emailedTalents[key].status)" ng-options="item for item in talentStatus"></select></td>
+                            <td>
+                                <select class="form-control" ng-model="emailedTalents[key].status" style="width:100px" ng-change="updateStatus(talent.data._id,talent.project._id, emailedTalents[key].status)" ng-options="item for item in talentStatus">
+                                </select>
+                            </td>
                             <td><button class="btn btn-primary" ng-click="emailCallListTalent(talent,talent.project._id)"><img style="width:30px;height:auto" src="/img/envelope.png" alt="envelope image"></button></td>
                         </tr>
                     </table>
