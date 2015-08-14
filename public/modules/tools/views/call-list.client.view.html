@@ -41,6 +41,9 @@
                                 <span ng-if="predicate == 'project.estimatedCompletionDate'">(V)</span>
                             </th>
                             <th>
+                                Scripts
+                            </th>
+                            <th>
                                 Notes
                             </th>
             				<th>Status</th>
@@ -62,6 +65,11 @@
         	    			<td>{{talent.data.locationISDN}}</td>
         	    			<td><a href="/#!/projects/{{talent.project._id}}" target="_blank">{{talent.project.title}}</a></td>
         	    			<td>{{talent.project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm a'}}</td>
+                            <td>
+                                <span ng-repeat="(key, script) in talent.project.scripts">
+                                    <a href="/res/scripts/{{talent.project._id}}/{{script.file.name}}" popover="{{script.file.name}}" popover-trigger="mouseenter" target="_blank"><img src="/img/Adobe-Acrobat-icon.png" alt="download PDF"></a>
+                                </span>
+                            </td>
                             <td>
                                 <textarea ng-model="talentNote[talent.data._id][talent.project._id]" name="talentNote[talent.data._id][talent.project._id]" ng-init="talentNote[talent.data._id][talent.project._id] = talent.project.note" class="form-control">
                                 </textarea>
@@ -117,6 +125,9 @@
                                 <span ng-if="predicate == 'project.estimatedCompletionDate'">(V)</span>
                             </th>
                             <th>
+                                Scripts
+                            </th>
+                            <th>
                                 Notes
                             </th>
             				<th>Status</th>
@@ -138,6 +149,11 @@
         	    			<td>{{talent.data.locationISDN}}</td>
         	    			<td><a href="/#!/projects/{{talent.project._id}}" target="_blank">{{talent.project.title}}</a></td>
         	    			<td>{{talent.project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm a'}}</td>
+                            <td>
+                                <span ng-repeat="(key, script) in talent.project.scripts">
+                                    <a href="/res/scripts/{{talent.project._id}}/{{script.file.name}}" popover="{{script.file.name}}" popover-trigger="mouseenter" target="_blank"><img src="/img/Adobe-Acrobat-icon.png" alt="download PDF"></a>
+                                </span>
+                            </td>
                             <td>
                                 <textarea ng-model="talentNote[talent.data._id][talent.project._id]" name="talentNote[talent.data._id][talent.project._id]" ng-init="talentNote[talent.data._id][talent.project._id] = talent.project.note" class="form-control">
                                 </textarea>
@@ -191,6 +207,9 @@
                                 <span ng-if="predicate == 'project.estimatedCompletionDate'">(V)</span>
                             </th>
                             <th>
+                                Scripts
+                            </th>
+                            <th>
                                 Notes
                             </th>
             				<th>Status</th>
@@ -212,6 +231,11 @@
         	    			<td>{{talent.data.locationISDN}}</td>
         	    			<td><a href="/#!/projects/{{talent.project._id}}" target="_blank">{{talent.project.title}}</a></td>
         	    			<td>{{talent.project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm a'}}</td>
+                            <td>
+                                <span ng-repeat="(key, script) in talent.project.scripts">
+                                    <a href="/res/scripts/{{talent.project._id}}/{{script.file.name}}" popover="{{script.file.name}}" popover-trigger="mouseenter" target="_blank"><img src="/img/Adobe-Acrobat-icon.png" alt="download PDF"></a>
+                                </span>
+                            </td>
                             <td>
                                 <textarea ng-model="talentNote[talent.data._id][talent.project._id]" name="talentNote[talent.data._id][talent.project._id]" ng-init="talentNote[talent.data._id][talent.project._id] = talent.project.note" class="form-control">
                                 </textarea>
@@ -265,6 +289,9 @@
                                 <span ng-if="predicate == 'project.estimatedCompletionDate'">(V)</span>
                             </th>
                             <th>
+                                Scripts
+                            </th>
+                            <th>
                                 Notes
                             </th>
                             <th>Status</th>
@@ -286,6 +313,11 @@
                             <td>{{talent.data.locationISDN}}</td>
                             <td><a href="/#!/projects/{{talent.project._id}}" target="_blank">{{talent.project.title}}</a></td>
                             <td>{{talent.project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm a'}}</td>
+                            <td>
+                                <span ng-repeat="(key, script) in talent.project.scripts">
+                                    <a href="/res/scripts/{{talent.project._id}}/{{script.file.name}}" popover="{{script.file.name}}" popover-trigger="mouseenter" target="_blank"><img src="/img/Adobe-Acrobat-icon.png" alt="download PDF"></a>
+                                </span>
+                            </td>
                             <td>
                                 <textarea ng-model="talentNote[talent.data._id][talent.project._id]" name="talentNote[talent.data._id][talent.project._id]" ng-init="talentNote[talent.data._id][talent.project._id] = talent.project.note" class="form-control">
                                 </textarea>

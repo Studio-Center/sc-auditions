@@ -234,6 +234,7 @@ var gatherTalentsSearch = function(req, res, filter){
 										callTalents[talentId].project._id = project._id;
 										callTalents[talentId].project.title = project.title;
 										callTalents[talentId].project.estimatedCompletionDate = project.estimatedCompletionDate;
+										callTalents[talentId].project.scripts = project.scripts;
 										callTalents[talentId].project.note = '';
 										if(talentInfo !== null){
 											for(var i = 0; i < project.talent.length; ++i){
