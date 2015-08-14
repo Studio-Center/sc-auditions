@@ -90,6 +90,9 @@ var TalentSchema = new Schema({
 	producerOptional: {
 		type: String
 	},
+	demoLink: {
+		type: String
+	},
 	typeCasts: {
 		type: Array
 	},

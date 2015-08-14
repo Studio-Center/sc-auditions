@@ -127,7 +127,8 @@ angular.module('talents').controller('TalentsModalController', ['$scope', '$stat
 				exclusivity: this.exclusivity,
 				parentName: this.parentName,
 				producerOptional: this.producerOptional,
-				unionJoined: this.unionJoinSelected
+				unionJoined: this.unionJoinSelected,
+				demoLink: this.demoLink
 			});
 
 			// Redirect after save
