@@ -37,6 +37,7 @@
 		<div><strong>ISDN Line 2</strong> {{talent.ISDNLine2 | tel}}</div>
 		<div><strong>Source Connect Username</strong> {{talent.sourceConnectUsername}}</div>
 		<div><strong>Producer</strong> {{talent.producerOptional}}</div>
+		<div><strong>StudioCenter.com Demo Link</strong> <span ng-show="talent.demoLink"><a href="{{talent.demoLink}}">{{talent.demoLink}}</a></span></div>
 		<div><strong>Typecasts</strong>
 		<span ng-repeat="(key, usval) in talent.typeCasts"> {{usval}} </span> </div>
 	</div>
