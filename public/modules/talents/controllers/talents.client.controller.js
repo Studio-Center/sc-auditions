@@ -304,5 +304,6 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 				talentId: talentId
 			});
 		};
+
 	}
 ]);

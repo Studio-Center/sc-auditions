@@ -40,6 +40,9 @@
                                 <span ng-if="predicate == '-project.estimatedCompletionDate'">(^)</span>
                                 <span ng-if="predicate == 'project.estimatedCompletionDate'">(V)</span>
                             </th>
+                            <th>
+                                Notes
+                            </th>
             				<th>Status</th>
             				<th>Email</th>
             			</tr>
@@ -59,6 +62,9 @@
         	    			<td>{{talent.data.locationISDN}}</td>
         	    			<td><a href="/#!/projects/{{talent.project._id}}" target="_blank">{{talent.project.title}}</a></td>
         	    			<td>{{talent.project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm a'}}</td>
+                            <td>
+                                {{talent.project.note}}
+                            </td>
         					<td><select class="form-control" ng-model="callProjects[key].status" style="width:100px" ng-change="updateStatus(talent.data._id,talent.project._id, callProjects[key].status)" ng-options="item for item in talentStatus"></select></td>
         					<td><button class="btn btn-primary" ng-click="emailCallListTalent(talent,talent.project._id)"><img style="width:30px;height:auto" src="/img/envelope.png" alt="envelope image"></button></td>
         	    		</tr>
@@ -108,6 +114,9 @@
                                 <span ng-if="predicate == '-project.estimatedCompletionDate'">(^)</span>
                                 <span ng-if="predicate == 'project.estimatedCompletionDate'">(V)</span>
                             </th>
+                            <th>
+                                Notes
+                            </th>
             				<th>Status</th>
             				<th>Email</th>
             			</tr>
@@ -127,6 +136,9 @@
         	    			<td>{{talent.data.locationISDN}}</td>
         	    			<td><a href="/#!/projects/{{talent.project._id}}" target="_blank">{{talent.project.title}}</a></td>
         	    			<td>{{talent.project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm a'}}</td>
+                            <td>
+                                {{talent.project.note}}
+                            </td>
         					<td><select class="form-control" ng-model="messagedTalents[key].status" style="width:100px" ng-change="updateStatus(talent.data._id,talent.project._id, messagedTalents[key].status)" ng-options="item for item in talentStatus"></select></td>
         					<td><button class="btn btn-primary" ng-click="emailCallListTalent(talent,talent.project._id)"><img style="width:30px;height:auto" src="/img/envelope.png" alt="envelope image"></button></td>
         	    		</tr>
@@ -174,6 +186,9 @@
                                 <span ng-if="predicate == '-project.estimatedCompletionDate'">(^)</span>
                                 <span ng-if="predicate == 'project.estimatedCompletionDate'">(V)</span>
                             </th>
+                            <th>
+                                Notes
+                            </th>
             				<th>Status</th>
             				<th>Email</th>
             			</tr>
@@ -193,6 +208,9 @@
         	    			<td>{{talent.data.locationISDN}}</td>
         	    			<td><a href="/#!/projects/{{talent.project._id}}" target="_blank">{{talent.project.title}}</a></td>
         	    			<td>{{talent.project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm a'}}</td>
+                            <td>
+                                {{talent.project.note}}
+                            </td>
         					<td><select class="form-control" ng-model="alreadyScheduledTalents[key].status" style="width:100px" ng-change="updateStatus(talent.data._id,talent.project._id, alreadyScheduledTalents[key].status)" ng-options="item for item in talentStatus"></select></td>
         					<td><button class="btn btn-primary" ng-click="emailCallListTalent(talent,talent.project._id)"><img style="width:30px;height:auto" src="/img/envelope.png" alt="envelope image"></button></td>
         	    		</tr>
@@ -240,6 +258,9 @@
                                 <span ng-if="predicate == '-project.estimatedCompletionDate'">(^)</span>
                                 <span ng-if="predicate == 'project.estimatedCompletionDate'">(V)</span>
                             </th>
+                            <th>
+                                Notes
+                            </th>
                             <th>Status</th>
                             <th>Email</th>
                         </tr>
@@ -259,6 +280,9 @@
                             <td>{{talent.data.locationISDN}}</td>
                             <td><a href="/#!/projects/{{talent.project._id}}" target="_blank">{{talent.project.title}}</a></td>
                             <td>{{talent.project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm a'}}</td>
+                            <td>
+                                {{talent.project.note}}
+                            </td>
                             <td><select class="form-control" ng-model="emailedTalents[key].status" style="width:100px" ng-change="updateStatus(talent.data._id,talent.project._id, emailedTalents[key].status)" ng-options="item for item in talentStatus"></select></td>
                             <td><button class="btn btn-primary" ng-click="emailCallListTalent(talent,talent.project._id)"><img style="width:30px;height:auto" src="/img/envelope.png" alt="envelope image"></button></td>
                         </tr>

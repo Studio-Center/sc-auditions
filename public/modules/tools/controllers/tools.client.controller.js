@@ -391,5 +391,21 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 
 		};
 
+		$scope.getTalentNote = function(talentId, project){
+
+			if(typeof project !== 'undefined'){
+				if(typeof project.talent !== 'undefined'){
+					for(var i = 0; i < project.talent.length; ++i){
+						if(project.talent[i].talentId === talentId){
+
+							return project.talent[i].note;
+							
+						}
+					}
+				}
+			}
+
+		}
+
 	}
 ]);

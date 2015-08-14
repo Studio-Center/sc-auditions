@@ -44,6 +44,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.rejFiles = [];
 		$scope.talentStatus = [];
 		$scope.talentBooked = [];
+		$scope.talentNote = [];
 		// projects client portal
 		$scope.selectedAuditions = [];
 		$scope.hideList = [];
@@ -996,6 +997,37 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		};
 
+		// get talent audition note
+		$scope.getTalentNote = function(talentId){
+
+			if(typeof $scope.project !== 'undefined'){
+				if(typeof $scope.project.talent !== 'undefined'){
+					for(var i = 0; i < $scope.project.talent.length; ++i){
+						if($scope.project.talent[i].talentId === talentId){
+
+							return $scope.project.talent[i].note;
+							
+						}
+					}
+				}
+			}
+
+		};
+		// save talent note
+		$scope.saveTalentNote = function(talentId){
+
+			for(var i = 0; i < $scope.project.talent.length; ++i){
+				if($scope.project.talent[i].talentId === talentId){
+
+					$scope.project.talent[i].note = $scope.talentNote[talentId];
+
+					$scope.updateNoRefresh();
+					
+				}
+			}
+
+		};
+
 		// save audition note item
 		$scope.saveAudtionNote = function(key){
 
@@ -1631,7 +1663,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		// play audio on load
 		$scope.$watch('audio', function(val){
-			$scope.audio.play();
+			if(typeof $scope.audio === 'object'){
+				$scope.audio.play();
+			}
 		});
 
 		// save discussion item
