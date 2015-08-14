@@ -304,6 +304,7 @@
 								</th>
 								<th>Email</th>
 								<th>Booked</th>
+								<th>Note</th>
 								<th></th>
 							</tr>
 							<tr ng-repeat="(key, member) in project.talent | orderBy:predicate:reverse" ng-module="talents" ng-controller="TalentsController" data-ng-init="getOne(member.talentId)">
@@ -332,6 +333,11 @@
 								</td>
 								<td>
 									<input type="checkbox" data-ng-model="talentBooked[key]" ng-checked="$parent.getBooked(member.talentId)" ng-click="$parent.toggleBooked(member.talentId)">
+								</td>
+								<td>
+									<textarea ng-model="talentNote[member.talentId]" name="talentNote[member.talentId]" ng-init="talentNote[member.talentId] = $parent.getTalentNote(member.talentId)" class="form-control">
+									</textarea>
+									<button style="float:right" class="btn btn-primary" ng-click="saveTalentNote(member.talentId)">Save</button>
 								</td>
 								<td>
 									<button ng-show="member.submissions" target="_blank" href="#" ng-click="talentSubmissionsModal(member)" title="talent auditions upload link">></button>

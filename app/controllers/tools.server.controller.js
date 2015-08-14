@@ -234,6 +234,14 @@ var gatherTalentsSearch = function(req, res, filter){
 										callTalents[talentId].project._id = project._id;
 										callTalents[talentId].project.title = project.title;
 										callTalents[talentId].project.estimatedCompletionDate = project.estimatedCompletionDate;
+										callTalents[talentId].project.note = '';
+										if(talentInfo !== null){
+											for(var i = 0; i < project.talent.length; ++i){
+												if(project.talent[i].talentId === String(talentInfo._id)){
+													callTalents[talentId].project.note = project.talent[i].note;
+												}
+											}
+										}
 									}
 									done('');
 								}

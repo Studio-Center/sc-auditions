@@ -53,23 +53,69 @@
 						<label>Archived</label>
 					</div>
 				</div>
-				<div data-ng-repeat="(key, project) in projects">
-					<div class="row" style="padding:4px 0;border-bottom:1px solid #000">
-						{{key + 1}}.
-            			<strong><a target="_blank" data-ng-href="#!/projects/{{project._id}}">{{project.title}}</a></strong> 
-            			-
-            			<small>Due by {{project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST</small> 
-            			-
-            			{{project.talent[projectTalentIdx[key]].part}}
-            			<span ng-show="project.talent[projectTalentIdx[key]].requested == true">- Requested</span>
-            			:
-            			<select ng-model="project.talent[projectTalentIdx[key]].status" ng-init="project.talent[projectTalentIdx[key]].status = project.talent[projectTalentIdx[key]].status || talentStatus[0]" style="width:100px" ng-change="updateTalentStatus(project, projectTalentIdx[key])" ng-options="item for item in talentStatus"></select>
-            			<button class="btn btn-primary" ng-click="sendTalentEmail(project.talent[projectTalentIdx[key]], project)">Email</button>
-            			<span ng-repeat="(key, script) in project.scripts">
-            				<a href="/res/scripts/{{project._id}}/{{script.file.name}}" popover="{{script.file.name}}" popover-trigger="mouseenter" target="_blank"><img src="/img/Adobe-Acrobat-icon.png" alt="download PDF"></a>
-            			</span>
-            		</div>
-            	</div>
+				<div class="table-responsive">
+	        		<table class="table table-striped">
+						<tr>
+							<th>
+								#
+							</th>
+							<th>
+								Project
+							</th>
+							<th>
+								Due By
+							</th>
+							<th>
+								Part
+							</th>
+							<th>
+								Requested
+							</th>
+							<th>
+								Status
+							</th>
+							<th>
+								Email
+							</th>
+							<th>
+								Scripts
+							</th>
+							<th>
+								Notes
+							</th>
+						</tr>
+						<tr data-ng-repeat="(key, project) in projects">
+							<td>
+								{{key + 1}}
+							</td>
+							<td>
+								<strong><a target="_blank" data-ng-href="#!/projects/{{project._id}}">{{project.title}}</a></strong> 
+							</td>
+							<td>
+								{{project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST
+							</td>
+							<td>
+								{{project.talent[projectTalentIdx[key]].part}}
+							</td>
+							<td>
+								<span ng-show="project.talent[projectTalentIdx[key]].requested == true">Yes</span>
+							</td>
+							<td>
+								<select ng-model="project.talent[projectTalentIdx[key]].status" ng-init="project.talent[projectTalentIdx[key]].status = project.talent[projectTalentIdx[key]].status || talentStatus[0]" style="width:100px" ng-change="updateTalentStatus(project, projectTalentIdx[key])" ng-options="item for item in talentStatus"></select>
+							</td>
+							<td>
+								<button class="btn btn-primary" ng-click="sendTalentEmail(project.talent[projectTalentIdx[key]], project)">Email</button>
+							</td>
+							<td>
+								<span ng-repeat="(key, script) in project.scripts">
+		            				<a href="/res/scripts/{{project._id}}/{{script.file.name}}" popover="{{script.file.name}}" popover-trigger="mouseenter" target="_blank"><img src="/img/Adobe-Acrobat-icon.png" alt="download PDF"></a>
+		            			</span>
+							</td>
+							<td>
+								{{project.talent[projectTalentIdx[key]].note}}
+							</td>
+						</tr>
+					</table>
             </div>
         </div>
 	</div>
