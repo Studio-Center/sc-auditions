@@ -357,7 +357,53 @@
 										<button class="btn btn-primary" ng-click="createTalent()">Create Talent</button>
 									</div>
 					                <div ng-controller="TalentsController" data-ng-init="find()">
-					                	<label>Search:</label> <input ng-model="filterTeam" class="form-control">
+					                	<label>Search:</label> <input ng-model="searchString" class="form-control">
+					                	<div class="row">
+				                        <div class="col-lg-3 col-md-3 col-sm-3">
+				                            <div class="btn-group" data-toggle="buttons" style="padding-top:15px">
+				                                <label class="btn btn-primary" ng-model="searchText.gender" btn-radio="'male'">Male</label>
+				                                <label class="btn btn-primary" ng-model="searchText.gender" btn-radio="'female'">Female</label>
+				                                <label class="btn btn-primary" ng-model="searchText.gender" btn-radio="">All</label>
+				                            </div>
+				                        </div>
+				                        <div class="col-lg-2 col-md-2 col-sm-2">
+				                            <label>union</label> <input type="checkbox" ng-model="searchText.unionStatus" ng-true-value="union" ng-false-value="" class="form-control">
+				                        </div>
+				                        <div class="col-lg-2 col-md-2 col-sm-2">
+				                            <label>non-union</label> <input type="checkbox" ng-model="searchText.unionStatus" ng-true-value="non-union" ng-false-value="" class="form-control">
+				                        </div>
+				                        <div class="col-lg-3 col-md-3 col-sm-3">
+				                            <label>union and non-union</label> <input type="checkbox" ng-model="searchUnions" ng-true-value="union non-union" ng-false-value="" class="form-control">
+				                        </div>
+				                        <div class="col-lg-2 col-md-2 col-sm-2">
+				                            <label>Emailer</label> <input type="checkbox" ng-model="searchText.type" ng-true-value="email" ng-false-value="" class="form-control">
+				                        </div>
+				                    </div>
+				                    <div class="row" style="padding-bottom:10px">
+				                        <div class="col-lg-3 col-md-3 col-sm-3">
+				                            <div class="btn-group" data-toggle="buttons" style="padding-top:15px">
+				                                <label class="btn btn-primary" ng-model="searchText.ageRange" btn-radio="'kid'">Kid</label>
+				                                <label class="btn btn-primary" ng-model="searchText.ageRange" btn-radio="'teen'">Teen</label>
+				                                <label class="btn btn-primary" ng-model="searchText.ageRange" btn-radio="'adult'">Adult</label>
+				                                <label class="btn btn-primary" ng-model="searchText.ageRange" btn-radio="">All</label>
+				                            </div>
+				                        </div>
+				                        <div class="col-lg-3 col-md-3 col-sm-3">
+				                            <select ng-model="searchText.locationISDN" class="form-control" style="margin-top:15px">
+				                                <option value="">All Locations</option>
+				                                <option ng-repeat="item in locations" value="{{item}}">{{item}}</option>
+				                            </select>
+				                        </div>
+				                        <div class="col-lg-6 col-md-6 col-sm-6">
+				                            <div class="btn-group" data-toggle="buttons" style="padding-top:15px">
+				                                <label class="btn btn-primary" ng-model="searchText.typeCasts" btn-radio="'African-American'">African-American</label>
+				                                <label class="btn btn-primary" ng-model="searchText.typeCasts" btn-radio="'british'">British</label>
+				                                <label class="btn btn-primary" ng-model="searchText.typeCasts" btn-radio="'spanish'">Spanish</label>
+				                                <label class="btn btn-primary" ng-model="searchText.typeCasts" btn-radio="'foreign language'">Foreign Language</label>
+				                                <label class="btn btn-primary" ng-model="searchText.typeCasts" btn-radio="">All</label>
+				                            </div>
+				                        </div>
+				                    </div>
 					                	<div class="row">
 									        <div class="col-lg-12 col-md-12 col-sm-12">
 									            <select ng-init="limit = 20" ng-model="limit" class="form-control">
@@ -397,7 +443,7 @@
 												<th><b>Part</b></th>
 												<th><b>Info</b></th>
 											</tr>
-											<tr ng-repeat="(key, talent) in filtered = (talents | multiTermFull:filterTeam:'AND') | startFrom:currentPage*limit | limitTo: limit">
+											<tr ng-repeat="(key, talent) in filtered = (talents | multiTerm:searchUnions:'AND' | filter:searchText:startsWith | multiTermFull:searchString:'AND') | startFrom:currentPage*limit | limitTo: limit">
 												<td>
 													<input type="checkbox" value="{{talent._id}}" ng-click="updateTalent(talent._id, talent.name + ' ' + talent.lastName, talent.email)" ng-checked="checkTalent(talent._id)">
 												</td>
@@ -409,7 +455,7 @@
 													<div ng-if="showPartFld(talent._id) == false">{{showPartString(talent._id)}}</div>
 												</td>
 												<td>
-													{{talent.name}} {{talent.lastName}} - {{talent.locationISDN}} - Outage <span ng-show="!talent.outageTimes">None</span><span ng-show="talent.outageTimes != ''">{{talent.outageTimes}}</span>
+													<a target="_blank" href="/#!/talents/{{talent._id}}">{{talent.name}} {{talent.lastName}}</a> - {{talent.locationISDN}} - Outage <span ng-show="!talent.outageTimes">None</span><span ng-show="talent.outageTimes != ''">{{talent.outageTimes}}</span>
 												</td>
 											</tr>
 										</table>
