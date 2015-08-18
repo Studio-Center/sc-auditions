@@ -458,7 +458,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 					$http.post('/projects/sendtalentemail', {
 				        talent: talent,
-				        project: $scope.project
+				        project: $scope.project,
+				        override: true
 				    }).
 					success(function(data, status, headers, config) {
 						alert('Selected talent has been emailed.');
