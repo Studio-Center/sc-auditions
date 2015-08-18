@@ -25,7 +25,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.priorityOpts = ['None', 'Very low', 'Low', 'Medium', 'High', 'Very high'];
 		$scope.phaseStatusOpts = ['in progress','open','complete','suspended'];
 		$scope.soundersOpts = ['Sounders', 'No Sounders - Approved By William'];
-		$scope.talentStatus = ['Cast', 'Emailed', 'Scheduled', 'Message left', 'Out', 'Received needs to be posted', 'Posted', 'Not Posted (Bad Read)'];
+		//$scope.talentStatus = ['Cast', 'Emailed', 'Scheduled', 'Message left', 'Out', 'Received needs to be posted', 'Posted', 'Not Posted (Bad Read)', 'Missed', 'Canceled'];
 		$scope.loadAudio = 0;
 		$scope.audio = '';
 		$scope.lastAudioID = 0;
@@ -1315,29 +1315,39 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		$scope.updateProjectStatus = function(){
 
-			// $scope.gatherToAddresses('updateStatus');
-		 //    $scope.email.subject = $scope.project.title + ' Status Update';
-		 //    $scope.email.message += 'Project: ' + $scope.project.title + '<br>';
-		 //    $scope.email.message += 'Status: ' + $scope.project.status.toUpperCase() + '<br>';
-		 //    $scope.email.message += 'Added by: ' + Authentication.user.displayName + '<br>';
-		 //    $scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '<br>';
+			var now = new Date();
 
-		 //    $http.post('/projects/sendemail', {
-			// 	email: $scope.email
-			// });
+			var item = {
+							date: now, 
+							userid: '', 
+							username: 'System', 
+							item: 'Changed to ' + $scope.project.status + ' by ' + Authentication.user.displayName, 
+							deleted: false
+						};
 
-			// // send client email if project status is set to finished
-			// if($scope.project.status === 'Complete'){
-			// 	// build main clients list
-			// 	for(var i = 0; i < $scope.project.client.length; ++i){
-			// 		$scope.selectedMainClients[i] = $scope.project.client[i].userId;
-			// 	}
-			// 	$scope.sendClientEmail('closing');
-			// }
+			$scope.project.discussion.push(item);
 
-			// update project store
-			//$scope.update();
+			// update project with new status
 			$scope.updateNoRefresh();
+
+			// email associated talent and update talent status
+			if($scope.project.status === 'Canceled'){
+				
+				$http.post('/projects/sendTalentCanceledEmail', {
+			        talents: $scope.project.talent,
+			        projectId: $scope.project._id,
+			        override: false
+			    }).
+				success(function(data, status, headers, config) {
+					// update project store
+					$scope.project = angular.extend($scope.project, data);
+
+					// update project with new status
+					$scope.update();
+				});
+
+			}
+
 		};
 		// Find a list of Projects
 		$scope.find = function() {

@@ -208,42 +208,44 @@ var sendTalentEmail = function(req, res, project, talent, override){
 		},
 		// generate email body
 		function(talentInfo, done) {
-			var email =  {
-							projectId: '',
-							to: [],
-							bcc: [],
-							subject: '',
-							header: '',
-							footer: '',
-							scripts: '',
-							referenceFiles: ''
-						};
-			var i;
+			if(talentInfo.type.toLowerCase() === 'email' || override === true){
+				var email =  {
+								projectId: '',
+								to: [],
+								bcc: [],
+								subject: '',
+								header: '',
+								footer: '',
+								scripts: '',
+								referenceFiles: ''
+							};
+				var i;
 
-			// add scripts and assets to email body
-			email.scripts = '\n' + '<strong>Scripts:</strong>' + '<br>';
-			if(typeof project.scripts !== 'undefined'){
-				if(project.scripts.length > 0){
-					for(i = 0; i < project.scripts.length; ++i){
-						email.scripts += '<a href="http://' + req.headers.host + '/res/scripts/' + project._id + '/' + project.scripts[i].file.name + '">' + project.scripts[i].file.name + '</a><br>';
+				// add scripts and assets to email body
+				email.scripts = '\n' + '<strong>Scripts:</strong>' + '<br>';
+				if(typeof project.scripts !== 'undefined'){
+					if(project.scripts.length > 0){
+						for(i = 0; i < project.scripts.length; ++i){
+							email.scripts += '<a href="http://' + req.headers.host + '/res/scripts/' + project._id + '/' + project.scripts[i].file.name + '">' + project.scripts[i].file.name + '</a><br>';
+						}
+					} else {
+						email.scripts += 'None';
 					}
 				} else {
 					email.scripts += 'None';
 				}
-			} else {
-				email.scripts += 'None';
-			}
-			email.referenceFiles = '\n' + '<strong>Reference Files:</strong>' + '<br>';
-			if(typeof project.referenceFiles !== 'undefined'){
-				if(project.referenceFiles.length > 0){
-					for(var j = 0; j < project.referenceFiles.length; ++j){
-						email.referenceFiles += '<a href="http://' + req.headers.host + '/res/referenceFiles/' + project._id + '/' + project.referenceFiles[j].file.name + '">' + project.referenceFiles[j].file.name + '</a><br>';
+				email.referenceFiles = '\n' + '<strong>Reference Files:</strong>' + '<br>';
+				if(typeof project.referenceFiles !== 'undefined'){
+					if(project.referenceFiles.length > 0){
+						for(var j = 0; j < project.referenceFiles.length; ++j){
+							email.referenceFiles += '<a href="http://' + req.headers.host + '/res/referenceFiles/' + project._id + '/' + project.referenceFiles[j].file.name + '">' + project.referenceFiles[j].file.name + '</a><br>';
+						}
+					} else {
+						email.referenceFiles += 'None';
 					}
 				} else {
 					email.referenceFiles += 'None';
 				}
-			} else {
-				email.referenceFiles += 'None';
 			}
 
 			done('', email, talentInfo);
@@ -302,6 +304,134 @@ var sendTalentEmail = function(req, res, project, talent, override){
 				return res.json(200);
 			}
 		}
+	});
+
+};
+
+exports.sendTalentCanceledEmail = function(req, res){
+
+	var project;
+	var projectId = req.body.projectId;
+	var talents = req.body.talents;
+	var override = req.body.override || false;
+
+	// reload project
+	Project.findOne({'_id':projectId}).sort('-created').exec(function(err, project) {
+
+		// walk through and email all selected clients
+		async.eachSeries(talents, function (selTalent, callback) {
+
+			Talent.findOne({'_id':selTalent.talentId}).sort('-created').exec(function(err, talentInfo) {
+
+				// check for null talent return
+				if(talentInfo !== null){
+
+					// filter based on current talent status
+					if((talentInfo.type.toLowerCase() === 'email' || override === true) && selTalent.status.toLowerCase() === 'emailed'){
+
+						async.waterfall([
+							// update talent email status
+							function(done){
+
+								// update talent email status 
+								for(var i = 0; i < project.talent.length; ++i){
+									if(project.talent[i].talentId === selTalent.talentId){
+
+										project.talent[i].status = 'Canceled';
+
+										done('');
+									}
+								}
+
+							},
+							function(done) {
+								var ownerId = project.owner || project.user._id;
+								User.findOne({'_id':ownerId}).sort('-created').exec(function(err, owner) {
+									if(err){
+										done(err, req.user);
+									} else {
+										owner = owner || req.user;
+										done(err, owner);
+									}
+								});
+							},
+							function(owner, done) {
+
+								var newDate = new Date(project.estimatedCompletionDate);
+								newDate = newDate.setHours(newDate.getHours() - 1);
+								newDate = dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT');
+								var part = '';
+
+								// generate email signature
+								var emailSig = '';
+								if(owner.emailSignature){
+									emailSig = owner.emailSignature;
+								} else {
+									emailSig = '';
+								}
+
+								res.render('templates/cancelled-project-email', {
+									emailSignature: emailSig,
+									talent: talentInfo
+								}, function(err, talentEmailHTML) {
+									done(err, talentEmailHTML, owner);
+								});
+
+							},
+							// send out talent project creation email
+							function(talentEmailHTML, owner, done) {
+								// send email
+								var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
+								var emailSubject = '';
+								var newDate = new Date(project.estimatedCompletionDate);
+								newDate = newDate.setHours(newDate.getHours() - 1);
+								var nameArr = [];
+
+								nameArr = talentInfo.name.split(' ');
+
+								// assign email subject line
+								emailSubject = 'The Audition Project ' + project.title + ' Has Been Cancelled';
+
+								var mailOptions = {
+									to: talentInfo.email,
+									from: owner.email || config.mailer.from,
+									replyTo: owner.email || config.mailer.from,
+									cc: 'audition­-notification@studiocenter.com',
+									subject: emailSubject,
+									html: talentEmailHTML
+								};
+
+								transporter.sendMail(mailOptions, function(err){
+									done(err);
+								});
+
+							}
+							], function(err) {
+								callback(err);
+						});
+					
+					} else {
+						callback();
+					}
+
+				} else {
+					callback();
+				}
+			});
+
+		}, function (err) {
+			if( err ) {
+				console.log(err);
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
+			} else {
+				// save on finish, no error
+				res.jsonp(project);
+
+			}
+       	});
+
 	});
 
 };
