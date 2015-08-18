@@ -1294,6 +1294,25 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			$scope.updateNoRefresh();
 		};
 
+		// update and store sounders change note
+		$scope.updateSoundersStatus = function(){
+
+			var now = new Date();
+
+			var item = {
+							date: now, 
+							userid: '', 
+							username: 'System', 
+							item: 'Changed to ' + $scope.project.sounders + ' by ' + Authentication.user.displayName, 
+							deleted: false
+						};
+
+			$scope.project.discussion.push(item);
+
+			$scope.updateNoRefresh();
+
+		};
+
 		$scope.updateProjectStatus = function(){
 
 			// $scope.gatherToAddresses('updateStatus');
