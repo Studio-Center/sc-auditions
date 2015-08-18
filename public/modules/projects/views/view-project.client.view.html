@@ -37,7 +37,10 @@
 		            	<strong>Notes ({{project.discussion.length}})</strong>
 		        	</div>
 		        	<fieldset>
-						<select class="form-control" style="display:block;margin:0 auto" ng-if="permitAdminProductionCoordinatorDirector()" ng-class="{blueBg: project.sounders == 'Sounders', yellowBg: project.sounders == 'No Sounders - Approved By William'}" ng-model="project.sounders" ng-change="update(false)">
+						<select class="form-control" style="display:block;margin:0 auto" ng-if="permitAdmin() || isOwner()" ng-class="{blueBg: project.sounders == 'Sounders', yellowBg: project.sounders == 'No Sounders - Approved By William'}" ng-model="project.sounders" ng-change="update(false)">
+	                        <option ng-repeat="item in soundersOpts" value="{{item}}">{{item}}</option>
+	                    </select>
+	                    <select class="form-control" style="display:block;margin:0 auto" ng-if="!permitAdmin() && !isOwner()" ng-class="{blueBg: project.sounders == 'Sounders', yellowBg: project.sounders == 'No Sounders - Approved By William'}" ng-model="project.sounders" ng-change="update(false)" disabled>
 	                        <option ng-repeat="item in soundersOpts" value="{{item}}">{{item}}</option>
 	                    </select>
                 	</fieldset>
