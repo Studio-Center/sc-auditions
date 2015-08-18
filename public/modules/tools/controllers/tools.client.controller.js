@@ -217,7 +217,8 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 
 			$http.post('/projects/sendTalentEmailById', {
 		        talent: talent,
-		        projectId: projectId
+		        projectId: projectId,
+		        override: true
 		    }).
 			success(function(data, status, headers, config) {
 				alert('Selected talent has been emailed.');
@@ -225,6 +226,7 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 				$scope.gatherTalentsToCall();
 				$scope.gatherTalentsMessagesLeft();
 				$scope.gatherTalentsAlreadyScheduled();
+				$scope.gatherEmailedTalent();
 			});
 
 		};

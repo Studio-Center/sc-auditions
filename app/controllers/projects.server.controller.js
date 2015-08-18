@@ -197,7 +197,7 @@ var emailTalent = function(selTalent, talentInfo, email, project, req, res){
 
 };
 
-var sendTalentEmail = function(req, res, project, talent){
+var sendTalentEmail = function(req, res, project, talent, override){
 
 	async.waterfall([
 		// gather info for selected talent
@@ -255,7 +255,7 @@ var sendTalentEmail = function(req, res, project, talent){
 			for(var i = 0; i < project.talent.length; ++i){
 				if(project.talent[i].talentId === talent.talentId){
 					//console.log(project.talent[i].status);
-					if(talentInfo.type.toLowerCase() === 'email'){
+					if(talentInfo.type.toLowerCase() === 'email' || override === true){
 						project.talent[i].status = 'Emailed';
 					}
 					//console.log(project.talent[i].status);
@@ -267,7 +267,7 @@ var sendTalentEmail = function(req, res, project, talent){
 		// email selected talent
 		function(email, talentInfo, done){
 			// only send email to talent if that is the preferred contact method
-			if(talentInfo.type.toLowerCase() === 'email'){
+			if(talentInfo.type.toLowerCase() === 'email' || override === true){
 				emailTalent(talent, talentInfo, email, project, req, res);
 			}
 
@@ -324,8 +324,9 @@ exports.sendTalentEmail = function(req, res){
 
 	var project = req.body.project;
 	var talent = req.body.talent;
+	var override = req.body.override || false;
 
-	sendTalentEmail(req, res, project, talent);	
+	sendTalentEmail(req, res, project, talent, override);	
 
 };
 
@@ -333,6 +334,7 @@ exports.sendTalentEmailById = function(req, res){
 
 	var projectId = req.body.projectId;
 	var talent = req.body.talent;
+	var override = req.body.override || false;
 
 	async.waterfall([
 		// gather info for selected talent
@@ -343,7 +345,7 @@ exports.sendTalentEmailById = function(req, res){
 		},
 		function(project, done) {
 			project = project.toObject();
-			sendTalentEmail(req, res, project, talent);	
+			sendTalentEmail(req, res, project, talent, override);	
 		}
 		], function(err) {
 		if (err) {
