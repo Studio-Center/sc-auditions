@@ -192,6 +192,7 @@ exports.sendTalentEmails = function(req, res){
 
 // call list methods
 var gatherTalentsSearch = function(req, res, filter){
+
 	var callTalents = [], talentId;
 	var searchCriteria = {'talent': { 
 									$elemMatch: { 
