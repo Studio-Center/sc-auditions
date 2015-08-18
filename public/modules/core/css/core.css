@@ -120,6 +120,7 @@
 	margin-top:-65px;
 	padding-bottom:45px
 }
+/* fixed header */
 @media(max-width: 1160px){
 	.create-project{
 		background:#000;
