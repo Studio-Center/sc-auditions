@@ -17,7 +17,7 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 		$scope.selTypecasts = [];
 		// store talent project data
 		$scope.projectTalentIdx = [];
-		$scope.talentStatus = ['Cast', 'Emailed', 'Scheduled', 'Message left', 'Out', 'Received needs to be posted', 'Posted', 'Not Posted (Bad Read)'];
+		$scope.talentStatus = ['Cast', 'Emailed', 'Scheduled', 'Message left', 'Out', 'Received needs to be posted', 'Posted', 'Not Posted (Bad Read)', 'Missed', 'Canceled'];
 		$scope.archived = false;
 
 		// listing filter

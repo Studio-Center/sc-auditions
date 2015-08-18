@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+</head>
+
+<body>
+
+	<p>Dear {{talent.name}},</p>
+
+	<p>Per client’s request, the Audition Project [Project Title] has been cancelled. Unless further instructed, you may disregard this particular audition.</p> 
+
+	<p>If you have any questions please email me or Debbie!</p>
+
+	<p>Thank you!</p>
+
+	{% autoescape false %}{{emailSignature}}{% endautoescape %}
+
+</body>
+
+</html>
