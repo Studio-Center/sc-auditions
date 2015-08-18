@@ -69,7 +69,9 @@
         	    			<td><a href="/#!/projects/{{talent.project._id}}" target="_blank">{{talent.project.title}}</a></td>
         	    			<td>{{talent.project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm a'}}</td>
                             <td>
-                                {{talent.requested}}
+                                <span ng-show="talent.requested">
+                                    <img src="/img/green-check.png" alt="rquested talent">
+                                </span>
                             </td>
                             <td>
                                 <span ng-repeat="(key, script) in talent.project.scripts">
@@ -159,7 +161,9 @@
         	    			<td><a href="/#!/projects/{{talent.project._id}}" target="_blank">{{talent.project.title}}</a></td>
         	    			<td>{{talent.project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm a'}}</td>
                             <td>
-                                {{talent.requested}}
+                                <span ng-show="talent.requested">
+                                    <img src="/img/green-check.png" alt="rquested talent">
+                                </span>
                             </td>
                             <td>
                                 <span ng-repeat="(key, script) in talent.project.scripts">
@@ -247,7 +251,9 @@
         	    			<td><a href="/#!/projects/{{talent.project._id}}" target="_blank">{{talent.project.title}}</a></td>
         	    			<td>{{talent.project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm a'}}</td>
                             <td>
-                                {{talent.requested}}
+                                <span ng-show="talent.requested">
+                                    <img src="/img/green-check.png" alt="rquested talent">
+                                </span>
                             </td>
                             <td>
                                 <span ng-repeat="(key, script) in talent.project.scripts">
@@ -335,7 +341,9 @@
                             <td><a href="/#!/projects/{{talent.project._id}}" target="_blank">{{talent.project.title}}</a></td>
                             <td>{{talent.project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm a'}}</td>
                             <td>
-                                {{talent.requested}}
+                                <span ng-show="talent.requested">
+                                    <img src="/img/green-check.png" alt="rquested talent">
+                                </span>
                             </td>
                             <td>
                                 <span ng-repeat="(key, script) in talent.project.scripts">
