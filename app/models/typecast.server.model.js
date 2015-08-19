@@ -10,6 +10,10 @@ var mongoose = require('mongoose'),
  * Typecast Schema
  */
 var TypecastSchema = new Schema({
+	sort: {
+		type: Number,
+		default: 0
+	},
 	name: {
 		type: String,
 		default: '',
