@@ -37,7 +37,8 @@ angular.module('typecasts').controller('TypecastsController', ['$scope', '$state
 		$scope.create = function() {
 			// Create new Typecast object
 			var typecast = new Typecasts ({
-				name: this.name
+				name: this.name,
+				sort: this.sort
 			});
 
 			// Redirect after save

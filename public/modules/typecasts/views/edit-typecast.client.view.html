@@ -6,6 +6,12 @@
         <form class="form-horizontal" data-ng-submit="update()" novalidate>
             <fieldset>
                 <div class="form-group">
+                    <label class="control-label" for="sort">Sort</label>
+                    <div class="controls">
+                        <input type="text" data-ng-model="typecast.sort" id="name" class="form-control" placeholder="Sort" required>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="control-label" for="name">Name</label>
                     <div class="controls">
                         <input type="text" data-ng-model="typecast.name" id="name" class="form-control" placeholder="Name" required>
