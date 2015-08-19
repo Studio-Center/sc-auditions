@@ -45,6 +45,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.talentStatus = [];
 		$scope.talentBooked = [];
 		$scope.talentNote = [];
+		$scope.verifyFilesList = {};
 		// projects client portal
 		$scope.selectedAuditions = [];
 		$scope.hideList = [];
@@ -1562,15 +1563,27 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		$scope.verifyFile = function(file){
 			
-			console.log(file);
+			//console.log(file);
 
-			// $http.post('/projects/fileExists', {
-			// 	file: file
-			// }).success(function(data, status, headers, config) {
-			// 	return true;
-			// }).error(function(data, status, headers, config) {
-		 //         return false;
-		 //    });
+			if(typeof $scope.verifyFilesList[file] === 'undefined'){
+
+				if($scope.verifyFilesList[file] !== 'scanning' || $scope.verifyFilesList[file] !== true || $scope.verifyFilesList[file] !== false){
+
+					$scope.verifyFilesList[file] = 'scanning';
+
+					$http.post('/projects/fileExists', {
+						file: file
+					}).success(function(data, status, headers, config) {
+						$scope.verifyFilesList[file] = true;
+						return true;
+					}).error(function(data, status, headers, config) {
+						$scope.verifyFilesList[file] = false;
+				        return false;
+				    });
+
+				}
+
+			}
 
 		};
 

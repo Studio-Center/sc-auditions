@@ -1237,9 +1237,9 @@ exports.fileExists = function(req, res){
 
 	// check if file exists
 	if (fs.existsSync(file)) {
-		return res.status(200).end();
+		return res.status(200).send();
 	} else {
-		return res.status(400).end();
+		return res.status(400).send();
 	}
 
 };
