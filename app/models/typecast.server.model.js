@@ -18,6 +18,10 @@ var TypecastSchema = new Schema({
 		unique: true, 
 		dropDups: true
 	},
+	attributes: {
+		type: Array,
+		trim: true
+	},
 	created: {
 		type: Date,
 		default: Date.now
