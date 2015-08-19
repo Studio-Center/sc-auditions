@@ -40,9 +40,9 @@
 						<select class="form-control" style="display:block;margin:0 auto" ng-if="permitAdmin() || isOwner()" ng-class="{blueBg: project.sounders == 'Sounders', yellowBg: project.sounders == 'No Sounders - Approved By William'}" ng-model="project.sounders" ng-change="updateSoundersStatus()">
 	                        <option ng-repeat="item in soundersOpts" value="{{item}}">{{item}}</option>
 	                    </select>
-	                    <select class="form-control" style="display:block;margin:0 auto" ng-if="!permitAdmin() && !isOwner()" ng-class="{blueBg: project.sounders == 'Sounders', yellowBg: project.sounders == 'No Sounders - Approved By William'}" ng-model="project.sounders" ng-change="updateSoundersStatus()" disabled>
-	                        <option ng-repeat="item in soundersOpts" value="{{item}}">{{item}}</option>
-	                    </select>
+	                    <div ng-if="!permitAdmin() && !isOwner()" style="padding:10px;font-weight:700" ng-class="{blueBg: project.sounders == 'Sounders', yellowBg: project.sounders == 'No Sounders - Approved By William'}">
+	                    	{{project.sounders[0]}}
+	                    </div>
                 	</fieldset>
 		        	<fieldset>
 						<textarea ng-model="discussion" name="discussion" class="form-control"></textarea>
