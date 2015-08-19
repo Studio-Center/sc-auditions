@@ -1560,6 +1560,20 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			return false;
 		};
 
+		$scope.verifyFile = function(file){
+			
+			console.log(file);
+
+			// $http.post('/projects/fileExists', {
+			// 	file: file
+			// }).success(function(data, status, headers, config) {
+			// 	return true;
+			// }).error(function(data, status, headers, config) {
+		 //         return false;
+		 //    });
+
+		};
+
 		$scope.stopAudio = function(){
 			if(typeof $scope.audio === 'object'){
 				$scope.audio.stop();

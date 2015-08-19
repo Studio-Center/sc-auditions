@@ -84,6 +84,10 @@ module.exports = function(app) {
 	// app.route('/projects/uploads')
 	// 	.post(users.requiresLogin, multipartyMiddleware, projects.uploadFile);
 
+	// check file exists
+	app.route('/projects/fileExists')
+		.post(users.requiresLogin, multipartyMiddleware, projects.fileExists);
+
 	// remove selected file from file system
 	app.route('/projects/deletefile')
 		.post(users.requiresLogin, multipartyMiddleware, projects.deleteFileByName);
