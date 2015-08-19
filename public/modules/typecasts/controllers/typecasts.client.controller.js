@@ -5,6 +5,9 @@ angular.module('typecasts').controller('TypecastsController', ['$scope', '$state
 	function($scope, $stateParams, $location, Authentication, Typecasts, Socket ) {
 		$scope.authentication = Authentication;
 
+		// controller level vals
+		$scope.newAtrribute = '';
+
 		// used for paginator
 		$scope.Math = window.Math;
 		$scope.currentPage = 0;
@@ -91,6 +94,45 @@ angular.module('typecasts').controller('TypecastsController', ['$scope', '$state
 			$scope.typecast = Typecasts.get({ 
 				typecastId: $stateParams.typecastId
 			});
+		};
+
+		// add new attribute to typecase
+		$scope.addAttribute = function(){
+
+			if($scope.newAtrribute !== ''){
+
+				var typecast = $scope.typecast;
+
+				typecast.attributes.push($scope.newAtrribute);
+
+				typecast.$update(function() {
+					$location.path('typecasts/' + typecast._id);
+				}, function(errorResponse) {
+					$scope.error = errorResponse.data.message;
+				});
+
+				$scope.newAtrribute = '';
+
+			} else {
+
+				alert('Please enter an attribute name!');
+
+			}
+
+		};
+
+		$scope.removeAttribute = function(key){
+
+			var typecast = $scope.typecast;
+
+			typecast.attributes.splice(key, 1);
+
+			typecast.$update(function() {
+				$location.path('typecasts/' + typecast._id);
+			}, function(errorResponse) {
+				$scope.error = errorResponse.data.message;
+			});
+
 		};
 	}
 ]);
