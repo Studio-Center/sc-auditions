@@ -208,6 +208,10 @@
 										{{key+1}}
 									</td>
 									<td>
+										<div ng-if="verifyFile('/res/auditions/'+project._id+'/'+audition.file.name)" style="font-size:18px;color:red;font-weight:700">
+											FILE NOT FOUND ON SERVER! PLEASE UPLOAD AGAIN!
+										</div>
+
 										<a href="/res/auditions/{{project._id}}/{{audition.file.name | encodeUri}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable">ngAudio</a> 
 										<p ng-module="users" ng-controller="UsersController" data-ng-init="getOne(audition.approved.by.userId)">
 											<strong>Posted by:</strong> {{useredit.displayName}}

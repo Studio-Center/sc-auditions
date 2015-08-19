@@ -1228,6 +1228,22 @@ var deleteFiles = function(project){
 
 };
 
+// check if file exists
+exports.fileExists = function(req, res){
+
+	// method vars
+	var appDir = path.dirname(require.main.filename);
+	var file = appDir + '/public' + req.body.file;
+
+	// check if file exists
+	if (fs.existsSync(file)) {
+		return res.status(200).end();
+	} else {
+		return res.status(400).end();
+	}
+
+};
+
 // handle remote file delete requests
 exports.deleteFileByName = function(req, res){
 
