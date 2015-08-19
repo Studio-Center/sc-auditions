@@ -39,7 +39,30 @@
 		<div><strong>Producer</strong> {{talent.producerOptional}}</div>
 		<div><strong>StudioCenter.com Demo Link</strong> <span ng-show="talent.demoLink"><a href="{{talent.demoLink}}">{{talent.demoLink}}</a></span></div>
 		<div><strong>Typecasts</strong>
-		<span ng-repeat="(key, usval) in talent.typeCasts"> {{usval}} </span> </div>
+			<form class="form-horizontal" data-ng-submit="update()" novalidate>
+	            <div class="controls" ng-module="typecasts">
+	                <div ng-controller="TypecastsController" data-ng-init="find()">
+                        <div class="row">
+                            <div class="col-lg-4 col-md-4 col-sm-4" data-ng-repeat="typecast in typecasts">
+                                <div><input type="checkbox" class="btn btn-primary" ng-model="talent.typeCasts[typecast.name]" btn-checkbox="'{{typecast.name}}'" ng-checked="talent.typeCasts.indexOf(typecast.name) > -1" ng-click="toggleTypecast(typecast.name)"> <strong>{{typecast.name}}</strong></div>
+                                <ul class="list-group">
+                                    <li class="list-group-item" ng-repeat="(key, attribute) in typecast.attributes">
+                                        <input type="checkbox" class="btn btn-primary" ng-model="talent.typeCasts[attribute]" btn-checkbox="'{{attribute}}'" ng-checked="talent.typeCasts.indexOf(attribute) > -1" ng-click="toggleTypecast(attribute)">
+                                        {{attribute}} 
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+	                </div>
+	            </div>
+	            <div data-ng-show="error" class="text-danger">
+                    <strong data-ng-bind="error"></strong>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Update" class="btn btn-default">
+                </div>
+			</form>
+		</div>
 	</div>
 	<div class="page-header jumbotron">
 		
