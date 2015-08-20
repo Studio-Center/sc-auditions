@@ -123,7 +123,10 @@ var ProjectSchema = new Schema({
 	},
 	counts: {
 		type: Object
-	}
+	},
+	clientNotes: {
+		type: String
+	},
 });
 
 /**
