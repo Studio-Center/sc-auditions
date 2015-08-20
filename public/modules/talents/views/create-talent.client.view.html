@@ -4,7 +4,8 @@
     </div>
     <div class="col-md-12">
         <form class="form-horizontal" data-ng-submit="create()" novalidate>
-            <fieldset>
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-6">
                 <div class="form-group">
                     <label class="control-label" for="name">First Name</label>
                     <div class="controls">
@@ -90,6 +91,8 @@
                         <label class="btn btn-primary" ng-model="ageRange" btn-radio="'adult'">Adult</label>
                     </div>
                 </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
                 <div class="form-group">
                     <label class="control-label" for="outageTimes">Outage Times</label>
                     <div class="controls">
@@ -142,6 +145,8 @@
                         <input type="text" data-ng-model="demoLink" id="demoLink" class="form-control" placeholder="StudioCenter.com Demo Link" required>
                     </div>
                 </div>
+            </div>
+        </div>
                 <div class="form-group">
                     <label class="control-label" for="typeCasts">Typecasts</label>
                      <div class="controls" ng-module="typecasts">

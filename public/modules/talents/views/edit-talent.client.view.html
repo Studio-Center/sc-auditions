@@ -4,144 +4,149 @@
     </div>
     <div class="col-md-12">
         <form class="form-horizontal" data-ng-submit="update()" novalidate>
-            <fieldset>
-                <div class="form-group">
-                    <label class="control-label" for="name">First Name</label>
-                    <div class="controls">
-                        <input type="text" data-ng-model="talent.name" id="name" class="form-control" placeholder="First Name" required>
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="form-group">
+                        <label class="control-label" for="name">First Name</label>
+                        <div class="controls">
+                            <input type="text" data-ng-model="talent.name" id="name" class="form-control" placeholder="First Name" required>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="name">Last Name</label>
-                    <div class="controls">
-                        <input type="text" data-ng-model="talent.lastName" id="lastName" class="form-control" placeholder="Last Name" required>
+                    <div class="form-group">
+                        <label class="control-label" for="name">Last Name</label>
+                        <div class="controls">
+                            <input type="text" data-ng-model="talent.lastName" id="lastName" class="form-control" placeholder="Last Name" required>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="type">Email</label>
-                    <div class="controls">
-                        <input type="email" data-ng-model="talent.email" id="email" class="form-control" placeholder="Email" required>
+                    <div class="form-group">
+                        <label class="control-label" for="lastNameCode">Last Name Code</label>
+                        <div class="controls">
+                            <input type="text" data-ng-model="talent.lastNameCode" id="lastNameCode" class="form-control" placeholder="lastNameCode" required>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="type">Email Alt</label>
-                    <div class="controls">
-                        <input type="email" data-ng-model="talent.email2" id="email2" class="form-control" placeholder="Email Alt">
+                    <div class="form-group">
+                        <label class="control-label" for="parentName">Parent Name</label>
+                        <div class="controls">
+                            <input type="text" data-ng-model="talent.parentName" id="parentName" class="form-control" placeholder="parentName" required>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="type">Phone Number</label>
-                    <div class="controls">
-                        <input type="tel" data-ng-model="talent.phone" id="phone" class="form-control" required>
+                    <div class="form-group">
+                        <label class="control-label" for="type">Email</label>
+                        <div class="controls">
+                            <input type="email" data-ng-model="talent.email" id="email" class="form-control" placeholder="Email" required>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="type">Phone Number Alt</label>
-                    <div class="controls">
-                        <input type="tel" data-ng-model="talent.phone2" id="phone2" class="form-control" >
+                    <div class="form-group">
+                        <label class="control-label" for="type">Email Alt</label>
+                        <div class="controls">
+                            <input type="email" data-ng-model="talent.email2" id="email2" class="form-control" placeholder="Email Alt">
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="type">Type</label>
-                    <div class="controls">
+                    <div class="form-group">
+                        <label class="control-label" for="type">Phone Number</label>
+                        <div class="controls">
+                            <input type="tel" data-ng-model="talent.phone" id="phone" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="type">Phone Number Alt</label>
+                        <div class="controls">
+                            <input type="tel" data-ng-model="talent.phone2" id="phone2" class="form-control" >
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="type">Type</label>
+                        <div class="controls">
+                            <div class="btn-group">
+                                <label ng-repeat="type in typeOptions" class="btn btn-primary" ng-model="talent.type" btn-radio="type">{{type}}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="unionStatus">Union Status</label><br/>
                         <div class="btn-group">
-                            <label ng-repeat="type in typeOptions" class="btn btn-primary" ng-model="talent.type" btn-radio="type">{{type}}</label>
+                            <unionOptions ng-repeat="union in unionOptions">
+                                <input type="checkbox" class="btn btn-primary" ng-model="talent.unionStatus[union]" ng-click="toggleUnion(union)" ng-checked="talent.unionStatus.indexOf(union) > -1" btn-checkbox> {{union}}<br>
+                            </unionOptions>
+                        </div>
+                    </div>
+                    <div class="form-group" ng-if="checkUnionStatus(talent.unionStatus)">
+                        <div class="btn-group">
+                            <unionOptions ng-repeat="union in unionJoinedOpts">
+                                <input type="checkbox" class="btn btn-primary" ng-model="talent.unionJoined[union]" ng-click="toggleUnionJoin(union)" ng-checked="talent.unionJoined.indexOf(union) > -1" btn-checkbox> {{union}}<br>
+                            </unionOptions>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="gender">Gender</label><br/>
+                        <div class="btn-group">
+                            <label class="btn btn-primary" ng-model="talent.gender" btn-radio="'male'">Male</label>
+                            <label class="btn btn-primary" ng-model="talent.gender" btn-radio="'female'">Female</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="btn-group">
+                            <label class="btn btn-primary" ng-model="talent.ageRange" btn-radio="'kid'">Kid</label>
+                            <label class="btn btn-primary" ng-model="talent.ageRange" btn-radio="'teen'">Teen</label>
+                            <label class="btn btn-primary" ng-model="talent.ageRange" btn-radio="'adult'">Adult</label>
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="control-label" for="unionStatus">Union Status</label><br/>
-                    <div class="btn-group">
-                        <unionOptions ng-repeat="union in unionOptions">
-                            <input type="checkbox" class="btn btn-primary" ng-model="talent.unionStatus[union]" ng-click="toggleUnion(union)" ng-checked="talent.unionStatus.indexOf(union) > -1" btn-checkbox> {{union}}<br>
-                        </unionOptions>
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="form-group">
+                        <label class="control-label" for="outageTimes">Outage Times</label>
+                        <div class="controls">
+                            <input type="text" data-ng-model="talent.outageTimes" id="outageTimes" class="form-control" placeholder="outageTimes" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="locationISDN">Location/ISDN</label>
+                        <div class="controls">
+                            <select ng-model="talent.locationISDN" class="form-control">
+                                <option ng-repeat="item in locations" value="{{item}}">{{item}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="exclusivity">Exclusivity</label>
+                        <div class="controls">
+                            <select ng-model="talent.exclusivity" class="form-control">
+                                <option ng-repeat="item in exclusivityOpts" value="{{item}}">{{item}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="type">ISDN Line 1</label>
+                        <div class="controls">
+                            <input type="tel" data-ng-model="talent.ISDNLine1" id="ISDNLine1" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="type">ISDN Line 2</label>
+                        <div class="controls">
+                            <input type="tel" data-ng-model="talent.ISDNLine2" id="ISDNLine2" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="name">Source Connect Username</label>
+                        <div class="controls">
+                            <input type="text" data-ng-model="talent.sourceConnectUsername" id="sourceConnectUsername" class="form-control" placeholder="Source Connect Username" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="producerOptional">Producer</label>
+                        <div class="controls">
+                            <input type="text" data-ng-model="talent.producerOptional" id="producerOptional" class="form-control" placeholder="Producer Optional">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="name">StudioCenter.com Demo Link</label>
+                        <div class="controls">
+                            <input type="text" data-ng-model="talent.demoLink" id="demoLink" class="form-control" placeholder="StudioCenter.com Demo Link" required>
+                        </div>
                     </div>
                 </div>
-                <div class="form-group" ng-if="checkUnionStatus(talent.unionStatus)">
-                    <div class="btn-group">
-                        <unionOptions ng-repeat="union in unionJoinedOpts">
-                            <input type="checkbox" class="btn btn-primary" ng-model="talent.unionJoined[union]" ng-click="toggleUnionJoin(union)" ng-checked="talent.unionJoined.indexOf(union) > -1" btn-checkbox> {{union}}<br>
-                        </unionOptions>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="gender">Gender</label><br/>
-                    <div class="btn-group">
-                        <label class="btn btn-primary" ng-model="talent.gender" btn-radio="'male'">Male</label>
-                        <label class="btn btn-primary" ng-model="talent.gender" btn-radio="'female'">Female</label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="btn-group">
-                        <label class="btn btn-primary" ng-model="talent.ageRange" btn-radio="'kid'">Kid</label>
-                        <label class="btn btn-primary" ng-model="talent.ageRange" btn-radio="'teen'">Teen</label>
-                        <label class="btn btn-primary" ng-model="talent.ageRange" btn-radio="'adult'">Adult</label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="lastNameCode">Last Name Code</label>
-                    <div class="controls">
-                        <input type="text" data-ng-model="talent.lastNameCode" id="lastNameCode" class="form-control" placeholder="lastNameCode" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="parentName">Parent Name</label>
-                    <div class="controls">
-                        <input type="text" data-ng-model="talent.parentName" id="parentName" class="form-control" placeholder="parentName" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="outageTimes">Outage Times</label>
-                    <div class="controls">
-                        <input type="text" data-ng-model="talent.outageTimes" id="outageTimes" class="form-control" placeholder="outageTimes" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="locationISDN">Location/ISDN</label>
-                    <div class="controls">
-                        <select ng-model="talent.locationISDN" class="form-control">
-                            <option ng-repeat="item in locations" value="{{item}}">{{item}}</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="exclusivity">Exclusivity</label>
-                    <div class="controls">
-                        <select ng-model="talent.exclusivity" class="form-control">
-                            <option ng-repeat="item in exclusivityOpts" value="{{item}}">{{item}}</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="type">ISDN Line 1</label>
-                    <div class="controls">
-                        <input type="tel" data-ng-model="talent.ISDNLine1" id="ISDNLine1" class="form-control">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="type">ISDN Line 2</label>
-                    <div class="controls">
-                        <input type="tel" data-ng-model="talent.ISDNLine2" id="ISDNLine2" class="form-control">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="name">Source Connect Username</label>
-                    <div class="controls">
-                        <input type="text" data-ng-model="talent.sourceConnectUsername" id="sourceConnectUsername" class="form-control" placeholder="Source Connect Username" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="producerOptional">Producer</label>
-                    <div class="controls">
-                        <input type="text" data-ng-model="talent.producerOptional" id="producerOptional" class="form-control" placeholder="Producer Optional">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="name">StudioCenter.com Demo Link</label>
-                    <div class="controls">
-                        <input type="text" data-ng-model="talent.demoLink" id="demoLink" class="form-control" placeholder="StudioCenter.com Demo Link" required>
-                    </div>
-                </div>
+            </div>
                 <div class="form-group">
                     <label class="control-label" for="typeCasts">Typecasts</label>
                     <div class="controls" ng-module="typecasts">
@@ -168,7 +173,6 @@
                 <div class="form-group">
                     <input type="submit" value="Update" class="btn btn-default">
                 </div>
-            </fieldset>
         </form>
     </div>
 </section>
