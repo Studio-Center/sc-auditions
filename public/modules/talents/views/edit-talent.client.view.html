@@ -148,7 +148,7 @@
                         <div ng-controller="TypecastsController" data-ng-init="find()">
                             <div class="btn-group">
                                 <div class="row">
-                                    <div class="col-lg-4 col-md-4 col-sm-4" data-ng-repeat="typecast in typecasts | orderBy:'-sort':reverse">
+                                    <div class="col-lg-3 col-md-3 col-sm-3" data-ng-repeat="typecast in typecasts | orderBy:'-sort':reverse">
                                         <p> <strong>{{typecast.name}}</strong></p>
                                         <ul class="list-group">
                                             <li class="list-group-item" ng-repeat="(key, attribute) in typecast.attributes">
