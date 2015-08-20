@@ -237,6 +237,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
       		return hidCnt;
       	};
+      	// download all auditions from project
       	$scope.downloadAllAuditions = function(){
 
 			$http.post('/projects/downloadallauditions', {
@@ -253,6 +254,61 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				);
 			});
       	};
+      	// download all auditions from project
+      	$scope.downloadBookedAuditions = function(){
+
+      		var bookedAuds = [];
+      		for(var i = 0; i < $scope.project.auditions.length; ++i){
+      			if($scope.project.auditions[i].booked === true){
+      				bookedAuds.push($scope.project.auditions[i].file.name);
+      			}
+      		}
+
+			$http.post('/projects/downloadBookedAuditions', {
+				projectId: $scope.project._id,
+				projectTitle: $scope.project.title,
+		        bookedAuds: bookedAuds
+		    }).
+			success(function(data, status, headers, config) {
+				// send data to users browser
+				// wait one second for archive processing on server
+				setTimeout(
+					function(){
+						window.location.href = 'res/archives/' + encodeURIComponent(data.zip);
+					},
+				    1000
+				);
+			});
+      	};
+      	// download all auditions from project
+      	$scope.downloadSelectedAuditions = function(){
+
+      		var selectedAuds = [];
+      		for(var i = 0; i < $scope.project.auditions.length; ++i){
+      			for(var j = 0; j < $scope.selectedAuditions.length; ++j){
+	      			if($scope.project.auditions[i].file.path === $scope.selectedAuditions[j]){
+	      				selectedAuds.push($scope.project.auditions[i].file.name);
+	      			}
+      			}
+      		}
+
+			$http.post('/projects/downloadSelectedAuditions', {
+		        projectId: $scope.project._id,
+		        projectTitle: $scope.project.title,
+		        selectedAuds: selectedAuds
+		    }).
+			success(function(data, status, headers, config) {
+				// send data to users browser
+				// wait one second for archive processing on server
+				setTimeout(
+					function(){
+						window.location.href = 'res/archives/' + encodeURIComponent(data.zip);
+					},
+				    1000
+				);
+			});
+      	};
+      	// show booked option for selected auditions
       	$scope.bookSelectedShow = function(){
       		var hiddenMatchCnt = 0, idx;
 
@@ -266,6 +322,18 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       		if($scope.selectedAuditions.length > hiddenMatchCnt){
       			return true;
       		}
+
+      	};
+      	// check for booked auditions
+      	$scope.bookedShow = function(){
+
+      		for(var i = 0; i < $scope.project.auditions.length; ++i){
+      			if($scope.project.auditions[i].booked === true){
+      				return true;
+      			}
+      		}
+
+      		return false;
 
       	};
 

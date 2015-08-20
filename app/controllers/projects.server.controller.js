@@ -2032,6 +2032,76 @@ exports.downloadAllAuditions = function(req, res, next){
 
 };
 
+exports.downloadBookedAuditions = function(req, res, next){
+
+	// method vars
+	var projectId = req.body.projectId;
+	var projectTitle = req.body.projectTitle;
+	var bookedAuds = req.body.bookedAuds;
+
+	// get app dir
+	var appDir = path.dirname(require.main.filename);
+	var relativePath =  'res' + '/' + 'auditions' + '/' + projectId + '/';
+    var newPath = appDir + '/public/' + relativePath;
+    var savePath = appDir + '/public/' + 'res' + '/' + 'archives' + '/';
+    var zipName = projectTitle + '.zip';
+    var newZip = savePath + zipName;
+
+    //console.log(newPath);
+
+    var output = fs.createWriteStream(newZip);
+	var archive = archiver('zip');
+
+	output.on('close', function() {
+	  res.jsonp({zip:zipName});
+	});
+
+    // add all booked auditions
+    for(var i = 0; i < bookedAuds.length; ++i){
+    	archive.file(newPath + bookedAuds[i], { name:bookedAuds[i] });
+    }
+
+    archive.pipe(output);
+
+    archive.finalize();
+
+};
+
+
+exports.downloadSelectedAuditions = function(req, res, next){
+
+	// method vars
+	var projectId = req.body.projectId;
+	var projectTitle = req.body.projectTitle;
+	var selAuds = req.body.selectedAuds;
+
+	// get app dir
+	var appDir = path.dirname(require.main.filename);
+	var relativePath =  'res' + '/' + 'auditions' + '/' + req.body.project._id + '/';
+    var newPath = appDir + '/public/' + relativePath;
+    var savePath = appDir + '/public/' + 'res' + '/' + 'archives' + '/';
+    var zipName = req.body.project.title + '.zip';
+    var newZip = savePath + zipName;
+
+    //console.log(newPath);
+
+    var output = fs.createWriteStream(newZip);
+	var archive = archiver('zip');
+
+	output.on('close', function() {
+	  res.jsonp({zip:zipName});
+	});
+
+    // add all booked auditions
+    for(var i = 0; i < selAuds.length; ++i){
+    	archive.file(newPath + selAuds[i], { name:selAuds[i] });
+    }
+
+    archive.pipe(output);
+
+    archive.finalize();
+
+};
 // send email and update project status for selected booked auditions
 exports.bookAuditions = function(req, res, next){
 
