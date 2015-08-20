@@ -223,7 +223,7 @@
         <span ng-if="newProject.client.length == 0"><h4>Please add clients to continue.</h4></span>
         <span ng-if="newProject.scripts.length == 0"><h4>Please add a script file to continue.</h4></span>
     </div>
-    <a ui-sref="createProject.talent" class="btn btn-block btn-info" ng-if="newProject.scripts.length > 0 && newProject.estimatedCompletionDate && newProject.title.length > 0 && newProject.client.length > 0">
+    <a ui-sref="{{newProjTalentLink}}" class="btn btn-block btn-info" ng-if="newProject.scripts.length > 0 && newProject.estimatedCompletionDate && newProject.title.length > 0 && newProject.client.length > 0">
         Next Section <span class="glyphicon glyphicon-circle-arrow-right"></span>
     </a>
 </div>
