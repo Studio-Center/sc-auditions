@@ -382,9 +382,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       		}
       	};
      	$scope.showCreatePartFld = function(id){
-      		for(var i = 0; i < $scope.talent.length; ++i){
-      			if($scope.talent[i].talentId === String(id)){
-      				if($scope.talent[i].requested === true || $scope.talent[i].regular === true){
+      		for(var i = 0; i < $scope.newProject.talent.length; ++i){
+      			if($scope.newProject.talent[i].talentId === String(id)){
+      				if($scope.newProject.talent[i].requested === true || $scope.newProject.talent[i].regular === true){
       					return false;
       				}
       			}
@@ -724,9 +724,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}
 		};
 		$scope.checkClientUsersCreate = function(userId){
-			for(var i = 0; i < $scope.client.length; ++i){
-				if($scope.client[i].userId === userId){
-					return true;
+			if(typeof $scope.newProject.client === 'object'){
+				for(var i = 0; i < $scope.newProject.client.length; ++i){
+					if($scope.newProject.client[i].userId === userId){
+						return true;
+					}
 				}
 			}
 		};
@@ -764,15 +766,15 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}
 		};
 		$scope.checkCreateTalent = function(talentId){
-			for(var i = 0; i < $scope.talent.length; ++i){
-				if($scope.talent[i].talentId === talentId && $scope.talent[i].regular === true){
+			for(var i = 0; i < $scope.newProject.talent.length; ++i){
+				if($scope.newProject.talent[i].talentId === talentId && $scope.newProject.talent[i].regular === true){
 					return true;
 				}
 			}
 		};
 		$scope.checkRequestedCreateTalent = function(talentId){
-			for(var i = 0; i < $scope.talent.length; ++i){
-				if($scope.talent[i].talentId === talentId && $scope.talent[i].requested === true){
+			for(var i = 0; i < $scope.newProject.talent.length; ++i){
+				if($scope.newProject.talent[i].talentId === talentId && $scope.newProject.talent[i].requested === true){
 					return true;
 				}
 			}
@@ -870,21 +872,21 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 			// check for existing item
 			var found = 0;
-			for(var i = 0; i < $scope.talent.length; ++i){
-				if($scope.talent[i].talentId === talentId){
+			for(var i = 0; i < $scope.newProject.talent.length; ++i){
+				if($scope.newProject.talent[i].talentId === talentId){
 					// reset requested status
-					if($scope.talent[i].requested === true){
-						$scope.talent[i].requested = false;
+					if($scope.newProject.talent[i].requested === true){
+						$scope.newProject.talent[i].requested = false;
 					}
 					// set regular status
-					if($scope.talent[i].regular === true){
-						$scope.talent[i].regular = false;
+					if($scope.newProject.talent[i].regular === true){
+						$scope.newProject.talent[i].regular = false;
 					} else {
-						$scope.talent[i].regular = true;
+						$scope.newProject.talent[i].regular = true;
 					}
 					// remove talent if no longer selected
-					if($scope.talent[i].regular === false && $scope.talent[i].requested === false){
-						$scope.talent.splice(i, 1);
+					if($scope.newProject.talent[i].regular === false && $scope.newProject.talent[i].requested === false){
+						$scope.newProject.talent.splice(i, 1);
 					}
 					found = 1;
 				}
@@ -892,7 +894,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 			// add talent if never found
 			if(found === 0){
-				$scope.talent.push(talent);
+				$scope.newProject.talent.push(talent);
 			}
 
 		};
@@ -902,21 +904,21 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 			// check for existing item
 			var found = 0;
-			for(var i = 0; i < $scope.talent.length; ++i){
-				if($scope.talent[i].talentId === talentId){
+			for(var i = 0; i < $scope.newProject.talent.length; ++i){
+				if($scope.newProject.talent[i].talentId === talentId){
 					// reset regular talent if set
-					if($scope.talent[i].regular === true){
-						$scope.talent[i].regular = false;
+					if($scope.newProject.talent[i].regular === true){
+						$scope.newProject.talent[i].regular = false;
 					}
 					// set requested talent
-					if($scope.talent[i].requested === true){
-						$scope.talent[i].requested = false;
+					if($scope.newProject.talent[i].requested === true){
+						$scope.newProject.talent[i].requested = false;
 					} else {
-						$scope.talent[i].requested = true;
+						$scope.newProject.talent[i].requested = true;
 					}
 					// remove talent if no longer selected
-					if($scope.talent[i].regular === false && $scope.talent[i].requested === false){
-						$scope.talent.splice(i, 1);
+					if($scope.newProject.talent[i].regular === false && $scope.newProject.talent[i].requested === false){
+						$scope.newProject.talent.splice(i, 1);
 					}
 					found = 1;
 				}
@@ -924,7 +926,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 			// add talent if never found
 			if(found === 0){
-				$scope.talent.push(talent);
+				$scope.newProject.talent.push(talent);
 			}
 
 		};
@@ -1026,15 +1028,15 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 			// check for existing item
 			var found = 0;
-			for(var i = 0; i < $scope.client.length; ++i){
-				if($scope.client[i].userId === userId){
-					$scope.client.splice(i, 1);
+			for(var i = 0; i < $scope.newProject.client.length; ++i){
+				if($scope.newProject.client[i].userId === userId){
+					$scope.newProject.client.splice(i, 1);
 					found = 1;
 				}
 			}
 
 			if(found === 0){
-				$scope.client.push(user);
+				$scope.newProject.client.push(user);
 			}
 
 		};
@@ -1157,11 +1159,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				actualTime: $scope.newProject.actualTime,
 				status: 'In Progress',
 				sounders: $scope.newProject.sounders,
-				scripts: $scope.scripts,
-				referenceFiles: $scope.referenceFiles,
+				scripts: $scope.newProject.scripts,
+				referenceFiles: $scope.newProject.referenceFiles,
 				description: $scope.newProject.description,
-				client: $scope.client,
-				talent: $scope.talent,
+				client: $scope.newProject.client,
+				talent: $scope.newProject.talent,
 				notifyClient: $scope.newProject.notifyClient
 			});
 
@@ -1220,6 +1222,33 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				$scope.project = angular.extend($scope.project, data);
 			});
 
+		};
+
+		// duplicate existing project
+		$scope.dupCheck = function(){
+
+			if($stateParams.projectId){
+				$scope.newProject = Projects.get({ 
+					projectId: $stateParams.projectId
+				});
+			}
+
+			// assign new project initial values
+			// $scope.$watch('project', function(val){
+			// 	$scope.newProject.title = $scope.project.title;
+			// 	$scope.newProject.estimatedCompletionDate = $scope.project.estimatedCompletionDate;
+			// 	$scope.newProject.estimatedTime = $scope.project.estimatedTime;
+			// 	$scope.newProject.actualTime = $scope.project.actualTime;
+			// 	$scope.newProject.sounders = $scope.project.sounders;
+			// 	$scope.scripts = $scope.project.scripts;
+			// 	$scope.referenceFiles = $scope.project.referenceFiles;
+			// 	$scope.newProject.description = $scope.project.description;
+			// 	$scope.client = $scope.project.client;
+			// 	$scope.talent = $scope.project.talent;
+
+			// 	console.log($scope.project);
+			// });
+		
 		};
 
 		// client update
@@ -1853,13 +1882,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		};
 
 		$scope.delTempScript = function(idx){
-			var file = '/res/scripts/temp/' + $scope.scripts[idx].file.name;
+			var file = '/res/scripts/temp/' + $scope.newProject.scripts[idx].file.name;
 
 			$http.post('/projects/deletefile', {
 		        fileLocation: file
 		    });
 
-		    $scope.scripts.splice(idx, 1);
+		    $scope.newProject.scripts.splice(idx, 1);
 		};
 
 		$scope.uploadScript = function($files) {
@@ -1909,7 +1938,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	      }).success(function(data, status, headers, config) {
 	        // file is uploaded successfully 
 	        //console.log(data);
-	        $scope.scripts.push(data[0]);
+	        $scope.newProject.scripts.push(data[0]);
 	      });
 	  	};
 
@@ -1962,7 +1991,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		    }).success(function(data, status, headers, config) {
 		        // file is uploaded successfully 
 		        //console.log(data);
-		        $scope.referenceFiles.push(data[0]);
+		        $scope.newProject.referenceFiles.push(data[0]);
 		    });
 	  	};
 
@@ -1976,13 +2005,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	  	};
 
 	  	$scope.delTempReferenceFile = function(idx){
-			var file = '/res/referenceFiles/temp/' + $scope.referenceFiles[idx].file.name;
+			var file = '/res/referenceFiles/temp/' + $scope.newProject.referenceFiles[idx].file.name;
 
 			$http.post('/projects/deletefile', {
 		        fileLocation: file
 		    });
 
-		    $scope.referenceFiles.splice(idx, 1);
+		    $scope.newProject.referenceFiles.splice(idx, 1);
 		};
 
 	  	$scope.delReferenceFile = function(idx){

@@ -148,10 +148,17 @@
                     <label class="control-label" for="typeCasts">Typecasts</label>
                      <div class="controls" ng-module="typecasts">
                         <div ng-controller="TypecastsController" data-ng-init="find()">
-                            <div class="btn-group" data-toggle="buttons">
-                                <typecasts data-ng-repeat="typecast in typecasts">
-                                    <input type="checkbox" class="btn btn-primary" ng-model="talent.typeCasts[typecast.name]" btn-checkbox="'{{typecast.name}}'" ng-click="toggleNewTypecast(typecast.name)"> {{typecast.name}}<br>
-                                </typecasts>
+                            <div class="btn-group">
+                                <div class="row">
+                                    <div class="col-lg-2 col-md-2 col-sm-2" data-ng-repeat="typecast in typecasts | orderBy:'-sort':reverse">
+                                    <p> {{typecast.name}}</p>
+                                    <ul class="list-group">
+                                        <li class="list-group-item" ng-repeat="(key, attribute) in typecast.attributes">
+                                            <input type="checkbox" class="btn btn-primary" ng-model="talent.typeCasts[attribute]" btn-checkbox="'{{attribute}}'" ng-click="toggleNewTypecast(attribute)"> {{attribute}}
+                                        </li>
+                                    </ul>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
