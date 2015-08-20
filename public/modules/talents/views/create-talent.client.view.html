@@ -149,7 +149,7 @@
                             <div class="btn-group">
                                 <div class="row">
                                     <div class="col-lg-4 col-md-4 col-sm-4" data-ng-repeat="typecast in typecasts | orderBy:'-sort':reverse">
-                                    <p><input type="checkbox" class="btn btn-primary" ng-model="talent.typeCasts[typecast.name]" btn-checkbox="'{{typecast.name}}'" ng-click="toggleNewTypecast(typecast.name)"> {{typecast.name}}</p>
+                                    <p> {{typecast.name}}</p>
                                     <ul class="list-group">
                                         <li class="list-group-item" ng-repeat="(key, attribute) in typecast.attributes">
                                             <input type="checkbox" class="btn btn-primary" ng-model="talent.typeCasts[attribute]" btn-checkbox="'{{attribute}}'" ng-click="toggleNewTypecast(attribute)"> {{attribute}}

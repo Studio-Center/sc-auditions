@@ -44,7 +44,7 @@
 	                <div ng-controller="TypecastsController" data-ng-init="find()">
                         <div class="row">
                             <div class="col-lg-4 col-md-4 col-sm-4" data-ng-repeat="typecast in typecasts | orderBy:'-sort':reverse">
-                                <div><input type="checkbox" class="btn btn-primary" ng-model="talent.typeCasts[typecast.name]" btn-checkbox="'{{typecast.name}}'" ng-checked="talent.typeCasts.indexOf(typecast.name) > -1" ng-click="toggleTypecast(typecast.name)"> <strong>{{typecast.name}}</strong></div>
+                                <div> <strong>{{typecast.name}}</strong></div>
                                 <ul class="list-group">
                                     <li class="list-group-item" ng-repeat="(key, attribute) in typecast.attributes">
                                         <input type="checkbox" class="btn btn-primary" ng-model="talent.typeCasts[attribute]" btn-checkbox="'{{attribute}}'" ng-checked="talent.typeCasts.indexOf(attribute) > -1" ng-click="toggleTypecast(attribute)">
