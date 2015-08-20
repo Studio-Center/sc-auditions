@@ -101,8 +101,7 @@
                             <div class="col-lg-3 col-md-3 col-sm-3" data-ng-repeat="typecast in typecasts | orderBy:'-sort':reverse">
                                 <div> <strong>{{typecast.name}}</strong></div>
                                 <ul class="list-group">
-                                    <li class="list-group-item" ng-repeat="(key, attribute) in typecast.attributes">
-                                        <input type="checkbox" class="btn btn-primary" ng-model="talent.typeCasts[attribute]" btn-checkbox="'{{attribute}}'" ng-checked="talent.typeCasts.indexOf(attribute) > -1" ng-click="toggleTypecast(attribute)">
+                                    <li ng-if="talent.typeCasts.indexOf(attribute) > -1" class="list-group-item" ng-repeat="(key, attribute) in typecast.attributes">
                                         {{attribute}} 
                                     </li>
                                 </ul>
@@ -113,11 +112,19 @@
 	            <div data-ng-show="error" class="text-danger">
                     <strong data-ng-bind="error"></strong>
                 </div>
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <input type="submit" value="Update" class="btn btn-default">
-                </div>
+                </div> -->
 			</form>
 		</div>
+		<div class="pull-right">
+		<a class="btn btn-primary" href="/#!/talents/{{talent._id}}/edit">
+			<i class="glyphicon glyphicon-edit"> Edit Talent</i>
+		</a>
+		<a class="btn btn-primary" data-ng-click="remove();">
+			<i class="glyphicon glyphicon-trash"> Terminate Talent</i>
+		</a>
+	</div>
 	</div>
 	<div class="page-header jumbotron">
 		
@@ -197,13 +204,5 @@
 					</table>
             </div>
         </div>
-	</div>
-	<div class="pull-right">
-		<a class="btn btn-primary" href="/#!/talents/{{talent._id}}/edit">
-			<i class="glyphicon glyphicon-edit"></i>
-		</a>
-		<a class="btn btn-primary" data-ng-click="remove();">
-			<i class="glyphicon glyphicon-trash"> Terminate Talent</i>
-		</a>
 	</div>
 </section>
