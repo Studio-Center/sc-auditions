@@ -2077,10 +2077,10 @@ exports.downloadSelectedAuditions = function(req, res, next){
 
 	// get app dir
 	var appDir = path.dirname(require.main.filename);
-	var relativePath =  'res' + '/' + 'auditions' + '/' + req.body.project._id + '/';
+	var relativePath =  'res' + '/' + 'auditions' + '/' + projectId + '/';
     var newPath = appDir + '/public/' + relativePath;
     var savePath = appDir + '/public/' + 'res' + '/' + 'archives' + '/';
-    var zipName = req.body.project.title + '.zip';
+    var zipName = projectTitle + '.zip';
     var newZip = savePath + zipName;
 
     //console.log(newPath);
