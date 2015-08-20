@@ -56,7 +56,7 @@
 									<th>
 										<span><a href="" ng-click="updatePred(predicate == 'file.name' ? '-file.name' : 'file.name'); reverse=false">Name</a></span>
 										<span ng-if="predicate == '-file.name'">(^)</span>
-										<span ng-if="predicate == 'file.name'">(V)</span>
+										<span ng-if="predicate == 'file.name'">(V)</span> (Click to download)
 									</th>
 									<th class="rating-clmn">
 										<span><a href="" ng-click="updatePred(predicate == 'curRating' ? '-curRating' : 'curRating'); reverse=false">Rating</a></span>
@@ -82,7 +82,7 @@
 									<strong>{{key+1}}.</strong> 
 								</td>
 								<td>
-									<a href="/res/auditions/{{project._id}}/{{audition.file.name | encodeUri}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable">ngAudio</a> 
+									<a href="/res/auditions/{{project._id}}/{{audition.file.name | encodeUri}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable" download="{{audition.file.name}}">ngAudio</a> 
 								</td>
 								<td>
 									<rating ng-model="audition.curRating" readonly="false" ng-click="updateRating(audition.file.path, false)" max="max" on-leave="overStar = lookUpRating(key)" on-hover="hoveringOver(value,key)"></rating>
