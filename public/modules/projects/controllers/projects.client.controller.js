@@ -38,7 +38,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.newProject = {
 			title: '',
 			estimatedCompletionDate: '',
-			notifyClient: true
+			notifyClient: true,
+			client: [],
+			scripts: [],
+			talent: []
 		};
 		$scope.parts = [];
 		$scope.toggleRefs = false;
