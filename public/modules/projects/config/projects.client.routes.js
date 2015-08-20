@@ -33,6 +33,22 @@ angular.module('projects').config(['$stateProvider', '$urlRouterProvider',
 			parent: 'createProject',
 			templateUrl: 'modules/projects/views/create-project/talent.client.view.html'
 		}).
+		state('createDupProject', {
+			abstract: true,
+			url: '/projects/create/:projectId',
+			controller: 'ProjectsController',
+			templateUrl: 'modules/projects/views/create-project.client.view.html'
+		}).
+		state('createDupProject.project', {
+			url: '',
+			parent: 'createDupProject',
+			templateUrl: 'modules/projects/views/create-project/project.client.view.html'
+		}).
+		state('createDupProject.talent', {
+			url: '/talent',
+			parent: 'createDupProject',
+			templateUrl: 'modules/projects/views/create-project/talent.client.view.html'
+		}).
 		state('newAuditionProject', {
 			url: '/projects/new-audition-form',
 			templateUrl: 'modules/projects/views/new-audition-project.client.view.html'
