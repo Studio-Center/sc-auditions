@@ -93,8 +93,16 @@
 				</div>
 			</div>
 		</div>
-		<div><strong>Typecasts</strong>
-			<form class="form-horizontal" data-ng-submit="update()" novalidate>
+		<div><strong>Typecasts</strong> <br>
+			<button ng-click="showTypecasts = !showTypecasts" class="btn btn-default">
+				<span ng-show="showTypecasts == undefined || showTypecasts == false">
+					Show Typecasts
+				</span>
+				<span ng-show="showTypecasts == true">
+					Hide Typecasts
+				</span>
+			</button>
+			<form class="form-horizontal" data-ng-submit="update()" novalidate ng-if="showTypecasts == true">
 	            <div class="controls" ng-module="typecasts">
 	                <div ng-controller="TypecastsController" data-ng-init="find()">
                         <div class="row">
