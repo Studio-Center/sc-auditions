@@ -42,6 +42,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			notifyClient: true,
 			client: [],
 			scripts: [],
+			copiedScripts: [],
+			referenceFiles: [],
+			copiedReferenceFiles: [],
 			talent: []
 		};
 		$scope.parts = [];
@@ -1157,16 +1160,30 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		// Create new Project
 		$scope.create = function() {
+
+			// method vars
+			var proStatus = 'In Progress';
+			var id = '';
+
+			// update project status, if needed
+			if(typeof $scope.newProject._id !== 'undefined'){
+				id = $scope.newProject._id;
+				proStatus = 'ReAuditioned';
+			}
+
 			// Create new Project object
 			var project = new Projects ({
+				id: id,
 				title: $scope.newProject.title,
 				estimatedCompletionDate: $scope.newProject.estimatedCompletionDate,
 				estimatedTime: $scope.newProject.estimatedTime,
 				actualTime: $scope.newProject.actualTime,
-				status: 'In Progress',
+				status: proStatus,
 				sounders: $scope.newProject.sounders,
 				scripts: $scope.newProject.scripts,
+				copiedScripts: $scope.newProject.copiedScripts,
 				referenceFiles: $scope.newProject.referenceFiles,
+				copiedReferenceFiles: $scope.newProject.copiedReferenceFiles,
 				description: $scope.newProject.description,
 				client: $scope.newProject.client,
 				talent: $scope.newProject.talent,
@@ -1234,29 +1251,33 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.dupCheck = function(){
 
 			if($stateParams.projectId){
-				$scope.newProject = Projects.get({ 
-					projectId: $stateParams.projectId
+				// $scope.newProject = Projects.get({ 
+				// 	projectId: $stateParams.projectId
+				// });
+
+				$http.get('/projects/' + $stateParams.projectId, {})
+				.success(function(data, status, headers, config) {
+					$scope.newProject = data;
+
+					// reset some defaults
+					$scope.newProject.title = $scope.newProject.title + ' ReAudtion';
+					$scope.newProject.talent = [];
+
+					// copy existing scripts and ref files
+					$scope.newProject.copiedScripts = $scope.newProject.scripts;
+					$scope.newProject.scripts = [];
+					$scope.newProject.copiedReferenceFiles = $scope.newProject.referenceFiles;
+					$scope.newProject.referenceFiles = [];
 				});
 
 				$scope.newProjTalentLink = 'createDupProject.talent';
 				$scope.newProjLink = 'createDupProject.project';
+
+				// $scope.$watch('newProject', function(){
+				// 	// new project adjustments
+				// 	$scope.newProject.title = $scope.newProject.title + ' ReAudtion';
+				// });
 			}
-
-			// assign new project initial values
-			// $scope.$watch('project', function(val){
-			// 	$scope.newProject.title = $scope.project.title;
-			// 	$scope.newProject.estimatedCompletionDate = $scope.project.estimatedCompletionDate;
-			// 	$scope.newProject.estimatedTime = $scope.project.estimatedTime;
-			// 	$scope.newProject.actualTime = $scope.project.actualTime;
-			// 	$scope.newProject.sounders = $scope.project.sounders;
-			// 	$scope.scripts = $scope.project.scripts;
-			// 	$scope.referenceFiles = $scope.project.referenceFiles;
-			// 	$scope.newProject.description = $scope.project.description;
-			// 	$scope.client = $scope.project.client;
-			// 	$scope.talent = $scope.project.talent;
-
-			// 	console.log($scope.project);
-			// });
 		
 		};
 
@@ -1924,6 +1945,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}
 		};
 
+		// remove temporary script file
 		$scope.delTempScript = function(idx){
 			var file = '/res/scripts/temp/' + $scope.newProject.scripts[idx].file.name;
 
@@ -1934,6 +1956,12 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		    $scope.newProject.scripts.splice(idx, 1);
 		};
 
+		// delete copy script file
+		$scope.delCopyScript = function(idx){
+		    $scope.newProject.copiedScripts.splice(idx, 1);
+		};
+
+		// upload script file
 		$scope.uploadScript = function($files) {
 	    //$files: an array of files selected, each file has name, size, and type.
 
@@ -2047,6 +2075,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	    	}
 	  	};
 
+	  	// delete temp reference file
 	  	$scope.delTempReferenceFile = function(idx){
 			var file = '/res/referenceFiles/temp/' + $scope.newProject.referenceFiles[idx].file.name;
 
@@ -2057,6 +2086,12 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		    $scope.newProject.referenceFiles.splice(idx, 1);
 		};
 
+		// delete copy reference file
+		$scope.delCopyReferenceFile = function(idx){
+		    $scope.newProject.copiedReferenceFiles.splice(idx, 1);
+		};
+
+		// delete reference file
 	  	$scope.delReferenceFile = function(idx){
 			// verify user wants to delete file
 			if (confirm('Are you sure?')) {
