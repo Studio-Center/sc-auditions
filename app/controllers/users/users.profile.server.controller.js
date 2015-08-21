@@ -103,7 +103,7 @@ exports.updateAdmin = function(req, res) {
 						transporter.sendMail({
 						    to: user.email,
 							from: adminEmail || config.mailer.from,
-							cc: 'audition­-notification@studiocenter.com',
+							cc: 'audition­\-notification@studiocenter.com',
 							replyTo: adminEmail || config.mailer.from,
 						    subject: 'Studio Center Auditions - Client Information Updated',
 						    html: clientEmailHTML
