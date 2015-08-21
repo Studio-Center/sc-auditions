@@ -856,7 +856,7 @@ exports.lead = function(req, res){
 	var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
 	transporter.sendMail({
 	    from: config.mailer.from,
-	    to: 'rob@studiocenter.com',
+	    to: 'scripts@studiocenter.com',
 	    cc: 'audition­-notification@studiocenter.com',
 	    subject: 'Start a new Audition Project Form Submission',
 	    text: emailBody,
