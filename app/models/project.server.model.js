@@ -125,7 +125,7 @@ var ProjectSchema = new Schema({
 		type: Object
 	},
 	clientNotes: {
-		type: String
+		type: Array
 	},
 });
 

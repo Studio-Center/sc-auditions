@@ -65,7 +65,10 @@
 							<h4>Client Notes</h4>
 						</div>
 						<div class="col-md-12">
-							<p style="white-space:pre">{{project.clientNotes}}</p>
+							<div ng-repeat="(key, note) in project.clientNotes | orderBy:'-date':reverse">
+								<h5><strong>{{note.date | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST - {{note.username}}</strong></h5>
+								<pre>{{note.item | linky:'_blank'}}</pre>
+							</div>
 						</div>
 					</div>
 				</div>
