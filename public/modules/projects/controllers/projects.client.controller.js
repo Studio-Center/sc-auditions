@@ -1232,13 +1232,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		// duplicate existing project
 		$scope.dupCheck = function(){
 
-			$scope.newProjTalentLink = 'createDupProject.talent';
-			$scope.newProjLink = 'createDupProject.project';
-
 			if($stateParams.projectId){
 				$scope.newProject = Projects.get({ 
 					projectId: $stateParams.projectId
 				});
+
+				$scope.newProjTalentLink = 'createDupProject.talent';
+				$scope.newProjLink = 'createDupProject.project';
 			}
 
 			// assign new project initial values
