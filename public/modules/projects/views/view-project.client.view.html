@@ -698,7 +698,7 @@
 			</div>
 			
 			<div class="col-lg-6 col-md-6 col-sm-6">
-				<accordion close-others="oneAtATime" data-ng-show="permitAdminDirector() || permitClient() || permitClientClient()">
+				<accordion close-others="oneAtATime" data-ng-show="permitAdminProductionCoordinatorDirector()">
 					<accordion-group is-open="status.open">
 					<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
 						<h4 class="panel-title accordion-toggle">
@@ -709,7 +709,7 @@
 						<div class="panel panel-default" ng-repeat="(key, phase) in project.phases">
 							<div class="panel-heading"><strong>{{project.phases[key].name}}</strong></div>
 							<div class="panel-body">
-								<span data-ng-show="permitAdminDirector()">
+								<span>
 									<div class="row">
 										<div class="col-lg-3 col-md-3 col-sm-3">
 											<label>Status:</label>
@@ -723,24 +723,6 @@
 										<div class="col-lg-3 col-md-3 col-sm-3">
 							        		<label>End Date:</label>
 							        	</div>
-							        	<div class="col-lg-9 col-md-9 col-sm-9">
-							        		<p>{{project.phases[key].endDate | amDateFormat:'MM/DD/YY h:mm:ss a'}}</p>
-							        	</div>
-							        </div>
-					    		</span>
-					    		<span data-ng-show="permitClient() || permitClientClient()">
-					    			<div class="row">
-										<div class="col-lg-3 col-md-3 col-sm-3">
-							    			<label>Status:</label>
-						    			</div>
-							        	<div class="col-lg-9 col-md-9 col-sm-9">
-											<p>{{project.phases[key].status}}</p>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-lg-3 col-md-3 col-sm-3">
-							        		<label>End Date:</label>
-						        		</div>
 							        	<div class="col-lg-9 col-md-9 col-sm-9">
 							        		<p>{{project.phases[key].endDate | amDateFormat:'MM/DD/YY h:mm:ss a'}}</p>
 							        	</div>
