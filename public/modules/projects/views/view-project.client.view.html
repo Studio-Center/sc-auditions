@@ -6,7 +6,7 @@
 				<h2 style="margin:0">{{project.title}} <small>Due {{project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST</small> </h2>
 				<h4>Created by {{project.user.displayName}} {{project.created | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST</h4>
 				<a class="btn btn-primary" href="/#!/projects-client/{{project._id}}" target="_blank">Click to View in Client Portal</a>
-				<a class="btn btn-danger" href="/#!/projects/create/{{project._id}}">ReAudition</a>
+				<a data-ng-show="permitAdminProductionCoordinator()" class="btn btn-danger" href="/#!/projects/create/{{project._id}}">ReAudition</a>
 			</div>
 			<div class="col-lg-4 col-md-4 col-sm-4">
 					<progressbar value="dynamic" type="success" ng-model="progress"><b>{{dynamic}}%</b></progressbar>

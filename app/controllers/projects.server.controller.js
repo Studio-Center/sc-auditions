@@ -1046,6 +1046,28 @@ exports.create = function(req, res) {
 					}
 				}
 			}
+
+			// update old project status
+			Project.findById(req.body.id).exec(function(err, oldProject) {
+
+				oldProject.status = 'ReAuditioned';
+
+				oldProject.save(function(err) {
+					if (err) {
+						return res.status(400).send({
+							message: errorHandler.getErrorMessage(err)
+						});
+					} else {
+						// emit an event for all connected clients
+						var socketio = req.app.get('socketio');
+						socketio.sockets.emit('projectsListUpdate'); // emit an event for all connected clients
+						socketio.sockets.emit('callListUpdate', {filter: ''}); 
+					}
+				});
+			});
+
+			// reset current project status
+			project.status = 'In Progress';
 		}
 
 		// send project creation email
