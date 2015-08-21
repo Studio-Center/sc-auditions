@@ -17,6 +17,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.newProjTalentLink = 'createProject.talent';
 		$scope.newProjLink = 'createProject.project';
 		ngAudioGlobals.unlock = false;
+		$scope.clientNotes = '';
 		$scope.auditions = [];
 		$scope.projProgress = [];
 		$scope.selCheckVal = 0;
@@ -1848,6 +1849,40 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			    $scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '<br>';
 
 				$scope.discussion = '';
+
+			    $http.post('/projects/sendemail', {
+					email: $scope.email
+				});
+				// update project store
+				//$scope.update();
+				$scope.updateNoRefresh();
+			}
+		};
+
+		// save client note
+		$scope.saveClientNote = function(){
+
+			if(typeof $scope.clientNotes !== 'undefined' && this.clientNotes !== ''){
+				var now = new Date();
+				var item = {
+							date: now.toJSON(), 
+							userid: Authentication.user._id, 
+							username: Authentication.user.displayName, 
+							item: this.clientNotes, 
+							deleted: false
+						};
+
+				$scope.project.clientNotes.push(item);
+
+				// send update email
+				$scope.gatherToAddresses('saveDiscussion');
+			    $scope.email.subject = $scope.project.title + ' client note added';
+			    $scope.email.message = 'Client Note Item: ' + this.clientNotes + '<br>';
+			    $scope.email.message += 'Project: ' + $scope.project.title + '<br>';
+			    $scope.email.message += 'Added by: ' + Authentication.user.displayName + '<br>';
+			    $scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '<br>';
+
+				this.clientNotes = '';
 
 			    $http.post('/projects/sendemail', {
 					email: $scope.email

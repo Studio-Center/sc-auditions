@@ -183,8 +183,16 @@
 					<div class="row">
 						<div class="col-md-12">
 							<h3>Notes</h4>
-							<textarea ng-model="project.clientNotes" name="project.clientNotes" class="form-control" style="height:300px"></textarea>
-							<button style="float:right" class="btn btn-primary" ng-click="updateNoRefresh()">Save</button>
+							<textarea ng-model="clientNotes" name="clientNotes" class="form-control" style="height:250px"></textarea>
+							<button style="float:right" class="btn btn-primary" ng-click="saveClientNote()">Save</button>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<div ng-repeat="(key, note) in project.clientNotes | orderBy:'-date':reverse">
+								<h5><strong>{{note.date | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST - {{note.username}}</strong></h5>
+								<pre>{{note.item | linky:'_blank'}}</pre>
+							</div>
 						</div>
 					</div>
 				</div>
