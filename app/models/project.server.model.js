@@ -88,8 +88,8 @@ var ProjectSchema = new Schema({
 		default: ['Sounders']
 	},
 	scripts: {
-		type: Array,
-		required: 'You must assign a script'
+		type: Array
+		//required: 'You must assign a script'
 	},
 	referenceFiles: {
 		type: Array
