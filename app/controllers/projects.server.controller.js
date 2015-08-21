@@ -89,7 +89,7 @@ exports.sendEmail = function(req, res){
 				var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
 				var mailOptions = {
 				    to: email.to,
-				    cc: 'audition­-notification@studiocenter.com',
+				    cc: 'audition­\-notification@studiocenter.com',
 				    bcc: bcc,
 				    from: config.mailer.from,
 				    subject: email.subject,
@@ -182,7 +182,7 @@ var emailTalent = function(selTalent, talentInfo, email, project, req, res){
 				to: talentInfo.email,
 				from: owner.email || config.mailer.from,
 				replyTo: owner.email || config.mailer.from,
-				cc: 'audition­-notification@studiocenter.com',
+				cc: 'audition­\-notification@studiocenter.com',
 				subject: emailSubject,
 				html: talentEmailHTML
 			};
@@ -396,7 +396,7 @@ exports.sendTalentCanceledEmail = function(req, res){
 									to: talentInfo.email,
 									from: owner.email || config.mailer.from,
 									replyTo: owner.email || config.mailer.from,
-									cc: 'audition­-notification@studiocenter.com',
+									cc: 'audition­\-notification@studiocenter.com',
 									subject: emailSubject,
 									html: talentEmailHTML
 								};
@@ -800,7 +800,7 @@ exports.sendClientEmail = function(req, res){
 										to: curClient.email,
 										from: owner.email || req.user.email || config.mailer.from,
 										replyTo: owner.email || req.user.email || config.mailer.from,
-										cc: 'audition­-notification@studiocenter.com',
+										cc: 'audition­\-notification@studiocenter.com',
 										bcc: bccList || config.mailer.from,
 										subject: emailSubject,
 										html: clientEmailHTML
@@ -857,7 +857,7 @@ exports.lead = function(req, res){
 	transporter.sendMail({
 	    from: config.mailer.from,
 	    to: 'scripts@studiocenter.com',
-	    cc: 'audition­-notification@studiocenter.com',
+	    cc: 'audition­\-notification@studiocenter.com',
 	    subject: 'Start a new Audition Project Form Submission',
 	    text: emailBody,
 	    attachments: attachements
@@ -903,7 +903,7 @@ var emailClients = function(client, email, project, req, res){
 									to: client.email,
 									from: req.user.email || config.mailer.from,
 									replyTo: req.user.email || config.mailer.from,
-									cc: 'audition­-notification@studiocenter.com',
+									cc: 'audition­\-notification@studiocenter.com',
 									subject: emailSubject,
 									html: clientEmailHTML
 								};
@@ -1175,7 +1175,7 @@ exports.create = function(req, res) {
 				
 				var mailOptions = {
 					to: email.bcc,
-					cc: 'audition­-notification@studiocenter.com',
+					cc: 'audition­\-notification@studiocenter.com',
 					from: req.user.email || config.mailer.from,
 					replyTo: req.user.email || config.mailer.from,
 					subject: email.subject,
@@ -2316,7 +2316,7 @@ exports.bookAuditions = function(req, res, next){
 
 			var mailOptions = {
 				to: clientsEmails,
-				cc: [ownerInfo.email, 'audition­-notification@studiocenter.com'],
+				cc: [ownerInfo.email, 'audition­\-notification@studiocenter.com'],
 				from: ownerInfo.email || config.mailer.from,
 				replyTo: ownerInfo.email || config.mailer.from,
 				subject: emailSubject,
