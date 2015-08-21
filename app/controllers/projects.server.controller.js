@@ -930,6 +930,9 @@ var moveFile = function(tempPath, newPath){
  * Create a Project
  */
 exports.create = function(req, res) {
+
+	// method vars
+	var i, j;
 	var project = new Project(req.body);
 	project.user = req.user;
 
@@ -955,7 +958,7 @@ exports.create = function(req, res) {
 
 		// move new saved files from temp to project id based directory
 		if(typeof project.scripts !== 'undefined'){
-			for(var i = 0; i < project.scripts.length; ++i){
+			for(i = 0; i < project.scripts.length; ++i){
 				if(typeof project.scripts[i] !== 'undefined'){
 					appDir = path.dirname(require.main.filename);
 				    tempPath = appDir + '/public/res/scripts/temp/' + project.scripts[i].file.name;
@@ -975,7 +978,7 @@ exports.create = function(req, res) {
 			}
 		}
 		if(typeof project.referenceFiles !== 'undefined'){
-			for(var j = 0; j < project.referenceFiles.length; ++j){
+			for(j = 0; j < project.referenceFiles.length; ++j){
 				if(typeof project.referenceFiles[j] !== 'undefined'){
 					appDir = path.dirname(require.main.filename);
 				    tempPath = appDir + '/public/res/referenceFiles/temp/' + project.referenceFiles[j].file.name;
@@ -991,6 +994,56 @@ exports.create = function(req, res) {
 				    newPath += project.referenceFiles[j].file.name;
 
 				    moveFile(tempPath, newPath);
+				}
+			}
+		}
+
+		// move copied ref and script files for re-auditioned projects
+		if(req.body.status === 'ReAuditioned'){
+			if(typeof req.body.copiedScripts !== 'undefined'){
+				for(i = 0; i < req.body.copiedScripts.length; ++i){
+					if(typeof req.body.copiedScripts[i] !== 'undefined'){
+						appDir = path.dirname(require.main.filename);
+					    tempPath = appDir + '/public/res/scripts/' + req.body.id + '/' + req.body.copiedScripts[i].file.name;
+					    relativePath =  'res/scripts/' + project._id + '/';
+					    newPath = appDir + '/public/' + relativePath;
+
+					    // create project directory if not found
+					    if (!fs.existsSync(newPath)) {
+					    	fs.mkdirSync(newPath);
+					    }
+
+					    // add file path
+					    newPath += req.body.copiedScripts[i].file.name;
+
+					    moveFile(tempPath, newPath);
+
+					    // add script file to project ref list
+					    project.scripts.push(req.body.copiedScripts[i]);
+					}
+				}
+			}
+			if(typeof req.body.copiedReferenceFiles !== 'undefined'){
+				for(j = 0; j < req.body.copiedReferenceFiles.length; ++j){
+					if(typeof req.body.copiedReferenceFiles[j] !== 'undefined'){
+						appDir = path.dirname(require.main.filename);
+					    tempPath = appDir + '/public/res/referenceFiles/' + req.body.id + '/' + req.body.copiedReferenceFiles[j].file.name;
+					    relativePath =  'res/referenceFiles/' + project._id + '/';
+					    newPath = appDir + '/public/' + relativePath;
+
+					    // create project directory if not found
+					    if (!fs.existsSync(newPath)) {
+					    	fs.mkdirSync(newPath);
+					    }
+
+					    // add file path
+					    newPath += req.body.copiedReferenceFiles[j].file.name;
+
+					    moveFile(tempPath, newPath);
+
+					    // add ref file to project ref list
+					    project.referenceFiles.push(req.body.copiedReferenceFiles[j]);
+					}
 				}
 			}
 		}
