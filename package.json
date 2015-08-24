@@ -1,7 +1,7 @@
 {
   "name": "studio-center-auditions",
   "description": "Studio Center auditions project management system",
-  "version": "0.9",
+  "version": "0.9.0",
   "author": "Studio Center",
   "engines": {
     "node": "0.10.x",

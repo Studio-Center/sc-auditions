@@ -346,7 +346,7 @@
 									<select class="form-control" ng-model="talentStatus[member.talentId]" ng-init="talentStatus[member.talentId] = $parent.getTalentStatus(member.talentId) || talentStatus[0]" style="width:100px" ng-change="$parent.updateTalentStatus(member.talentId, talentStatus[member.talentId])" ng-options="item for item in talentStatus"></select>
 								</td>
 								<td>
-									{{project.talent[key].part}}
+									{{member.part}}
 								</td>
 								<td>
 									<button class="btn btn-primary" ng-click="$parent.sendTalentEmail(member.talentId)"><img style="width:30px;height:auto" src="/img/envelope.png" alt="envelope image"></button>
