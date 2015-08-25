@@ -841,6 +841,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			// gen talent object
 			var talent = {'talentId': talentId, 'name': talentName, 'email': email, 'booked': false, 'status': 'Cast', part: $scope.parts[talentId] || '', regular: false, requested: true};
 
+			$scope.addTalent = false;
+
 			// check for existing item
 			var found = 0;
 			for(var i = 0; i < $scope.project.talent.length; ++i){
@@ -875,6 +877,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		    }).
 			success(function(data, status, headers, config) {
 				$scope.project = angular.extend($scope.project, data);
+
+				$scope.addTalent = true;
 			});
 
 			// update project store
