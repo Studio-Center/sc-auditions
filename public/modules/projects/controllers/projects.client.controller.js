@@ -1296,6 +1296,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					$scope.newProject.scripts = [];
 					$scope.newProject.copiedReferenceFiles = $scope.newProject.referenceFiles;
 					$scope.newProject.referenceFiles = [];
+					$scope.newProject.estimatedCompletionDate = '';
 				});
 
 				$scope.newProjTalentLink = 'createDupProject.talent';
