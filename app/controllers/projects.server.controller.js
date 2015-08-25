@@ -1386,6 +1386,8 @@ exports.update = function(req, res) {
 
 							moveFile(file, newFile);
 
+							project.markModified('auditions');
+
 						}
 					}
 				}
