@@ -1941,6 +1941,8 @@ exports.uploadAudition = function(req, res, next){
 
 	// method vars
 	var audTalent = '';
+	var firstName = '';
+	var lastNameCode = '';
 
 	// We are able to access req.files.file thanks to 
     // the multiparty middleware
@@ -1971,13 +1973,12 @@ exports.uploadAudition = function(req, res, next){
 	var regStrOP = regStr[1];
 
 	var lastNm = /([A-Z])[a-z]+$/.exec(regStrOP);
-	var lastNmPos = lastNm.index;
+	if(lastNm !== null){
+		var lastNmPos = lastNm.index;
 
-	var firstName = regStrOP.slice(0,lastNmPos);
-	var lastNameCode = regStrOP.slice(lastNmPos, regStrOP.length);
-
-	console.log(firstName);
-	console.log(lastNameCode);
+		firstName = regStrOP.slice(0,lastNmPos);
+		lastNameCode = regStrOP.slice(lastNmPos, regStrOP.length);
+	}
 
     mv(tempPath, newPath, function(err) {
         //console.log(err);
@@ -1985,8 +1986,6 @@ exports.uploadAudition = function(req, res, next){
             res.status(500).end();
         }else{
         	Talent.findOne({'name': new RegExp('^'+firstName+'$', "i"), 'lastNameCode': new RegExp('^'+lastNameCode+'$', "i")}).sort('-created').exec(function(err, talent) {
-
-        		console.log(talent);
 
 	            Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
 					if (err) return next(err);
