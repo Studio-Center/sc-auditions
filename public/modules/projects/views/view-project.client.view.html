@@ -260,6 +260,10 @@
 										</p>
 									</td>
 									<td>
+										<div ng-if="project.auditions[key].talent == ''">
+											<img src="img/warning.jpg" alt="talent warning icon" style="width:20px;height:auto">
+											Talent Not Assigned
+										</div>
 										<select ng-model="project.auditions[key].talent" ng-change="$parent.updateNoRefresh()">
 					                        <option ng-repeat="talent in project.talent" ng-selected="project.auditions[key].talent == talent.talentId" value="{{talent.talentId}}">{{talent.name}}</option>
 					                    </select>
