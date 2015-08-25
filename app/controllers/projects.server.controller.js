@@ -1992,22 +1992,26 @@ exports.uploadAudition = function(req, res, next){
 					if (! project) return next(new Error('Failed to load Project '));
 					req.project = project ;
 
-					// if talent found search project for existing assignment
-					if(talent !== null){
+					// walk through project talent, look for existing assignment
+					async.eachSeries(project.talent, function (curTalent, talentCallback) {
+						if(talent !== null){
+							if(String(talent._id) === curTalent.talentId){
+								audTalent = curTalent.talentId;
 
-						// walk through project talent, look for existing assignment
-						for(var i = 0; i < project.talent.length; ++i){
-							// talent found assigned to project
-							if(String(talent._id) === project.talent[i].talentId){
-								audTalent = project.talent[i].talentId;
+								project.talent[project.talent.indexOf(curTalent)].status = 'Posted';
 
-								project.talent[i].status = 'Posted';
+								project.markModified('talent');
+
+								talentCallback();
+							} else {
+								talentCallback();
 							}
+						} else {
+							talentCallback();
 						}
-
-					}
-
-					var audition = {
+					}, function (err) {
+						
+						var audition = {
 								file: req.files.file, 
 								discussion: [], 
 								description: '',
@@ -2027,25 +2031,28 @@ exports.uploadAudition = function(req, res, next){
 											}
 										}
 								};
-					//console.log(audition);
-					// assign script object to body
-					project.auditions.push(audition);
+						//console.log(audition);
+						// assign script object to body
+						project.auditions.push(audition);
 
-					project = _.extend(req.project, project);
+						project = _.extend(req.project, project.toObject());
 
-					project.save(function(err) {
-						if (err) {
-							return res.status(400).send({
-								message: errorHandler.getErrorMessage(err)
-							});
-						} else {
-							var socketio = req.app.get('socketio');
-							socketio.sockets.emit('projectUpdate', {id: project._id}); 
-							socketio.sockets.emit('callListUpdate', {filter: ''}); 
-							return res.jsonp(project);
-							
-						}
-					});
+						project.save(function(err) {
+							if (err) {
+								return res.status(400).send({
+									message: errorHandler.getErrorMessage(err)
+								});
+							} else {
+								var socketio = req.app.get('socketio');
+								socketio.sockets.emit('projectUpdate', {id: project._id}); 
+								socketio.sockets.emit('callListUpdate', {filter: ''}); 
+								return res.jsonp(project);
+								
+							}
+						});
+
+				   	});
+					
 				});
 
 			});
