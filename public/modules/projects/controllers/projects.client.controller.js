@@ -14,6 +14,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.ratings = [];
 		$scope.ratingsAvg = [];
 		// static project options
+		$scope.addTalent = true;
 		$scope.newProjTalentLink = 'createProject.talent';
 		$scope.newProjLink = 'createProject.project';
 		ngAudioGlobals.unlock = false;
@@ -793,6 +794,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			// gen talent object
 			var talent = {'talentId': talentId, 'name': talentName, 'email': email, 'booked': false, 'status': 'Cast', part: $scope.parts[talentId] || '', regular: true, requested: false};
 
+			$scope.addTalent = false;
+
 			// check for existing item
 			var found = 0, selTalent;
 			for(var i = 0; i < $scope.project.talent.length; ++i){
@@ -827,6 +830,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		    }).
 			success(function(data, status, headers, config) {
 				$scope.project = angular.extend($scope.project, data);
+
+				$scope.addTalent = true;
 			});
 
 			// update project store
