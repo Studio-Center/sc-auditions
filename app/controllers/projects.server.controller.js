@@ -1938,6 +1938,10 @@ exports.uploadTempScript = function(req, res, next){
 
 // file upload
 exports.uploadAudition = function(req, res, next){
+
+	// method vars
+	var audTalent = '';
+
 	// We are able to access req.files.file thanks to 
     // the multiparty middleware
     var file = req.files.file;
@@ -1960,56 +1964,91 @@ exports.uploadAudition = function(req, res, next){
 
     // add file path
     newPath += file.name;
-
     //console.log(newPath);
+
+    // strip talent name and last name code from audition
+    var regStr = /([a-zA-Z]+)\.\w{3}$/i.exec(file.name);
+	var regStrOP = regStr[1];
+
+	var lastNm = /([A-Z])[a-z]+$/.exec(regStrOP);
+	var lastNmPos = lastNm.index;
+
+	var firstName = regStrOP.slice(0,lastNmPos);
+	var lastNameCode = regStrOP.slice(lastNmPos, regStrOP.length);
+
+	console.log(firstName);
+	console.log(lastNameCode);
 
     mv(tempPath, newPath, function(err) {
         //console.log(err);
         if (err){
             res.status(500).end();
         }else{
-            Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
-				if (err) return next(err);
-				if (! project) return next(new Error('Failed to load Project '));
-				req.project = project ;
+        	Talent.findOne({'name': new RegExp('^'+firstName+'$', "i"), 'lastNameCode': new RegExp('^'+lastNameCode+'$', "i")}).sort('-created').exec(function(err, talent) {
 
-				var audition = {
-							file: req.files.file, 
-							discussion: [], 
-							description: '',
-							rating: [], 
-							published: true,
-							rename: '',
-							avgRating: 0,
-							favorite: 0,
-							approved: 
-									{
-										by: 
-										{
-											userId: req.user._id,
-											date: now.toJSON(), 
-											name: req.user.displayName
-										}
-									}
-							};
-				//console.log(audition);
-				// assign script object to body
-				project.auditions.push(audition);
+        		console.log(talent);
 
-				project = _.extend(req.project, project);
+	            Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
+					if (err) return next(err);
+					if (! project) return next(new Error('Failed to load Project '));
+					req.project = project ;
 
-				project.save(function(err) {
-					if (err) {
-						return res.status(400).send({
-							message: errorHandler.getErrorMessage(err)
-						});
-					} else {
-						var socketio = req.app.get('socketio');
-						socketio.sockets.emit('projectUpdate', {id: project._id}); 
-						socketio.sockets.emit('callListUpdate', {filter: ''}); 
-						return res.jsonp(project);
+					// if talent found search project for existing assignment
+					if(talent !== null){
+
+						// walk through project talent, look for existing assignment
+						for(var i = 0; i < project.talent.length; ++i){
+							// talent found assigned to project
+							if(String(talent._id) === project.talent[i].talentId){
+								audTalent = project.talent[i].talentId;
+
+								project.talent[i].status = 'Posted';
+							}
+						}
+
 					}
+
+					var audition = {
+								file: req.files.file, 
+								discussion: [], 
+								description: '',
+								rating: [], 
+								published: true,
+								rename: '',
+								avgRating: 0,
+								favorite: 0,
+								talent: audTalent,
+								approved: 
+										{
+											by: 
+											{
+												userId: req.user._id,
+												date: now.toJSON(), 
+												name: req.user.displayName
+											}
+										}
+								};
+					//console.log(audition);
+					// assign script object to body
+					project.auditions.push(audition);
+
+					project = _.extend(req.project, project);
+
+					project.save(function(err) {
+						if (err) {
+							return res.status(400).send({
+								message: errorHandler.getErrorMessage(err)
+							});
+						} else {
+							var socketio = req.app.get('socketio');
+							socketio.sockets.emit('projectUpdate', {id: project._id}); 
+							socketio.sockets.emit('callListUpdate', {filter: ''}); 
+							return res.jsonp(project);
+							
+						}
+					});
 				});
+
 			});
             //res.status(200).end();
         }
