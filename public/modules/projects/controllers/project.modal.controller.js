@@ -121,7 +121,7 @@ angular.module('projects').controller('ProjectsModalController', ['$scope', '$st
 			if(typeof fileDir === 'undefined'){
 				fileName = '/res/auditions/' + $scope.project._id + '/' + filename;
 			} else {
-				fileName = fileDir + '/' + filename
+				fileName = fileDir + '/' + filename;
 			}
 
 			// if(typeof $scope.audio === 'object'){

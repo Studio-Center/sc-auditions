@@ -1805,7 +1805,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			if(typeof fileDir === 'undefined'){
 				fileName = '/res/auditions/' + $scope.project._id + '/' + filename;
 			} else {
-				fileName = fileDir + '/' + filename
+				fileName = fileDir + '/' + filename;
 			}
 
 			// if(typeof $scope.audio === 'object'){
@@ -1861,7 +1861,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			if(typeof fileDir === 'undefined'){
 				fileName = '/res/auditions/' + $scope.project._id + '/' + filename;
 			} else {
-				fileName = fileDir + '/' + filename
+				fileName = fileDir + '/' + filename;
 			}
 
 			$scope.audio = ngAudio.load(fileName);
@@ -2244,7 +2244,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			        //console.log(data);
 			        $scope.auditions = [];
 
-			        alert('Auditions have been submitted. Thank you!')
+			        alert('Auditions have been submitted. Thank you!');
 			    });
 
 			}

@@ -208,8 +208,7 @@ var sendTalentEmail = function(req, res, project, talent, override){
 		},
 		// generate email body
 		function(talentInfo, done) {
-			if(talentInfo.type.toLowerCase() === 'email' || override === true){
-				var email =  {
+			var email =  {
 								projectId: '',
 								to: [],
 								bcc: [],
@@ -219,6 +218,7 @@ var sendTalentEmail = function(req, res, project, talent, override){
 								scripts: '',
 								referenceFiles: ''
 							};
+			if(talentInfo.type.toLowerCase() === 'email' || override === true){
 				var i;
 
 				// add scripts and assets to email body
@@ -679,11 +679,11 @@ function inWords (num) {
     if ((num = num.toString()).length > 9) return 'overflow';
     var n = ('000000000' + num).substr(-9).match(/^(\d{2})(\d{2})(\d{2})(\d{1})(\d{2})$/);
     if (!n) return; var str = '';
-    str += (n[1] != 0) ? (a[Number(n[1])] || b[n[1][0]] + ' ' + a[n[1][1]]) : '';
-    str += (n[2] != 0) ? (a[Number(n[2])] || b[n[2][0]] + ' ' + a[n[2][1]]) : '';
-    str += (n[3] != 0) ? (a[Number(n[3])] || b[n[3][0]] + ' ' + a[n[3][1]])  : '';
-    str += (n[4] != 0) ? (a[Number(n[4])] || b[n[4][0]] + ' ' + a[n[4][1]]) : '';
-    str += (n[5] != 0) ? ((str != '') ? 'and ' : '') + (a[Number(n[5])] || b[n[5][0]] + ' ' + a[n[5][1]]) : '';
+    str += (n[1] !== 0) ? (a[Number(n[1])] || b[n[1][0]] + ' ' + a[n[1][1]]) : '';
+    str += (n[2] !== 0) ? (a[Number(n[2])] || b[n[2][0]] + ' ' + a[n[2][1]]) : '';
+    str += (n[3] !== 0) ? (a[Number(n[3])] || b[n[3][0]] + ' ' + a[n[3][1]])  : '';
+    str += (n[4] !== 0) ? (a[Number(n[4])] || b[n[4][0]] + ' ' + a[n[4][1]]) : '';
+    str += (n[5] !== 0) ? ((str !== '') ? 'and ' : '') + (a[Number(n[5])] || b[n[5][0]] + ' ' + a[n[5][1]]) : '';
     return str;
 }
 
@@ -771,7 +771,7 @@ exports.sendClientEmail = function(req, res){
 
 					var bccList = [];
 					for(i = 0; i < directors.length; ++i){
-						if(req.user.email != directors[i].email && owner.email != directors[i].email) {
+						if(req.user.email !== directors[i].email && owner.email !== directors[i].email) {
 							bccList.push(directors[i].email);
 						}
 					}
@@ -1986,7 +1986,7 @@ exports.uploadAudition = function(req, res, next){
         if (err){
             res.status(500).end();
         }else{
-        	Talent.findOne({'name': new RegExp('^'+firstName+'$', "i"), 'lastNameCode': new RegExp('^'+lastNameCode+'$', "i")}).sort('-created').exec(function(err, talent) {
+        	Talent.findOne({'name': new RegExp('^'+firstName+'$', 'i'), 'lastNameCode': new RegExp('^'+lastNameCode+'$', 'i')}).sort('-created').exec(function(err, talent) {
 
 	            Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
 					if (err) return next(err);
