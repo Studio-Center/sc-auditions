@@ -237,7 +237,7 @@ exports.create = function(req, res) {
 					to: user.email,
 					from: adminEmail || config.mailer.from,
 					replyTo: adminEmail || config.mailer.from,
-					cc: 'audition-­notification@studiocenter.com',
+					cc: 'audition\-­notification@studiocenter.com',
 					subject: emailSubject,
 					html: clientEmailHTML
 				};
