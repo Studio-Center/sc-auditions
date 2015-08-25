@@ -354,7 +354,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
       		var hours = Math.abs(projDate - now) / 36e5;
 
-      		if(hours < 1){
+      		if(hours <= 1){
       			return true;
       		}
       	};

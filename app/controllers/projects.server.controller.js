@@ -1972,7 +1972,8 @@ exports.uploadAudition = function(req, res, next){
     var regStr = /([a-zA-Z]+)\.\w{3}$/i.exec(file.name);
 	var regStrOP = regStr[1];
 
-	var lastNm = /([A-Z])[a-z]+$/.exec(regStrOP);
+	var lastNm = /([A-Z])[a-z]*$/.exec(regStrOP);
+	console.log(regStrOP);
 	if(lastNm !== null){
 		var lastNmPos = lastNm.index;
 
