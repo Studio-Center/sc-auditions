@@ -356,6 +356,23 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
       		if(hours <= 1){
       			return true;
+      		} else {
+     			return false;
+      		}
+      	};
+      	$scope.compareDatesDay = function(projDate){
+      		var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
+
+      		var now = new Date();
+      		projDate = new Date(projDate);
+
+      		var diffDays = Math.round(Math.abs((projDate.getTime() - now.getTime())/(oneDay)));
+
+
+      		if(Number(diffDays) >= 1){
+      			return true;
+      		} else {
+     			return false;
       		}
       	};
       	$scope.checkPassed = function(projDate){
@@ -364,6 +381,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
       		if(now > projDate){
       			return true;
+      		} else {
+      			return false;
       		}
       	};
 

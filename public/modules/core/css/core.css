@@ -56,6 +56,9 @@
 	text-decoration:line-through;
 }
 /* background color codes */
+.defClr{
+	background:#fff !important;
+}
 .blueBg{
 	background:#4580ed !important;
 	color:#fff !important;
