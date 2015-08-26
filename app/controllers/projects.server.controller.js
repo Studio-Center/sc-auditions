@@ -123,6 +123,12 @@ var emailTalent = function(selTalent, talentInfo, email, project, req, res){
 		},
 		function(owner, done) {
 
+			var emailTmpl = 'templates/projects/new-project-talent-email';
+			// load language specific email templates
+			if(talentInfo.prefLanguage === 'Spanish'){
+				emailTmpl = 'templates/projects/new-project-talent-email-spanish';
+			}
+
 			var newDate = new Date(project.estimatedCompletionDate);
 			newDate = newDate.setHours(newDate.getHours() - 1);
 			newDate = dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT');
@@ -138,8 +144,14 @@ var emailTalent = function(selTalent, talentInfo, email, project, req, res){
 
 			// assign part text
 			if(typeof selTalent.part !== 'undefined'){
-				if(selTalent.part !== ''){
-					part = '<p>You are cast for the part of ' + selTalent.part + '</p>';
+				if(talentInfo.prefLanguage !== 'Spanish'){
+					if(selTalent.part !== ''){
+						part = '<p>You are cast for the part of ' + selTalent.part + '</p>';
+					}
+				} else {
+					if(selTalent.part !== ''){
+						part = '<p>Usted está echado para el papel de ' + selTalent.part + '</p>';
+					}
 				}
 			}
 
@@ -149,7 +161,7 @@ var emailTalent = function(selTalent, talentInfo, email, project, req, res){
 				requestedTxt = 'REQUESTED ';
 			}
 
-			res.render('templates/projects/new-project-talent-email', {
+			res.render(emailTmpl, {
 				email: email,
 				emailSignature: emailSig,
 				dueDate: newDate,

@@ -13,8 +13,10 @@ angular.module('talents').controller('TalentsModalController', ['$scope', '$stat
 		$scope.unionJoinedOpts = ['SAG/AFTRA', 'OTHER'];
 		$scope.unionSelected = [];
 		$scope.unionJoinSelected = [];
-		$scope.typeSelected = [];
+		$scope.prefLangOpts = ['English', 'Spanish'];
+		$scope.typeSelected = 'Email';
 		$scope.selTypecasts = [];
+		$scope.prefLanguage = 'English';
 		// store talent project data
 		$scope.projectTalentIdx = [];
 		$scope.talentStatus = ['Cast', 'Emailed', 'Scheduled', 'Message left', 'Out', 'Received needs to be posted', 'Posted', 'Not Posted (Bad Read)'];
@@ -128,7 +130,8 @@ angular.module('talents').controller('TalentsModalController', ['$scope', '$stat
 				parentName: this.parentName,
 				producerOptional: this.producerOptional,
 				unionJoined: this.unionJoinSelected,
-				demoLink: this.demoLink
+				demoLink: this.demoLink,
+				prefLanguage: this.prefLanguage
 			});
 
 			// Redirect after save

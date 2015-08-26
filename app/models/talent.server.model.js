@@ -96,6 +96,9 @@ var TalentSchema = new Schema({
 	typeCasts: {
 		type: Array
 	},
+	prefLanguage: {
+		type: String
+	},
 	created: {
 		type: Date,
 		default: Date.now
