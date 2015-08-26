@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+</head>
+
+<body>
+
+	<div class="list-group">
+    	<div class="row">
+    		{% if count %}
+				{% for key, project in results %}
+				<h4><a href="/#!/projects/{{project.project._id}}" target="_blank">{{project.project.title}}</a></h4>
+					{% for key, talent in project.talents %}
+						<div>{{talent.name}} - {{talent.status}}</div>
+					{% endfor %}
+				{% endfor %}
+			{% else %}
+				<p>No missing auditions found.</p>
+			{% endif %}
+    	</div>
+    </div>
+
+</body>
+
+</html>

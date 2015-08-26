@@ -24,8 +24,186 @@ var mongoose = require('mongoose'),
 	moment = require('moment-timezone'),
 	now = new Date();
 
+exports.emailMissingAuds = function(req, res){
+
+	var callTalents = {}, talentId, missingCnt = 0;
+
+	var yesterday = new Date();
+	//yesterday.setDate(yesterday.getDate() - 1);
+	var tomorrow = new Date();
+	tomorrow.setDate(tomorrow.getDate() + 1);
+
+	var searchCriteria = {'estimatedCompletionDate': {$gte: yesterday, $lt: tomorrow}};
+
+	Project.find(searchCriteria).sort('-estimatedCompletionDate').populate('project', 'displayName').exec(function(err, projects) {
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+
+			async.waterfall([
+				function(done) {
+					User.find({'roles':'admin'}).sort('-created').exec(function(err, admins) {
+						done(err, admins);
+					});
+				},
+				function(admins, done) {
+					User.find({'roles':'producer/auditions director'}).sort('-created').exec(function(err, directors) {
+						done(err, admins, directors);
+					});
+				},
+				function(admins, directors, done) {
+					User.find({'roles':'production coordinator'}).sort('-created').exec(function(err, coordinators) {
+						done(err, admins, directors, coordinators);
+					});
+				},
+				function(admins, directors, coordinators, done) {
+					User.find({'roles':'talent director'}).sort('-created').exec(function(err, talentdirectors) {
+						done(err, admins, directors, coordinators, talentdirectors);
+					});
+				},
+				function(admins, directors, coordinators, talentdirectors, done) {
+
+					// add previously queried roles to email list
+					var i, to = [];
+					for(i = 0; i < admins.length; ++i){
+						to.push(admins[i].email);
+					}
+					for(i = 0; i < directors.length; ++i){
+						to.push(directors[i].email);
+					}
+					for(i = 0; i < coordinators.length; ++i){
+						to.push(coordinators[i].email);
+					}
+					for(i = 0; i < talentdirectors.length; ++i){
+						to.push(talentdirectors[i].email);
+					}
+
+					done('', to);
+				},
+				function(to, done) {
+				
+					// walk through found projects
+					async.forEach(projects, function (project, callback) {
+						// walk through found talents
+						if(typeof project.talent !== 'undefined' && project.talent.length > 0){
+
+							// create project object
+							callTalents[project._id] = {
+														project: {
+																	_id: '', 
+																	title: '', 
+																	estimatedCompletionDate: ''
+																},
+														missingAudsCnt: 0,
+														talents: []
+														};
+							callTalents[project._id].project._id = project._id;
+							callTalents[project._id].project.title = project.title;
+							callTalents[project._id].project.estimatedCompletionDate = project.estimatedCompletionDate;
+
+							// walk through project found talent
+							async.forEach(project.talent, function (talent, talentCallback) {
+
+								if(typeof talent !== 'undefined'){
+
+									async.waterfall([
+										// gather info for selected talent
+										function(done) {
+											Talent.findOne({'_id':talent.talentId}).sort('-created').exec(function(err, talentInfo) {
+												done(err, talentInfo);
+											});
+										},
+										function(talentInfo, done){
+
+											if(talent.status !== 'Out' && talent.status !== 'Posted' && talent.status !== 'Not Posted (Bad Read)'){
+												callTalents[project._id].talents.push(talent);
+												talentId = callTalents[project._id].talents.length - 1;
+												callTalents[project._id].talents[talentId].data = talentInfo;
+												++callTalents[project._id].missingAudsCnt;
+												++missingCnt;
+											} 
+											done('');
+										}
+										], function(err) {
+										if (err) {
+											return res.json(400, err);
+										} else {
+											talentCallback();
+										}
+									});
+
+								}
+
+							}, function (err) {
+								if( err ) {
+									return res.status(400).send({
+										message: errorHandler.getErrorMessage(err)
+									});
+								} else {
+					            	callback();
+								}
+				           	});
+
+						} else {
+
+							callback();
+
+						}
+					
+					}, function (err) {
+
+						res.render('templates/missing-auds-email', {
+							count: missingCnt,
+							results:callTalents
+						}, function(err, missingAudsEmailHTML) {
+							done(err, missingAudsEmailHTML, to);
+						});
+
+		           	});
+
+				},
+				// generate email
+				function(missingAudsEmailHTML, to, done) {
+
+					// send email
+					var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
+					var newDate = new Date();
+
+					// assign email subject line
+					var emailSubject = ' Missing Auditions Report - ' + dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
+
+					var mailOptions = {
+						to: to,
+						from: config.mailer.from,
+						replyTo: config.mailer.from,
+						cc: 'audition­\-notification@studiocenter.com',
+						subject: emailSubject,
+						html: missingAudsEmailHTML
+					};
+
+					transporter.sendMail(mailOptions, function(err){
+						done(err);
+					});
+
+				}
+			], function(err) {
+				if (err) {
+					return console.log(err);
+				} else {
+					return res.status(400);
+				}
+			});
+			
+		}
+	});
+
+};
+
 // methods for missing auditions report
 exports.findMissingAuds = function(req, res){
+
 	var callTalents = {}, talentId, missingCnt = 0;
 
 	var yesterday = new Date(req.body.dateFilter);
