@@ -14,6 +14,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.ratings = [];
 		$scope.ratingsAvg = [];
 		// static project options
+		$scope.showDateEdit = false;
 		$scope.addTalent = true;
 		$scope.newProjTalentLink = 'createProject.talent';
 		$scope.newProjLink = 'createProject.project';
@@ -1880,6 +1881,37 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				$scope.audio.play();
 			}
 		});
+
+		$scope.updateDueDate = function(){
+			var discussion = 'Due date and time extended by ' + Authentication.user.displayName;
+			var now = new Date();
+			var item = {
+				date: now.toJSON(), 
+				userid: '', 
+				username: 'System', 
+				item: discussion, 
+				deleted: false
+			};
+
+			$scope.project.discussion.push(item);
+
+			// send update email
+			$scope.gatherToAddresses('saveDiscussion');
+		    $scope.email.subject = $scope.project.title + ' - Audition Due Date and Time Extended';
+		    $scope.email.message = 'Discussion Item: ' + discussion + '<br>';
+		    $scope.email.message += 'Project: ' + $scope.project.title + '<br>';
+		    $scope.email.message += 'Added by: System<br>';
+		    $scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '<br>';
+
+			$scope.discussion = '';
+
+		    $http.post('/projects/sendemail', {
+				email: $scope.email
+			});
+			// update project store
+			//$scope.update();
+			$scope.updateNoRefresh();
+		}
 
 		// save discussion item
 		$scope.saveDiscussion = function(){
