@@ -26,7 +26,7 @@
                 </div>
 				<h4>Created by {{project.user.displayName}} {{project.created | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST</h4>
 				<a class="btn btn-primary" href="/#!/projects-client/{{project._id}}" target="_blank">Click to View in Client Portal</a>
-				<a class="btn btn-success" ng-click="showDateEdit = !showDateEdit">Extend Audition</a>
+				<a data-ng-show="permitAdminProductionCoordinator() || isOwner()" class="btn btn-success" ng-click="showDateEdit = !showDateEdit">Extend Audition</a>
 				<a data-ng-show="permitAdminProductionCoordinator() || isOwner()" class="btn btn-danger" href="/#!/projects/create/{{project._id}}">ReAudition</a>
 			</div>
 			<div class="col-lg-4 col-md-4 col-sm-4">
