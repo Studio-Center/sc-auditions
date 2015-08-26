@@ -1883,7 +1883,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		});
 
 		$scope.updateDueDate = function(){
-			var discussion = 'Due date and time extended by ' + Authentication.user.displayName;
+
+			var discussion = 'Due date and time extended to ' + moment($scope.project.estimatedCompletionDate).format('MM/DD/YYYY h:mm a') + ' EST by ' + Authentication.user.displayName;
 			var now = new Date();
 			var item = {
 				date: now.toJSON(), 
@@ -1894,6 +1895,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			};
 
 			$scope.project.discussion.push(item);
+
+			$scope.project.status = 'In Progress';
 
 			// send update email
 			$scope.gatherToAddresses('saveDiscussion');
@@ -1911,6 +1914,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			// update project store
 			//$scope.update();
 			$scope.updateNoRefresh();
+
+			$scope.showDateEdit = false;
 		}
 
 		// save discussion item
