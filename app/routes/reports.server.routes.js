@@ -18,6 +18,10 @@ module.exports = function(app) {
 	app.route('/reports/findAuditionsBooked')
 		.post(users.requiresLogin, reports.findAuditionsBooked);
 
+	// automated missing reports email
+	app.route('/reports/emailMissingAuds')
+		.get(reports.emailMissingAuds);
+
 	app.route('/reports/convertToCSV')
 		.post(users.requiresLogin, reports.convertToCSV);
 
