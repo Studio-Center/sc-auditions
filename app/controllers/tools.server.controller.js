@@ -400,8 +400,8 @@ exports.sendPreCloseSummary = function(req, res){
 				},
 				// filter selected talents
 				function(talents, owner, producers, done){
-					var shortTblHeader = '<table><tr><th>First Name</th><th>Last Name</th></tr>';
-					var longTblHeader = '<table><tr><th>First Name</th><th>Last Name</th><th>Phone #</th><th>Alt Phone #</th><th>Location</th><th>Email</th></tr>';
+					var shortTblHeader = '<table><tr><th>Project</th><th>First Name</th><th>Last Name</th></tr>';
+					var longTblHeader = '<table><tr><th>Project</th><th>First Name</th><th>Last Name</th><th>Phone #</th><th>Alt Phone #</th><th>Location</th><th>Email</th></tr>';
 					var talentPosted = '<p>Talent Posted:</p>' + shortTblHeader, 
 						talentNotCalled = '<p>Talent Not Called:</p>' + longTblHeader, 
 						talentNotPosted = '<p>Talent Not Posted:</p>' + shortTblHeader, 
@@ -416,6 +416,8 @@ exports.sendPreCloseSummary = function(req, res){
 								switch(project.talent[j].status){
 									case 'Posted':
 										talentPosted += '<tr><td>' + 
+														'<a href="http://studiocenterauditions.com/#!/projects/' + project._id + '">' + project.title + '</a>' +
+														'</td><td>' +
 														talent.name +
 														'</td><td>' +
 														talent.lastName +
@@ -423,6 +425,8 @@ exports.sendPreCloseSummary = function(req, res){
 									break;
 									case 'Cast':
 										talentNotCalled += '<tr><td>' + 
+														'<a href="http://studiocenterauditions.com/#!/projects/' + project._id + '">' + project.title + '</a>' +
+														'</td><td>' +
 														talent.name + ' ' + talent.lastName +
 														'</td><td>' +
 														talent.parentName +
@@ -442,6 +446,8 @@ exports.sendPreCloseSummary = function(req, res){
 									case 'Message left':
 									case 'Received needs to be posted':
 										talentNotPosted += '<tr><td>' + 
+														'<a href="http://studiocenterauditions.com/#!/projects/' + project._id + '">' + project.title + '</a>' +
+														'</td><td>' +
 														talent.name +
 														'</td><td>' +
 														talent.lastName +
@@ -449,6 +455,8 @@ exports.sendPreCloseSummary = function(req, res){
 									break;
 									case 'Out':
 										talentOut += '<tr><td>' + 
+														'<a href="http://studiocenterauditions.com/#!/projects/' + project._id + '">' + project.title + '</a>' +
+														'</td><td>' +
 														talent.name +
 														'</td><td>' +
 														talent.lastName +
