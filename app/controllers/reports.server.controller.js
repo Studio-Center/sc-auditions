@@ -192,7 +192,7 @@ exports.emailMissingAuds = function(req, res){
 				if (err) {
 					return console.log(err);
 				} else {
-					return res.status(400);
+					return res.status(200).send();
 				}
 			});
 			
