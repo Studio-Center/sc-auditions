@@ -546,7 +546,7 @@ exports.sendPreCloseSummary = function(req, res){
 							type: 'system',
 							sharedKey: 'N/A',
 							description: ' project ' + project.title + ' preclose summary sent',
-							user: ''
+							user: owner
 						}
 						log = new Log(log);
 						log.save();
@@ -556,7 +556,7 @@ exports.sendPreCloseSummary = function(req, res){
 							type: 'project',
 							sharedKey: String(project._id),
 							description: ' project ' + project.title + ' preclose summary sent',
-							user: ''
+							user: owner
 						}
 						log = new Log(log);
 						log.save();
