@@ -52,7 +52,7 @@
 							<table class="table table-striped">
 								<tr>
 									<th>Sel</th>
-									<th>#</th>
+									<!--<th>#</th>-->
 									<th>
 										<span><a href="" ng-click="updatePred(predicate == 'file.name' ? '-file.name' : 'file.name'); reverse=false">Name</a></span>
 										<span ng-if="predicate == '-file.name'">(^)</span>
@@ -78,9 +78,9 @@
 
 									<img ng-if="audition.booked" src="/img/green-check.png" style="width:30px;height:auto">
 								</td>
-								<td>
+								<!--<td>
 									<strong>{{key+1}}.</strong> 
-								</td>
+								</td>-->
 								<td>
 									<a href="/res/auditions/{{project._id}}/{{audition.file.name | encodeUri}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable" download="{{audition.file.name}}">ngAudio</a> 
 								</td>
