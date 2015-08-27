@@ -9,6 +9,7 @@ var mongoose = require('mongoose'),
 	User = mongoose.model('User'),
 	Talent = mongoose.model('Talent'),
 	Typecast = mongoose.model('Typecast'),
+	Log = mongoose.model('Log'),
 	fs = require('fs'),
 	rimraf = require('rimraf'),
 	config = require('../../config/config'),
@@ -200,6 +201,17 @@ var emailTalent = function(selTalent, talentInfo, email, project, req, res){
 			};
 
 			transporter.sendMail(mailOptions, function(err){
+
+				// write change to log
+				var log = {
+					type: 'talent',
+					sharedKey: selTalent.talentId,
+					description: 'sent new project email for ' + project.title,
+					user: req.user
+				}
+				log = new Log(log);
+				log.save();
+
 				done(err);
 			});
 		},
@@ -297,6 +309,7 @@ var sendTalentEmail = function(req, res, project, talent, override){
 					if (err) {
 						done(err);
 					} else {
+
 						var socketio = req.app.get('socketio');
 						socketio.sockets.emit('projectUpdate', {id: project._id}); 
 						socketio.sockets.emit('callListUpdate', {filter: ''}); 
@@ -414,6 +427,17 @@ exports.sendTalentCanceledEmail = function(req, res){
 								};
 
 								transporter.sendMail(mailOptions, function(err){
+
+									// write change to log
+									var log = {
+										type: 'talent',
+										sharedKey: selTalent.talentId,
+										description: 'sent cancelled email for ' + project.title,
+										user: req.user
+									}
+									log = new Log(log);
+									log.save();
+
 									done(err);
 								});
 
@@ -520,6 +544,17 @@ exports.updateSingleTalentStatus = function (req, res){
 			for(var i = 0; i < project.talent.length; ++i){
 				if(project.talent[i].talentId === talentId){
 					project.talent[i].status = talentStatus;
+
+					// write change to log
+					var log = {
+						type: 'talent',
+						sharedKey: talentId,
+						description: project.title + ' status updated to ' + project.talent[i].status,
+						user: req.user
+					}
+					log = new Log(log);
+					log.save();
+
 					done('', project);
 				}
 			}
@@ -628,6 +663,7 @@ exports.updateTalentNote = function (req, res){
 				req.project = project;
 
 				project.save(function(err) {
+
 					var socketio = req.app.get('socketio');
 					socketio.sockets.emit('projectUpdate', {id: project._id}); 
 					socketio.sockets.emit('callListUpdate', {filter: ''}); 
@@ -819,6 +855,16 @@ exports.sendClientEmail = function(req, res){
 									};
 
 					transporter.sendMail(mailOptions, function(){
+						// write change to log
+						var log = {
+							type: 'project',
+							sharedKey: String(req.body.project._id),
+							description: 'client ' + curClient.displayName + ' sent ' + type + ' email ' + req.body.project.title,
+							user: req.user
+						}
+						log = new Log(log);
+						log.save();
+
 						done(err);
 					});
 				}
@@ -875,6 +921,16 @@ exports.lead = function(req, res){
 	    attachments: attachements
 	});
 
+	// write change to log
+	var log = {
+		type: 'system',
+		sharedKey: String(req.user._id) || 'N/A',
+		description: 'new project lead submitted by ' + req.body.firstName + ' ' + req.body.lastName,
+		user: req.user
+	}
+	log = new Log(log);
+	log.save();
+
 	return res.status(200).send();
 };
 
@@ -921,6 +977,17 @@ var emailClients = function(client, email, project, req, res){
 								};
 
 				transporter.sendMail(mailOptions);
+
+				// write change to log
+				var log = {
+					type: 'project',
+					sharedKey: String(project._id),
+					description: 'client ' + clientInfo.displayName + ' sent project created email ' + project.title,
+					user: req.user
+				}
+				log = new Log(log);
+				log.save();
+
 			}
 		], function(err) {
 			//if (err) return console.log(err);
@@ -1270,6 +1337,17 @@ exports.create = function(req, res) {
 							message: errorHandler.getErrorMessage(err)
 						});
 					} else {
+
+						// write change to log
+						var log = {
+							type: 'project',
+							sharedKey: String(project._id),
+							description: project.title + ' project created',
+							user: req.user
+						}
+						log = new Log(log);
+						log.save();
+
 						// emit an event for all connected clients
 						var socketio = req.app.get('socketio');
 						socketio.sockets.emit('projectsListUpdate'); // emit an event for all connected clients
@@ -1307,6 +1385,16 @@ var deleteFiles = function(project){
 		// remove file if exists
 		if (fs.existsSync(file)) {
 			fs.unlinkSync(file);
+
+			// write change to log
+			var log = {
+				type: 'project',
+				sharedKey: String(project._id),
+				description: project.title + ' project file ' + project.deleteFiles[i] + ' deleted',
+				user: req.user
+			}
+			log = new Log(log);
+			log.save();
 		}
 
 		// remove file from delete queue
@@ -1355,6 +1443,16 @@ var renameFiles = function(project,res){
 		// move file if exists
 		if (fs.existsSync(file) && project.auditions[i].rename !== '') {
 			moveFile(file, newFile);
+
+			// write change to log
+			var log = {
+				type: 'project',
+				sharedKey: String(project._id),
+				description: project.title + ' project file ' + project.auditions[i].file.name + ' renamed to ' + project.auditions[i].rename,
+				user: req.user
+			}
+			log = new Log(log);
+			log.save();
 
 			// change stored file name
 			project.auditions[i].file.name = project.auditions[i].rename;
@@ -1430,6 +1528,18 @@ exports.update = function(req, res) {
 					if (err) {
 						done(err);
 					} else {
+
+						// write change to log
+						var log = {
+							type: 'project',
+							sharedKey: String(project._id),
+							description: project.title + ' project updated',
+							user: req.user
+						}
+						log = new Log(log);
+						log.save();
+
+						// update connected clients
 						var socketio = req.app.get('socketio');
 						socketio.sockets.emit('projectUpdate', {id: project._id}); 
 						socketio.sockets.emit('callListUpdate', {filter: ''}); 
@@ -1517,6 +1627,16 @@ exports.deleteById = function(req, res) {
 			rimraf.sync(auditionsDir);
 			rimraf.sync(scriptsDir);
 			rimraf.sync(referenceFilesDir);
+
+			// write change to log
+			var log = {
+				type: 'project',
+				sharedKey: String(project._id),
+				description: project.title + ' project deleted',
+				user: req.user
+			}
+			log = new Log(log);
+			log.save();
 
 			project.remove(function(err) {
 				if (err) {
@@ -1744,6 +1864,17 @@ exports.uploadFile = function(req, res, next){
         if (err){
             return res.status(500).end();
         }else{
+
+        	// write change to log
+			var log = {
+				type: 'project',
+				sharedKey: String(project._id),
+				description: project.title + ' file uploaded ' + file.name,
+				user: req.user
+			}
+			log = new Log(log);
+			log.save();
+
             return res.status(200).end();
         }
     });
@@ -1808,6 +1939,17 @@ exports.uploadScript = function(req, res, next){
 							message: errorHandler.getErrorMessage(err)
 						});
 					} else {
+
+						// write change to log
+						var log = {
+							type: 'project',
+							sharedKey: String(project._id),
+							description: project.title + ' script uploaded ' + file.name,
+							user: req.user
+						}
+						log = new Log(log);
+						log.save();
+
 						var socketio = req.app.get('socketio');
 						socketio.sockets.emit('projectUpdate', {id: project._id}); 
 						socketio.sockets.emit('callListUpdate', {filter: ''}); 
@@ -1879,6 +2021,17 @@ exports.uploadReferenceFile = function(req, res, next){
 							message: errorHandler.getErrorMessage(err)
 						});
 					} else {
+
+						// write change to log
+						var log = {
+							type: 'project',
+							sharedKey: String(project._id),
+							description: project.title + ' reference file uploaded ' + file.name,
+							user: req.user
+						}
+						log = new Log(log);
+						log.save();
+
 						var socketio = req.app.get('socketio');
 						socketio.sockets.emit('projectUpdate', {id: project._id}); 
 						socketio.sockets.emit('callListUpdate', {filter: ''}); 
@@ -2005,7 +2158,6 @@ exports.uploadAudition = function(req, res, next){
 	var regStrOP = regStr[1];
 
 	var lastNm = /([A-Z])[a-z]*$/.exec(regStrOP);
-	console.log(regStrOP);
 	if(lastNm !== null){
 		var lastNmPos = lastNm.index;
 
@@ -2076,6 +2228,17 @@ exports.uploadAudition = function(req, res, next){
 									message: errorHandler.getErrorMessage(err)
 								});
 							} else {
+
+								// write change to log
+								var log = {
+									type: 'project',
+									sharedKey: String(project._id),
+									description: project.title + ' audition uploaded ' + file.name,
+									user: req.user
+								}
+								log = new Log(log);
+								log.save();
+
 								var socketio = req.app.get('socketio');
 								socketio.sockets.emit('projectUpdate', {id: project._id}); 
 								socketio.sockets.emit('callListUpdate', {filter: ''}); 
@@ -2803,6 +2966,16 @@ exports.uploadTalentAudition = function(req, res, next){
 				//console.log(updatedProject);
 
 				project.save(function(err) {
+
+					// write change to log
+					var log = {
+						type: 'project',
+						sharedKey: String(project._id),
+						description: project.title + ' talent audition uploaded ' + file.name,
+						user: req.user
+					}
+					log = new Log(log);
+					log.save();
 
 					var socketio = req.app.get('socketio');
 						socketio.sockets.emit('projectUpdate', {id: project._id}); 

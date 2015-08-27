@@ -29,6 +29,7 @@ exports.emailMissingAuds = function(req, res){
 	var callTalents = {}, talentId, missingCnt = 0;
 
 	var yesterday = new Date();
+	yesterday.setHours(0,0,0,0);
 	//yesterday.setDate(yesterday.getDate() - 1);
 	var tomorrow = new Date();
 	tomorrow.setDate(tomorrow.getDate() + 1);
@@ -99,7 +100,7 @@ exports.emailMissingAuds = function(req, res){
 														missingAudsCnt: 0,
 														talents: []
 														};
-							callTalents[project._id].project._id = project._id;
+							callTalents[project._id].project._id = String(project._id);
 							callTalents[project._id].project.title = project.title;
 							callTalents[project._id].project.estimatedCompletionDate = project.estimatedCompletionDate;
 
