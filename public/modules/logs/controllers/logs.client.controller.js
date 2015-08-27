@@ -5,6 +5,31 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
 	function($scope, $stateParams, $location, Authentication, Logs ) {
 		$scope.authentication = Authentication;
 
+		// used for paginator
+		$scope.Math = window.Math;
+		$scope.currentPage = 0;
+		$scope.filtered = [];
+		$scope.limit = 0;
+		$scope.range = function(min, max, step){
+		    step = step || 1;
+		    var input = [];
+		    for (var i = min; i <= max; i += step) input.push(i);
+		    return input;
+		};
+	    $scope.setPage = function () {
+	        $scope.currentPage = this.n;
+	    };
+	    $scope.changePage = function(page){
+	    	var curSel = page * $scope.limit;
+
+	    	if(curSel < $scope.filtered.length && curSel >= 0){
+	    		$scope.currentPage = page;
+	    	}
+	    };
+	    $scope.$watch('filtered', function(val){
+	    	$scope.currentPage = 0;
+	    }, true);
+
 		// Create new Log
 		$scope.create = function() {
 			// Create new Log object
