@@ -81,6 +81,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.currentPage = 0;
 		$scope.filtered = [];
 		$scope.limit = 0;
+		$scope.queryLimit = 50;
 		$scope.range = function(min, max, step){
 		    step = step || 1;
 		    var input = [];
@@ -1512,10 +1513,25 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			$scope.projects = Projects.query();
 		};
 
+		$scope.findLimit = function(){
+			$http.post('/projects/findLimit', {
+		        queryLimit: $scope.queryLimit
+		    }).
+			success(function(data, status, headers, config) {
+				$scope.projects = [];
+				$scope.projects = data;
+			});
+		};
+		$scope.updateLimit = function(limit){
+			$scope.queryLimit = limit;
+			
+			$scope.findLimit();
+		};
+
 		// dynamically update project view
 		Socket.on('projectsListUpdate', function() {
 
-			$scope.find();
+			$scope.findLimit();
 
 		});
 

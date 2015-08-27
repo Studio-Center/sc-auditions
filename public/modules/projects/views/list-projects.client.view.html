@@ -1,4 +1,4 @@
-<section data-ng-controller="ProjectsController" data-ng-init="find();defaults();">
+<section data-ng-controller="ProjectsController" data-ng-init="findLimit();defaults();">
     <div class="page-header">
         <h1>Projects</h1>
         <a data-ng-show="permitAdminProductionCoordinator()" class="btn btn-default" href="#!/projects/create">Create New Project</a>
@@ -40,9 +40,28 @@
         <div class="col-lg-3 col-md-3 col-sm-3">
             <label>In Progress:</label> <input type="checkbox" name="userProjFilter" id="userProjFilter" ng-model="searchText.status" ng-true-value="In Progress" ng-false-value="" ng-checked="permitProducers()" class="form-control">
         </div>
+        <div class="col-lg-3 col-md-3 col-sm-3">
+
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3" style="text-align:center;padding-bottom:9px">
+            
+        </div>
     </div>
     <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="col-lg-5 col-md-5 col-sm-5">
+            <label>Number of recent projects to show:</label><br>
+            <div class="btn-group" data-toggle="buttons">
+                <label class="btn btn-primary" ng-model="queryLimit" ng-click="updateLimit(50)" btn-radio="50">50</label>
+                <label class="btn btn-primary" ng-model="queryLimit" ng-click="updateLimit(100)" btn-radio="100">100</label>
+                <label class="btn btn-primary" ng-model="queryLimit" ng-click="updateLimit(150)" btn-radio="150">150</label>
+                <label class="btn btn-primary" ng-model="queryLimit" ng-click="updateLimit(200)" btn-radio="200">200</label>
+                <label class="btn btn-primary" ng-model="queryLimit" ng-click="updateLimit(250)" btn-radio="250">250</label>
+                <label class="btn btn-primary" ng-model="queryLimit" ng-click="updateLimit(300)" btn-radio="300">300</label>
+                <label class="btn btn-primary" ng-model="queryLimit" ng-click="updateLimit()" btn-radio="">All</label>
+            </div>
+        </div>
+        <div class="col-lg-7 col-md-7 col-sm-7">
+            <label></label><br>
             <select ng-init="limit = 20" ng-model="limit" class="form-control">
                 <option value="5" selected>Show 5 per page</option>
                 <option value="10">Show 10 per page</option>
