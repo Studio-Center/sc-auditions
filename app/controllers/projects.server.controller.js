@@ -2215,14 +2215,16 @@ exports.uploadAudition = function(req, res, next){
 
     // strip talent name and last name code from audition
     var regStr = /([a-zA-Z]+)\.\w{3}$/i.exec(file.name);
-	var regStrOP = regStr[1];
+    if(regStr !== null){
+		var regStrOP = regStr[1];
 
-	var lastNm = /([A-Z])[a-z]*$/.exec(regStrOP);
-	if(lastNm !== null){
-		var lastNmPos = lastNm.index;
+		var lastNm = /([A-Z])[a-z]*$/.exec(regStrOP);
+		if(lastNm !== null){
+			var lastNmPos = lastNm.index;
 
-		firstName = regStrOP.slice(0,lastNmPos);
-		lastNameCode = regStrOP.slice(lastNmPos, regStrOP.length);
+			firstName = regStrOP.slice(0,lastNmPos);
+			lastNameCode = regStrOP.slice(lastNmPos, regStrOP.length);
+		}
 	}
 
     mv(tempPath, newPath, function(err) {
@@ -2276,36 +2278,50 @@ exports.uploadAudition = function(req, res, next){
 											}
 										}
 								};
-						//console.log(audition);
-						// assign script object to body
-						project.auditions.push(audition);
 
-						project = _.extend(req.project, project.toObject());
+						// write change to log
+						var log = {
+							type: 'project',
+							sharedKey: String(project._id),
+							description: project.title + ' audition uploaded ' + file.name,
+							user: req.user
+						}
+						log = new Log(log);
+						log.save();
 
-						project.save(function(err) {
-							if (err) {
-								return res.status(400).send({
-									message: errorHandler.getErrorMessage(err)
-								});
-							} else {
+						// send audition data to client
+						return res.jsonp(audition);
 
-								// write change to log
-								var log = {
-									type: 'project',
-									sharedKey: String(project._id),
-									description: project.title + ' audition uploaded ' + file.name,
-									user: req.user
-								}
-								log = new Log(log);
-								log.save();
+						// //console.log(audition);
+						// // assign script object to body
+						// project.auditions.push(audition);
 
-								var socketio = req.app.get('socketio');
-								socketio.sockets.emit('projectUpdate', {id: project._id}); 
-								socketio.sockets.emit('callListUpdate', {filter: ''}); 
-								return res.jsonp(project);
+						// project = _.extend(req.project, project.toObject());
+
+						// project.save(function(err) {
+						// 	if (err) {
+						// 		return res.status(400).send({
+						// 			message: errorHandler.getErrorMessage(err)
+						// 		});
+						// 	} else {
+
+						// 		// write change to log
+						// 		var log = {
+						// 			type: 'project',
+						// 			sharedKey: String(project._id),
+						// 			description: project.title + ' audition uploaded ' + file.name,
+						// 			user: req.user
+						// 		}
+						// 		log = new Log(log);
+						// 		log.save();
+
+						// 		var socketio = req.app.get('socketio');
+						// 		socketio.sockets.emit('projectUpdate', {id: project._id}); 
+						// 		socketio.sockets.emit('callListUpdate', {filter: ''}); 
+						// 		return res.jsonp(project);
 								
-							}
-						});
+						// 	}
+						// });
 
 				   	});
 					

@@ -2343,14 +2343,20 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			$scope.upload = $upload.upload({
 		        url: 'projects/uploads/audition', //upload.php script, node.js route, or servlet url 
 		        data: {project: $scope.project},
-		        file: file, // or list of files ($files) for html5 only 
+		        file: file // or list of files ($files) for html5 only 
 		    }).progress(function(evt) {
 		      	$scope.uploadStatus = (i + 1) + ' of ' + $files.length + ' files uploaded';
 		      	$scope.uploadfile = evt.config.file.name;
 		        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
 		    }).success(function(data, status, headers, config) {
 		        // file is uploaded successfully 
-		        $scope.project = angular.extend($scope.project, data);
+		        $scope.project.auditions.push(data);
+
+		        // save project on finish
+		        if((i+1) === $files.length){
+		        	// update project store
+					$scope.updateNoRefresh();
+		        }
 		    });
 		};
 		$scope.uploadAudition = function($files) {
