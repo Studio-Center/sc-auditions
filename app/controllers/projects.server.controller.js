@@ -1639,6 +1639,24 @@ var performLoadList = function(req, res, allowedRoles, i, j){
 
 	}
 };
+
+exports.findLimit = function(req, res) { 
+
+	var limit = req.body.queryLimit;
+	console.log(limit);
+
+	Project.find().sort('-created').populate('user', 'displayName').limit(limit).exec(function(err, projects) {
+		if (err) {
+			//console.log(err);
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			return res.jsonp(projects);
+		}
+	});
+
+};
 exports.list = function(req, res) { 
 
 	// permit certain user roles full access

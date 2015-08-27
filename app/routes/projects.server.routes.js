@@ -11,6 +11,9 @@ module.exports = function(app) {
 		.get(users.requiresLogin, projects.list)
 		.post(users.requiresLogin, projects.create);
 
+	app.route('/projects/findLimit')
+		.post(users.requiresLogin, projects.findLimit);
+
 	// list projects for clients
 	app.route('/projects-client')
 		.get(users.jwtauth, users.requiresLogin, projects.list);
