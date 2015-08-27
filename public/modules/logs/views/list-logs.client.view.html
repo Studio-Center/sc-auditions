@@ -26,20 +26,20 @@
             <div class="text-center">
             <ul class="pagination">
                 <li ng-class="{disabled: currentPage == 0}">
-                    <a href ng-click="currentPage=currentPage-1">« Prev</a>
+                    <a href ng-click="changePage(currentPage-1)">« Prev</a>
                 </li>
-                <li ng-repeat="n in range(0, Math.floor(users.length/limit))" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                <li ng-repeat="n in range(0, Math.floor(filtered.length/limit))" ng-class="{active: n == currentPage}" ng-click="setPage()">
                     <a href ng-bind="n + 1">1</a>
                 </li>
-                <li ng-class="{disabled: currentPage == Math.floor(users.length/limit)}">
-                    <a href ng-click="currentPage=currentPage+1">Next »</a>
+                <li ng-class="{disabled: currentPage == Math.floor(filtered.length/limit)}">
+                    <a href ng-click="changePage(currentPage+1)">Next »</a>
                 </li>
             </ul>
             </div>
         </div>
     </div>
     <div class="list-group">
-        <div data-ng-repeat="log in filtered = (logs | filter:searchString)" data-ng-href="#!/logs/{{log._id}}" class="list-group-item">
+        <div data-ng-repeat="log in filtered = (logs | filter:searchString) | limitTo: limit" data-ng-href="#!/logs/{{log._id}}" class="list-group-item">
 			<small class="list-group-item-text">
 				Posted on
 				<span data-ng-bind="log.created | amDateFormat:'MM/DD/YY h:mm:ss a'"></span>
@@ -54,13 +54,13 @@
             <div class="text-center">
             <ul class="pagination">
                 <li ng-class="{disabled: currentPage == 0}">
-                    <a href ng-click="currentPage=currentPage-1">« Prev</a>
+                    <a href ng-click="changePage(currentPage-1)">« Prev</a>
                 </li>
-                <li ng-repeat="n in range(0, Math.floor(users.length/limit))" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                <li ng-repeat="n in range(0, Math.floor(filtered.length/limit))" ng-class="{active: n == currentPage}" ng-click="setPage()">
                     <a href ng-bind="n + 1">1</a>
                 </li>
-                <li ng-class="{disabled: currentPage == Math.floor(users.length/limit)}">
-                    <a href ng-click="currentPage=currentPage+1">Next »</a>
+                <li ng-class="{disabled: currentPage == Math.floor(filtered.length/limit)}">
+                    <a href ng-click="changePage(currentPage+1)">Next »</a>
                 </li>
             </ul>
             </div>
