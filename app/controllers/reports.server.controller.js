@@ -328,7 +328,6 @@ exports.convertToCSV = function(req, res){
 				];
 
 	// cleanup client and talent lists
-	console.log();
 	async.eachSeries(projects, function (project, clientsCallback) {
 
 		clients = [];
