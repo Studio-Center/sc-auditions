@@ -2231,16 +2231,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			$scope.updateNoRefresh();
 	  	};
 
-		$scope.uploadReferenceFile = function($files) {
-	    //$files: an array of files selected, each file has name, size, and type.
-
-	    for (var i = 0; i < $files.length; i++) {
-		    var file = $files[i];
-
-		    	performUploadReferenceFile(file, i, $files);
-	    	}
-	  	};
-
 	  	var performUploadReferenceFile = function(file, i, $files){
 		  	$scope.upload = $upload.upload({
 		        url: 'projects/uploads/referenceFile', //upload.php script, node.js route, or servlet url 
@@ -2252,7 +2242,23 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
 		    }).success(function(data, status, headers, config) {
 				$scope.project = angular.extend($scope.project, data);
+
+				// // save project on finish
+		  //       if((i+1) === $files.length){
+		  //       	// update project store
+				// 	$scope.updateNoRefresh();
+		  //       }
 		    });
+	  	};
+
+	  	// upload reference files to server
+	  	$scope.uploadReferenceFile = function($files) {
+	    //$files: an array of files selected, each file has name, size, and type.
+
+	    for (var i = 0; i < $files.length; i++) {
+		    var file = $files[i];
+		    	performUploadReferenceFile(file, i, $files);
+	    	}
 	  	};
 
 	  	var performUploadTempReferenceFile = function(file, i, $files){
@@ -2352,8 +2358,16 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		        // file is uploaded successfully 
 		        $scope.project.auditions.push(data);
 
+		        // update talents with posted status for uploaded talent
+	        	for(var j = 0; j < $scope.project.talent.length; ++j){
+	        		if($scope.project.talent[j].talentId === data.talent){
+						$scope.project.talent[j].status = 'Posted';
+	        		}
+	        	}
+
 		        // save project on finish
 		        if((i+1) === $files.length){
+
 		        	// update project store
 					$scope.updateNoRefresh();
 		        }
