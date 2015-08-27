@@ -185,6 +185,17 @@ exports.emailMissingAuds = function(req, res){
 					};
 
 					transporter.sendMail(mailOptions, function(err){
+
+						// log event
+						var log = {
+							type: 'system',
+							sharedKey: 'N/A',
+							description: 'missing auditions email sent'
+							user: ''
+						}
+						log = new Log(log);
+						log.save();
+
 						done(err);
 					});
 
