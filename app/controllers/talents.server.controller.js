@@ -6,6 +6,7 @@
 var mongoose = require('mongoose'),
 	errorHandler = require('./errors'),
 	Talent = mongoose.model('Talent'),
+	Log = mongoose.model('Log'),
 	_ = require('lodash'),
 	config = require('../../config/config'),
 	async = require('async'),
@@ -31,6 +32,16 @@ exports.create = function(req, res) {
 					message: errorHandler.getErrorMessage(err)
 				});
 			} else {
+
+			// write change to log
+			var log = {
+				type: 'talent',
+				sharedKey: String(talent._id),
+				description: talent.name + ' ' + talent.lastName + ' created',
+				user: req.user
+			}
+			log = new Log(log);
+			log.save();
 
 			// send out new talent email
 			async.waterfall([
@@ -208,6 +219,17 @@ exports.update = function(req, res) {
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
+
+			// write change to log
+			var log = {
+				type: 'talent',
+				sharedKey: String(talent._id),
+				description: talent.name + ' ' + talent.lastName + ' updated ',
+				user: req.user
+			}
+			log = new Log(log);
+			log.save();
+
 			res.jsonp(talent);
 		}
 	});
@@ -293,6 +315,17 @@ exports.delete = function(req, res) {
 
 		},
 		function(done) {
+
+			// write change to log
+			var log = {
+				type: 'talent',
+				sharedKey: String(talent._id),
+				description: talent.name + ' ' + talent.lastName + ' terminated ',
+				user: req.user
+			}
+			log = new Log(log);
+			log.save();
+
 			talent.remove(function(err) {
 				if (err) {
 					done(err);

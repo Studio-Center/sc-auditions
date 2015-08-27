@@ -1280,6 +1280,16 @@ exports.create = function(req, res) {
 
 						async.eachSeries(talents, function (talent, talentCallback) {
 
+							// write change to log
+							var log = {
+								type: 'talent',
+								sharedKey: String(talent._id),
+								description: talent.name + ' ' + talent.lastName + ' added to project ' + project.title,
+								user: req.user
+							}
+							log = new Log(log);
+							log.save();
+
 							// check for email flag
 							emailTalentChk = false;
 							if(talent.type.toLowerCase() === 'email'){
@@ -1317,6 +1327,17 @@ exports.create = function(req, res) {
 
 					if(typeof project.client !== 'undefined'){
 						for(i = 0; i < project.client.length; ++i){
+
+							// write change to log
+							var log = {
+								type: 'user',
+								sharedKey: String(project.client.clientId),
+								description: project.client.name + ' added to project ' + project.title,
+								user: req.user
+							}
+							log = new Log(log);
+							log.save();
+
 							emailClients(project.client[i], email, project, req, res);
 						}
 					}
