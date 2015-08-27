@@ -39,7 +39,7 @@
         </div>
     </div>
     <div class="list-group">
-        <div data-ng-repeat="log in filtered = (logs | filter:searchString) | limitTo: limit" data-ng-href="#!/logs/{{log._id}}" class="list-group-item">
+        <div data-ng-repeat="log in filtered = (logs | filter:searchString) | startFrom:currentPage*limit | limitTo: limit" class="list-group-item">
 			<small class="list-group-item-text">
 				Posted on
 				<span data-ng-bind="log.created | amDateFormat:'MM/DD/YY h:mm:ss a'"></span>
