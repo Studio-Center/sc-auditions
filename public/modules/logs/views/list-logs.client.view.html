@@ -6,9 +6,18 @@
         <div class="col-lg-6 col-md-6 col-sm-6">
             <label>Search:</label> <input ng-model="searchString" class="form-control">
         </div>
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <label>Filter notes by type:</label><br>
+            <div class="btn-group" data-toggle="buttons">
+                <label class="btn btn-primary" ng-model="searchText.type" btn-radio="'project'">Project</label>
+                <label class="btn btn-primary" ng-model="searchText.type" btn-radio="'talent'">Talent</label>
+                <label class="btn btn-primary" ng-model="searchText.type" btn-radio="'system'">System</label>
+            </div>
+        </div>
     </div>
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
+        	<h4></h4>
             <select ng-init="limit = 20" ng-model="limit" class="form-control">
                 <option value="5" selected>Show 5 per page</option>
                 <option value="10">Show 10 per page</option>
@@ -22,7 +31,10 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="col-lg-2 col-md-2 col-sm-2">
+            <p style="margin-top:27px">{{filtered.length}} Note(s) Found</p>
+        </div>
+        <div class="col-lg-10 col-md-10 col-sm-10">
             <div class="text-center">
             <ul class="pagination">
                 <li ng-class="{disabled: currentPage == 0}">
@@ -39,13 +51,14 @@
         </div>
     </div>
     <div class="list-group">
-        <div data-ng-repeat="log in filtered = (logs | filter:searchString) | startFrom:currentPage*limit | limitTo: limit" class="list-group-item">
+        <div data-ng-repeat="log in filtered = (logs | filter:searchString | filter:searchText:startsWith) | startFrom:currentPage*limit | limitTo: limit" class="list-group-item">
 			<small class="list-group-item-text">
 				Posted on
 				<span data-ng-bind="log.created | amDateFormat:'MM/DD/YY h:mm:ss a'"></span>
 				by
 				<span data-ng-bind="log.user.displayName"></span>
 			</small>
+			<p><strong>Log Type:</strong> {{log.type}}</p>
 			<h4 class="list-group-item-heading" data-ng-bind="log.description"></h4>
         </div>
     </div>
