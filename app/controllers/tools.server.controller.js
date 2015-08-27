@@ -540,6 +540,27 @@ exports.sendPreCloseSummary = function(req, res){
 					};
 
 					transporter.sendMail(mailOptions, function(err){
+
+						// log event
+						var log = {
+							type: 'system',
+							sharedKey: 'N/A',
+							description: ' project ' + project.title + ' preclose summary sent'
+							user: ''
+						}
+						log = new Log(log);
+						log.save();
+
+						// log event
+						var log = {
+							type: 'project',
+							sharedKey: String(project._id),
+							description: ' project ' + project.title + ' preclose summary sent'
+							user: ''
+						}
+						log = new Log(log);
+						log.save();
+
 						++emailCnt;
 						done(err);
 					});
