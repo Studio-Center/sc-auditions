@@ -206,7 +206,7 @@ var emailTalent = function(selTalent, talentInfo, email, project, req, res){
 				var log = {
 					type: 'talent',
 					sharedKey: selTalent.talentId,
-					description: 'sent new project email for ' + project.title,
+					description: 'sent new project email to talent ' + selTalent.name + ' for ' + project.title,
 					user: req.user
 				}
 				log = new Log(log);
