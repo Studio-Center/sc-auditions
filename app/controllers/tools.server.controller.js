@@ -9,6 +9,7 @@ var mongoose = require('mongoose'),
 	User = mongoose.model('User'),
 	Talent = mongoose.model('Talent'),
 	Typecast = mongoose.model('Typecast'),
+	Log = mongoose.model('Log'),
 	fs = require('fs'),
 	config = require('../../config/config'),
 	_ = require('lodash'),
@@ -87,6 +88,17 @@ exports.sendTalentEmails = function(req, res){
 												};
 
 								transporter.sendMail(mailOptions, function(){
+
+									// write change to log
+									var log = {
+										type: 'talent',
+										sharedKey: String(talent._id),
+										description: talent.name + ' ' + talent.lastName + ' sent custom email ',
+										user: req.user
+									}
+									log = new Log(log);
+									log.save();
+
 									callback(err);
 								});
 									
