@@ -299,6 +299,26 @@ var sendTalentEmail = function(req, res, project, talent, override){
 
 			var newProject = project;
 
+			// write change to log
+			if(typeof req.body.project.log !== 'undefined'){
+				var log = req.body.project.log;
+				log.user = req.user;
+
+				log = new Log(log);
+				log.save();
+
+				// also senf log for prohect if talent log attribute
+				if(log.type === 'talent'){
+					log = log.toObject();
+
+					log.type = 'project';
+					log.sharedKey = String(req.body.project._id);
+
+					log = new Log(log);
+					log.save();
+				}
+			}
+
 			Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
 				
 				project = _.extend(project, newProject);
@@ -692,6 +712,26 @@ exports.updateNoRefresh = function(req, res){
 
 	// validate user interaction
 	if (_.intersection(req.user.roles, allowedRoles).length) {
+
+		// write change to log
+		if(typeof req.body.project.log !== 'undefined'){
+			var log = req.body.project.log;
+			log.user = req.user;
+
+			log = new Log(log);
+			log.save();
+
+			// also senf log for prohect if talent log attribute
+			if(log.type === 'talent'){
+				log = log.toObject();
+
+				log.type = 'project';
+				log.sharedKey = String(req.body.project._id);
+
+				log = new Log(log);
+				log.save();
+			}
+		}
 
 		var project = req.body.project;
 
@@ -1784,7 +1824,6 @@ var performLoadList = function(req, res, allowedRoles, i, j){
 exports.findLimit = function(req, res) { 
 
 	var limit = req.body.queryLimit;
-	console.log(limit);
 
 	Project.find().sort('-created').populate('user', 'displayName').limit(limit).exec(function(err, projects) {
 		if (err) {

@@ -812,6 +812,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		};
 
 		$scope.updateTalent = function(talentId, talentName, email){
+
 			// gen talent object
 			var talent = {
 							'talentId': talentId, 
@@ -820,7 +821,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 							'booked': false, 
 							'status': 'Cast', 
 							part: $scope.parts[talentId] || '', 
-							regular: true, requested: false
+							regular: true, 
+							requested: false
 						};
 
 			$scope.addTalent = false;
@@ -841,8 +843,21 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					}
 					// remove talent if no longer selected
 					if($scope.project.talent[i].regular === false && $scope.project.talent[i].requested === false){
+
+						var log = {
+							type: 'talent',
+							sharedKey: $scope.project.talent[i].talentId,
+							description: 'talent ' + $scope.project.talent[i].name + ' removed from  ' + $scope.project.title,
+						}
+
+						$scope.project.log = log;
+
 						$scope.project.talent.splice(i, 1);
+
 						$scope.updateNoRefresh();
+
+						$scope.addTalent = true;
+
 						return;
 					}
 					found = 1;
@@ -851,6 +866,14 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 			if(found === 0){
 				$scope.project.talent.push(talent);
+
+				var log = {
+							type: 'talent',
+							sharedKey: talent.talentId,
+							description: 'talent ' + talent.name + ' added to project  ' + $scope.project.title,
+						}
+
+				$scope.project.log = log;
 			}
 
 			$http.post('/projects/sendTalentEmail', {
@@ -868,7 +891,16 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		};
 		$scope.updateRequestTalent = function(talentId, talentName, email){
 			// gen talent object
-			var talent = {'talentId': talentId, 'name': talentName, 'email': email, 'booked': false, 'status': 'Cast', part: $scope.parts[talentId] || '', regular: false, requested: true};
+			var talent = {
+							'talentId': talentId, 
+							'name': talentName, 
+							'email': email, 
+							'booked': false, 
+							'status': 'Cast', 
+							part: $scope.parts[talentId] || '', 
+							regular: false, 
+							requested: true
+						};
 
 			$scope.addTalent = false;
 
@@ -888,8 +920,21 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					}
 					// remove talent if no longer selected
 					if($scope.project.talent[i].regular === false && $scope.project.talent[i].requested === false){
+
+						var log = {
+							type: 'talent',
+							sharedKey: $scope.project.talent[i].talentId,
+							description: 'REQUESTED talent ' + $scope.project.talent[i].name + ' removed from  ' + $scope.project.title,
+						}
+
+						$scope.project.log = log;
+
 						$scope.project.talent.splice(i, 1);
+
 						$scope.updateNoRefresh();
+
+						$scope.addTalent = true;
+
 						return;
 					}
 					found = 1;
@@ -898,6 +943,14 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 			if(found === 0){
 				$scope.project.talent.push(talent);
+
+				var log = {
+							type: 'talent',
+							sharedKey: talent.talentId,
+							description: 'REQUESTED talent ' + talent.name + ' added to project  ' + $scope.project.title,
+						}
+
+				$scope.project.log = log;
 			}
 
 			$http.post('/projects/sendTalentEmail', {
@@ -915,7 +968,16 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		};
 		$scope.updateCreateTalent = function(talentId, talentName, email){
 			// gen talent object
-			var talent = {'talentId': talentId, 'name': talentName, 'email': email, 'booked': false, 'status': 'Cast', part: $scope.parts[talentId] || '', regular: true, requested: false};
+			var talent = {
+							'talentId': talentId, 
+							'name': talentName, 
+							'email': email, 
+							'booked': false, 
+							'status': 'Cast', 
+							part: $scope.parts[talentId] || '', 
+							regular: true, 
+							requested: false
+						};
 
 			// check for existing item
 			var found = 0;
@@ -947,7 +1009,16 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		};
 		$scope.updateRequestCreateTalent = function(talentId, talentName, email){
 			// gen talent object
-			var talent = {'talentId': talentId, 'name': talentName, 'email': email, 'booked': false, 'status': 'Cast', part: $scope.parts[talentId] || '', regular: false, requested: true};
+			var talent = {
+							'talentId': talentId, 
+							'name': talentName, 
+							'email': email, 
+							'booked': false, 
+							'status': 'Cast', 
+							part: $scope.parts[talentId] || '', 
+							regular: false, 
+							requested: true
+						};
 
 			// check for existing item
 			var found = 0;
@@ -1049,7 +1120,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		$scope.updateClient = function(userId, displayName, email){
 			// gen user object
-			var user = {'userId': userId, 'name': displayName, 'email': email};
+			var user = {
+						'userId': userId, 
+						'name': displayName, 
+						'email': email
+					};
 
 			// check for existing item
 			var found = 0;
@@ -1071,7 +1146,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		$scope.updateCreateClient = function(userId, displayName, email){
 			// gen user object
-			var user = {'userId': userId, 'name': displayName, 'email': email};
+			var user = {
+						'userId': userId, 
+						'name': displayName, 
+						'email': email
+					};
 
 			// check for existing item
 			var found = 0;
@@ -1151,7 +1230,12 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.saveAudtionNote = function(key){
 
 			var now = new Date();
-			var item = {date: now.toJSON(), userid: Authentication.user._id, username: Authentication.user.displayName, item: this.auditions[key].discussion};
+			var item = {
+						date: now.toJSON(), 
+						userid: Authentication.user._id, 
+						username: Authentication.user.displayName, 
+						item: this.auditions[key].discussion
+					};
 
 			$scope.project.auditions[key].discussion.push(item);
 
@@ -1187,7 +1271,12 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.saveScriptNote = function(key){
 
 			var now = new Date();
-			var item = {date: now.toJSON(), userid: Authentication.user._id, username: Authentication.user.displayName, item: this.scripts[key].discussion};
+			var item = {
+						date: now.toJSON(), 
+						userid: Authentication.user._id, 
+						username: Authentication.user.displayName, 
+						item: this.scripts[key].discussion
+					};
 
 			$scope.project.scripts[key].discussion.push(item);
 
@@ -1951,7 +2040,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 			if(typeof $scope.discussion !== 'undefined' && this.discussion !== ''){
 				var now = new Date();
-				var item = {date: now.toJSON(), userid: Authentication.user._id, username: Authentication.user.displayName, item: $scope.discussion, deleted: false};
+				var item = {
+							date: now.toJSON(), 
+							userid: Authentication.user._id, 
+							username: Authentication.user.displayName, 
+							item: $scope.discussion, 
+							deleted: false
+						};
 
 				$scope.project.discussion.push(item);
 
