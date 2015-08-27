@@ -190,7 +190,7 @@ exports.emailMissingAuds = function(req, res){
 						var log = {
 							type: 'system',
 							sharedKey: 'N/A',
-							description: 'missing auditions email sent'
+							description: 'missing auditions email sent',
 							user: ''
 						}
 						log = new Log(log);
