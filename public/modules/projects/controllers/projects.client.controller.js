@@ -813,7 +813,15 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		$scope.updateTalent = function(talentId, talentName, email){
 			// gen talent object
-			var talent = {'talentId': talentId, 'name': talentName, 'email': email, 'booked': false, 'status': 'Cast', part: $scope.parts[talentId] || '', regular: true, requested: false};
+			var talent = {
+							'talentId': talentId, 
+							'name': talentName, 
+							'email': email, 
+							'booked': false, 
+							'status': 'Cast', 
+							part: $scope.parts[talentId] || '', 
+							regular: true, requested: false
+						};
 
 			$scope.addTalent = false;
 
