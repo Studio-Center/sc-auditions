@@ -9,6 +9,7 @@ var mongoose = require('mongoose'),
 	User = mongoose.model('User'),
 	Talent = mongoose.model('Talent'),
 	Typecast = mongoose.model('Typecast'),
+	Log = mongoose.model('Log'),
 	fs = require('fs'),
 	config = require('../../config/config'),
 	_ = require('lodash'),
@@ -190,8 +191,7 @@ exports.emailMissingAuds = function(req, res){
 						var log = {
 							type: 'system',
 							sharedKey: 'N/A',
-							description: 'missing auditions email sent',
-							user: ''
+							description: 'missing auditions email sent'
 						}
 						log = new Log(log);
 						log.save();
