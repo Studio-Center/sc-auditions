@@ -490,6 +490,9 @@ exports.sendPreCloseSummary = function(req, res){
 						emailSig = '';
 					}
 
+					// convert project id from object to string for email
+					project._id = String(project._id);
+
 					res.render('templates/projects/pre-close-summary-email', {
 						talentPosted: talentPosted, 
 						talentNotCalled: talentNotCalled, 
