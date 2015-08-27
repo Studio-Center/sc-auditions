@@ -1,0 +1,16 @@
+<section data-ng-controller="LogsController" data-ng-init="find()">
+    <div class="page-header">
+        <h1>Logs</h1>
+    </div>
+    <div class="list-group">
+        <div data-ng-repeat="log in logs" data-ng-href="#!/logs/{{log._id}}" class="list-group-item">
+			<small class="list-group-item-text">
+				Posted on
+				<span data-ng-bind="log.created | date:'medium'"></span>
+				by
+				<span data-ng-bind="log.user.displayName"></span>
+			</small>
+			<h4 class="list-group-item-heading" data-ng-bind="log.description"></h4>
+        </div>
+    </div>
+</section>
