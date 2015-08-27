@@ -847,7 +847,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 						var log = {
 							type: 'talent',
 							sharedKey: $scope.project.talent[i].talentId,
-							description: 'talent ' + $scope.project.talent[i].name + ' removed from  ' + $scope.project.title,
+							description: 'talent ' + $scope.project.talent[i].name + ' removed from  ' + $scope.project.title
 						}
 
 						$scope.project.log = log;
@@ -870,7 +870,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				var log = {
 							type: 'talent',
 							sharedKey: talent.talentId,
-							description: 'talent ' + talent.name + ' added to project  ' + $scope.project.title,
+							description: 'talent ' + talent.name + ' added to project  ' + $scope.project.title
 						}
 
 				$scope.project.log = log;
@@ -924,7 +924,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 						var log = {
 							type: 'talent',
 							sharedKey: $scope.project.talent[i].talentId,
-							description: 'REQUESTED talent ' + $scope.project.talent[i].name + ' removed from  ' + $scope.project.title,
+							description: 'REQUESTED talent ' + $scope.project.talent[i].name + ' removed from  ' + $scope.project.title
 						}
 
 						$scope.project.log = log;
@@ -947,7 +947,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				var log = {
 							type: 'talent',
 							sharedKey: talent.talentId,
-							description: 'REQUESTED talent ' + talent.name + ' added to project  ' + $scope.project.title,
+							description: 'REQUESTED talent ' + talent.name + ' added to project  ' + $scope.project.title
 						}
 
 				$scope.project.log = log;
@@ -1054,6 +1054,14 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			for(var i = 0; i < $scope.project.talent.length; ++i){
 				if(String($scope.project.talent[i].talentId) === String(talentId)){
 					$scope.project.talent[i].status = status;
+
+					var log = {
+						type: 'talent',
+						sharedKey: $scope.project.talent[i].talentId,
+						description: 'talent ' + $scope.project.talent[i].name + ' status updated to ' + $scope.project.talent[i].status
+					}
+
+					$scope.project.log = log;
 
 					// update project store
 					//$scope.update();
@@ -1173,6 +1181,14 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				if($scope.project.talent[i].talentId === talentId){
 
 					$scope.project.talent[i].booked = !$scope.project.talent[i].booked;
+
+					var log = {
+						type: 'talent',
+						sharedKey: $scope.project.talent[i].talentId,
+						description: 'talent ' + $scope.project.talent[i].name + ' booked status set to ' + $scope.project.talent[i].booked
+					}
+
+					$scope.project.log = log;
 
 					// update project store
 					//$scope.update();
