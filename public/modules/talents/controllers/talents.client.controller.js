@@ -309,5 +309,28 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 			});
 		};
 
+		// gather filtered list of logs
+		$scope.listFilter = function(){
+
+			$scope.$watch('talent._id', function(val){
+
+				var listFilter = {
+					type: 'talent', 
+					sharedKey: $scope.talent._id
+				};
+
+				//console.log(listFilter);
+
+				$http.post('/logs/listFilter', {
+			        filter: listFilter
+			    }).
+				success(function(data, status, headers, config) {
+					$scope.logs = data;
+				});
+
+			});
+
+		};
+
 	}
 ]);
