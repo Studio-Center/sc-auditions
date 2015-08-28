@@ -32,7 +32,7 @@ exports.emailMissingAuds = function(req, res){
 	var yesterday = new Date();
 	yesterday.setHours(0,0,0,0);
 	//yesterday.setDate(yesterday.getDate() - 1);
-	var tomorrow = new Date();
+	var tomorrow = new Date(yesterday);
 	tomorrow.setDate(tomorrow.getDate() + 1);
 
 	var searchCriteria = {'estimatedCompletionDate': {$gte: yesterday, $lt: tomorrow}};
