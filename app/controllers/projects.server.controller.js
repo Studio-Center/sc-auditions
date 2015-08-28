@@ -300,8 +300,8 @@ var sendTalentEmail = function(req, res, project, talent, override){
 			var newProject = project;
 
 			// write change to log
-			if(typeof req.body.project.log !== 'undefined'){
-				var log = req.body.project.log;
+			if(typeof project.log !== 'undefined'){
+				var log = project.log;
 				log.user = req.user;
 
 				log = new Log(log);
@@ -312,7 +312,7 @@ var sendTalentEmail = function(req, res, project, talent, override){
 					log = log.toObject();
 
 					log.type = 'project';
-					log.sharedKey = String(req.body.project._id);
+					log.sharedKey = String(project._id);
 
 					log = new Log(log);
 					log.save();
