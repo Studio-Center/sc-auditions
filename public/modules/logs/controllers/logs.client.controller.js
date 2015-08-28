@@ -80,6 +80,18 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
 			$scope.logs = Logs.query();
 		};
 
+		// gather filtered list of logs
+		$scope.listFilter = function(listFilter){
+
+			$http.post('/logs/listFilter', {
+		        filter: listFilter
+		    }).
+			success(function(data, status, headers, config) {
+				$scope.logs = data;
+			});
+
+		};
+
 		// Find existing Log
 		$scope.findOne = function() {
 			$scope.log = Logs.get({ 

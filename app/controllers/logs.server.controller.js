@@ -83,6 +83,23 @@ exports.list = function(req, res) { Log.find().sort('-created').populate('user',
 	});
 };
 
+// present filtered list of logs
+exports.listFilter = function(req, res){
+
+	var filter = req.body.filter;
+
+	Log.find(filter).sort('-created').populate('user', 'displayName').exec(function(err, logs) {
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			res.jsonp(logs);
+		}
+	});
+
+};
+
 /**
  * Log middleware
  */
