@@ -1847,6 +1847,17 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			return false;
 		};
 
+		// check for media file
+		$scope.checkForAudio = function(file){
+
+			var fileExt = /(\w{3})$/i.exec(file);
+
+			if(fileExt[1].toLowerCase() === 'mp3'){
+				return true;
+			}
+
+		};
+
 		$scope.verifyFile = function(file){
 			
 			//console.log(file);
