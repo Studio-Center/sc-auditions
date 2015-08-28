@@ -14,6 +14,10 @@ module.exports = function(app) {
 		.put(users.requiresLogin, logs.hasAuthorization, logs.update)
 		.delete(users.requiresLogin, logs.hasAuthorization, logs.delete);
 
+	// gather filtered list of logs
+	app.route('/logs/listFilter')
+		.post(users.requiresLogin, logs.listFilter);
+
 	// Finish by binding the Log middleware
 	app.param('logId', logs.logByID);
 };

@@ -138,6 +138,7 @@
 		</a>
 	</div>
 	</div>
+
 	<div class="page-header jumbotron">
 		
         <div class="controls" ng-module="projects">
@@ -214,7 +215,20 @@
 							</td>
 						</tr>
 					</table>
+				</div>
             </div>
         </div>
 	</div>
+
+	<div class="page-header jumbotron">
+        <div class="controls" ng-module="logs">
+            <div ng-controller="LogsController" data-ng-init="listFilter({type:'talent',sharedKey:$parent.talent._id})">
+            	<h3 style="margin:0;padding:0">Contact Log:</h3>
+            	<div data-ng-repeat="(key, log) in logs">
+            		<span>{{log.created | amDateFormat:'MM/DD/YY h:mm:ss a'}}</span>
+            		<span>{{log.description}}</span>
+            	</div>
+            </div>
+        </div>
+    </div>
 </section>
