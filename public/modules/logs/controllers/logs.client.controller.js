@@ -1,8 +1,8 @@
 'use strict';
 
 // Logs controller
-angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Logs',
-	function($scope, $stateParams, $location, Authentication, Logs ) {
+angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Logs', '$http',
+	function($scope, $stateParams, $location, Authentication, Logs, $http ) {
 		$scope.authentication = Authentication;
 
 		// used for paginator
@@ -82,6 +82,8 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
 
 		// gather filtered list of logs
 		$scope.listFilter = function(listFilter){
+
+			console.log(listFilter);
 
 			$http.post('/logs/listFilter', {
 		        filter: listFilter
