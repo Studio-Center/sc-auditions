@@ -223,9 +223,11 @@
 	<div class="page-header jumbotron" ng-if="talent">
             <div data-ng-init="listFilter()">
             	<h3 style="margin:0;padding:0">Contact Log:</h3>
-            	<div data-ng-repeat="(key, log) in logs">
-            		<span>{{log.created | amDateFormat:'MM/DD/YY h:mm:ss a'}}</span>
-            		<span>{{log.description}}</span>
+            	<div style="max-height:250px;overflow:scroll">
+	            	<div data-ng-repeat="(key, log) in logs">
+	            		<span>{{log.created | amDateFormat:'MM/DD/YY h:mm:ss a'}}</span>
+	            		<span>{{log.description}}</span>
+	            	</div>
             	</div>
             </div>
     </div>
