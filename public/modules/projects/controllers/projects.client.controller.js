@@ -2166,17 +2166,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		    $scope.newProject.copiedScripts.splice(idx, 1);
 		};
 
-		// upload script file
-		$scope.uploadScript = function($files) {
-	    //$files: an array of files selected, each file has name, size, and type.
-
-	    for (var i = 0; i < $files.length; i++) {
-	      var file = $files[i];
-
-	      performScriptUpload(file, i, $files);
-    	 }
-	  	};
-
 	  	var performScriptUpload = function(file, i, $files){
 	  		$scope.upload = $upload.upload({
 	        url: 'projects/uploads/script', //upload.php script, node.js route, or servlet url 
@@ -2189,8 +2178,27 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
 	      }).success(function(data, status, headers, config) {
 	        // file is uploaded successfully 
-			$scope.project = angular.extend($scope.project, data);
+			//$scope.project = angular.extend($scope.project, data);
+
+			$scope.project.scripts.push(data);
+
+			// save project on finish
+	        if((i+1) === $files.length){
+	        	// update project store
+				$scope.updateNoRefresh();
+	        }
 	      });
+	  	};
+
+	  	// upload script file
+		$scope.uploadScript = function($files) {
+	    //$files: an array of files selected, each file has name, size, and type.
+
+	    for (var i = 0; i < $files.length; i++) {
+	      var file = $files[i];
+
+	      performScriptUpload(file, i, $files);
+    	 }
 	  	};
 
 	  	$scope.uploadTempScript = function($files) {
@@ -2241,13 +2249,15 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		      	$scope.uploadfile = evt.config.file.name;
 		        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
 		    }).success(function(data, status, headers, config) {
-				$scope.project = angular.extend($scope.project, data);
+				//$scope.project = angular.extend($scope.project, data);
 
-				// // save project on finish
-		  //       if((i+1) === $files.length){
-		  //       	// update project store
-				// 	$scope.updateNoRefresh();
-		  //       }
+				$scope.project.referenceFiles.push(data);
+
+				// save project on finish
+		        if((i+1) === $files.length){
+		        	// update project store
+					$scope.updateNoRefresh();
+		        }
 		    });
 	  	};
 
