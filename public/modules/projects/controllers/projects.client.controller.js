@@ -1553,7 +1553,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 						email: $scope.email
 					});
 
-					var discussion = 'Project phase ' + $scope.project.phases[key].name + ' status changed to ' + $scope.project.phases[key].name + ' on ' + newDate + ' EST by ' + Authentication.user.displayName;
+					var discussion = 'Project phase ' + $scope.project.phases[key].name + ' status changed to ' + $scope.project.phases[key].status + ' on ' + newDate + ' EST by ' + Authentication.user.displayName;
 					var now = new Date();
 					var item = {
 						date: $scope.project.estimatedCompletionDate, 
