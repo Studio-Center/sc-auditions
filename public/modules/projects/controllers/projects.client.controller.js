@@ -2024,6 +2024,20 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		$scope.updateDueDate = function(){
 
+			// walk through and update phases if project closed to reset phase settings
+			if($scope.project.status === 'Closed - Pending Client Decision'){
+				$scope.project.status = 'In Progress';
+
+				for(var i = 0; i < $scope.project.phases.length; ++i){
+					if($scope.project.phases[i].name === 'Posting and Publishing'){
+						$scope.project.phases[i].status = 'in progress';
+						$scope.project.phases[i].endDate = '';
+
+					}
+				}
+
+			}
+
 			var newDate = moment($scope.project.estimatedCompletionDate).format('MM/DD/YYYY h:mm a');
 
 			$scope.project.estimatedCompletionDate = newDate;
