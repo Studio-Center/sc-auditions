@@ -1530,20 +1530,42 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		// update phase options
 		$scope.updateStatus = function(key){
 
-			// // send update email
-			// $scope.gatherToAddresses('updateStatus');
-		 //    $scope.email.subject = $scope.project.title + ' Phase ' + $scope.project.phases[key].name[0].toUpperCase() + ' Status Update';
-		 //    $scope.email.message += 'Project: ' + $scope.project.title + '<br>';
-		 //    $scope.email.message += 'Phase: ' + $scope.project.phases[key].name[0].toUpperCase() + '<br>';
-		 //    $scope.email.message += 'Status: ' + $scope.project.phases[key].status[0].toUpperCase() + '<br>';
-		 //    $scope.email.message += 'Start Date: ' + $scope.project.phases[key].startDate + '<br>';
-		 //    $scope.email.message += 'End Date: ' + $scope.project.phases[key].endDate + '<br>' + '<br>';
-		 //    $scope.email.message += 'Added by: ' + Authentication.user.displayName + '<br>';
-		 //    $scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '<br>';
+			// update change value
+			var newDate = moment(new Date($scope.project.estimatedCompletionDate)).format('MM/DD/YYYY h:mm a');
+			$scope.project.phases[key].changeDate = newDate;
 
-		 //    $http.post('/projects/sendemail', {
-			// 	email: $scope.email
-			// });
+			if(String($scope.project.phases[key].name) === 'Posting and Publishing'){
+				if(String($scope.project.phases[key].status) === 'Holding for more talent' || String($scope.project.phases[key].status) === 'Holding For Requested Talent'){
+
+					// send update email
+					$scope.gatherToAddresses('updateStatus');
+				    $scope.email.subject = $scope.project.title + ' Phase ' + $scope.project.phases[key].name + ' Status Update';
+				    $scope.email.message += 'Project: ' + $scope.project.title + '<br>';
+				    $scope.email.message += 'Phase: ' + $scope.project.phases[key].name + '<br>';
+				    $scope.email.message += 'Status: ' + $scope.project.phases[key].status + '<br>';
+				    $scope.email.message += 'Start Date: ' + $scope.project.phases[key].startDate + '<br>';
+				    $scope.email.message += 'End Date: ' + $scope.project.phases[key].endDate + '<br>' + '<br>';
+				    $scope.email.message += 'Change Date: ' + $scope.project.phases[key].changeDate + '<br>' + '<br>';
+				    $scope.email.message += 'Added by: ' + Authentication.user.displayName + '<br>';
+				    $scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '<br>';
+
+				    $http.post('/projects/sendemail', {
+						email: $scope.email
+					});
+
+					var discussion = 'Project phase ' + $scope.project.phases[key].name + ' status changed to ' + $scope.project.phases[key].name + ' on ' + newDate + ' EST by ' + Authentication.user.displayName;
+					var now = new Date();
+					var item = {
+						date: $scope.project.estimatedCompletionDate, 
+						userid: '', 
+						username: 'System', 
+						item: discussion, 
+						deleted: false
+					};
+					$scope.project.discussion.push(item);
+
+				}
+			}
 
 		    if($scope.project.phases[key].status === 'complete'){
 		    	var now = new Date();
@@ -2069,6 +2091,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 			// reset project status
 			$scope.project.status = 'In Progress';
+
+			// clear preclose summary bool
+			$scope.project.preClose = false;
 
 			// update project store
 			//$scope.update();

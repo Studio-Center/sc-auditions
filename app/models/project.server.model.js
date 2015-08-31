@@ -43,6 +43,7 @@ var ProjectSchema = new Schema({
 						name: 'Casting',
 						status: 'complete',
 						options: ['in progress','complete'],
+						changeDate: '',
 						startDate: Date.now,
 						endDate: ''
 					},
@@ -50,6 +51,7 @@ var ProjectSchema = new Schema({
 						name: 'Talent Notification',
 						status: 'in progress',
 						options: ['in progress','complete'],
+						changeDate: '',
 						startDate: Date.now,
 						endDate: ''
 					},
@@ -57,6 +59,7 @@ var ProjectSchema = new Schema({
 						name: 'Posting and Publishing',
 						status: 'in progress',
 						options: ['in progress','Holding for more talent','Holding For Requested Talent','complete'],
+						changeDate: '',
 						startDate: Date.now,
 						endDate: ''
 					}
