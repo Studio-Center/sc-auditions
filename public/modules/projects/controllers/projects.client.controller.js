@@ -1554,9 +1554,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					});
 
 					var discussion = 'Project phase ' + $scope.project.phases[key].name + ' status changed to ' + $scope.project.phases[key].status + ' on ' + newDate + ' EST by ' + Authentication.user.displayName;
-					var now = new Date();
 					var item = {
-						date: $scope.project.estimatedCompletionDate, 
+						date: newDate, 
 						userid: '', 
 						username: 'System', 
 						item: discussion, 
@@ -2049,13 +2048,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.updateDueDate = function(){
 
 			var newDate = moment(new Date($scope.project.estimatedCompletionDate)).format('MM/DD/YYYY h:mm a');
+			var newNewDate = moment(new Date()).format('MM/DD/YYYY h:mm a');
 
 			$scope.project.estimatedCompletionDate = newDate;
 
 			var discussion = 'Due date and time extended to ' + newDate + ' EST by ' + Authentication.user.displayName;
-			var now = new Date();
 			var item = {
-				date: $scope.project.estimatedCompletionDate, 
+				date: newNewDate, 
 				userid: '', 
 				username: 'System', 
 				item: discussion, 
