@@ -208,7 +208,7 @@ var emailTalent = function(selTalent, talentInfo, email, project, req, res){
 					sharedKey: selTalent.talentId,
 					description: 'sent new project email to talent ' + selTalent.name + ' for ' + project.title,
 					user: req.user
-				}
+				};
 				log = new Log(log);
 				log.save();
 
@@ -454,7 +454,7 @@ exports.sendTalentCanceledEmail = function(req, res){
 										sharedKey: selTalent.talentId,
 										description: 'sent cancelled email for ' + project.title,
 										user: req.user
-									}
+									};
 									log = new Log(log);
 									log.save();
 
@@ -571,7 +571,7 @@ exports.updateSingleTalentStatus = function (req, res){
 						sharedKey: talentId,
 						description: project.title + ' status updated to ' + project.talent[i].status,
 						user: req.user
-					}
+					};
 					log = new Log(log);
 					log.save();
 
@@ -901,7 +901,7 @@ exports.sendClientEmail = function(req, res){
 							sharedKey: String(req.body.project._id),
 							description: 'client ' + curClient.displayName + ' sent ' + type + ' email ' + req.body.project.title,
 							user: req.user
-						}
+						};
 						log = new Log(log);
 						log.save();
 
@@ -967,7 +967,7 @@ exports.lead = function(req, res){
 		sharedKey: String(req.user._id) || 'N/A',
 		description: 'new project lead submitted by ' + req.body.firstName + ' ' + req.body.lastName,
 		user: req.user
-	}
+	};
 	log = new Log(log);
 	log.save();
 
@@ -1024,7 +1024,7 @@ var emailClients = function(client, email, project, req, res){
 					sharedKey: String(project._id),
 					description: 'client ' + clientInfo.displayName + ' sent project created email ' + project.title,
 					user: req.user
-				}
+				};
 				log = new Log(log);
 				log.save();
 
@@ -1326,7 +1326,7 @@ exports.create = function(req, res) {
 								sharedKey: String(talent._id),
 								description: talent.name + ' ' + talent.lastName + ' added to project ' + project.title,
 								user: req.user
-							}
+							};
 							log = new Log(log);
 							log.save();
 
@@ -1374,7 +1374,7 @@ exports.create = function(req, res) {
 								sharedKey: String(project.client.clientId),
 								description: project.client.name + ' added to project ' + project.title,
 								user: req.user
-							}
+							};
 							log = new Log(log);
 							log.save();
 
@@ -1405,7 +1405,7 @@ exports.create = function(req, res) {
 							sharedKey: String(project._id),
 							description: project.title + ' project created',
 							user: req.user
-						}
+						};
 						log = new Log(log);
 						log.save();
 
@@ -1436,7 +1436,7 @@ exports.read = function(req, res) {
 
 
 // remove file from local file system
-var deleteFiles = function(project){
+var deleteFiles = function(project, req, user){
 	
 	var appDir = path.dirname(require.main.filename);
 
@@ -1453,7 +1453,7 @@ var deleteFiles = function(project){
 				sharedKey: String(project._id),
 				description: project.title + ' project file ' + project.deleteFiles[i] + ' deleted',
 				user: req.user
-			}
+			};
 			log = new Log(log);
 			log.save();
 		}
@@ -1493,7 +1493,7 @@ exports.deleteFileByName = function(req, res){
 };
 
 // rename file from local file system
-var renameFiles = function(project,res){
+var renameFiles = function(project, res, req){
 	
 	var appDir = path.dirname(require.main.filename);
 
@@ -1511,7 +1511,7 @@ var renameFiles = function(project,res){
 				sharedKey: String(project._id),
 				description: project.title + ' project file ' + project.auditions[i].file.name + ' renamed to ' + project.auditions[i].rename,
 				user: req.user
-			}
+			};
 			log = new Log(log);
 			log.save();
 
@@ -1596,7 +1596,7 @@ exports.update = function(req, res) {
 							sharedKey: String(project._id),
 							description: project.title + ' project updated',
 							user: req.user
-						}
+						};
 						log = new Log(log);
 						log.save();
 
@@ -1695,7 +1695,7 @@ exports.deleteById = function(req, res) {
 				sharedKey: String(project._id),
 				description: project.title + ' project deleted',
 				user: req.user
-			}
+			};
 			log = new Log(log);
 			log.save();
 
@@ -1931,7 +1931,7 @@ exports.uploadFile = function(req, res, next){
 				sharedKey: String(project._id),
 				description: project.title + ' file uploaded ' + file.name,
 				user: req.user
-			}
+			};
 			log = new Log(log);
 			log.save();
 
@@ -1994,7 +1994,7 @@ exports.uploadScript = function(req, res, next){
 					sharedKey: String(project._id),
 					description: project.title + ' script uploaded ' + file.name,
 					user: req.user
-				}
+				};
 				log = new Log(log);
 				log.save();
 
@@ -2078,7 +2078,7 @@ exports.uploadReferenceFile = function(req, res, next){
 					sharedKey: String(project._id),
 					description: project.title + ' reference file uploaded ' + file.name,
 					user: req.user
-				}
+				};
 				log = new Log(log);
 				log.save();
 
@@ -2299,7 +2299,7 @@ exports.uploadAudition = function(req, res, next){
 							sharedKey: String(project._id),
 							description: project.title + ' audition uploaded ' + file.name,
 							user: req.user
-						}
+						};
 						log = new Log(log);
 						log.save();
 
@@ -3007,6 +3007,16 @@ exports.uploadTalentAudition = function(req, res, next){
 						fs.unlinkSync(tempPath);
 					}
 
+					// write change to log
+					var log = {
+						type: 'project',
+						sharedKey: String(project._id),
+						description: project.title + ' talent audition uploaded ' + audition.file.name,
+						user: req.user
+					};
+					log = new Log(log);
+					log.save();
+
 					auditionCallback(err);
 				});
 
@@ -3056,16 +3066,6 @@ exports.uploadTalentAudition = function(req, res, next){
 				//console.log(updatedProject);
 
 				project.save(function(err) {
-
-					// write change to log
-					var log = {
-						type: 'project',
-						sharedKey: String(project._id),
-						description: project.title + ' talent audition uploaded ' + file.name,
-						user: req.user
-					}
-					log = new Log(log);
-					log.save();
 
 					var socketio = req.app.get('socketio');
 						socketio.sockets.emit('projectUpdate', {id: project._id}); 

@@ -192,7 +192,7 @@ exports.emailMissingAuds = function(req, res){
 							type: 'system',
 							sharedKey: 'N/A',
 							description: 'missing auditions email sent'
-						}
+						};
 						log = new Log(log);
 						log.save();
 

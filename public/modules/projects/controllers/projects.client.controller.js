@@ -824,6 +824,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 							regular: true, 
 							requested: false
 						};
+			var log;
 
 			$scope.addTalent = false;
 
@@ -844,11 +845,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					// remove talent if no longer selected
 					if($scope.project.talent[i].regular === false && $scope.project.talent[i].requested === false){
 
-						var log = {
+						log = {
 							type: 'talent',
 							sharedKey: $scope.project.talent[i].talentId,
 							description: 'talent ' + $scope.project.talent[i].name + ' removed from  ' + $scope.project.title
-						}
+						};
 
 						$scope.project.log = log;
 
@@ -867,11 +868,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			if(found === 0){
 				$scope.project.talent.push(talent);
 
-				var log = {
+				log = {
 							type: 'talent',
 							sharedKey: talent.talentId,
 							description: 'talent ' + talent.name + ' added to project  ' + $scope.project.title
-						}
+						};
 
 				$scope.project.log = log;
 			}
@@ -901,6 +902,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 							regular: false, 
 							requested: true
 						};
+			var log;
 
 			$scope.addTalent = false;
 
@@ -921,11 +923,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					// remove talent if no longer selected
 					if($scope.project.talent[i].regular === false && $scope.project.talent[i].requested === false){
 
-						var log = {
+						log = {
 							type: 'talent',
 							sharedKey: $scope.project.talent[i].talentId,
 							description: 'REQUESTED talent ' + $scope.project.talent[i].name + ' removed from  ' + $scope.project.title
-						}
+						};
 
 						$scope.project.log = log;
 
@@ -944,11 +946,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			if(found === 0){
 				$scope.project.talent.push(talent);
 
-				var log = {
+				log = {
 							type: 'talent',
 							sharedKey: talent.talentId,
 							description: 'REQUESTED talent ' + talent.name + ' added to project  ' + $scope.project.title
-						}
+						};
 
 				$scope.project.log = log;
 			}
@@ -1059,7 +1061,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 						type: 'talent',
 						sharedKey: $scope.project.talent[i].talentId,
 						description: 'talent ' + $scope.project.talent[i].name + ' status updated to ' + $scope.project.talent[i].status
-					}
+					};
 
 					$scope.project.log = log;
 
@@ -1186,7 +1188,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 						type: 'talent',
 						sharedKey: $scope.project.talent[i].talentId,
 						description: 'talent ' + $scope.project.talent[i].name + ' booked status set to ' + $scope.project.talent[i].booked
-					}
+					};
 
 					$scope.project.log = log;
 
@@ -2024,28 +2026,14 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		$scope.updateDueDate = function(){
 
-			// walk through and update phases if project closed to reset phase settings
-			if($scope.project.status === 'Closed - Pending Client Decision'){
-				$scope.project.status = 'In Progress';
-
-				for(var i = 0; i < $scope.project.phases.length; ++i){
-					if($scope.project.phases[i].name === 'Posting and Publishing'){
-						$scope.project.phases[i].status = 'in progress';
-						$scope.project.phases[i].endDate = '';
-
-					}
-				}
-
-			}
-
-			var newDate = moment($scope.project.estimatedCompletionDate).format('MM/DD/YYYY h:mm a');
+			var newDate = moment(new Date($scope.project.estimatedCompletionDate)).format('MM/DD/YYYY h:mm a');
 
 			$scope.project.estimatedCompletionDate = newDate;
 
 			var discussion = 'Due date and time extended to ' + newDate + ' EST by ' + Authentication.user.displayName;
 			var now = new Date();
 			var item = {
-				date: now.toJSON(), 
+				date: $scope.project.estimatedCompletionDate, 
 				userid: '', 
 				username: 'System', 
 				item: discussion, 
@@ -2053,8 +2041,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			};
 
 			$scope.project.discussion.push(item);
-
-			$scope.project.status = 'In Progress';
 
 			// send update email
 			$scope.gatherToAddresses('saveDiscussion');
@@ -2064,17 +2050,32 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		    $scope.email.message += 'Added by: System<br>';
 		    $scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '<br>';
 
-			$scope.discussion = '';
-
 		    $http.post('/projects/sendemail', {
 				email: $scope.email
 			});
+
+			// walk through and update phases if project closed to reset phase settings
+			if(String($scope.project.status) === 'Closed - Pending Client Decision'){
+
+				console.log('test');
+
+				for(var i = 0; i < $scope.project.phases.length; ++i){
+					if($scope.project.phases[i].name === 'Posting and Publishing'){
+						$scope.project.phases[i].status = 'in progress';
+						$scope.project.phases[i].endDate = '';
+					}
+				}
+			}
+
+			// reset project status
+			$scope.project.status = 'In Progress';
+
 			// update project store
 			//$scope.update();
 			$scope.updateNoRefresh();
 
 			$scope.showDateEdit = false;
-		}
+		};
 
 		// save discussion item
 		$scope.saveDiscussion = function(){

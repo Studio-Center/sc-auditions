@@ -39,7 +39,7 @@ exports.create = function(req, res) {
 				sharedKey: String(talent._id),
 				description: talent.name + ' ' + talent.lastName + ' created',
 				user: req.user
-			}
+			};
 			log = new Log(log);
 			log.save();
 
@@ -226,7 +226,7 @@ exports.update = function(req, res) {
 				sharedKey: String(talent._id),
 				description: talent.name + ' ' + talent.lastName + ' updated ',
 				user: req.user
-			}
+			};
 			log = new Log(log);
 			log.save();
 
@@ -322,7 +322,7 @@ exports.delete = function(req, res) {
 				sharedKey: String(talent._id),
 				description: talent.name + ' ' + talent.lastName + ' terminated ',
 				user: req.user
-			}
+			};
 			log = new Log(log);
 			log.save();
 
