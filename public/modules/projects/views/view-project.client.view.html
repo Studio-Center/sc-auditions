@@ -760,11 +760,19 @@
 							        		</select>
 							        	</div>
 							        </div>
+							        <div class="row" ng-if="project.phases[key].changeDate">
+										<div class="col-lg-4 col-md-4 col-sm-4">
+							        		<label>Change Date:</label>
+							        	</div>
+							        	<div class="col-lg-8 col-md-8 col-sm-8">
+							        		<p>{{project.phases[key].changeDate | amDateFormat:'MM/DD/YY h:mm:ss a'}}</p>
+							        	</div>
+							        </div>
 							        <div class="row">
-										<div class="col-lg-3 col-md-3 col-sm-3">
+										<div class="col-lg-4 col-md-4 col-sm-4">
 							        		<label>End Date:</label>
 							        	</div>
-							        	<div class="col-lg-9 col-md-9 col-sm-9">
+							        	<div class="col-lg-8 col-md-8 col-sm-8">
 							        		<p>{{project.phases[key].endDate | amDateFormat:'MM/DD/YY h:mm:ss a'}}</p>
 							        	</div>
 							        </div>
