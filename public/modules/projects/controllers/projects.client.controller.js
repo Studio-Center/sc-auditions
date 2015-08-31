@@ -1531,7 +1531,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.updateStatus = function(key){
 
 			// update change value
-			var newDate = moment(new Date($scope.project.estimatedCompletionDate)).format('MM/DD/YYYY h:mm a');
+			var newDate = moment(new Date()).format('MM/DD/YYYY h:mm a');
 			$scope.project.phases[key].changeDate = newDate;
 
 			if(String($scope.project.phases[key].name) === 'Posting and Publishing'){
