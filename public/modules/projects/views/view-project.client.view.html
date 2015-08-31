@@ -14,9 +14,9 @@
                                 <div class="dropdown">
                                     <div class="input-group">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                                        <input type="text" class="form-control" data-ng-model="project.estimatedCompletionDate" ng-change="updateDueDate()" readonly>
+                                        <input type="text" class="form-control" data-ng-model="project.estimatedCompletionDate" readonly>
                                     </div>
-                                    <datetimepicker ng-change="updateDueDate()" data-ng-model="project.estimatedCompletionDate" data-datetimepicker-config="{ minuteStep: 30, dropdownSelector: '#dropdown2' }"/>
+                                    <datetimepicker ng-change="updateDueDate()" data-ng-model="project.estimatedCompletionDate" data-datetimepicker-config="{ minuteStep: 30 }"/>
                                     
                                 </div>
                                  <div style="color:red;font-weight:700">{{dateNotice}}</div>

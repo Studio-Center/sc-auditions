@@ -95,7 +95,7 @@ exports.sendTalentEmails = function(req, res){
 										sharedKey: String(talent._id),
 										description: talent.name + ' ' + talent.lastName + ' sent custom email ',
 										user: req.user
-									}
+									};
 									log = new Log(log);
 									log.save();
 
@@ -520,6 +520,7 @@ exports.sendPreCloseSummary = function(req, res){
 				},
 				// send out talent project creation email
 				function(owner, producers, summaryEmailHTML, done) {
+					var log;
 					// send email
 					// generate email signature
 					var newDate = new Date(project.estimatedCompletionDate);
@@ -542,22 +543,22 @@ exports.sendPreCloseSummary = function(req, res){
 					transporter.sendMail(mailOptions, function(err){
 
 						// log event
-						var log = {
+						log = {
 							type: 'system',
 							sharedKey: 'N/A',
 							description: ' project ' + project.title + ' preclose summary sent',
 							user: owner
-						}
+						};
 						log = new Log(log);
 						log.save();
 
 						// log event
-						var log = {
+						log = {
 							type: 'project',
 							sharedKey: String(project._id),
 							description: ' project ' + project.title + ' preclose summary sent',
 							user: owner
-						}
+						};
 						log = new Log(log);
 						log.save();
 
