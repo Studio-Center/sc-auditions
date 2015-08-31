@@ -2428,6 +2428,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		        // save project on finish
 		        if((i+1) === $files.length){
 
+		        	$scope.verifyFilesList = [];
+
 		        	// update project store
 					$scope.updateNoRefresh();
 		        }
