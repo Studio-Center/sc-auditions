@@ -319,7 +319,7 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 					sharedKey: $scope.talent._id
 				};
 
-				//console.log(listFilter);
+				console.log(listFilter);
 
 				$http.post('/logs/listFilter', {
 			        filter: listFilter
