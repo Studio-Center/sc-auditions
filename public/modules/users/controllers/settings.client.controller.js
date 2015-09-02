@@ -7,6 +7,18 @@ angular.module('users').controller('SettingsController', ['$scope', '$http', '$l
 		// custom arrays
 		$scope.roleOpts = ['user', 'admin', 'producer/auditions director', 'talent', 'talent director', 'client', 'agency'];
 
+		$scope.permitEveryOneButClients = function(){
+			var allowRoles = ['admin', 'producer/auditions director', 'production coordinator', 'talent director'];
+
+			for(var i = 0; i < Authentication.user.roles.length; ++i){
+				for(var j = 0; j < allowRoles.length; ++j){
+					if(Authentication.user.roles[i] === allowRoles[j]) {
+						return true;
+					}
+				}
+			}
+		};
+
 		// If user is not signed in then redirect back home
 		if (!$scope.user) $location.path('/');
 

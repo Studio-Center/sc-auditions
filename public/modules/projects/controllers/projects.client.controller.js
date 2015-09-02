@@ -577,64 +577,70 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		// send various client emails
 		$scope.sendClientEmail = function(type){
 
-			// update email count
-    		if(typeof $scope.project.counts === 'undefined'){
-    			$scope.project.counts = {};
-    		}
-    		if(typeof $scope.project.counts[type] === 'undefined'){
-    			$scope.project.counts[type] = 0;
-    		}
-    		$scope.project.counts[type] += 1;
+			if($scope.selectedMainClients.length > 0){
 
-			$http.post('/projects/sendclientemail', {
-		        type: type,
-		        project: $scope.project,
-		        clients: $scope.selectedMainClients,
-		        count: $scope.project.counts[type]
-		    }).
-			success(function(data, status, headers, config) {
-        		alert('Clients Emailed ' + type + ' Email ');
-        		$scope.selectedMainClients = [];
+				// update email count
+	    		if(typeof $scope.project.counts === 'undefined'){
+	    			$scope.project.counts = {};
+	    		}
+	    		if(typeof $scope.project.counts[type] === 'undefined'){
+	    			$scope.project.counts[type] = 0;
+	    		}
+	    		$scope.project.counts[type] += 1;
 
-				var note, now = Date.now();
-				var item = {
-							date: now, 
-							userid: '', 
-							username: 'System', 
-							item: '', 
-							deleted: false
-						};
+				$http.post('/projects/sendclientemail', {
+			        type: type,
+			        project: $scope.project,
+			        clients: $scope.selectedMainClients,
+			        count: $scope.project.counts[type]
+			    }).
+				success(function(data, status, headers, config) {
+	        		alert('Clients sent ' + type + ' Email ');
+	        		$scope.selectedMainClients = [];
 
-				
+					var note, now = Date.now();
+					var item = {
+								date: now, 
+								userid: '', 
+								username: 'System', 
+								item: '', 
+								deleted: false
+							};
 
-        		// add note
-        		switch(type){
-        			case 'opening':
-						note = 'Client Notified of Project Start by ' + Authentication.user.displayName;
-					break;
-					case 'carryover':
-						note = 'Client sent Carryover by ' + Authentication.user.displayName;
-					break;
-					case 'closing':
-						note = 'Client Notified of Project Completion by ' + Authentication.user.displayName;
-					break;
-        		}
+					
 
-        		// add note to note object
-        		item.item = note;
+	        		// add note
+	        		switch(type){
+	        			case 'opening':
+							note = 'Client Notified of Project Start by ' + Authentication.user.displayName;
+						break;
+						case 'carryover':
+							note = 'Client sent Carryover by ' + Authentication.user.displayName;
+						break;
+						case 'closing':
+							note = 'Client Notified of Project Completion by ' + Authentication.user.displayName;
+						break;
+	        		}
 
-        		// add to project discussion
-        		$scope.project.discussion.push(item);
+	        		// add note to note object
+	        		item.item = note;
 
-        		// update project store
-				//$scope.update();
-				$scope.updateNoRefresh();
-        	}).
-			error(function(data, status, headers, config) {
-				alert('An error occured while sending client emails. Please contact your administrator.');
-			    // called asynchronously if an error occurs
-			    // or server returns response with an error status.
-			});
+	        		// add to project discussion
+	        		$scope.project.discussion.push(item);
+
+	        		// update project store
+					//$scope.update();
+					$scope.updateNoRefresh();
+	        	}).
+				error(function(data, status, headers, config) {
+					alert('An error occured while sending client emails. Please contact your administrator.');
+				    // called asynchronously if an error occurs
+				    // or server returns response with an error status.
+				});
+
+			} else {
+				alert('Please select clients to email!');
+			}
 		};
 
 		// new project form 
