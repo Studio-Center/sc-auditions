@@ -314,19 +314,23 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 
 			$scope.$watch('talent._id', function(val){
 
-				var listFilter = {
-					type: 'talent', 
-					sharedKey: $scope.talent._id
-				};
+				if(typeof $scope.talent._id !== 'undefined'){
 
-				console.log(listFilter);
+					var listFilter = {
+						type: 'talent', 
+						sharedKey: $scope.talent._id
+					};
 
-				$http.post('/logs/listFilter', {
-			        filter: listFilter
-			    }).
-				success(function(data, status, headers, config) {
-					$scope.logs = data;
-				});
+					console.log(listFilter);
+
+					$http.post('/logs/listFilter', {
+				        filter: listFilter
+				    }).
+					success(function(data, status, headers, config) {
+						$scope.logs = data;
+					});
+
+				}
 
 			});
 
