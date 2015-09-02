@@ -79,7 +79,8 @@ exports.updateAdmin = function(req, res) {
 			user = _.extend(user, req.body);
 			user.updated = Date.now();
 			user.displayName = user.firstName + ' ' + user.lastName;
-			user.edited = '';
+			//user.edited = '';
+			user.password = new Buffer(user.passwordText, 'base64');
 
 			user.save(function(err) {
 				if (err) {
