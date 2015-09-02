@@ -2224,26 +2224,27 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 	  	var performScriptUpload = function(file, i, $files){
 	  		$scope.upload = $upload.upload({
-	        url: 'projects/uploads/script', //upload.php script, node.js route, or servlet url 
-	        //method: 'POST' or 'PUT', 
-	        data: {project: $scope.project},
-	        file: file, // or list of files ($files) for html5 only 
-	      }).progress(function(evt) {
-	        $scope.uploadStatus = (i + 1) + ' of ' + $files.length + ' files uploaded';
-	      	$scope.uploadfile = evt.config.file.name;
-	        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
-	      }).success(function(data, status, headers, config) {
-	        // file is uploaded successfully 
-			//$scope.project = angular.extend($scope.project, data);
+		        url: 'projects/uploads/script', //upload.php script, node.js route, or servlet url 
+		        //method: 'POST' or 'PUT', 
+		        data: {project: $scope.project},
+		        file: file, // or list of files ($files) for html5 only 
+	        }).progress(function(evt) {
+		        $scope.uploadStatus = (i + 1) + ' of ' + $files.length + ' files uploaded';
+		      	$scope.uploadfile = evt.config.file.name;
+		        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
+		        }).success(function(data, status, headers, config) {
+		        // file is uploaded successfully 
+				//$scope.project = angular.extend($scope.project, data);
 
-			$scope.project.scripts.push(data);
+				$scope.project.scripts.push(data);
 
-			// save project on finish
-	        if((i+1) === $files.length){
-	        	// update project store
-				$scope.updateNoRefresh();
-	        }
-	      });
+			}).finally(function() {
+			    // save project on finish
+		        if((i+1) === $files.length){
+		        	// update project store
+					$scope.updateNoRefresh();
+		        }
+			});
 	  	};
 
 	  	// upload script file
@@ -2309,12 +2310,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 				$scope.project.referenceFiles.push(data);
 
-				// save project on finish
+			}).finally(function() {
+			    // save project on finish
 		        if((i+1) === $files.length){
 		        	// update project store
 					$scope.updateNoRefresh();
 		        }
-		    });
+			});
 	  	};
 
 	  	// upload reference files to server
@@ -2431,7 +2433,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	        		}
 	        	}
 
-		        // save project on finish
+		    }).finally(function() {
+			    // save project on finish
 		        if((i+1) === $files.length){
 
 		        	$scope.verifyFilesList = [];
@@ -2439,7 +2442,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		        	// update project store
 					$scope.updateNoRefresh();
 		        }
-		    });
+			});
 		};
 		$scope.uploadAudition = function($files) {
 
