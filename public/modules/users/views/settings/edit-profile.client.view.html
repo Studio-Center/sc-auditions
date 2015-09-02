@@ -31,7 +31,7 @@
 					<label for="phone">Phone Number</label>
 					<input type="text" id="phone" name="phone" class="form-control" data-ng-model="user.phone" placeholder="Phone Number">
 				</div>
-				<div class="form-group">
+				<div class="form-group" ng-if="permitEveryOneButClients()">
 					<label for="notes">Email Signature</label>
 					<div text-angular ng-model="user.emailSignature"></div>
 				</div>
