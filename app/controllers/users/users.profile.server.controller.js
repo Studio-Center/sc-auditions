@@ -8,6 +8,7 @@ var _ = require('lodash'),
 	mongoose = require('mongoose'),
 	passport = require('passport'),
 	User = mongoose.model('User'),
+	Log = mongoose.model('Log'),
 	config = require('../../../config/config'),
 	nodemailer = require('nodemailer'),
 	sgTransport = require('nodemailer-sendgrid-transport');
@@ -35,6 +36,16 @@ exports.update = function(req, res) {
 					message: errorHandler.getErrorMessage(err)
 				});
 			} else {
+				// write change to log
+				var log = {
+					type: 'system',
+					sharedKey: String(user._id),
+					description: 'user ' + user.displayName + ' updated ',
+					user: user
+				};
+				log = new Log(log);
+				log.save();
+
 				req.login(user, function(err) {
 					if (err) {
 						res.status(400).send(err);
@@ -88,6 +99,16 @@ exports.updateAdmin = function(req, res) {
 						message: errorHandler.getErrorMessage(err)
 					});
 				} else {
+
+					// write change to log
+					var log = {
+						type: 'system',
+						sharedKey: String(user._id),
+						description: 'user ' + user.displayName + ' updated ',
+						user: user
+					};
+					log = new Log(log);
+					log.save();
 
 					var template = 'templates/users/client-updated-email';
 
@@ -245,7 +266,19 @@ exports.create = function(req, res) {
 					html: clientEmailHTML
 				};
 
-				transporter.sendMail(mailOptions, function(){});
+				transporter.sendMail(mailOptions, function(){
+
+					// write change to log
+					var log = {
+						type: 'system',
+						sharedKey: String(user._id),
+						description: 'user ' + user.displayName + ' added and emailed ',
+						user: user
+					};
+					log = new Log(log);
+					log.save();
+
+				});
 
 			});
 
