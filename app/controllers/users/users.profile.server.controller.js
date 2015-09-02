@@ -100,9 +100,11 @@ exports.updateAdmin = function(req, res) {
 
 						var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
 
+						var toAddr = [user.email, adminEmail];
+
 						// send email notification of update
 						transporter.sendMail({
-						    to: user.email,
+						    to: toAddr,
 							from: adminEmail || config.mailer.from,
 							cc: 'audition­s\-notification@studiocenter.com',
 							replyTo: adminEmail || config.mailer.from,
