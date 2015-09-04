@@ -578,6 +578,12 @@ exports.sendPreCloseSummary = function(req, res){
 						project = _.extend(req.project, project);
 
 						project.save(function(err) {
+
+							// update connected clients
+							var socketio = req.app.get('socketio');
+							socketio.sockets.emit('projectUpdate', {id: project._id}); 
+							socketio.sockets.emit('callListUpdate', {filter: ''}); 
+						
 							done(err);
 						});
 					});
