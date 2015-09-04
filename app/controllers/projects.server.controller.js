@@ -1726,7 +1726,7 @@ exports.deleteById = function(req, res) {
 exports.getTalentFilteredProjects = function(req, res){
 
 	var dayAgo = new Date();
-	dayAgo.setDate(dayAgo.getDay() - 1);
+	dayAgo.setDate(dayAgo.getDay() + 1);
 
 	var searchCriteria = {'talent': { 
 									$elemMatch: { 
