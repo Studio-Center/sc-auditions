@@ -261,7 +261,7 @@ var gatherTalentsSearch = function(req, res, filter){
 								}
 								], function(err) {
 								if (err) {
-									return res.json(400, err);
+									return res.status(400).json(err);
 								} else {
 									talentCallback();
 								}
@@ -584,7 +584,7 @@ exports.sendPreCloseSummary = function(req, res){
 				}
 				], function(err) {
 				if (err) {
-					return res.json(400, err);
+					return res.status(400).json(err);
 				} else {
 					callback();
 				}

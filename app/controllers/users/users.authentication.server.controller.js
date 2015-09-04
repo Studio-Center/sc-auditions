@@ -129,7 +129,7 @@ exports.token = function(req, res, next){
 			}, 
 			req.app.get('jwtTokenSecret')
 		);						
-		res.json({
+		res.status(200).json({
 			token : token,
 			expires : expires,
 			user : user.toJSON()
