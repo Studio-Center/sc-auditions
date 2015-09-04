@@ -49,7 +49,7 @@
 			<div class="col-lg-6 col-md-6 col-sm-6">
 				<div class="panel panel-default">
 					<div class="panel-heading"><strong>Description &amp; Specs</strong></div>
-					<div class="panel-body" ng-bind-html="project.description | linky:'_blank'"></div>
+					<div class="panel-body" ng-bind-html-unsafe="project.description | linky:'_blank'"></div>
 				</div>
 			</div>
 			
