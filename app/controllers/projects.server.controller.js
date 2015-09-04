@@ -333,7 +333,7 @@ var sendTalentEmail = function(req, res, project, talent, override){
 						var socketio = req.app.get('socketio');
 						socketio.sockets.emit('projectUpdate', {id: project._id}); 
 						socketio.sockets.emit('callListUpdate', {filter: ''}); 
-						res.json(project);
+						res.status(200).json(project);
 					}
 				});			
 
@@ -344,9 +344,9 @@ var sendTalentEmail = function(req, res, project, talent, override){
 		], function(err) {
 		if (err) {
 			if (err) {
-				return res.json(400, err);
+				return res.status(400).json(err);
 			} else {
-				return res.json(200);
+				return res.status(200);
 			}
 		}
 	});
@@ -497,9 +497,9 @@ exports.getproject = function(req, res){
 
 	Project.findById(req.body.id).populate('user', 'displayName').exec(function(err, project) {
 		if (err) {
-			return res.json(400, err);
+			return res.status(400).json(err);
 		} else {
-			res.jsonp(project);
+			res.status(200).jsonp(project);
 		}
 	});
 
@@ -535,9 +535,9 @@ exports.sendTalentEmailById = function(req, res){
 		}
 		], function(err) {
 		if (err) {
-			return res.json(400, err);
+			return res.status(400).json(err);
 		} else {
-			return res.json(200);
+			return res.status(200);
 		}
 	});
 
@@ -604,10 +604,10 @@ exports.updateSingleTalentStatus = function (req, res){
 		}
 		], function(err) {
 		if (err) {
-			return res.json(400, err);
+			return res.status(400).json(err);
 		} else {
 			
-			return res.json(200);
+			return res.status(200);
 		}
 	});
 };
@@ -630,12 +630,12 @@ exports.updateTalentStatus = function(req, res){
 
 			project.save(function(err) {
 				if (err) {
-					return res.json(400, err);
+					return res.status(400).json(err);
 				} else {
 					var socketio = req.app.get('socketio');
 						socketio.sockets.emit('projectUpdate', {id: project._id}); 
 						socketio.sockets.emit('callListUpdate', {filter: ''}); 
-					res.json(200);
+					res.status(200);
 				}
 			});	
 
@@ -696,10 +696,10 @@ exports.updateTalentNote = function (req, res){
 		}
 		], function(err) {
 		if (err) {
-			return res.json(400, err);
+			return res.status(400).json(err);
 		} else {
 			
-			return res.json(200);
+			return res.status(200);
 		}
 	});
 
@@ -743,7 +743,7 @@ exports.updateNoRefresh = function(req, res){
 
 			project.save(function(err) {
 				if (err) {
-					return res.json(400, err);
+					return res.status(400).json(err);
 				} else {
 					var socketio = req.app.get('socketio');
 						socketio.sockets.emit('projectUpdate', {id: project._id}); 
@@ -2659,9 +2659,9 @@ exports.bookAuditions = function(req, res, next){
 		}
 		], function(err) {
 		if (err) {
-			return res.json(400, err);
+			return res.status(400).json(err);
 		} else {
-			return res.json(200);
+			return res.status(200);
 		}
 	});
 };
