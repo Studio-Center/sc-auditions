@@ -11,7 +11,7 @@
     		{% if count %}
 				{% for key, project in results %}
 				<h4><a href="http://studiocenterauditions.com/#!/projects/{{project.project._id}}" target="_blank">{{project.project.title}}</a></h4>
-					{% if project.talents > 0 %}
+					{% if project.talents.length > 0 %}
 						{% for key, talent in project.talents %}
 							<div>{{talent.name}} - {{talent.status}}</div>
 						{% endfor %}
