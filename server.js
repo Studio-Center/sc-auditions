@@ -8,8 +8,10 @@ var init = require('./config/init')(),
 	jwt = require('jwt-simple');
 
 // multithreading
-var cluster = require('cluster');
-var numCPUs = require('os').cpus().length;
+var cluster = require('cluster'),
+	sio = require('socket.io'),
+	sio_redis = require('socket.io-redis'),
+	numCPUs = require('os').cpus().length;
 
 /**
  * Main application entry file.
@@ -54,7 +56,9 @@ var numCPUs = require('os').cpus().length;
 	// Start the app by listening on <port>
 	var server = app.listen(config.port);
 
-	var io = require('socket.io').listen(server);
+	var io = sio(server);
+
+	io.adapter(sio_redis({ host: 'localhost', port: 6379 }));
 
 	app.set('socketio', io);
 	app.set('server', server);
