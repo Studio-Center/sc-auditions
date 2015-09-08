@@ -28,6 +28,7 @@ module.exports = {
 				'public/lib/angular/angular.js',
 				'public/lib/angular-base64/angular-base64.min.js',
 				'public/lib/angular-route/angular-route.min.js',
+				'public/lib/angular-sanitize/angular-sanitize.min.js',
 				'public/lib/angular-moment/angular-moment.min.js',
 				'public/lib/ng-file-upload/angular-file-upload-shim.min.js',
 				'public/lib/ng-file-upload/angular-file-upload.min.js',
