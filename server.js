@@ -63,6 +63,19 @@ var cluster = require('cluster'),
 	app.set('socketio', io);
 	app.set('server', server);
 
+	// Listen to messages sent from the master. Ignore everything else.
+    process.on('message', function(message, connection) {
+        if (message !== 'sticky-session:connection') {
+            return;
+        }
+
+        // Emulate a connection event on the server by emitting the
+        // event with the connection the master sent us.
+        server.emit('connection', connection);
+
+        connection.resume();
+    });
+
 	// Expose app
 	exports = module.exports = app;
 
