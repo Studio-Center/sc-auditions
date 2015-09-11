@@ -35,6 +35,10 @@
 					<label for="notes">Notes</label>
 					<textarea id="notes" name="notes" class="form-control" data-ng-model="useredit.notes">{{useredit.notes}}</textarea>
 				</div>
+				<div class="form-group" ng-if="useredit.roles[0] !== 'client' && useredit.roles[0] !== 'client-client'">
+					<label for="notes">Email Signature</label>
+					<div text-angular ng-model="useredit.emailSignature"></div>
+				</div>
 				<div class="form-group">
 					<label for="roles">User Role</label>
 					<select id="roles" name="roles" data-ng-model="useredit.roles" class="form-control">
