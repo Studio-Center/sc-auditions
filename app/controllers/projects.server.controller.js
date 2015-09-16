@@ -1762,15 +1762,16 @@ exports.getTalentFilteredProjects = function(req, res){
 /**
  * List of Projects
  */
-var performLoadList = function(req, res, allowedRoles, i, j){
+var performLoadList = function(req, res, allowedRoles, i, j, limit){
 
 	var curUserId = String(req.user._id);
+	var limit = limit || 50;
 
 	if(req.user.roles[i] === allowedRoles[j]){
 
 		switch(allowedRoles[j]){
 			case 'user':
-				Project.find({'user._id': curUserId}).sort('-created').populate('user', 'displayName').exec(function(err, projects) {
+				Project.find({'user._id': curUserId}).sort('-created').populate('user', 'displayName').limit(limit).exec(function(err, projects) {
 					if (err) {
 						return res.status(400).send({
 							message: errorHandler.getErrorMessage(err)
@@ -1782,7 +1783,7 @@ var performLoadList = function(req, res, allowedRoles, i, j){
 			break;
 			case 'talent':
 			// talent does not currently have access, added to permit later access
-				Project.find({'talent': { $elemMatch: { 'talentId': curUserId}}}).sort('-created').populate('user', 'displayName').exec(function(err, projects) {
+				Project.find({'talent': { $elemMatch: { 'talentId': curUserId}}}).sort('-created').populate('user', 'displayName').limit(limit).exec(function(err, projects) {
 					if (err) {
 						return res.status(400).send({
 							message: errorHandler.getErrorMessage(err)
@@ -1793,7 +1794,7 @@ var performLoadList = function(req, res, allowedRoles, i, j){
 				});
 			break;
 			case 'client':
-				Project.find({'client': { $elemMatch: { 'userId': curUserId}}}).sort('-created').populate('user', 'displayName').exec(function(err, projects) {
+				Project.find({'client': { $elemMatch: { 'userId': curUserId}}}).sort('-created').populate('user', 'displayName').limit(limit).exec(function(err, projects) {
 					if (err) {
 						return res.status(400).send({
 							message: errorHandler.getErrorMessage(err)
@@ -1806,7 +1807,7 @@ var performLoadList = function(req, res, allowedRoles, i, j){
 			break;
 			case 'client-client':
 				//console.log(curUserId);
-				Project.find({'clientClient': { $elemMatch: { 'userId': curUserId}}}).sort('-created').populate('user', 'displayName').exec(function(err, projects) {
+				Project.find({'clientClient': { $elemMatch: { 'userId': curUserId}}}).sort('-created').populate('user', 'displayName').limit(limit).exec(function(err, projects) {
 					if (err) {
 						return res.status(400).send({
 							message: errorHandler.getErrorMessage(err)
@@ -1823,18 +1824,36 @@ var performLoadList = function(req, res, allowedRoles, i, j){
 
 exports.findLimit = function(req, res) { 
 
-	var limit = req.body.queryLimit;
+	var limit = req.body.queryLimit || 50;
 
-	Project.find().sort('-created').populate('user', 'displayName').limit(limit).exec(function(err, projects) {
-		if (err) {
-			//console.log(err);
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			return res.jsonp(projects);
+	// permit certain user roles full access
+	var allowedRoles = ['admin','producer/auditions director', 'production coordinator','talent director'];
+
+	if (_.intersection(req.user.roles, allowedRoles).length) {
+
+		Project.find().sort('-created').populate('user', 'displayName').limit(limit).exec(function(err, projects) {
+			if (err) {
+				//console.log(err);
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
+			} else {
+				return res.jsonp(projects);
+			}
+		});
+
+	// filter results as required for remaning uer roles
+	} else {
+
+		allowedRoles = ['user', 'talent', 'client', 'client-client'];
+
+		for(var i = 0; i < req.user.roles.length; ++i){
+			for(var j = 0; j < allowedRoles.length; ++j){
+				performLoadList(req, res, allowedRoles, i, j, limit);
+			}
 		}
-	});
+
+	}
 
 };
 exports.list = function(req, res) { 
