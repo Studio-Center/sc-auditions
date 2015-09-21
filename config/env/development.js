@@ -27,6 +27,7 @@ module.exports = {
 	},
 	mailer: {
 		from: process.env.MAILER_FROM || 'no-reply@studiocenterauditions.com',
+		notifications: 'audition­s\-notification@studiocenter.com',
 		// options: {
 		// 	service: process.env.MAILER_SERVICE_PROVIDER || 'Gmail',
 		// 	auth: {

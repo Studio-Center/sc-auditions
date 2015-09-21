@@ -121,7 +121,7 @@ exports.updateAdmin = function(req, res) {
 
 						var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
 
-						var ccAddr = ['audition­s\-notification@studiocenter.com', adminEmail];
+						var ccAddr = [config.mailer.notifications, adminEmail];
 
 						// send email notification of update
 						transporter.sendMail({

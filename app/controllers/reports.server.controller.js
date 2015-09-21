@@ -180,7 +180,7 @@ exports.emailMissingAuds = function(req, res){
 						to: to,
 						from: config.mailer.from,
 						replyTo: config.mailer.from,
-						cc: 'audition­s\-notification@studiocenter.com',
+						cc: config.mailer.notifications,
 						subject: emailSubject,
 						html: missingAudsEmailHTML
 					};
