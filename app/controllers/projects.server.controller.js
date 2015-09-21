@@ -195,7 +195,6 @@ var emailTalent = function(selTalent, talentInfo, email, project, req, res){
 				to: talentInfo.email,
 				from: owner.email || config.mailer.from,
 				replyTo: owner.email || config.mailer.from,
-				cc: config.mailer.notifications,
 				subject: emailSubject,
 				html: talentEmailHTML
 			};
