@@ -12,7 +12,7 @@
     <h1 style="text-align:center">Start A New Audition Project</h1>
   </div>
   <div class="col-md-12" style="padding-bottom:75px">
-    <form name="newAuditionProjectForm" data-ng-submit="lead()" class="signin form-horizontal" autocomplete="off">
+    <form name="newAuditionProjectForm" data-ng-submit="lead()" class="signin form-horizontal newAuditionProjectForm" autocomplete="off">
       <fieldset>
         <div class="form-group">
           <label for="firstName">First Name</label>
@@ -33,6 +33,7 @@
         <div class="form-group">
           <label for="email" class="control-label">Email: *</label>
           <input class="form-control" type="email" name="email"  placeholder="Email" data-ng-model="newLead.email" size="60" value="{{user.email}}" required />
+          <input type="text" name="website" data-ng-model="newLead.website" placeholder="Website" size="60" maxlength="128" class="form-control website" />
         </div>
         <div class="form-group">
           <label for="describe" class="control-label">Please describe your audio project. *</label>
