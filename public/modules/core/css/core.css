@@ -123,6 +123,9 @@
 	margin-top:-65px;
 	padding-bottom:45px
 }
+.newAuditionProjectForm .website{
+	display:none;
+}
 /* fixed header */
 @media(max-width: 1160px){
 	.create-project{

@@ -646,21 +646,26 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		// new project form 
 		$scope.lead = function(){
 
-			// Trigger validation flag.
-		    $scope.submitted = true;
+			if($scope.newLead.website.length == 0){
 
-			$http.post('/projects/lead', {
-			        firstName: $scope.newLead.firstName,
-			        lastName: $scope.newLead.lastName,
-			        company: $scope.newLead.company,
-			        phone: $scope.newLead.phone,
-			        email: $scope.newLead.email,
-			        describe: $scope.newLead.describe,
-			        scripts: $scope.scripts
-			    }).
-				success(function(data, status, headers, config) {
-            	$location.path('/projects/new-audition-form/thanks');
-        	});
+				// Trigger validation flag.
+			    $scope.submitted = true;
+
+				$http.post('/projects/lead', {
+				        firstName: $scope.newLead.firstName,
+				        lastName: $scope.newLead.lastName,
+				        company: $scope.newLead.company,
+				        phone: $scope.newLead.phone,
+				        email: $scope.newLead.email,
+				        describe: $scope.newLead.describe,
+				        scripts: $scope.scripts
+				    }).
+					success(function(data, status, headers, config) {
+	            	$location.path('/projects/new-audition-form/thanks');
+	        	});
+
+			}
+			
 		};
 		$scope.leadFormPop = function(){
 			if(typeof Authentication.user === 'object'){

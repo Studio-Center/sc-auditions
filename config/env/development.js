@@ -27,14 +27,7 @@ module.exports = {
 	},
 	mailer: {
 		from: process.env.MAILER_FROM || 'no-reply@studiocenterauditions.com',
-		notifications: 'audition­s\-notification@studiocenter.com',
-		// options: {
-		// 	service: process.env.MAILER_SERVICE_PROVIDER || 'Gmail',
-		// 	auth: {
-		// 		user: process.env.MAILER_EMAIL_ID || 'no-reply@studiocenter.com',
-		// 		pass: process.env.MAILER_PASSWORD || 'nor3p$CTP'
-		// 	}
-		// }
+		notifications: 'audition-notification@studiocenter.com',
 		options: {
 		    auth: {
 		        api_key: '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'
