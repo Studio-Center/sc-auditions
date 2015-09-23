@@ -646,7 +646,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		// new project form 
 		$scope.lead = function(){
 
-			if($scope.newLead.website.length == 0){
+			if($scope.newLead.website.length === 0){
 
 				// Trigger validation flag.
 			    $scope.submitted = true;
@@ -665,7 +665,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	        	});
 
 			}
-			
+
 		};
 		$scope.leadFormPop = function(){
 			if(typeof Authentication.user === 'object'){
