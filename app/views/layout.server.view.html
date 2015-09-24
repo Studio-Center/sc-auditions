@@ -60,6 +60,18 @@
 		<section class="container">
 			{% block content %}{% endblock %}
 		</section>
+		<footer class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<a href="https://studiocenter.com/" target="_blank">StudioCenter.com</a> |
+					<a href="https://studiocenter.com/video/video-production" target="_blank">Video production</a> |
+					<a href="https://studiocenter.com/video/motion-graphics" target="_blank">Motion Graphics</a> |
+					<a href="https://studiocenter.com/camera/video-talent" target="_blank">On Camera talent</a> |
+					<a href="https://studiocenter.com/digital/web-design" target="_blank">Web Design</a> |
+					<a href="https://studiocenter.com/audio/mix-week" target="_blank">Mix of the Week</a>
+				</div>
+			</div>
+		</footer>
 	</section>
 
 	<!--Embedding The User Object-->
@@ -69,7 +81,7 @@
 
 	<!--Application JavaScript Files-->
 	{% for jsFile in jsFiles %}<script type="text/javascript" src="{{jsFile}}"></script>
-	{% endfor %} 
+	{% endfor %}
 
 	{% if process.env.NODE_ENV === 'development' %}
 	<!--Livereload script rendered -->
