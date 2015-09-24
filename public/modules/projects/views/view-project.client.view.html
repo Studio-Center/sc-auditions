@@ -17,7 +17,7 @@
                                         <input type="text" class="form-control" data-ng-model="project.estimatedCompletionDate" readonly>
                                     </div>
                                     <datetimepicker ng-change="updateDueDate()" data-ng-model="project.estimatedCompletionDate" data-datetimepicker-config="{ minuteStep: 30 }"/>
-                                    
+
                                 </div>
                                  <div style="color:red;font-weight:700">{{dateNotice}}</div>
                            </div>
@@ -52,7 +52,7 @@
 					<div class="panel-body" ng-bind-html="project.description"></div>
 				</div>
 			</div>
-			
+
 			<div class="col-lg-6 col-md-6 col-sm-6">
 				<div class="panel panel-default" data-ng-show="permitAdminProductionCoordinatorDirector()">
 					<div class="panel-heading">
@@ -88,7 +88,7 @@
 						<div class="col-md-12">
 							<div ng-repeat="(key, note) in project.clientNotes | orderBy:'-date':reverse">
 								<h5><strong>{{note.date | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST - {{note.username}}</strong></h5>
-								<pre>{{note.item | linky:'_blank'}}</pre>
+								<div ng-bind-html="note.item"></div>
 							</div>
 						</div>
 					</div>
@@ -123,8 +123,8 @@
 							<li class="list-group-item" ng-repeat="(key, script) in project.scripts">
 								<div class="row">
                     				<div class="col-lg-10 col-md-10 col-sm-10">
-										<strong>{{key+1}}.</strong> 
-										<a href="/res/scripts/{{project._id}}/{{script.file.name | encodeUri}}" target="_blank" data-ng-bind="script.file.name" download="{{script.file.name}}"></a> 
+										<strong>{{key+1}}.</strong>
+										<a href="/res/scripts/{{project._id}}/{{script.file.name | encodeUri}}" target="_blank" data-ng-bind="script.file.name" download="{{script.file.name}}"></a>
 										<a href="/res/scripts/{{project._id}}/{{script.file.name}}" target="_blank">
 											<img src="/img/Adobe-Acrobat-icon.png" alt="download PDF" download="{{script.file.name}}">
 										</a>
@@ -165,7 +165,7 @@
 							<li class="list-group-item" ng-repeat="(key, referenceFile) in project.referenceFiles">
 								<div class="row">
                     				<div class="col-lg-10 col-md-10 col-sm-10">
-										<strong>{{key+1}}.</strong> <a href="/res/referenceFiles/{{project._id}}/{{referenceFile.file.name | encodeUri}}" target="_blank" data-ng-bind="referenceFile.file.name" download="{{referenceFile.file.name}}"></a> 
+										<strong>{{key+1}}.</strong> <a href="/res/referenceFiles/{{project._id}}/{{referenceFile.file.name | encodeUri}}" target="_blank" data-ng-bind="referenceFile.file.name" download="{{referenceFile.file.name}}"></a>
 
 										<div ng-show="checkForAudio(referenceFile.file.name)">
 											<button ng-click="playAudio(key, referenceFile.file.name, '/res/referenceFiles/{{project._id}}/')" class="btn btn-primary">
@@ -175,7 +175,7 @@
 												<span ng-if="lastAudioID != key || audioStatus != 1">
 													<img src="/img/aqua-play-icon.png" style="width:35px;height:auto" alt="play icon">
 												</span>
-											</button> 
+											</button>
 											<button ng-click="stopAudio()" class="btn btn-primary" ng-if="lastAudioID == key && audioStatus == 1">
 												<img src="/img/Aqua-Stop-icon.png" style="width:35px;height:auto" alt="play icon">
 											</button>
@@ -188,16 +188,16 @@
 								</div>
 							</li>
 						</ul>
-						
+
 					</accordion-group>
 				</accordion>
 			</div>
-			
+
 		</div>
 
 		<div class="row">
 
-			<div class="col-lg-12 col-md-12 col-sm-12">		
+			<div class="col-lg-12 col-md-12 col-sm-12">
 				<accordion close-others="oneAtATime">
 					<accordion-group is-open="status.open">
 					<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
@@ -261,13 +261,13 @@
 											FILE NOT FOUND ON SERVER! <br>PLEASE UPLOAD AGAIN!
 										</div>
 
-										<a href="/res/auditions/{{project._id}}/{{audition.file.name | encodeUri}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable" download="{{audition.file.name}}">ngAudio</a> 
+										<a href="/res/auditions/{{project._id}}/{{audition.file.name | encodeUri}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable" download="{{audition.file.name}}">ngAudio</a>
 										<p ng-module="users" ng-controller="UsersController" data-ng-init="getOne(audition.approved.by.userId)">
 											<strong>Posted by:</strong> {{useredit.displayName}}
 										</p>
 										<p ng-show="audition.hidden == true" style="font-size:18px;color:red;font-weight:700">HIDDEN BY CLIENT</p>
 										<button ng-show="showRename === 0" ng-click="showRename = 1" class="btn btn-primary">Rename</button>
-										
+
 
 										<div ng-show="showRename">
 											<input type="text" ng-model="project.auditions[key].rename" ng-init="project.auditions[key].rename = project.auditions[key].file.name" placeholder="Enter new filename" class="form-control">
@@ -285,7 +285,7 @@
 												<span ng-if="lastAudioID != key || audioStatus != 1">
 													<img src="/img/aqua-play-icon.png" style="width:35px;height:auto" alt="play icon">
 												</span>
-											</button> 
+											</button>
 											<button ng-click="stopAudio()" class="btn btn-primary" ng-if="lastAudioID == key && audioStatus == 1">
 												<img src="/img/Aqua-Stop-icon.png" style="width:35px;height:auto" alt="play icon">
 											</button>
@@ -322,12 +322,12 @@
 								</tr>
 							</table>
 						</div>
-						
+
 				</accordion-group>
 				</accordion>
 			</div>
 		</div>
-		
+
 		<div class="row">
 
 			<div class="col-lg-12 col-md-12 col-sm-12">
@@ -547,7 +547,7 @@
 			</div>
 
 		</div>
-		
+
 		<div class="row">
 			<div class="col-lg-6 col-md-6 col-sm-6">
 				<accordion close-others="oneAtATime" data-ng-show="permitAdminProductionCoordinatorDirector()">
@@ -569,7 +569,7 @@
 								<input type="checkbox" ng-model="selectedMainClients[key]" ng-true-value="{{member.userId}}"> <a target="_blank" href="/#!/usersedit/{{member.userId}}">{{member.name}} {{member.company}}</a> - {{useredit.company}}
 							</li>
 						</ul>
-						
+
 						<accordion close-others="oneAtATime" ng-if="permitAdminProductionCoordinator()">
 							<accordion-group is-open="statusInt.open">
 							<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
@@ -616,7 +616,7 @@
 									    </div>
 										<ul class="list-group">
 											<li class="list-group-item" ng-repeat="(key, user) in filtered = (users | filter:filterClient) | startFrom:currentPage*limit | limitTo: limit">
-												<input type="checkbox" value="{{user._id}}" ng-click="updateClient(user._id, user.displayName, user.email)" ng-checked="checkClientUsers(user._id)"> 
+												<input type="checkbox" value="{{user._id}}" ng-click="updateClient(user._id, user.displayName, user.email)" ng-checked="checkClientUsers(user._id)">
 												<a target="_blank" href="/#!/usersedit/{{user._id}}">
 													{{user.displayName}}
 												</a>
@@ -643,7 +643,7 @@
 									</div>
 								</div>
 							</accordion-group>
-							
+
 						</accordion>
 					</accordion-group>
 				</accordion>
@@ -708,7 +708,7 @@
 									    </div>
 										<ul class="list-group">
 											<li class="list-group-item" ng-repeat="(key, user) in filtered = (users | filter:filterClientClient) | startFrom:currentPage*limit | limitTo: limit">
-												<input type="checkbox" value="{{user._id}}" ng-click="updateClientClient(user._id, user.displayName, user.email)" ng-checked="checkClientClientUsers(user._id)"> 
+												<input type="checkbox" value="{{user._id}}" ng-click="updateClientClient(user._id, user.displayName, user.email)" ng-checked="checkClientClientUsers(user._id)">
 												<a target="_blank" href="/#!/usersedit/{{user._id}}">{{user.displayName}}</a>
 												 - {{user.company}}
 											</li>
@@ -737,7 +737,7 @@
 					</accordion-group>
 				</accordion>
 			</div>
-			
+
 			<div class="col-lg-6 col-md-6 col-sm-6">
 				<accordion close-others="oneAtATime" data-ng-show="permitAdminProductionCoordinatorDirector()">
 					<accordion-group is-open="status.open">
