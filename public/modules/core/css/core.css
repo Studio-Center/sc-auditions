@@ -126,6 +126,9 @@
 .newAuditionProjectForm .website{
 	display:none;
 }
+footer{
+  text-align:center;
+}
 /* fixed header */
 @media(max-width: 1160px){
 	.create-project{
@@ -133,7 +136,4 @@
 		margin-top:0;
 		padding-bottom:0;
 	}
-}
-footer{
-  text-align:center;
 }
