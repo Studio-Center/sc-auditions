@@ -25,13 +25,13 @@
 			</select>
 		</div>
 	</div>
-	
+
 	<div ng-if="project.title">
 
 		<div class="row">
 			<div class="col-md-12">
 				<div class="page-header jumbotron text-center" style="border:10px solid #e1e1e1;border-radius:0" ng-class="{redBG: project.status == 'In Progress' && checkPassed(project.estimatedCompletionDate), greenBg: project.status == 'Booked', lgreenBG: project.status == 'Closed - Pending Client Decision', orangeBG: project.status == 'On Hold', lgray: project.status == 'Cancelled', mgray: project.status == 'ReAuditioned', gray: project.status == 'Dead', blueBg: project.status == 'In Progress' && compareDates(project.estimatedCompletionDate),lblueBG: project.status == 'In Progress', yellowBg: project.sounders == 'No Sounders - Approved By William' && compareDates(project.estimatedCompletionDate), lyellowBg: project.sounders == 'No Sounders - Approved By William'}">
-					<p><strong>{{project.title}} Due {{project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST 
+					<p><strong>{{project.title}} Due {{project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST
 						- <span ng-if="project.status[0] != 'In Progress'">Auditions Complete</span><span ng-if="project.status[0] == 'In Progress'">{{project.status[0]}}</span></strong></p>
 				</div>
 			</div>
@@ -45,7 +45,7 @@
 		<div class="row audition" ng-if="project.auditions.length > 0">
 
 			<div class="panel panel-default">
-				
+
 				<div class="panel-body">
 					<div class="row">
 						<div class="table-responsive">
@@ -79,10 +79,10 @@
 									<img ng-if="audition.booked" src="/img/green-check.png" style="width:30px;height:auto">
 								</td>
 								<!--<td>
-									<strong>{{key+1}}.</strong> 
+									<strong>{{key+1}}.</strong>
 								</td>-->
 								<td>
-									<a href="/res/auditions/{{project._id}}/{{audition.file.name | encodeUri}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable" download="{{audition.file.name}}">ngAudio</a> 
+									<a href="/res/auditions/{{project._id}}/{{audition.file.name | encodeUri}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable" download="{{audition.file.name}}">ngAudio</a>
 								</td>
 								<td>
 									<rating ng-model="audition.curRating" readonly="false" ng-click="updateRating(audition.file.path, false)" max="max" on-leave="overStar = lookUpRating(key)" on-hover="hoveringOver(value,key)"></rating>
@@ -96,7 +96,7 @@
 											<span ng-if="lastAudioID != key || audioStatus != 1">
 												<img src="/img/aqua-play-icon.png" style="width:35px;height:auto" alt="play icon">
 											</span>
-										</button> 
+										</button>
 										<button ng-click="stopAudio()" class="btn btn-primary" ng-if="lastAudioID == key && audioStatus == 1">
 											<img src="/img/Aqua-Stop-icon.png" style="width:35px;height:auto" alt="play icon">
 										</button>
@@ -154,14 +154,14 @@
 								<a href="" class="btn btn-primary" ng-click="downloadBookedAuditions()">Download Booked</a>
 							</div>
 						</div>
-						
+
 						<div class="col-md-4" style="text-align:center">
 							<div ng-if="bookSelectedShow()">
 								<a href="" class="btn btn-primary" ng-click="downloadSelectedAuditions()">Download Selected</a>
 								<a href="" class="btn btn-primary" ng-click="bookSelectedAuditions()">Book Selected</a>
 							</div>
 						</div>
-						
+
 						<div class="col-md-4" style="text-align:center">
 							<a href="" class="btn btn-primary" ng-click="hideSelectedAuditions()">
 								<span ng-if="hideSelected == false">
@@ -177,13 +177,13 @@
 
 				</div>
 			</div>
-			
+
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<div class="row">
 						<div class="col-md-12">
 							<h3>Notes</h4>
-							<textarea ng-model="clientNotes" name="clientNotes" class="form-control" style="height:250px"></textarea>
+              <div text-angular ng-model="clientNotes"></div>
 							<button style="float:right" class="btn btn-primary" ng-click="saveClientNote()">Save</button>
 						</div>
 					</div>
@@ -191,7 +191,7 @@
 						<div class="col-md-12">
 							<div ng-repeat="(key, note) in project.clientNotes | orderBy:'-date':reverse">
 								<h5><strong>{{note.date | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST - {{note.username}}</strong></h5>
-								<pre>{{note.item | linky:'_blank'}}</pre>
+								<div ng-bind-html="note.item"></div>
 							</div>
 						</div>
 					</div>
@@ -200,7 +200,7 @@
 
 		</div>
 
-		
+
 	</div>
 
 </section>
