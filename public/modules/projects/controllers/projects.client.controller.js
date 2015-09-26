@@ -1727,11 +1727,74 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		);
 
 		// load project in view
+		$scope.newFileCnt = 0;
+		$scope.procCnt = 0;
+		$scope.fileCheck = false;
 		$scope.loadProject = function(){
+
+			// set vars
+			var file;
+
+			// load project document
 			this.findOne();
 
 			// enable audio load after watch
 			$scope.loadAudio = 0;
+
+			// update project after all auditions file have been checked
+			$scope.$watch('procCnt', function(){
+				if($scope.procCnt > 0 && $scope.newFileCnt > 0){
+					if($scope.procCnt === $scope.newFileCnt){
+						// save project changes
+						$scope.updateNoRefresh();
+						// reset count vars
+						$scope.newFileCnt = 0;
+						$scope.procCnt = 0;
+					}
+				}
+			});
+			// walk through all auditions on project load
+			$scope.$watch('project', function(){
+
+				if($scope.project !== 'undefined' && $scope.fileCheck === false){
+
+					for(var i = 0; var i < $scope.project.audition.length; ++i){
+
+						if($scope.project.audition[i].filecheck === 'undefined' || $scope.project.audition[i].filecheck === 0){
+
+							// increment file count
+							$scope.newFileCnt += 1;
+
+							// new file location
+							file = '/res/auditions/'+$scope.project._id+'/'+$scope.project.audition[i].file.name;
+
+							// check for new file
+							$http.post('/projects/fileExists', {
+								file: file
+							// file found
+							}).success(function(data, status, headers, config) {
+								$scope.project.audition[i].filecheck = 1;
+								$scope.project.audition[i].filecheckdate = new Date();
+								$scope.procCnt += 1;
+							// file not found
+							}).error(function(data, status, headers, config) {
+								$scope.project.audition[i].filecheck = 2;
+								$scope.project.audition[i].filecheckdate = new Date();
+								$scope.procCnt += 1;
+							});
+
+						}
+
+						if(i === ($scope.project.audition.length-1)) {
+							$scope.fileCheck = true;
+						}
+
+					}
+
+				});
+
+			}
+
 		};
 
 		// load audio files into player after project object has finished loading
@@ -1892,11 +1955,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		};
 
-		$scope.verifyFile = function(file, callbackRes){
+		$scope.verifyFile = function(file){
 
 			//console.log(file);
 
 			if(typeof $scope.verifyFilesList[file] === 'undefined'){
+
+				if($scope.verifyFilesList[file] !== 'scanning' || $scope.verifyFilesList[file] !== true || $scope.verifyFilesList[file] !== false){
 
 					$scope.verifyFilesList[file] = 'scanning';
 
@@ -1904,11 +1969,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 						file: file
 					}).success(function(data, status, headers, config) {
 						$scope.verifyFilesList[file] = true;
-							callbackRes(true);
+						return true;
 					}).error(function(data, status, headers, config) {
 						$scope.verifyFilesList[file] = false;
-			        callbackRes(false);
-			    });
+				        return false;
+				    });
+
+				}
 
 			}
 
@@ -2416,34 +2483,23 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		var performUploadAudition = function(file, i, $files){
 			$scope.upload = $upload.upload({
-	        url: 'projects/uploads/audition', //upload.php script, node.js route, or servlet url
-	        data: {project: $scope.project},
-	        file: file // or list of files ($files) for html5 only
-	    }).progress(function(evt) {
-	      	$scope.uploadStatus = (i + 1) + ' of ' + $files.length + ' files uploaded';
-	      	$scope.uploadfile = evt.config.file.name;
-	        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
-	    }).success(function(data, status, headers, config) {
-
-	        // update talents with posted status for uploaded talent
-        	for(var j = 0; j < $scope.project.talent.length; ++j){
-        		if($scope.project.talent[j].talentId === data.talent){
-							$scope.project.talent[j].status = 'Posted';
-        		}
-        	}
-
-					// verify uploaded file
-					// $scope.verifyFile('/res/auditions/'+$scope.project._id+'/'+data.file.name, function(result){
-					// 	if(result === true){
-					// 		data.filecheck = 1;
-					// 	} else {
-							data.filecheck = 0;
-						// }
-						//data.filecheckdate = new Date();
-
-						// file is uploaded save
+		        url: 'projects/uploads/audition', //upload.php script, node.js route, or servlet url
+		        data: {project: $scope.project},
+		        file: file // or list of files ($files) for html5 only
+		    }).progress(function(evt) {
+		      	$scope.uploadStatus = (i + 1) + ' of ' + $files.length + ' files uploaded';
+		      	$scope.uploadfile = evt.config.file.name;
+		        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
+		    }).success(function(data, status, headers, config) {
+		        // file is uploaded successfully
 		        $scope.project.auditions.push(data);
-					// });
+
+		        // update talents with posted status for uploaded talent
+	        	for(var j = 0; j < $scope.project.talent.length; ++j){
+	        		if($scope.project.talent[j].talentId === data.talent){
+								$scope.project.talent[j].status = 'Posted';
+	        		}
+	        	}
 
 		    }).finally(function() {
 			    // save project on finish
