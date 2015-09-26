@@ -1892,13 +1892,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		};
 
-		$scope.verifyFile = function(file){
+		$scope.verifyFile = function(file, callbackRes){
 
 			//console.log(file);
 
 			if(typeof $scope.verifyFilesList[file] === 'undefined'){
-
-				if($scope.verifyFilesList[file] !== 'scanning' || $scope.verifyFilesList[file] !== true || $scope.verifyFilesList[file] !== false){
 
 					$scope.verifyFilesList[file] = 'scanning';
 
@@ -1906,13 +1904,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 						file: file
 					}).success(function(data, status, headers, config) {
 						$scope.verifyFilesList[file] = true;
-						return true;
+							callbackRes(true);
 					}).error(function(data, status, headers, config) {
 						$scope.verifyFilesList[file] = false;
-				        return false;
-				    });
-
-				}
+			        callbackRes(false);
+			    });
 
 			}
 
@@ -2420,23 +2416,36 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		var performUploadAudition = function(file, i, $files){
 			$scope.upload = $upload.upload({
-		        url: 'projects/uploads/audition', //upload.php script, node.js route, or servlet url
-		        data: {project: $scope.project},
-		        file: file // or list of files ($files) for html5 only
-		    }).progress(function(evt) {
-		      	$scope.uploadStatus = (i + 1) + ' of ' + $files.length + ' files uploaded';
-		      	$scope.uploadfile = evt.config.file.name;
-		        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
-		    }).success(function(data, status, headers, config) {
-		        // file is uploaded successfully
+	        url: 'projects/uploads/audition', //upload.php script, node.js route, or servlet url
+	        data: {project: $scope.project},
+	        file: file // or list of files ($files) for html5 only
+	    }).progress(function(evt) {
+	      	$scope.uploadStatus = (i + 1) + ' of ' + $files.length + ' files uploaded';
+	      	$scope.uploadfile = evt.config.file.name;
+	        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
+	    }).success(function(data, status, headers, config) {
+
+	        // update talents with posted status for uploaded talent
+        	for(var j = 0; j < $scope.project.talent.length; ++j){
+        		if($scope.project.talent[j].talentId === data.talent){
+							$scope.project.talent[j].status = 'Posted';
+        		}
+        	}
+
+					// verify uploaded file
+					$scope.verifyFile('/res/auditions/'+project._id+'/'+data.file.name, function(result){
+						if(result === true){
+							data.filecheck = 1;
+						} else {
+							data.filecheck = 0;
+						}
+						data.filecheckdate = new Date.now();
+					}).finally(function(){
+
+						// file is uploaded save
 		        $scope.project.auditions.push(data);
 
-		        // update talents with posted status for uploaded talent
-	        	for(var j = 0; j < $scope.project.talent.length; ++j){
-	        		if($scope.project.talent[j].talentId === data.talent){
-								$scope.project.talent[j].status = 'Posted';
-	        		}
-	        	}
+					});
 
 		    }).finally(function() {
 			    // save project on finish
