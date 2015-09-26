@@ -2439,7 +2439,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 						} else {
 							data.filecheck = 0;
 						}
-						data.filecheckdate = new Date.now();
+						data.filecheckdate = new Date();
 
 						// file is uploaded save
 		        $scope.project.auditions.push(data);
