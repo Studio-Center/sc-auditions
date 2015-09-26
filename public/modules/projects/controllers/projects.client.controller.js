@@ -2440,11 +2440,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 							data.filecheck = 0;
 						}
 						data.filecheckdate = new Date.now();
-					}).finally(function(){
 
 						// file is uploaded save
 		        $scope.project.auditions.push(data);
-
 					});
 
 		    }).finally(function() {
