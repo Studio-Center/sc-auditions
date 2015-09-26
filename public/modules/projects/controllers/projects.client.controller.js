@@ -2433,7 +2433,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
         	}
 
 					// verify uploaded file
-					$scope.verifyFile('/res/auditions/'+project._id+'/'+data.file.name, function(result){
+					$scope.verifyFile('/res/auditions/'+$scope.project._id+'/'+data.file.name, function(result){
 						if(result === true){
 							data.filecheck = 1;
 						} else {
