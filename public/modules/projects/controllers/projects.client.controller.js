@@ -2433,17 +2433,17 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
         	}
 
 					// verify uploaded file
-					$scope.verifyFile('/res/auditions/'+$scope.project._id+'/'+data.file.name, function(result){
-						if(result === true){
-							data.filecheck = 1;
-						} else {
+					// $scope.verifyFile('/res/auditions/'+$scope.project._id+'/'+data.file.name, function(result){
+					// 	if(result === true){
+					// 		data.filecheck = 1;
+					// 	} else {
 							data.filecheck = 0;
-						}
+						// }
 						data.filecheckdate = new Date();
 
 						// file is uploaded save
 		        $scope.project.auditions.push(data);
-					});
+					// });
 
 		    }).finally(function() {
 			    // save project on finish
