@@ -276,7 +276,7 @@ var sendTalentEmail = function(req, res, project, talent, override){
 		// update talent email status
 		function(email, talentInfo, done){
 
-			// update talent email status 
+			// update talent email status
 			for(var i = 0; i < project.talent.length; ++i){
 				if(project.talent[i].talentId === talent.talentId){
 					//console.log(project.talent[i].status);
@@ -319,7 +319,7 @@ var sendTalentEmail = function(req, res, project, talent, override){
 			}
 
 			Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
-				
+
 				project = _.extend(project, newProject);
 
 				req.project = project;
@@ -330,11 +330,11 @@ var sendTalentEmail = function(req, res, project, talent, override){
 					} else {
 
 						var socketio = req.app.get('socketio');
-						socketio.sockets.emit('projectUpdate', {id: project._id}); 
-						socketio.sockets.emit('callListUpdate', {filter: ''}); 
+						socketio.sockets.emit('projectUpdate', {id: project._id});
+						socketio.sockets.emit('callListUpdate', {filter: ''});
 						res.status(200).json(project);
 					}
-				});			
+				});
 
 			});
 
@@ -377,7 +377,7 @@ exports.sendTalentCanceledEmail = function(req, res){
 							// update talent email status
 							function(done){
 
-								// update talent email status 
+								// update talent email status
 								for(var i = 0; i < project.talent.length; ++i){
 									if(project.talent[i].talentId === selTalent.talentId){
 
@@ -464,7 +464,7 @@ exports.sendTalentCanceledEmail = function(req, res){
 							], function(err) {
 								callback(err);
 						});
-					
+
 					} else {
 						callback();
 					}
@@ -511,7 +511,7 @@ exports.sendTalentEmail = function(req, res){
 	var talent = req.body.talent;
 	var override = req.body.override || false;
 
-	sendTalentEmail(req, res, project, talent, override);	
+	sendTalentEmail(req, res, project, talent, override);
 
 };
 
@@ -530,7 +530,7 @@ exports.sendTalentEmailById = function(req, res){
 		},
 		function(project, done) {
 			project = project.toObject();
-			sendTalentEmail(req, res, project, talent, override);	
+			sendTalentEmail(req, res, project, talent, override);
 		}
 		], function(err) {
 		if (err) {
@@ -559,7 +559,7 @@ exports.updateSingleTalentStatus = function (req, res){
 		// update talent email status
 		function(project, done){
 
-			// update talent email status 
+			// update talent email status
 			for(var i = 0; i < project.talent.length; ++i){
 				if(project.talent[i].talentId === talentId){
 					project.talent[i].status = talentStatus;
@@ -585,18 +585,18 @@ exports.updateSingleTalentStatus = function (req, res){
 			var newProject = project.toObject();
 
 			Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
-				
+
 				project = _.extend(project, newProject);
 
 				req.project = project;
 
 				project.save(function(err) {
 					var socketio = req.app.get('socketio');
-					socketio.sockets.emit('projectUpdate', {id: project._id}); 
-					socketio.sockets.emit('callListUpdate', {filter: ''}); 
+					socketio.sockets.emit('projectUpdate', {id: project._id});
+					socketio.sockets.emit('callListUpdate', {filter: ''});
 
 					done(err);
-				});			
+				});
 
 			});
 
@@ -605,7 +605,7 @@ exports.updateSingleTalentStatus = function (req, res){
 		if (err) {
 			return res.status(400).json(err);
 		} else {
-			
+
 			return res.status(200);
 		}
 	});
@@ -632,11 +632,11 @@ exports.updateTalentStatus = function(req, res){
 					return res.status(400).json(err);
 				} else {
 					var socketio = req.app.get('socketio');
-						socketio.sockets.emit('projectUpdate', {id: project._id}); 
-						socketio.sockets.emit('callListUpdate', {filter: ''}); 
+						socketio.sockets.emit('projectUpdate', {id: project._id});
+						socketio.sockets.emit('callListUpdate', {filter: ''});
 					res.status(200);
 				}
-			});	
+			});
 
 		});
 
@@ -661,7 +661,7 @@ exports.updateTalentNote = function (req, res){
 		// update talent email status
 		function(project, done){
 
-			// update talent email status 
+			// update talent email status
 			for(var i = 0; i < project.talent.length; ++i){
 				if(project.talent[i].talentId === talentId){
 					project.talent[i].note = newNote;
@@ -676,7 +676,7 @@ exports.updateTalentNote = function (req, res){
 			var newProject = project.toObject();
 
 			Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
-				
+
 				project = _.extend(project, newProject);
 
 				req.project = project;
@@ -684,11 +684,11 @@ exports.updateTalentNote = function (req, res){
 				project.save(function(err) {
 
 					var socketio = req.app.get('socketio');
-					socketio.sockets.emit('projectUpdate', {id: project._id}); 
-					socketio.sockets.emit('callListUpdate', {filter: ''}); 
+					socketio.sockets.emit('projectUpdate', {id: project._id});
+					socketio.sockets.emit('callListUpdate', {filter: ''});
 
 					done(err);
-				});			
+				});
 
 			});
 
@@ -697,7 +697,7 @@ exports.updateTalentNote = function (req, res){
 		if (err) {
 			return res.status(400).json(err);
 		} else {
-			
+
 			return res.status(200);
 		}
 	});
@@ -745,12 +745,12 @@ exports.updateNoRefresh = function(req, res){
 					return res.status(400).json(err);
 				} else {
 					var socketio = req.app.get('socketio');
-						socketio.sockets.emit('projectUpdate', {id: project._id}); 
-						socketio.sockets.emit('callListUpdate', {filter: ''}); 
+						socketio.sockets.emit('projectUpdate', {id: project._id});
+						socketio.sockets.emit('callListUpdate', {filter: ''});
 
 					res.jsonp(project);
 				}
-			});	
+			});
 
 		});
 
@@ -867,7 +867,7 @@ exports.sendClientEmail = function(req, res){
 					bccList.push(owner.email);
 
 					var emailSubject;
-			
+
 					switch(type){
 						case 'opening':
 							emailSubject = 'Your audition project: ' + req.body.project.title + ' Due ' + dateFormat(req.body.project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
@@ -921,7 +921,7 @@ exports.sendClientEmail = function(req, res){
        	});
 
 	});
-	
+
 };
 
 // send emails from lead form
@@ -941,7 +941,7 @@ exports.lead = function(req, res){
     var newPath = appDir + '/public/' + relativePath;
 
 	var attachements = [];
-	
+
 	for(var i = 0; i < req.body.scripts.length; ++i){
 		attachements[i] = {
 			filename: req.body.scripts[i].file.name,
@@ -1179,7 +1179,7 @@ exports.create = function(req, res) {
 						// emit an event for all connected clients
 						var socketio = req.app.get('socketio');
 						socketio.sockets.emit('projectsListUpdate'); // emit an event for all connected clients
-						socketio.sockets.emit('callListUpdate', {filter: ''}); 
+						socketio.sockets.emit('callListUpdate', {filter: ''});
 					}
 				});
 			});
@@ -1290,7 +1290,7 @@ exports.create = function(req, res) {
 			function(emailHTML, email, done) {
 				// send email
 				var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
-				
+
 				var mailOptions = {
 					to: email.bcc,
 					cc: config.mailer.notifications,
@@ -1306,13 +1306,13 @@ exports.create = function(req, res) {
 			},
 			// send out talent project creation email
 			function(email, done) {
-				
+
 				if(typeof project.talent !== 'undefined'){
 
 					var talentIds = [];
 					var emailTalentChk;
 					for(var i = 0; i < project.talent.length; ++i){
-						talentIds[i] = project.talent[i].talentId;						
+						talentIds[i] = project.talent[i].talentId;
 					}
 
 					Talent.where('_id').in(talentIds).sort('-created').exec(function(err, talents) {
@@ -1344,7 +1344,7 @@ exports.create = function(req, res) {
 										// update talent status as needed
 										project.talent[j].status = 'Emailed';
 									}
-								}							
+								}
 							}
 
 							talentCallback();
@@ -1356,7 +1356,7 @@ exports.create = function(req, res) {
 					});
 
 				} else {
-					done('', email);					
+					done('', email);
 				}
 
 			},
@@ -1411,7 +1411,7 @@ exports.create = function(req, res) {
 						// emit an event for all connected clients
 						var socketio = req.app.get('socketio');
 						socketio.sockets.emit('projectsListUpdate'); // emit an event for all connected clients
-						socketio.sockets.emit('callListUpdate', {filter: ''}); 
+						socketio.sockets.emit('callListUpdate', {filter: ''});
 						return res.jsonp(project);
 					}
 				});
@@ -1436,7 +1436,7 @@ exports.read = function(req, res) {
 
 // remove file from local file system
 var deleteFiles = function(project, req, user){
-	
+
 	var appDir = path.dirname(require.main.filename);
 
 	for(var i = 0; i < project.deleteFiles.length; ++i){
@@ -1493,7 +1493,7 @@ exports.deleteFileByName = function(req, res){
 
 // rename file from local file system
 var renameFiles = function(project, res, req){
-	
+
 	var appDir = path.dirname(require.main.filename);
 
 	for(var i = 0; i < project.auditions.length; ++i){
@@ -1601,8 +1601,8 @@ exports.update = function(req, res) {
 
 						// update connected clients
 						var socketio = req.app.get('socketio');
-						socketio.sockets.emit('projectUpdate', {id: project._id}); 
-						socketio.sockets.emit('callListUpdate', {filter: ''}); 
+						socketio.sockets.emit('projectUpdate', {id: project._id});
+						socketio.sockets.emit('callListUpdate', {filter: ''});
 
 						return res.jsonp(project);
 					}
@@ -1665,7 +1665,7 @@ exports.delete = function(req, res) {
 		} else {
 			// emit an event for all connected clients
 			var socketio = req.app.get('socketio');
-			socketio.sockets.emit('projectsListUpdate'); 
+			socketio.sockets.emit('projectsListUpdate');
 			return res.jsonp(project);
 		}
 	});
@@ -1718,7 +1718,7 @@ exports.deleteById = function(req, res) {
 		}
 
 	});
-	
+
 };
 
 // list projects assigned to talent
@@ -1727,10 +1727,10 @@ exports.getTalentFilteredProjects = function(req, res){
 	var dayAgo = new Date();
 	dayAgo.setDate(dayAgo.getDay() - 3);
 
-	var searchCriteria = {'talent': { 
-									$elemMatch: { 
+	var searchCriteria = {'talent': {
+									$elemMatch: {
 										'talentId': req.body.talentId
-									} 
+									}
 								}
 						};
 
@@ -1754,8 +1754,8 @@ exports.getTalentFilteredProjects = function(req, res){
 				return res.jsonp(projects);
 			}
 		});
-	} 
-	
+	}
+
 };
 
 /**
@@ -1814,14 +1814,14 @@ var performLoadList = function(req, res, allowedRoles, i, j, limit){
 					} else {
 						return res.jsonp(projects);
 					}
-				});						
+				});
 			break;
 		}
 
 	}
 };
 
-exports.findLimit = function(req, res) { 
+exports.findLimit = function(req, res) {
 
 	var limit = req.body.queryLimit || 50;
 
@@ -1859,7 +1859,7 @@ exports.findLimit = function(req, res) {
 	}
 
 };
-exports.list = function(req, res) { 
+exports.list = function(req, res) {
 
 	// permit certain user roles full access
 	var allowedRoles = ['admin','producer/auditions director', 'production coordinator','talent director'];
@@ -1917,7 +1917,7 @@ exports.hasAuthorization = function(req, res, next) {
 
 // file upload
 exports.uploadFile = function(req, res, next){
-	// We are able to access req.files.file thanks to 
+	// We are able to access req.files.file thanks to
     // the multiparty middleware
     var file = req.files.file;
     //console.log(file.name);
@@ -1964,7 +1964,7 @@ exports.uploadFile = function(req, res, next){
 
 // file upload
 exports.uploadScript = function(req, res, next){
-	// We are able to access req.files.file thanks to 
+	// We are able to access req.files.file thanks to
     // the multiparty middleware
     var file = req.files.file;
     //console.log(req.files);
@@ -1990,7 +1990,7 @@ exports.uploadScript = function(req, res, next){
     newPath += file.name;
 
     //console.log(newPath);
-    
+
     mv(tempPath, newPath, function(err) {
         //console.log(err);
         if (err){
@@ -2002,10 +2002,10 @@ exports.uploadScript = function(req, res, next){
 				// req.project = project ;
 
 				var script = {
-								file: req.files.file, 
+								file: req.files.file,
 								by: {
 									userId: req.user._id,
-									date: now.toJSON(), 
+									date: now.toJSON(),
 									name: req.user.displayName
 								}
 							};
@@ -2035,8 +2035,8 @@ exports.uploadScript = function(req, res, next){
 				// 	} else {
 
 				// 		var socketio = req.app.get('socketio');
-				// 		socketio.sockets.emit('projectUpdate', {id: project._id}); 
-				// 		socketio.sockets.emit('callListUpdate', {filter: ''}); 
+				// 		socketio.sockets.emit('projectUpdate', {id: project._id});
+				// 		socketio.sockets.emit('callListUpdate', {filter: ''});
 				// 		return res.jsonp(project);
 				// 	}
 				// });
@@ -2048,7 +2048,7 @@ exports.uploadScript = function(req, res, next){
 
 // file upload
 exports.uploadReferenceFile = function(req, res, next){
-	// We are able to access req.files.file thanks to 
+	// We are able to access req.files.file thanks to
     // the multiparty middleware
     var file = req.files.file;
     //console.log(req.files);
@@ -2074,7 +2074,7 @@ exports.uploadReferenceFile = function(req, res, next){
     newPath += file.name;
 
     //console.log(newPath);
-    
+
     mv(tempPath, newPath, function(err) {
         //console.log(err);
         if (err){
@@ -2089,7 +2089,7 @@ exports.uploadReferenceFile = function(req, res, next){
 							file: req.files.file,
 							by: {
 								userId: req.user._id,
-								date: now.toJSON(), 
+								date: now.toJSON(),
 								name: req.user.displayName
 							}
 							};
@@ -2129,8 +2129,8 @@ exports.uploadReferenceFile = function(req, res, next){
 				// 		log.save();
 
 				// 		var socketio = req.app.get('socketio');
-				// 		socketio.sockets.emit('projectUpdate', {id: project._id}); 
-				// 		socketio.sockets.emit('callListUpdate', {filter: ''}); 
+				// 		socketio.sockets.emit('projectUpdate', {id: project._id});
+				// 		socketio.sockets.emit('callListUpdate', {filter: ''});
 				// 		return res.jsonp(project);
 				// 	}
 				// });
@@ -2141,7 +2141,7 @@ exports.uploadReferenceFile = function(req, res, next){
 };
 
 exports.uploadTempReferenceFile = function(req, res, next){
-	// We are able to access req.files.file thanks to 
+	// We are able to access req.files.file thanks to
     // the multiparty middleware
     var file = req.files.file;
     //console.log(file.name);
@@ -2163,7 +2163,7 @@ exports.uploadTempReferenceFile = function(req, res, next){
     				file: req.files.file,
     				by: {
 							userId: req.user._id,
-							date: now.toJSON(), 
+							date: now.toJSON(),
 							name: req.user.displayName
 						}
 				};
@@ -2181,7 +2181,7 @@ exports.uploadTempReferenceFile = function(req, res, next){
 
 // file upload
 exports.uploadTempScript = function(req, res, next){
-	// We are able to access req.files.file thanks to 
+	// We are able to access req.files.file thanks to
     // the multiparty middleware
     var file = req.files.file;
     //console.log(file.name);
@@ -2202,8 +2202,10 @@ exports.uploadTempScript = function(req, res, next){
     var script = {
 					file: req.files.file,
 					userId: req.user._id,
-					date: now.toJSON(), 
-					name: req.user.displayName
+					date: now.toJSON(),
+					name: req.user.displayName,
+					filecheck: 0,
+					filecheckdate: ''
 				};
 
 	scripts.push(script);
@@ -2225,7 +2227,7 @@ exports.uploadAudition = function(req, res, next){
 	var firstName = '';
 	var lastNameCode = '';
 
-	// We are able to access req.files.file thanks to 
+	// We are able to access req.files.file thanks to
     // the multiparty middleware
     var file = req.files.file;
     //console.log(file.name);
@@ -2293,23 +2295,23 @@ exports.uploadAudition = function(req, res, next){
 							talentCallback();
 						}
 					}, function (err) {
-						
+
 						var audition = {
-								file: req.files.file, 
-								discussion: [], 
+								file: req.files.file,
+								discussion: [],
 								description: '',
-								rating: [], 
+								rating: [],
 								published: true,
 								rename: '',
 								avgRating: 0,
 								favorite: 0,
 								talent: audTalent,
-								approved: 
+								approved:
 										{
-											by: 
+											by:
 											{
 												userId: req.user._id,
-												date: now.toJSON(), 
+												date: now.toJSON(),
 												name: req.user.displayName
 											}
 										}
@@ -2352,15 +2354,15 @@ exports.uploadAudition = function(req, res, next){
 						// 		log.save();
 
 						// 		var socketio = req.app.get('socketio');
-						// 		socketio.sockets.emit('projectUpdate', {id: project._id}); 
-						// 		socketio.sockets.emit('callListUpdate', {filter: ''}); 
+						// 		socketio.sockets.emit('projectUpdate', {id: project._id});
+						// 		socketio.sockets.emit('callListUpdate', {filter: ''});
 						// 		return res.jsonp(project);
-								
+
 						// 	}
 						// });
 
 				   	});
-					
+
 				});
 
 			});
@@ -2372,7 +2374,7 @@ exports.uploadAudition = function(req, res, next){
 
 // audition temp file upload
 exports.uploadTempAudition = function(req, res, next){
-	// We are able to access req.files.file thanks to 
+	// We are able to access req.files.file thanks to
     // the multiparty middleware
     var file = req.files.file;
     //console.log(file.name);
@@ -2402,29 +2404,29 @@ exports.uploadTempAudition = function(req, res, next){
         if (err){
             res.status(500).end();
         }else{
-            
+
 			var audition = {
-						file: req.files.file, 
-						discussion: [], 
+						file: req.files.file,
+						discussion: [],
 						description: '',
-						rating: [], 
+						rating: [],
 						published: true,
 						rename: '',
 						avgRating: 0,
 						favorite: 0,
-						approved: 
+						approved:
 								{
-									by: 
+									by:
 									{
 										userId: '',
-										date: now.toJSON(), 
+										date: now.toJSON(),
 										name: ''
 									}
 								}
 			};
 
 			return res.jsonp(audition);
-			
+
         }
     });
 
@@ -2568,13 +2570,13 @@ exports.bookAuditions = function(req, res, next){
 			newProject.status = 'Booked';
 
 			Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
-				
+
 				project = _.extend(project, newProject);
 
 				project.save(function(err) {
 					var socketio = req.app.get('socketio');
-						socketio.sockets.emit('projectUpdate', {id: project._id}); 
-						socketio.sockets.emit('callListUpdate', {filter: ''}); 
+						socketio.sockets.emit('projectUpdate', {id: project._id});
+						socketio.sockets.emit('callListUpdate', {filter: ''});
 					done(err, selAuds, project);
 				});
 
@@ -2698,7 +2700,7 @@ exports.backupProjectsById = function(req, res, next){
     var newZip = archivesPath + zippedFilename;
     var backupDir = archivesPath + req.user._id + '_backup';
     var auditionsDir, scriptsDir, referenceFilesDir, projectBuDir;
-    
+
     // remove existing backup file
     if (fs.existsSync(newZip)) {
     	rimraf.sync(newZip);
@@ -2826,7 +2828,7 @@ var walk = function(dir, done) {
 };
 
 exports.uploadBackup = function(req, res, next){
-// We are able to access req.files.file thanks to 
+// We are able to access req.files.file thanks to
     // the multiparty middleware
     var file = req.files.file, JSONobj, saveProj, parentPath, project;
     var auditionsDir, scriptsDir, referenceFilesDir;
@@ -2919,7 +2921,7 @@ exports.uploadBackup = function(req, res, next){
 															done(err);
 														});
 											    	}
-													
+
 											    });
 											},
 											function(done) {
@@ -2931,7 +2933,7 @@ exports.uploadBackup = function(req, res, next){
 															done(err);
 														});
 												    }
-													
+
 											    });
 											},
 
@@ -2944,9 +2946,9 @@ exports.uploadBackup = function(req, res, next){
 												projectCallback(err);
 											}
 										});
-										
+
 									});
-								
+
 								});
 
 
@@ -3017,7 +3019,7 @@ exports.uploadTalentAudition = function(req, res, next){
 		function(done) {
 
 			async.eachSeries(auditions, function (audition, auditionCallback) {
-				
+
 				// move submitted auditions to new location
 				tempPath = auditionsPath + audition.file.name;
 				savePath = talentUploadTalentPath + audition.file.name;
@@ -3090,8 +3092,8 @@ exports.uploadTalentAudition = function(req, res, next){
 				project.save(function(err) {
 
 					var socketio = req.app.get('socketio');
-						socketio.sockets.emit('projectUpdate', {id: project._id}); 
-						socketio.sockets.emit('callListUpdate', {filter: ''}); 
+						socketio.sockets.emit('projectUpdate', {id: project._id});
+						socketio.sockets.emit('callListUpdate', {filter: ''});
 
 					done(err);
 

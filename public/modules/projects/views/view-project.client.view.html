@@ -257,7 +257,7 @@
 										{{key+1}}
 									</td>
 									<td>
-										<div ng-show="verifyFile('/res/auditions/'+project._id+'/'+audition.file.name) == false || verifyFilesList['/res/auditions/'+project._id+'/'+audition.file.name] == false" style="font-size:18px;color:red;font-weight:700">
+										<div ng-show="audition.filecheck === 0 || (audition.filecheck === undefined || audition.filecheckdate === '')" style="font-size:18px;color:red;font-weight:700">
 											FILE NOT FOUND ON SERVER! <br>PLEASE UPLOAD AGAIN!
 										</div>
 
