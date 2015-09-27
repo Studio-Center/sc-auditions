@@ -1957,8 +1957,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		$scope.verifyFile = function(file){
 
-			//console.log(file);
-
 			if(typeof $scope.verifyFilesList[file] === 'undefined'){
 
 				if($scope.verifyFilesList[file] !== 'scanning' || $scope.verifyFilesList[file] !== true || $scope.verifyFilesList[file] !== false){
@@ -2509,6 +2507,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		        	// update project store
 							$scope.updateNoRefresh();
+							// trigger new file check walk
+							$scope.fileCheck = false;
 		        }
 			});
 		};
