@@ -1758,42 +1758,42 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 				if($scope.project !== 'undefined' && $scope.fileCheck === false){
 
-					for(var i = 0; var i < $scope.project.audition.length; ++i){
+					angular.forEach($scope.project.auditions, function(value, key){
 
-						if($scope.project.audition[i].filecheck === 'undefined' || $scope.project.audition[i].filecheck === 0){
+						if(value.filecheck === 'undefined' || value.filecheck === 0){
 
 							// increment file count
 							$scope.newFileCnt += 1;
 
 							// new file location
-							file = '/res/auditions/'+$scope.project._id+'/'+$scope.project.audition[i].file.name;
+							file = '/res/auditions/'+$scope.project._id+'/'+value.file.name;
 
 							// check for new file
 							$http.post('/projects/fileExists', {
 								file: file
 							// file found
 							}).success(function(data, status, headers, config) {
-								$scope.project.audition[i].filecheck = 1;
-								$scope.project.audition[i].filecheckdate = new Date();
+								$scope.project.audition[key].filecheck = 1;
+								$scope.project.audition[key].filecheckdate = new Date();
 								$scope.procCnt += 1;
 							// file not found
 							}).error(function(data, status, headers, config) {
-								$scope.project.audition[i].filecheck = 2;
-								$scope.project.audition[i].filecheckdate = new Date();
+								$scope.project.audition[key].filecheck = 2;
+								$scope.project.audition[key].filecheckdate = new Date();
 								$scope.procCnt += 1;
 							});
 
 						}
 
-						if(i === ($scope.project.audition.length-1)) {
+						if(key === ($scope.project.audition.length-1)) {
 							$scope.fileCheck = true;
 						}
 
-					}
+					});
 
-				});
+				}
 
-			}
+			});
 
 		};
 
