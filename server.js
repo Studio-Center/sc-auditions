@@ -46,7 +46,6 @@ var cluster = require('cluster'),
 	// Init the express application
 	var app = require('./config/express')(db);
 
-
 	// Set the secret for encoding/decoding JWT tokens
 	app.set('jwtTokenSecret', 'studiocenter-auditions-jwt');
 
@@ -58,23 +57,24 @@ var cluster = require('cluster'),
 
 	var io = sio(server);
 
+	// config / init socket io with redis
 	io.adapter(sio_redis({ host: 'localhost', port: 6379 }));
 
 	app.set('socketio', io);
 	app.set('server', server);
 
 	// Listen to messages sent from the master. Ignore everything else.
-    process.on('message', function(message, connection) {
-        if (message !== 'sticky-session:connection') {
-            return;
-        }
+  process.on('message', function(message, connection) {
+      if (message !== 'sticky-session:connection') {
+          return;
+      }
 
-        // Emulate a connection event on the server by emitting the
-        // event with the connection the master sent us.
-        server.emit('connection', connection);
+      // Emulate a connection event on the server by emitting the
+      // event with the connection the master sent us.
+      server.emit('connection', connection);
 
-        connection.resume();
-    });
+      connection.resume();
+  });
 
 	// Expose app
 	exports = module.exports = app;

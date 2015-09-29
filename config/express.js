@@ -3,7 +3,7 @@
 /**
  * Module dependencies.
  */
-var express = require('express'),    
+var express = require('express'),
 	morgan = require('morgan'),
 	bodyParser = require('body-parser'),
 	session = require('express-session'),
@@ -75,11 +75,14 @@ module.exports = function(db) {
 	}
 
 	// Request body parsing middleware should be above methodOverride
-	app.use(bodyParser.urlencoded({
-		extended: true
-	}));
-	app.use(bodyParser.json());
+	// app.use(bodyParser.urlencoded({
+	// 	extended: true
+	// }));
+	// app.use(bodyParser.json());
 	app.use(methodOverride());
+	// set file limits
+	app.use(bodyParser.json({limit: '64mb'}));
+	app.use(bodyParser.urlencoded({limit: '64mb', extended: true}));
 
 	// Enable jsonp
 	app.enable('jsonp callback');
