@@ -31,7 +31,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.phaseStatusOpts = ['in progress','open','complete','suspended'];
 		$scope.soundersOpts = ['Sounders', 'No Sounders - Approved By William'];
 		//$scope.talentStatus = ['Cast', 'Emailed', 'Scheduled', 'Message left', 'Out', 'Received needs to be posted', 'Posted', 'Not Posted (Bad Read)', 'Missed', 'Canceled'];
-		$scope.loadAudio = 0;
+		//$scope.loadAudio = 0;
 		$scope.audio = '';
 		$scope.lastAudioID = 0;
 		$scope.audioStatus = 0;
@@ -1739,7 +1739,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			this.findOne();
 
 			// enable audio load after watch
-			$scope.loadAudio = 0;
+			//$scope.loadAudio = 0;
 
 			// update project after all auditions file have been checked
 			$scope.$watch('procCnt', function(){
@@ -2461,7 +2461,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			if (confirm('Are you sure?')) {
 
 				// tell audio system to reload files
-				$scope.loadAudio = 0;
+				//$scope.loadAudio = 0;
 
 				var file = '/res/auditions/' + $scope.project._id + '/' + $scope.project.auditions[idx].file.name;
 
@@ -2515,14 +2515,14 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.uploadAudition = function($files) {
 
 			// tell audio system to reload files
-			$scope.loadAudio = 0;
+			//$scope.loadAudio = 0;
 
 		    //$files: an array of files selected, each file has name, size, and type.
-		    for (var i = 0; i < $files.length; i++) {
-		    	var file = $files[i];
+				angular.forEach($files, function(file, key) {
 
-		    	performUploadAudition(file, i, $files);
-		    }
+		    	performUploadAudition(file, key, $files);
+
+				});
 		};
 
 		var performUploadTempAuditionFile = function(file, i, $files){
