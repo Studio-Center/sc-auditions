@@ -2304,12 +2304,12 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 					$scope.project.scripts.push(data);
 
-				}).finally(function() {
-				    // save project on finish
-			        if((i+1) === $files.length){
-			        	// update project store
-								$scope.updateNoRefresh();
-			        }
+					// save project on finish
+					if((i+1) === $files.length){
+						// update project store
+						$scope.updateNoRefresh();
+					}
+
 				});
 	  	};
 
@@ -2365,17 +2365,17 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		      	$scope.uploadfile = evt.config.file.name;
 		        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
 		    }).success(function(data, status, headers, config) {
-				//$scope.project = angular.extend($scope.project, data);
+					//$scope.project = angular.extend($scope.project, data);
 
-				$scope.project.referenceFiles.push(data);
+					$scope.project.referenceFiles.push(data);
 
-			}).finally(function() {
-			    // save project on finish
-		        if((i+1) === $files.length){
-		        	// update project store
-					$scope.updateNoRefresh();
-		        }
-			});
+					// save project on finish
+					if((i+1) === $files.length){
+						// update project store
+						$scope.updateNoRefresh();
+					}
+
+				});
 	  	};
 
 	  	// upload reference files to server
@@ -2491,24 +2491,24 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	        		}
 						});
 
-		    }).finally(function() {
-			    // save project on finish
-	        if((i+1) === $files.length){
+						// save project on finish
+		        if((i+1) === $files.length){
 
-							// save with pause, ensure loop finished
-		        	setTimeout(function(){
+								// save with pause, ensure loop finished
+			        	setTimeout(function(){
 
-								$scope.verifyFilesList = [];
+									$scope.verifyFilesList = [];
 
-			        	// update project store
-								$scope.updateNoRefresh();
-								// trigger new file check walk
-								$scope.fileCheck = false;
+				        	// update project store
+									$scope.updateNoRefresh();
+									// trigger new file check walk
+									$scope.fileCheck = false;
 
-							}(), 1000);
+								}(), 1000);
 
-	        }
-			});
+		        }
+
+		    });
 		};
 		$scope.uploadAudition = function($files) {
 
