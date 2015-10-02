@@ -2254,16 +2254,16 @@ exports.uploadAudition = function(req, res, next){
     // strip talent name and last name code from audition
     var regStr = /([a-zA-Z]+)\.\w{3}$/i.exec(file.name);
     if(regStr !== null){
-		var regStrOP = regStr[1];
+			var regStrOP = regStr[1];
 
-		var lastNm = /([A-Z])[a-z]*$/.exec(regStrOP);
-		if(lastNm !== null){
-			var lastNmPos = lastNm.index;
+			var lastNm = /([A-Z])[a-z]*$/.exec(regStrOP);
+			if(lastNm !== null){
+				var lastNmPos = lastNm.index;
 
-			firstName = regStrOP.slice(0,lastNmPos);
-			lastNameCode = regStrOP.slice(lastNmPos, regStrOP.length);
+				firstName = regStrOP.slice(0,lastNmPos);
+				lastNameCode = regStrOP.slice(lastNmPos, regStrOP.length);
+			}
 		}
-	}
 
     mv(tempPath, newPath, function(err) {
         //console.log(err);
@@ -2272,98 +2272,98 @@ exports.uploadAudition = function(req, res, next){
         }else{
         	Talent.findOne({'name': new RegExp('^'+firstName+'$', 'i'), 'lastNameCode': new RegExp('^'+lastNameCode+'$', 'i')}).sort('-created').exec(function(err, talent) {
 
-	            Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
-					if (err) return next(err);
-					if (! project) return next(new Error('Failed to load Project '));
-					req.project = project ;
+            Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
+							if (err) return next(err);
+							if (! project) return next(new Error('Failed to load Project '));
+							req.project = project ;
 
-					// walk through project talent, look for existing assignment
-					async.eachSeries(project.talent, function (curTalent, talentCallback) {
-						if(talent !== null){
-							if(String(talent._id) === curTalent.talentId){
-								audTalent = curTalent.talentId;
+							// walk through project talent, look for existing assignment
+							async.eachSeries(project.talent, function (curTalent, talentCallback) {
+								if(talent !== null){
+									if(String(talent._id) === curTalent.talentId){
+										audTalent = curTalent.talentId;
 
-								// project.talent[project.talent.indexOf(curTalent)].status = 'Posted';
+										// project.talent[project.talent.indexOf(curTalent)].status = 'Posted';
 
-								// project.markModified('talent');
+										// project.markModified('talent');
 
-								talentCallback();
-							} else {
-								talentCallback();
-							}
-						} else {
-							talentCallback();
-						}
-					}, function (err) {
+										talentCallback();
+									} else {
+										talentCallback();
+									}
+								} else {
+									talentCallback();
+								}
+							}, function (err) {
 
-						var audition = {
-								file: req.files.file,
-								discussion: [],
-								description: '',
-								rating: [],
-								published: true,
-								rename: '',
-								avgRating: 0,
-								favorite: 0,
-								talent: audTalent,
-								approved:
-										{
-											by:
-											{
-												userId: req.user._id,
-												date: now.toJSON(),
-												name: req.user.displayName
-											}
-										}
+								var audition = {
+										file: req.files.file,
+										discussion: [],
+										description: '',
+										rating: [],
+										published: true,
+										rename: '',
+										avgRating: 0,
+										favorite: 0,
+										talent: audTalent,
+										approved:
+												{
+													by:
+													{
+														userId: req.user._id,
+														date: now.toJSON(),
+														name: req.user.displayName
+													}
+												}
+										};
+
+								// write change to log
+								var log = {
+									type: 'project',
+									sharedKey: String(project._id),
+									description: project.title + ' audition uploaded ' + file.name,
+									user: req.user
 								};
+								log = new Log(log);
+								log.save();
 
-						// write change to log
-						var log = {
-							type: 'project',
-							sharedKey: String(project._id),
-							description: project.title + ' audition uploaded ' + file.name,
-							user: req.user
-						};
-						log = new Log(log);
-						log.save();
+								// send audition data to client
+								return res.jsonp(audition);
 
-						// send audition data to client
-						return res.jsonp(audition);
+								// //console.log(audition);
+								// // assign script object to body
+								// project.auditions.push(audition);
 
-						// //console.log(audition);
-						// // assign script object to body
-						// project.auditions.push(audition);
+								// project = _.extend(req.project, project.toObject());
 
-						// project = _.extend(req.project, project.toObject());
+								// project.save(function(err) {
+								// 	if (err) {
+								// 		return res.status(400).send({
+								// 			message: errorHandler.getErrorMessage(err)
+								// 		});
+								// 	} else {
 
-						// project.save(function(err) {
-						// 	if (err) {
-						// 		return res.status(400).send({
-						// 			message: errorHandler.getErrorMessage(err)
-						// 		});
-						// 	} else {
+								// 		// write change to log
+								// 		var log = {
+								// 			type: 'project',
+								// 			sharedKey: String(project._id),
+								// 			description: project.title + ' audition uploaded ' + file.name,
+								// 			user: req.user
+								// 		}
+								// 		log = new Log(log);
+								// 		log.save();
 
-						// 		// write change to log
-						// 		var log = {
-						// 			type: 'project',
-						// 			sharedKey: String(project._id),
-						// 			description: project.title + ' audition uploaded ' + file.name,
-						// 			user: req.user
-						// 		}
-						// 		log = new Log(log);
-						// 		log.save();
+								// 		var socketio = req.app.get('socketio');
+								// 		socketio.sockets.emit('projectUpdate', {id: project._id});
+								// 		socketio.sockets.emit('callListUpdate', {filter: ''});
+								// 		return res.jsonp(project);
 
-						// 		var socketio = req.app.get('socketio');
-						// 		socketio.sockets.emit('projectUpdate', {id: project._id});
-						// 		socketio.sockets.emit('callListUpdate', {filter: ''});
-						// 		return res.jsonp(project);
+								// 	}
+								// });
 
-						// 	}
-						// });
+						   	});
 
-				   	});
-
-				});
+						});
 
 			});
             //res.status(200).end();

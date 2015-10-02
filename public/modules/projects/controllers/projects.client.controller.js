@@ -2495,26 +2495,29 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			    // save project on finish
 		        if((i+1) === $files.length){
 
-		        	$scope.verifyFilesList = [];
+								// save with pause, ensure loop finished
+			        	setTimeout(function(){
 
-		        	// update project store
-							$scope.updateNoRefresh();
-							// trigger new file check walk
-							$scope.fileCheck = false;
+									$scope.verifyFilesList = [];
+
+				        	// update project store
+									$scope.updateNoRefresh();
+									// trigger new file check walk
+									$scope.fileCheck = false;
+
+								}(), 1000);
+
 		        }
 			});
 		};
 		$scope.uploadAudition = function($files) {
 
-			// tell audio system to reload files
-			//$scope.loadAudio = 0;
+	    //$files: an array of files selected, each file has name, size, and type.
+			angular.forEach($files, function(file, key) {
 
-		    //$files: an array of files selected, each file has name, size, and type.
-				angular.forEach($files, function(file, key) {
+	    	performUploadAudition(file, key, $files);
 
-		    	performUploadAudition(file, key, $files);
-
-				});
+			});
 		};
 
 		var performUploadTempAuditionFile = function(file, i, $files){
