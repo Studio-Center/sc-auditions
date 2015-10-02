@@ -2316,13 +2316,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	  	// upload script file
 			$scope.uploadScript = function($files) {
 		    angular.forEach($files, function(file, key) {
-		      performScriptUpload(file, i, $files);
+		      performScriptUpload(file, key, $files);
 				});
 	  	};
 
 	  	$scope.uploadTempScript = function($files) {
 	    	angular.forEach($files, function(file, key) {
-	    		performUploadTempScript(file, i, $files);
+	    		performUploadTempScript(file, key, $files);
     		});
 	  	};
 
@@ -2383,7 +2383,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	    //$files: an array of files selected, each file has name, size, and type.
 
 	    	angular.forEach($files, function(file, key) {
-		    	performUploadReferenceFile(file, i, $files);
+		    	performUploadReferenceFile(file, key, $files);
 	    	});
 	  	};
 
@@ -2407,7 +2407,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		    //$files: an array of files selected, each file has name, size, and type.
 		    angular.forEach($files, function(file, key) {
 
-			    performUploadTempReferenceFile(file, i, $files);
+			    performUploadTempReferenceFile(file, key, $files);
 
 	    	});
 	  	};
@@ -2537,7 +2537,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		    //$files: an array of files selected, each file has name, size, and type.
 		    angular.forEach($files, function(file, key) {
 
-	    		performUploadTempAuditionFile(file, i, $files);
+	    		performUploadTempAuditionFile(file, key, $files);
 
     		});
 	  	};
