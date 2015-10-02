@@ -2276,7 +2276,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.delTempScript = function(idx){
 			var file = '/res/scripts/temp/' + $scope.newProject.scripts[idx].file.name;
 
-			$http.post('/projects/deletefile', {
+				$http.post('/projects/deletefile', {
 		        fileLocation: file
 		    });
 
@@ -2294,43 +2294,36 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		        //method: 'POST' or 'PUT',
 		        data: {project: $scope.project},
 		        file: file, // or list of files ($files) for html5 only
-	        }).progress(function(evt) {
+        }).progress(function(evt) {
 		        $scope.uploadStatus = (i + 1) + ' of ' + $files.length + ' files uploaded';
 		      	$scope.uploadfile = evt.config.file.name;
 		        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
 		        }).success(function(data, status, headers, config) {
 		        // file is uploaded successfully
-				//$scope.project = angular.extend($scope.project, data);
+					//$scope.project = angular.extend($scope.project, data);
 
-				$scope.project.scripts.push(data);
+					$scope.project.scripts.push(data);
 
-			}).finally(function() {
-			    // save project on finish
-		        if((i+1) === $files.length){
-		        	// update project store
-					$scope.updateNoRefresh();
-		        }
-			});
+				}).finally(function() {
+				    // save project on finish
+			        if((i+1) === $files.length){
+			        	// update project store
+								$scope.updateNoRefresh();
+			        }
+				});
 	  	};
 
 	  	// upload script file
-		$scope.uploadScript = function($files) {
-	    //$files: an array of files selected, each file has name, size, and type.
-
-	    for (var i = 0; i < $files.length; i++) {
-	      var file = $files[i];
-
-	      performScriptUpload(file, i, $files);
-    	 }
+			$scope.uploadScript = function($files) {
+		    angular.forEach($files, function(file, key) {
+		      performScriptUpload(file, i, $files);
+				});
 	  	};
 
 	  	$scope.uploadTempScript = function($files) {
-	    //$files: an array of files selected, each file has name, size, and type.
-	    for (var i = 0; i < $files.length; i++) {
-	    	var file = $files[i];
-
+	    	angular.forEach($files, function(file, key) {
 	    		performUploadTempScript(file, i, $files);
-    		}
+    		});
 	  	};
 
 	  	var performUploadTempScript = function(file, i, $files){
@@ -2389,10 +2382,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	  	$scope.uploadReferenceFile = function($files) {
 	    //$files: an array of files selected, each file has name, size, and type.
 
-	    for (var i = 0; i < $files.length; i++) {
-		    var file = $files[i];
+	    	angular.forEach($files, function(file, key) {
 		    	performUploadReferenceFile(file, i, $files);
-	    	}
+	    	});
 	  	};
 
 	  	var performUploadTempReferenceFile = function(file, i, $files){
@@ -2413,22 +2405,22 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 	  	$scope.uploadTempReferenceFile = function($files) {
 		    //$files: an array of files selected, each file has name, size, and type.
-		    for (var i = 0; i < $files.length; i++) {
-		    	var file = $files[i];
+		    angular.forEach($files, function(file, key) {
 
 			    performUploadTempReferenceFile(file, i, $files);
-	    	}
+
+	    	});
 	  	};
 
 	  	// delete temp reference file
-	  	$scope.delTempReferenceFile = function(idx){
+  	$scope.delTempReferenceFile = function(idx){
 			var file = '/res/referenceFiles/temp/' + $scope.newProject.referenceFiles[idx].file.name;
 
 			$http.post('/projects/deletefile', {
-		        fileLocation: file
-		    });
+	        fileLocation: file
+	    });
 
-		    $scope.newProject.referenceFiles.splice(idx, 1);
+	    $scope.newProject.referenceFiles.splice(idx, 1);
 		};
 
 		// delete copy reference file
@@ -2493,11 +2485,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		        $scope.project.auditions.push(data);
 
 		        // update talents with posted status for uploaded talent
-	        	for(var j = 0; j < $scope.project.talent.length; ++j){
-	        		if($scope.project.talent[j].talentId === data.talent){
-								$scope.project.talent[j].status = 'Posted';
+						angular.forEach($scope.project.talent, function(talent, key) {
+	        		if(talent.talentId === data.talent){
+								$scope.project.talent[key].status = 'Posted';
 	        		}
-	        	}
+						});
 
 		    }).finally(function() {
 			    // save project on finish
@@ -2542,13 +2534,12 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	  	};
 
 	  	$scope.uploadTempAudition = function($files) {
-	    //$files: an array of files selected, each file has name, size, and type.
-	    for (var i = 0; i < $files.length; i++) {
-	    	var file = $files[i];
+		    //$files: an array of files selected, each file has name, size, and type.
+		    angular.forEach($files, function(file, key) {
 
 	    		performUploadTempAuditionFile(file, i, $files);
 
-    		}
+    		});
 	  	};
 
 	  	// delete uploaded temp audition
@@ -2556,7 +2547,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 	  		var file = '/res/auditions/temp/' + $scope.auditions[key].file.name;
 
-			$http.post('/projects/deletefile', {
+				$http.post('/projects/deletefile', {
 		        fileLocation: file
 		    });
 
@@ -2598,7 +2589,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			        	talent: talent,
 			        	projectId: $scope.project._id
 			        };
-				}
+						}
 		      }
 		    });
 
@@ -2608,7 +2599,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		      //$log.info('Modal dismissed at: ' + new Date());
 
 		    });
-      	};
+    	};
 
 	}
 ]);
