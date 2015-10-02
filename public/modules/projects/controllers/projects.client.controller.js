@@ -2493,21 +2493,21 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		    }).finally(function() {
 			    // save project on finish
-		        if((i+1) === $files.length){
+	        if((i+1) === $files.length){
 
-								// save with pause, ensure loop finished
-			        	setTimeout(function(){
+							// save with pause, ensure loop finished
+		        	setTimeout(function(){
 
-									$scope.verifyFilesList = [];
+								$scope.verifyFilesList = [];
 
-				        	// update project store
-									$scope.updateNoRefresh();
-									// trigger new file check walk
-									$scope.fileCheck = false;
+			        	// update project store
+								$scope.updateNoRefresh();
+								// trigger new file check walk
+								$scope.fileCheck = false;
 
-								}(), 1000);
+							}(), 1000);
 
-		        }
+	        }
 			});
 		};
 		$scope.uploadAudition = function($files) {
