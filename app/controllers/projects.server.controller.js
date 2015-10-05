@@ -416,7 +416,8 @@ exports.sendTalentCanceledEmail = function(req, res){
 
 								res.render('templates/cancelled-project-email', {
 									emailSignature: emailSig,
-									talent: talentInfo
+									talent: talentInfo,
+									project: project
 								}, function(err, talentEmailHTML) {
 									done(err, talentEmailHTML, owner);
 								});
