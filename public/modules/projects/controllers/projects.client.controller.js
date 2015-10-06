@@ -13,6 +13,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.isReadonly = false;
 		$scope.ratings = [];
 		$scope.ratingsAvg = [];
+		// file check vars
+		$scope.newFileCnt = 0;
+		$scope.procCnt = 0;
+		$scope.fileCheck = false;
 		// static project options
 		$scope.showDateEdit = false;
 		$scope.addTalent = true;
@@ -1727,9 +1731,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		);
 
 		// load project in view
-		$scope.newFileCnt = 0;
-		$scope.procCnt = 0;
-		$scope.fileCheck = false;
 		$scope.loadProject = function(){
 
 			// set vars
@@ -1752,47 +1753,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 						$scope.procCnt = 0;
 					}
 				}
-			});
-			// walk through all auditions on project load
-			$scope.$watch('project', function(){
-
-				if($scope.project !== 'undefined' && $scope.fileCheck === false){
-
-					angular.forEach($scope.project.auditions, function(value, key){
-
-						if(value.filecheck === 'undefined' || value.filecheck === 0){
-
-							// increment file count
-							$scope.newFileCnt += 1;
-
-							// new file location
-							file = '/res/auditions/'+$scope.project._id+'/'+value.file.name;
-
-							// check for new file
-							$http.post('/projects/fileExists', {
-								file: file
-							// file found
-							}).success(function(data, status, headers, config) {
-								$scope.project.audition[key].filecheck = 1;
-								$scope.project.audition[key].filecheckdate = new Date();
-								$scope.procCnt += 1;
-							// file not found
-							}).error(function(data, status, headers, config) {
-								$scope.project.audition[key].filecheck = 2;
-								$scope.project.audition[key].filecheckdate = new Date();
-								$scope.procCnt += 1;
-							});
-
-						}
-
-						if(key === ($scope.project.audition.length-1)) {
-							$scope.fileCheck = true;
-						}
-
-					});
-
-				}
-
 			});
 
 		};
@@ -1832,6 +1792,49 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.$watch('project', function(val){
 
 			if(typeof $scope.project === 'object'){
+
+				$scope.$watch('project.auditions',function(){
+					var file;
+
+					// audition file check
+					if($scope.fileCheck === false){
+
+						angular.forEach($scope.project.auditions, function(value, key){
+
+							if(typeof value.filecheck === 'undefined' || value.filecheck === 0){
+
+								// increment file count
+								$scope.newFileCnt += 1;
+
+								// new file location
+								file = '/res/auditions/'+$scope.project._id+'/'+value.file.name;
+
+								// check for new file
+								$http.post('/projects/fileExists', {
+									file: file
+								// file found
+								}).success(function(data, status, headers, config) {
+									$scope.project.auditions[key].filecheck = 1;
+									$scope.project.auditions[key].filecheckdate = new Date();
+									$scope.procCnt += 1;
+								// file not found
+								}).error(function(data, status, headers, config) {
+									$scope.project.auditions[key].filecheck = 2;
+									$scope.project.auditions[key].filecheckdate = new Date();
+									$scope.procCnt += 1;
+								});
+
+							}
+
+							if(key === ($scope.project.auditions.length-1)) {
+								$scope.fileCheck = true;
+							}
+
+						});
+
+					}
+
+				});
 
 				// check for values then do things
 				$scope.$watch('project.referenceFiles',function(){
@@ -2489,24 +2492,27 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	        		if(talent.talentId === data.talent){
 								$scope.project.talent[key].status = 'Posted';
 	        		}
+
+							// save on finish loop
+							if($scope.project.talent.length === (key+1)){
+								// save project on finish
+				        if((i+1) === $files.length){
+
+										// save with pause, ensure loop finished
+					        	setTimeout(function(){
+
+											$scope.verifyFilesList = [];
+
+						        	// update project store
+											$scope.updateNoRefresh();
+											// trigger new file check walk
+											$scope.fileCheck = false;
+
+										}(), 1000);
+
+				        }
+							}
 						});
-
-						// save project on finish
-		        if((i+1) === $files.length){
-
-								// save with pause, ensure loop finished
-			        	setTimeout(function(){
-
-									$scope.verifyFilesList = [];
-
-				        	// update project store
-									$scope.updateNoRefresh();
-									// trigger new file check walk
-									$scope.fileCheck = false;
-
-								}(), 1000);
-
-		        }
 
 		    });
 		};
