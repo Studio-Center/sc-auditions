@@ -2494,49 +2494,57 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}
 		};
 
+		$scope.uploadedAuds = [];
 		var performUploadAudition = function(file, i, $files){
+
 			$scope.upload = $upload.upload({
-		        url: 'projects/uploads/audition', //upload.php script, node.js route, or servlet url
-		        data: {project: $scope.project},
-		        file: file // or list of files ($files) for html5 only
-		    }).progress(function(evt) {
-		      	$scope.uploadStatus = (i + 1) + ' of ' + $files.length + ' files uploaded';
-		      	$scope.uploadfile = evt.config.file.name;
-		        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
-		    }).success(function(data, status, headers, config) {
-		        // file is uploaded successfully
-		        $scope.project.auditions.push(data);
+	        url: 'projects/uploads/audition', //upload.php script, node.js route, or servlet url
+	        data: {project: $scope.project},
+	        file: file // or list of files ($files) for html5 only
+	    }).progress(function(evt) {
+	      	$scope.uploadStatus = (i + 1) + ' of ' + $files.length + ' files uploaded';
+	      	$scope.uploadfile = evt.config.file.name;
+	        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
+	    }).success(function(data, status, headers, config) {
+	        // file is uploaded successfully
+					$scope.uploadedAuds.push(data);
 
-		        // update talents with posted status for uploaded talent
-						angular.forEach($scope.project.talent, function(talent, key) {
-	        		if(talent.talentId === data.talent){
-								$scope.project.talent[key].status = 'Posted';
-	        		}
+	        // update talents with posted status for uploaded talent
+					angular.forEach($scope.project.talent, function(talent, key) {
+        		if(talent.talentId === data.talent){
+							$scope.project.talent[key].status = 'Posted';
+        		}
 
-							// save on finish loop
-							if($scope.project.talent.length === (key+1)){
-								// save project on finish
-				        if((i+1) === $files.length){
+						// save on finish loop
+						if($scope.project.talent.length === (key+1)){
 
-										// save with pause, ensure loop finished
-					        	setTimeout(function(){
+							// save project on finish
+			        if($files.length === (i+1)){
 
-											$scope.verifyFilesList = [];
+								angular.extend($scope.project.auditions, $scope.uploadedAuds);
 
-						        	// update project store
-											$scope.updateNoRefresh();
-											// trigger new file check walk
-											$scope.fileCheck = false;
+								// save with pause, ensure loop finished
+			        	setTimeout(function(){
 
-										}(), 1000);
+									$scope.verifyFilesList = [];
 
-				        }
-							}
-						});
+				        	// update project store
+									$scope.updateNoRefresh();
+									// trigger new file check walk
+									$scope.fileCheck = false;
 
-		    });
+								}(), 1000);
+
+			        }
+						}
+					});
+
+	    });
+
 		};
 		$scope.uploadAudition = function($files) {
+
+			$scope.uploadedAuds = [];
 
 			// prevent any other action
 			$scope.processing = true;
