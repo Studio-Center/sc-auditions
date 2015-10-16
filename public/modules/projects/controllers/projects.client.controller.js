@@ -2493,7 +2493,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					});
 
 				} else {
-					
+
 					$scope.project.auditions.splice(idx, 1);
 
 					// update project store
@@ -2532,11 +2532,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 							// save project on finish
 			        if($files.length === (i+1)){
 
-								angular.forEach($scope.uploadedAuds, function(aud, audKey) {
+								$scope.project.auditions = $scope.project.auditions.concat($scope.uploadedAuds);
 
-									$scope.project.auditions.push(aud);
-
-									if($scope.uploadedAuds.length === (audKey+1)){
+								// angular.forEach($scope.uploadedAuds, function(aud, audKey) {
+								//
+								// 	$scope.project.auditions.push(aud);
+								//
+								// 	if($scope.uploadedAuds.length === (audKey+1)){
 
 										// save with pause, ensure loop finished
 					        	setTimeout(function(){
@@ -2550,9 +2552,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 										}(), 1000);
 
-					        }
-
-								});
+					      //   }
+								//
+								// });
 
 						}
 					}
