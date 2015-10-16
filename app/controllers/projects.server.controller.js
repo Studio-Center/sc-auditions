@@ -1489,6 +1489,9 @@ exports.deleteFileByName = function(req, res){
 	// remove file is exists
 	if (fs.existsSync(file)) {
 		fs.unlinkSync(file);
+		return res.status(200).send();
+	} else {
+		return res.status(200).send();
 	}
 };
 
@@ -2234,6 +2237,7 @@ exports.uploadAudition = function(req, res, next){
     //console.log(file.name);
     //console.log(file.type);
 
+		// read in project document
     var project = JSON.parse(req.body.data);
     project = project.project;
 
@@ -2269,7 +2273,7 @@ exports.uploadAudition = function(req, res, next){
     mv(tempPath, newPath, function(err) {
         //console.log(err);
         if (err){
-            res.status(500).end();
+            res.status(500).send({'error':'upload failed'});
         }else{
         	Talent.findOne({'name': new RegExp('^'+firstName+'$', 'i'), 'lastNameCode': new RegExp('^'+lastNameCode+'$', 'i')}).sort('-created').exec(function(err, talent) {
 
@@ -2280,6 +2284,7 @@ exports.uploadAudition = function(req, res, next){
 
 							// walk through project talent, look for existing assignment
 							async.eachSeries(project.talent, function (curTalent, talentCallback) {
+
 								if(talent !== null){
 									if(String(talent._id) === curTalent.talentId){
 										audTalent = curTalent.talentId;
@@ -2295,6 +2300,7 @@ exports.uploadAudition = function(req, res, next){
 								} else {
 									talentCallback();
 								}
+
 							}, function (err) {
 
 								var audition = {

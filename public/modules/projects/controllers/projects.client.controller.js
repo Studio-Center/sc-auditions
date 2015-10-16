@@ -1402,7 +1402,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			$http.post('/projects/updateNoRefresh', {
 				project: $scope.project
 			}).success(function(data, status, headers, config) {
+
+				// update local project document
 				$scope.project = angular.extend($scope.project, data);
+
+				// remove update overlay
+				$scope.processing = false;
+
 			});
 
 		};
@@ -2264,7 +2270,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 				$http.put('/projects/deletefile', {
 			        fileLocation: file
-			    });
+			  });
 
 				$scope.project.scripts.splice(idx, 1);
 
@@ -2277,13 +2283,16 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		// remove temporary script file
 		$scope.delTempScript = function(idx){
+
 			var file = '/res/scripts/temp/' + $scope.newProject.scripts[idx].file.name;
 
-				$http.post('/projects/deletefile', {
-		        fileLocation: file
-		    });
+			$http.post('/projects/deletefile', {
+        fileLocation: file
+	    }).success(function(data, status, headers, config) {
+			});
 
-		    $scope.newProject.scripts.splice(idx, 1);
+	    $scope.newProject.scripts.splice(idx, 1);
+
 		};
 
 		// delete copy script file
@@ -2417,13 +2426,16 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 	  	// delete temp reference file
   	$scope.delTempReferenceFile = function(idx){
+
 			var file = '/res/referenceFiles/temp/' + $scope.newProject.referenceFiles[idx].file.name;
 
 			$http.post('/projects/deletefile', {
-	        fileLocation: file
-	    });
+        fileLocation: file
+			}).success(function(data, status, headers, config) {
+			});
 
 	    $scope.newProject.referenceFiles.splice(idx, 1);
+
 		};
 
 		// delete copy reference file
@@ -2436,17 +2448,21 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			// verify user wants to delete file
 			if (confirm('Are you sure?')) {
 
+				$scope.processing = true;
+
 				var file = '/res/referenceFiles/' + $scope.project._id + '/' + $scope.project.referenceFiles[idx].file.name;
 
 				$http.post('/projects/deletefile', {
-			        fileLocation: file
-			    });
+	        fileLocation: file
+				}).success(function(data, status, headers, config) {
 
-				$scope.project.referenceFiles.splice(idx, 1);
+					// delete selected file
+					$scope.project.referenceFiles.splice(idx, 1);
 
-				// update project store
-				//$scope.update();
-				$scope.updateNoRefresh();
+					// update project store
+					$scope.updateNoRefresh();
+
+				});
 
 			}
 		};
@@ -2458,18 +2474,22 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				// tell audio system to reload files
 				//$scope.loadAudio = 0;
 
+				$scope.processing = true;
+
 				var file = '/res/auditions/' + $scope.project._id + '/' + $scope.project.auditions[idx].file.name;
 
 			    // delete selected file
 				$http.post('/projects/deletefile', {
-			        fileLocation: file
-			    });
+	        fileLocation: file
+				}).success(function(data, status, headers, config) {
 
-				$scope.project.auditions.splice(idx, 1);
+					$scope.project.auditions.splice(idx, 1);
 
-				// update project store
-				//$scope.update();
-				$scope.updateNoRefresh();
+					// update project store
+					//$scope.update();
+					$scope.updateNoRefresh();
+
+				});
 
 			}
 		};
@@ -2517,6 +2537,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		    });
 		};
 		$scope.uploadAudition = function($files) {
+
+			// prevent any other action
+			$scope.processing = true;
 
 	    //$files: an array of files selected, each file has name, size, and type.
 			angular.forEach($files, function(file, key) {
@@ -2587,28 +2610,28 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		};
 
 		// talent uploads modal
-      	$scope.talentSubmissionsModal = function(talent){
-      		var modalInstance = $modal.open({
-		      animation: true,
-		      templateUrl: 'modules/projects/views/talent-submissions-modal.client.view.html',
-		      controller: 'ProjectsModalController',
-		      resolve: {
-		      	data: function () {
-			        return {
-			        	talent: talent,
-			        	projectId: $scope.project._id
-			        };
-						}
-		      }
-		    });
+    	$scope.talentSubmissionsModal = function(talent){
+    		var modalInstance = $modal.open({
+	      animation: true,
+	      templateUrl: 'modules/projects/views/talent-submissions-modal.client.view.html',
+	      controller: 'ProjectsModalController',
+	      resolve: {
+	      	data: function () {
+		        return {
+		        	talent: talent,
+		        	projectId: $scope.project._id
+		        };
+					}
+	      }
+	    });
 
-		    modalInstance.result.then(function (selectedItem) {
-		      //$scope.selected = selectedItem;
-		    }, function () {
-		      //$log.info('Modal dismissed at: ' + new Date());
+	    modalInstance.result.then(function (selectedItem) {
+	      //$scope.selected = selectedItem;
+	    }, function () {
+	      //$log.info('Modal dismissed at: ' + new Date());
 
-		    });
-    	};
+	    });
+  	};
 
 	}
 ]);
