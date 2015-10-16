@@ -2521,23 +2521,32 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 							// save project on finish
 			        if($files.length === (i+1)){
 
-								angular.extend($scope.project.auditions, $scope.uploadedAuds);
+								angular.forEach($scope.uploadedAuds, function(aud, audKey) {
 
-								// save with pause, ensure loop finished
-			        	setTimeout(function(){
+									$scope.project.auditions.push(aud);
 
-									$scope.verifyFilesList = [];
+									if($scope.uploadedAuds.length === (audKey+1)){
 
-				        	// update project store
-									$scope.updateNoRefresh();
-									// trigger new file check walk
-									$scope.fileCheck = false;
+										// save with pause, ensure loop finished
+					        	setTimeout(function(){
 
-								}(), 1000);
+												$scope.verifyFilesList = [];
 
-			        }
+							        	// update project store
+												$scope.updateNoRefresh();
+												// trigger new file check walk
+												$scope.fileCheck = false;
+
+										}(), 1000);
+
+					        }
+
+								});
+
 						}
-					});
+					}
+
+				});
 
 	    });
 
