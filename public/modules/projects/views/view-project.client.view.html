@@ -251,7 +251,7 @@
 										Favorited
 									</th>
 								</tr>
-								<tr ng-repeat="(key, audition) in project.auditions">
+								<tr ng-repeat="(key, audition) in project.auditions track by $index">
 									<td>
 										{{key+1}}
 									</td>
