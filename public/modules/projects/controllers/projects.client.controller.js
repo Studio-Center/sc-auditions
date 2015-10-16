@@ -2476,20 +2476,31 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 				$scope.processing = true;
 
-				var file = '/res/auditions/' + $scope.project._id + '/' + $scope.project.auditions[idx].file.name;
+				if(typeof $scope.project.auditions[idx].file !== 'undefined'){
+					var file = '/res/auditions/' + $scope.project._id + '/' + $scope.project.auditions[idx].file.name;
 
-			    // delete selected file
-				$http.post('/projects/deletefile', {
-	        fileLocation: file
-				}).success(function(data, status, headers, config) {
+				    // delete selected file
+					$http.post('/projects/deletefile', {
+		        fileLocation: file
+					}).success(function(data, status, headers, config) {
 
+						$scope.project.auditions.splice(idx, 1);
+
+						// update project store
+						//$scope.update();
+						$scope.updateNoRefresh();
+
+					});
+
+				} else {
+					
 					$scope.project.auditions.splice(idx, 1);
 
 					// update project store
 					//$scope.update();
 					$scope.updateNoRefresh();
 
-				});
+				}
 
 			}
 		};
