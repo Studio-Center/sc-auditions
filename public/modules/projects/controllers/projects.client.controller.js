@@ -2505,7 +2505,60 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}
 		};
 
+		$scope.newAudUpload;
+		$scope.audFiles = [];
 		$scope.uploadedAuds = [];
+		$scope.$watch('newAudUpload', function(){
+
+			// get curent index
+			var i = $scope.uploadedAuds.length;
+
+			// file is uploaded successfully
+			$scope.uploadedAuds[i] = $scope.newAudUpload;
+
+			// update talents with posted status for uploaded talent
+			angular.forEach($scope.project.talent, function(talent, key) {
+				if(talent.talentId === $scope.newAudUpload.talent){
+					$scope.project.talent[key].status = 'Posted';
+				}
+
+				// save on finish loop
+				if($scope.project.talent.length === (key+1)){
+
+					// save project on finish
+					if($scope.audFiles.length === (i+1)){
+
+						$scope.project.auditions = $scope.project.auditions.concat($scope.uploadedAuds);
+
+						// angular.forEach($scope.uploadedAuds, function(aud, audKey) {
+						//
+						// 	$scope.project.auditions.push(aud);
+						//
+						// 	if($scope.uploadedAuds.length === (audKey+1)){
+
+								// save with pause, ensure loop finished
+								setTimeout(function(){
+
+										$scope.verifyFilesList = [];
+
+										// update project store
+										$scope.updateNoRefresh();
+										// trigger new file check walk
+										$scope.fileCheck = false;
+
+								}(), 1000);
+
+						//   }
+						//
+						// });
+
+					}
+				}
+
+			});
+
+
+		});
 		var performUploadAudition = function(file, i, $files){
 
 			$scope.upload = $upload.upload({
@@ -2517,56 +2570,14 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	      	$scope.uploadfile = evt.config.file.name;
 	        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
 	    }).success(function(data, status, headers, config) {
-	        // file is uploaded successfully
-					$scope.uploadedAuds[i] = data;
-
-	        // update talents with posted status for uploaded talent
-					angular.forEach($scope.project.talent, function(talent, key) {
-        		if(talent.talentId === data.talent){
-							$scope.project.talent[key].status = 'Posted';
-        		}
-
-						// save on finish loop
-						if($scope.project.talent.length === (key+1)){
-
-							// save project on finish
-			        if($files.length === (i+1)){
-
-								$scope.project.auditions = $scope.project.auditions.concat($scope.uploadedAuds);
-
-								// angular.forEach($scope.uploadedAuds, function(aud, audKey) {
-								//
-								// 	$scope.project.auditions.push(aud);
-								//
-								// 	if($scope.uploadedAuds.length === (audKey+1)){
-
-										// save with pause, ensure loop finished
-					        	setTimeout(function(){
-
-												$scope.verifyFilesList = [];
-
-							        	// update project store
-												$scope.updateNoRefresh();
-												// trigger new file check walk
-												$scope.fileCheck = false;
-
-										}(), 1000);
-
-					      //   }
-								//
-								// });
-
-						}
-					}
-
-				});
-
+					$scope.newAudUpload = data;
 	    });
 
 		};
 		$scope.uploadAudition = function($files) {
 
 			$scope.uploadedAuds = [];
+			$scope.audFiles = $files;
 
 			// prevent any other action
 			$scope.processing = true;
