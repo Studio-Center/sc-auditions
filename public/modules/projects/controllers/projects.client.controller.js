@@ -2507,7 +2507,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
 	    }).success(function(data, status, headers, config) {
 	        // file is uploaded successfully
-					$scope.uploadedAuds.push(data);
+					$scope.uploadedAuds[i] = data;
 
 	        // update talents with posted status for uploaded talent
 					angular.forEach($scope.project.talent, function(talent, key) {
