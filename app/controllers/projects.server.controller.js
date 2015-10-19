@@ -1547,11 +1547,11 @@ exports.update = function(req, res) {
 				var appDir = path.dirname(require.main.filename);
 
 				for(var i = 0; i < project.auditions.length; ++i){
-					if(typeof project.auditions[i].file !== 'undefined'){
+					if(typeof project.auditions[i] !== 'undefined' && typeof project.auditions[i].file !== 'undefined'){
 						var file = appDir + '/public/res/auditions/' + project._id + '/' + project.auditions[i].file.name;
 						var newFile = appDir + '/public/res/auditions/' + project._id + '/' + project.auditions[i].rename;
 
-						// move file is exists
+						// move file if exists
 						if (fs.existsSync(file) && project.auditions[i].rename !== '') {
 
 							// change stored file name
