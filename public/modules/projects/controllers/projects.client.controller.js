@@ -19,6 +19,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.fileCheck = false;
 		// static project options
 		$scope.showDateEdit = false;
+		$scope.showRename = false;
 		$scope.addTalent = true;
 		$scope.newProjTalentLink = 'createProject.talent';
 		$scope.newProjLink = 'createProject.project';
@@ -76,6 +77,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		});
 
+		$scope.toggleShowRename = function(){
+			$scope.showRename = !$scope.showRename;
+		};
 		$scope.toggleShowEdit = function(){
 			$scope.showDateEdit = !$scope.showDateEdit;
 		};
@@ -2361,15 +2365,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
   	// set published status
   	$scope.updatePublished = function(key){
-  		if(this.project.auditions[key].published === false){
-  			$scope.project.auditions[key].published = true;
-  		} else {
-  			$scope.project.auditions[key].published = false;
-  		}
-
   		// update project store
-		//$scope.update();
-		$scope.updateNoRefresh();
+			//$scope.update();
+			$scope.updateNoRefresh();
   	};
 
   	var performUploadReferenceFile = function(file, i, $files){
