@@ -14,28 +14,28 @@
 	        <div class="col-lg-2 col-md-2 col-sm-2">
 	        	<div class="checkbox">
 	    			<label>
-	            		<input type="checkbox" ng-model="searchText.unionStatus" ng-true-value="!non-union" ng-false-value=""> union
+	            		<input type="checkbox" ng-model="searchText.unionStatus" ng-true-value="'!non-union'" ng-false-value="''"> union
 	            	</label>
 	            </div>
 	        </div>
 	        <div class="col-lg-2 col-md-2 col-sm-2">
 	        	<div class="checkbox">
 	    			<label>
-	            		<input type="checkbox" ng-model="searchText.unionStatus" ng-true-value="!union" ng-false-value=""> non-union
+	            		<input type="checkbox" ng-model="searchText.unionStatus" ng-true-value="'!union'" ng-false-value="''"> non-union
 	            	</label>
 	            </div>
 	        </div>
 	        <div class="col-lg-3 col-md-3 col-sm-3">
 	        	<div class="checkbox">
 	    			<label>
-	            		<input type="checkbox" ng-model="searchUnions" ng-true-value="union non-union" ng-false-value=""> union and non-union
+	            		<input type="checkbox" ng-model="searchUnions" ng-true-value="'union non-union'" ng-false-value="''"> union and non-union
 	            	</label>
 	            </div>
 	        </div>
 	        <div class="col-lg-2 col-md-2 col-sm-2">
 	        	<div class="checkbox">
 	    			<label>
-	            		<input type="checkbox" ng-model="searchText.type" ng-true-value="email" ng-false-value=""> Emailer
+	            		<input type="checkbox" ng-model="searchText.type" ng-true-value="'email'" ng-false-value="''"> Emailer
 	            	</label>
 	            </div>
 	        </div>
@@ -57,21 +57,21 @@
 	        <div class="col-lg-2 col-md-2 col-sm-2">
 	        	<div class="checkbox">
 	    			<label>
-	            		<input type="checkbox" ng-model="searchText.typeCasts" ng-true-value="british" ng-false-value=""> British
+	            		<input type="checkbox" ng-model="searchText.typeCasts" ng-true-value="'british'" ng-false-value="''"> British
 	            	</label>
 	            </div>
 	        </div>
 	        <div class="col-lg-2 col-md-2 col-sm-2">
 	        	<div class="checkbox">
 	    			<label>
-	            		<input type="checkbox" ng-model="searchText.typeCasts" ng-true-value="spanish" ng-false-value=""> Spanish
+	            		<input type="checkbox" ng-model="searchText.typeCasts" ng-true-value="'spanish'" ng-false-value="''"> Spanish
 	            	</label>
 	            </div>
 	        </div>
 	        <div class="col-lg-2 col-md-2 col-sm-2">
 	        	<div class="checkbox">
 	    			<label>
-	            		<input type="checkbox" ng-model="searchText.typeCasts" ng-true-value="foreign language" ng-false-value=""> Foreign Language
+	            		<input type="checkbox" ng-model="searchText.typeCasts" ng-true-value="'foreign language'" ng-false-value="''"> Foreign Language
 	            	</label>
 	            </div>
 	        </div>
@@ -111,7 +111,7 @@
 	        <div data-ng-repeat="talent in talents | multiTerm:searchUnions:'AND' | filter:searchText:startsWith | filter:searchString | startFrom:currentPage*limit | limitTo: limit" data-ng-href="#!/talents/{{talent._id}}" class="list-group-item">
 	        	<div style="float:right">
 	        		<label>Email:</label>
-	        		<input type="checkbox" name="emailClients" ng-model="emailClients" ng-true-value="{{talent._id}}" ng-checked="checkToggleEmail(talent._id)" ng-click="toggleEmailer(talent._id,talent)">
+	        		<input type="checkbox" name="emailClients" ng-model="emailClients" ng-true-value="'{{talent._id}}'" ng-checked="checkToggleEmail(talent._id)" ng-click="toggleEmailer(talent._id,talent)">
 	        	</div>
 	            <small class="list-group-item-text">
 	                Added
@@ -121,7 +121,7 @@
 	            <p><strong>Phone Number</strong> {{talent.phone | tel}} <strong>Phone Number Alt</strong> {{talent.phone2 | tel}}<br>
 	            <strong>Email</strong> {{talent.email}} <strong>Email Alt</strong> {{talent.email2}} <br>
 	            <strong>Location:</strong> {{talent.locationISDN}} <br>
-	            <strong>Union Status</strong> 
+	            <strong>Union Status</strong>
 	            <span ng-repeat="(key, usval) in talent.unionStatus">{{usval}} </span></p>
 	        </div>
 	    </div>
