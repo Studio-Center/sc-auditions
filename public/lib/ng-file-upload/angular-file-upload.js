@@ -149,6 +149,7 @@ angularFileUpload.service('$upload', ['$http', '$q', '$timeout', function ($http
                                     formData.append(key, new Blob([val], {type: 'application/json'}));
                                 } else {
                                     formData.append(key, CircularJSON.stringify(val));
+                                    
                                 }
                             }
 
