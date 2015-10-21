@@ -2191,7 +2191,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 							date: now.toJSON(),
 							userid: Authentication.user._id,
 							username: Authentication.user.displayName,
-							item: $scope.discussion,
+							item: $scope.discussion || this.discussion,
 							deleted: false
 						};
 
@@ -2205,7 +2205,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			    $scope.email.message += 'Added by: ' + Authentication.user.displayName + '<br>';
 			    $scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '<br>';
 
-				$scope.discussion = '';
+					$scope.discussion = '';
+					this.discussion = '';
 
 			    $http.post('/projects/sendemail', {
 					email: $scope.email
