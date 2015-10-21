@@ -2208,7 +2208,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				// send update email
 				$scope.gatherToAddresses('saveDiscussion');
 			    $scope.email.subject = $scope.project.title + ' discussion added';
-			    $scope.email.message = 'Discussion Item: ' + $scope.discussion + '<br>';
+			    $scope.email.message = 'Discussion Item: ' + this.discussion + '<br>';
 			    $scope.email.message += 'Project: ' + $scope.project.title + '<br>';
 			    $scope.email.message += 'Added by: ' + Authentication.user.displayName + '<br>';
 			    $scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '<br>';
