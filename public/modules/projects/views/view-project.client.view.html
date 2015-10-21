@@ -104,7 +104,7 @@
 			            	Scripts ({{project.scripts.length}}) <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
 			            </h4>
 		        	</accordion-heading>
-						<div data-ng-if="permitAdminDirector()" class="clearfix" style="padding-bottom:5px">
+						<div data-ng-if="permitAdminProductionCoordinatorDirector() || isOwner()" class="clearfix" style="padding-bottom:5px">
 
 	                    	<fieldset>
 								<h4>Upload Script: </h4>
