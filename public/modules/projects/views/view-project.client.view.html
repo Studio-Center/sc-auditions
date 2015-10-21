@@ -25,8 +25,8 @@
                 </div>
 				<h4>Created by {{::project.user.displayName}} {{project.created | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST</h4>
 				<a class="btn btn-primary" href="/#!/projects-client/{{::project._id}}" target="_blank">Click to View in Client Portal</a>
-				<a data-ng-if="permitAdminProductionCoordinator() || isOwner()" class="btn btn-success" ng-click="showDateEdit = !showDateEdit">Extend Audition</a>
-				<a data-ng-if="permitAdminProductionCoordinator() || isOwner()" class="btn btn-danger" href="/#!/projects/create/{{::project._id}}">ReAudition</a>
+				<a data-ng-show="permitAdminProductionCoordinator() || isOwner()" class="btn btn-success" ng-click="showDateEdit = !showDateEdit">Extend Audition</a>
+				<a data-ng-show="permitAdminProductionCoordinator() || isOwner()" class="btn btn-danger" href="/#!/projects/create/{{::project._id}}">ReAudition</a>
 			</div>
 			<div class="col-lg-4 col-md-4 col-sm-4">
 					<progressbar value="dynamic" type="success" ng-model="progress"><b>{{dynamic}}%</b></progressbar>
@@ -53,7 +53,7 @@
 			</div>
 
 			<div class="col-lg-6 col-md-6 col-sm-6">
-				<div class="panel panel-default" data-ng-if="permitAdminProductionCoordinatorDirector()">
+				<div class="panel panel-default" data-ng-show="permitAdminProductionCoordinatorDirector()">
 					<div class="panel-heading">
 		            	<strong>Notes ({{project.discussion.length}})</strong>
 		        	</div>
@@ -104,7 +104,7 @@
 			            	Scripts ({{project.scripts.length}}) <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
 			            </h4>
 		        	</accordion-heading>
-						<div data-ng-if="permitAdminProductionCoordinatorDirector() || isOwner()" class="clearfix" style="padding-bottom:5px">
+						<div data-ng-show="permitAdminProductionCoordinatorDirector() || isOwner()" class="clearfix" style="padding-bottom:5px">
 
 	                    	<fieldset>
 								<h4>Upload Script: </h4>
@@ -147,7 +147,7 @@
 			            </h4>
 		        	</accordion-heading>
 
-						<div data-ng-if="permitAdminProductionCoordinatorDirector() || isOwner()" class="clearfix" style="padding-bottom:5px">
+						<div data-ng-show="permitAdminProductionCoordinatorDirector() || isOwner()" class="clearfix" style="padding-bottom:5px">
 							<h4>Upload Reference: </h4>
 
 							<div ng-file-drop ng-file-select="uploadReferenceFile($files)" ng-model="files" ng-model-rejected="rejFiles"
@@ -182,7 +182,7 @@
 
 									</div>
 									<div class="col-lg-1 col-md-1 col-sm-1">
-										<button data-ng-if="permitAdminProductionCoordinatorDirector() || isOwner()" ng-click="delReferenceFile(key)" target="_blank" class="btn btn-danger">Delete</button>
+										<button data-ng-show="permitAdminProductionCoordinatorDirector() || isOwner()" ng-click="delReferenceFile(key)" target="_blank" class="btn btn-danger">Delete</button>
 									</div>
 								</div>
 							</li>
@@ -204,7 +204,7 @@
 			            	Auditions ({{project.auditions.length}})<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
 			            </h4>
 		        	</accordion-heading>
-				 		<div data-ng-if="permitAdminDirector()" class="clearfix" style="padding-bottom:5px">
+				 		<div data-ng-show="permitAdminDirector()" class="clearfix" style="padding-bottom:5px">
 							<h4>Upload Audition Files: (*.mp3 only!)</h4>
 
 							<div ng-file-drop ng-file-select="uploadAudition($files)" ng-model="files" ng-model-rejected="rejFiles"
@@ -273,7 +273,7 @@
 											<button ng-click="update(false);showRename = 0;" class="btn btn-primary">Update</button>
 											<button ng-click="showRename = 0;" class="btn btn-primary">Cancel</button>
 										</div>
-										<button data-ng-if="permitAdminDirector()" ng-click="delAudition(key)" class="btn btn-danger">Delete</button>
+										<button data-ng-show="permitAdminDirector()" ng-click="delAudition(key)" class="btn btn-danger">Delete</button>
 									</td>
 									<td>
 										<span ng-if="verifyAudio(key)">
@@ -306,7 +306,7 @@
 					                </td>
 					                <td>
 					                	<rating ng-model="audition.avgRating" readonly="false" ng-click="updateRating(audition.file.path, false)" max="max" on-leave="overStar = audition.avgRating" on-hover="hoveringOver(value,key)"></rating>
-										<p data-ng-if="audition.avgRating">Average: <br>
+										<p data-ng-show="audition.avgRating">Average: <br>
 											<rating ng-model="audition.avgRating" readonly="true" max="max" on-leave="overStar = audition.avgRating" ></rating>
 									</td>
 									<td>
@@ -405,7 +405,7 @@
 							</tr>
 						</table>
 						</div>
-						<accordion close-others="oneAtATime" data-ng-if="permitAdminTalentDirectorProdCoord()">
+						<accordion close-others="oneAtATime" data-ng-show="permitAdminTalentDirectorProdCoord()">
 							<accordion-group is-open="statusInt.open">
 							<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
 								<h4 class="panel-title accordion-toggle">
@@ -549,7 +549,7 @@
 
 		<div class="row">
 			<div class="col-lg-6 col-md-6 col-sm-6">
-				<accordion close-others="oneAtATime" data-ng-if="permitAdminProductionCoordinatorDirector()">
+				<accordion close-others="oneAtATime" data-ng-show="permitAdminProductionCoordinatorDirector()">
 					<accordion-group is-open="status.open">
 					<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
 						<h4 class="panel-title accordion-toggle">
@@ -647,7 +647,7 @@
 					</accordion-group>
 				</accordion>
 
-				<accordion close-others="oneAtATime" data-ng-if="permitAdminProductionCoordinatorDirector() || permitClient()">
+				<accordion close-others="oneAtATime" data-ng-show="permitAdminProductionCoordinatorDirector() || permitClient()">
 					<accordion-group is-open="status.open">
 					<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
 						<h4 class="panel-title accordion-toggle">
@@ -738,7 +738,7 @@
 			</div>
 
 			<div class="col-lg-6 col-md-6 col-sm-6">
-				<accordion close-others="oneAtATime" data-ng-if="permitAdminProductionCoordinatorDirector()">
+				<accordion close-others="oneAtATime" data-ng-show="permitAdminProductionCoordinatorDirector()">
 					<accordion-group is-open="status.open">
 					<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
 						<h4 class="panel-title accordion-toggle">
@@ -784,7 +784,7 @@
 
 		</div>
 	</div>
-	<div class="pull-right" data-ng-if="permitAdminProductionCoordinator()" style="padding-bottom:75px">
+	<div class="pull-right" data-ng-show="permitAdminProductionCoordinator()" style="padding-bottom:75px">
 		<a class="btn btn-primary" href="/#!/projects/{{project._id}}/edit">
 			<i class="glyphicon glyphicon-edit"></i>
 		</a>
@@ -794,7 +794,7 @@
 	</div>
 
 	<div class="container" style="position:fixed;bottom:0;background:#fff;z-index:999;padding-top:5px">
-		<div class="row" data-ng-if="permitAdminDirector()">
+		<div class="row" data-ng-show="permitAdminDirector()">
 			<div class="col-lg-12 col-md-12 col-sm-12">
 				<ul style="clear:both" ng-if="rejFiles.length > 0" class="response">
 					<li class="sel-file" ng-repeat="f in rejFiles">
