@@ -76,6 +76,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		});
 
+		$scope.toggleShowEdit = function(){
+			$scope.showDateEdit = !$scope.showDateEdit;
+		};
+
 		$scope.updatePred = function(pred){
 			$scope.predicate = pred;
 		};
