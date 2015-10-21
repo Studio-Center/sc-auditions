@@ -98,7 +98,7 @@
 			</div>
 		</div>
 		<div><strong>Typecasts</strong> <br>
-			<button ng-click="showTypecasts = !showTypecasts" class="btn btn-default">
+			<button ng-click="showTypecasts = !showTypecasts" class="btn btn-primary">
 				<span ng-show="showTypecasts == undefined || showTypecasts == false">
 					Show Typecasts
 				</span>
@@ -207,7 +207,7 @@
 							</td>
 							<td>
 								<span ng-repeat="(key, script) in project.scripts">
-		            				<a href="/res/scripts/{{project._id}}/{{script.file.name}}" popover="{{script.file.name}}" popover-trigger="mouseenter" target="_blank"><img src="/img/Adobe-Acrobat-icon.png" alt="download PDF"></a>
+		            				<a href="/res/scripts/{{project._id}}/{{script.file.name}}" popover="{{script.file.name}}" popover-trigger="mouseenter" popover-placement="top" popover-popup-delay="250" popover-append-to-body="true" target="_blank"><img src="/img/Adobe-Acrobat-icon.png" alt="download PDF"></a>
 		            			</span>
 							</td>
 							<td>
