@@ -1,6 +1,6 @@
 <div class="form-group">
     <a ui-sref="{{newProjLink}}" class="btn btn-block btn-info">
-        <span class="glyphicon glyphicon-circle-arrow-left"></span> Previous Section 
+        <span class="glyphicon glyphicon-circle-arrow-left"></span> Previous Section
     </a>
 </div>
 
@@ -25,16 +25,16 @@
                             </div>
                         </div>
                         <div class="col-lg-2 col-md-2 col-sm-2">
-                            <label>union</label> <input type="checkbox" ng-model="searchText.unionStatus" ng-true-value="union" ng-false-value="" class="form-control">
+                            <label>union</label> <input type="checkbox" ng-model="searchText.unionStatus" ng-true-value="'union'" class="form-control">
                         </div>
                         <div class="col-lg-2 col-md-2 col-sm-2">
-                            <label>non-union</label> <input type="checkbox" ng-model="searchText.unionStatus" ng-true-value="non-union" ng-false-value="" class="form-control">
+                            <label>non-union</label> <input type="checkbox" ng-model="searchText.unionStatus" ng-true-value="'non-union'" class="form-control">
                         </div>
                         <div class="col-lg-3 col-md-3 col-sm-3">
-                            <label>union and non-union</label> <input type="checkbox" ng-model="searchUnions" ng-true-value="union non-union" ng-false-value="" class="form-control">
+                            <label>union and non-union</label> <input type="checkbox" ng-model="searchUnions" ng-true-value="'union non-union'" class="form-control">
                         </div>
                         <div class="col-lg-2 col-md-2 col-sm-2">
-                            <label>Emailer</label> <input type="checkbox" ng-model="searchText.type" ng-true-value="email" ng-false-value="" class="form-control">
+                            <label>Emailer</label> <input type="checkbox" ng-model="searchText.type" ng-true-value="'email'" class="form-control">
                         </div>
                     </div>
                     <div class="row" style="padding-bottom:10px">
@@ -113,7 +113,7 @@
                         <li class="list-group-item" ng-repeat="(key, talent) in filtered = (talents | multiTerm:searchUnions:'AND' | filter:searchText:startsWith | multiTermFull:searchString:'AND') | startFrom:currentPage*limit | limitTo: limit">
                             <div class="row">
                                 <div class="col-lg-1 col-md-1 col-sm-1">
-                                    <input type="checkbox" value="{{talent._id}}" ng-click="updateCreateTalent(talent._id, talent.name + ' ' + talent.lastName, talent.email)" ng-checked="checkCreateTalent(talent._id)"> 
+                                    <input type="checkbox" value="{{talent._id}}" ng-click="updateCreateTalent(talent._id, talent.name + ' ' + talent.lastName, talent.email)" ng-checked="checkCreateTalent(talent._id)">
                                 </div>
                                 <div class="col-lg-1 col-md-1 col-sm-1">
                                     <input type="checkbox" value="{{talent._id}}" ng-click="updateRequestCreateTalent(talent._id, talent.name + ' ' + talent.lastName, talent.email)" ng-checked="checkRequestedCreateTalent(talent._id)">

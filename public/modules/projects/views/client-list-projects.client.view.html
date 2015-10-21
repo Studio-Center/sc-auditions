@@ -31,8 +31,8 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="page-header jumbotron text-center" style="border:10px solid #e1e1e1;border-radius:0" ng-class="{redBG: project.status == 'In Progress' && checkPassed(project.estimatedCompletionDate), greenBg: project.status == 'Booked', lgreenBG: project.status == 'Closed - Pending Client Decision', orangeBG: project.status == 'On Hold', lgray: project.status == 'Cancelled', mgray: project.status == 'ReAuditioned', gray: project.status == 'Dead', blueBg: project.status == 'In Progress' && compareDates(project.estimatedCompletionDate),lblueBG: project.status == 'In Progress', yellowBg: project.sounders == 'No Sounders - Approved By William' && compareDates(project.estimatedCompletionDate), lyellowBg: project.sounders == 'No Sounders - Approved By William'}">
-					<p><strong>{{project.title}} Due {{project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST
-						- <span ng-if="project.status[0] != 'In Progress'">Auditions Complete</span><span ng-if="project.status[0] == 'In Progress'">{{project.status[0]}}</span></strong></p>
+					<p><strong>{{::project.title}} Due {{::project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST
+						- <span ng-if="project.status[0] != 'In Progress'">Auditions Complete</span><span ng-if="project.status[0] == 'In Progress'">{{::project.status[0]}}</span></strong></p>
 				</div>
 			</div>
 
@@ -82,7 +82,7 @@
 									<strong>{{key+1}}.</strong>
 								</td>-->
 								<td>
-									<a href="/res/auditions/{{project._id}}/{{audition.file.name | encodeUri}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable" download="{{audition.file.name}}">ngAudio</a>
+									<a href="/res/auditions/{{::project._id}}/{{::audition.file.name | encodeUri}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable" download="{{::audition.file.name}}">ngAudio</a>
 								</td>
 								<td>
 									<rating ng-model="audition.curRating" readonly="false" ng-click="updateRating(audition.file.path, false)" max="max" on-leave="overStar = lookUpRating(key)" on-hover="hoveringOver(value,key)"></rating>
@@ -190,7 +190,7 @@
 					<div class="row">
 						<div class="col-md-12">
 							<div ng-repeat="(key, note) in project.clientNotes | orderBy:'-date':reverse">
-								<h5><strong>{{note.date | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST - {{note.username}}</strong></h5>
+								<h5><strong>{{::note.date | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST - {{::note.username}}</strong></h5>
 								<div ng-bind-html="note.item"></div>
 							</div>
 						</div>

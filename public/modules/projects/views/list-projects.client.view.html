@@ -14,7 +14,7 @@
             <label>Search by Project Name:</label> <input ng-model="searchText.title" class="form-control">
         </div>
         <div class="col-lg-3 col-md-3 col-sm-3">
-            <label>Sort:</label> 
+            <label>Sort:</label>
             <select ng-model="sortText" ng-init="sortText = 'created'" class="form-control">
                 <option value="created">Created</option>
                 <option value="title">Name</option>
@@ -30,7 +30,7 @@
                                 </select>
         </div>
         <div class="col-lg-3 col-md-3 col-sm-3">
-            <label>My Projects:</label> <input type="checkbox" name="userProjFilter" id="userProjFilter" ng-model="searchText" ng-true-value="{{authentication.user._id}}" ng-false-value="" class="form-control">
+            <label>My Projects:</label> <input type="checkbox" name="userProjFilter" id="userProjFilter" ng-model="searchText" ng-true-value="'{{authentication.user._id}}'" class="form-control">
         </div>
     </div>
     <div class="row">
@@ -38,13 +38,13 @@
             <label>Search Entire Project:</label> <input ng-model="searchString" class="form-control">
         </div>
         <div class="col-lg-3 col-md-3 col-sm-3">
-            <label>In Progress:</label> <input type="checkbox" name="userProjFilter" id="userProjFilter" ng-model="searchText.status" ng-true-value="In Progress" ng-false-value="" ng-checked="permitProducers()" class="form-control">
+            <label>In Progress:</label> <input type="checkbox" name="userProjFilter" id="userProjFilter" ng-model="searchText.status" ng-true-value="'In Progress'" ng-checked="permitProducers()" class="form-control">
         </div>
         <div class="col-lg-3 col-md-3 col-sm-3">
 
         </div>
         <div class="col-lg-3 col-md-3 col-sm-3" style="text-align:center;padding-bottom:9px">
-            
+
         </div>
     </div>
     <div class="row">
@@ -103,16 +103,16 @@
                         <div class="col-lg-8 col-md-8 col-sm-8">
                             <div class="row">
                                 <div class="col-lg-6 col-md-6 col-sm-6">
-                                    <strong>{{project.title}}</strong> <small>Due {{project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm a'}} EST</small> 
+                                    <strong>{{::project.title}}</strong> <small>Due {{::project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm a'}} EST</small>
                                 </div>
                                 <div class="col-lg-3 col-md-3 col-sm-3">
-                                    <progressbar value="calcProjectProg(project)" type="success" ng-model="progress"><b>{{calcProjectProg(project)}}%</b></progressbar>
+                                    <progressbar value="calcProjectProg(project)" type="success" ng-model="progress"><b>{{::calcProjectProg(project)}}%</b></progressbar>
                                 </div>
                                 <div class="col-lg-3 col-md-3 col-sm-3"></div>
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-4 col-sm-4">
-                            <small>Created {{project.created | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST by {{project.user.displayName}}</small>
+                            <small>Created {{::project.created | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST by {{::project.user.displayName}}</small>
                         </div>
                     </div>
                 </a>

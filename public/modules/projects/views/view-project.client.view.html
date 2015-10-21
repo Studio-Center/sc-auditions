@@ -2,7 +2,7 @@
 	<div class="page-header">
 		<div class="row">
 			<div class="col-lg-8 col-md-8 col-sm-8">
-				<h2 style="margin:0">{{project.title}} <small>Due {{project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST</small> </h2>
+				<h2 style="margin:0">{{::project.title}} <small>Due {{project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST</small> </h2>
 				<div class="form-group" ng-if="showDateEdit">
                     <div class="panel panel-default">
                         <div class="panel-heading">
@@ -23,10 +23,10 @@
                         </div>
                     </div>
                 </div>
-				<h4>Created by {{project.user.displayName}} {{project.created | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST</h4>
-				<a class="btn btn-primary" href="/#!/projects-client/{{project._id}}" target="_blank">Click to View in Client Portal</a>
-				<a data-ng-show="permitAdminProductionCoordinator() || isOwner()" class="btn btn-success" ng-click="showDateEdit = !showDateEdit">Extend Audition</a>
-				<a data-ng-show="permitAdminProductionCoordinator() || isOwner()" class="btn btn-danger" href="/#!/projects/create/{{project._id}}">ReAudition</a>
+				<h4>Created by {{::project.user.displayName}} {{project.created | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST</h4>
+				<a class="btn btn-primary" href="/#!/projects-client/{{::project._id}}" target="_blank">Click to View in Client Portal</a>
+				<a data-ng-if="permitAdminProductionCoordinator() || isOwner()" class="btn btn-success" ng-click="showDateEdit = !showDateEdit">Extend Audition</a>
+				<a data-ng-if="permitAdminProductionCoordinator() || isOwner()" class="btn btn-danger" href="/#!/projects/create/{{::project._id}}">ReAudition</a>
 			</div>
 			<div class="col-lg-4 col-md-4 col-sm-4">
 					<progressbar value="dynamic" type="success" ng-model="progress"><b>{{dynamic}}%</b></progressbar>
@@ -37,7 +37,7 @@
                     <div ng-if="permitAdmin()" ng-controller="UsersController" data-ng-init="findFilter('production coordinator')">
                     	<label>Owner</label>
                     	<select class="form-control" style="display:block;margin:0 auto" ng-model="project.owner" ng-change="$parent.update(false)">
-	                        <option ng-repeat="user in users" ng-selected="project.owner == user._id" value="{{user._id}}">{{user.firstName}} {{user.lastName}}</option>
+	                        <option ng-repeat="user in users" ng-selected="project.owner == user._id" value="{{::user._id}}">{{::user.firstName}} {{::user.lastName}}</option>
 	                    </select>
                     </div>
 				</div>
@@ -53,7 +53,7 @@
 			</div>
 
 			<div class="col-lg-6 col-md-6 col-sm-6">
-				<div class="panel panel-default" data-ng-show="permitAdminProductionCoordinatorDirector()">
+				<div class="panel panel-default" data-ng-if="permitAdminProductionCoordinatorDirector()">
 					<div class="panel-heading">
 		            	<strong>Notes ({{project.discussion.length}})</strong>
 		        	</div>
@@ -71,10 +71,10 @@
 					</fieldset>
 					<div style="max-height:200px;padding:10px;border-top:1px solid #e8e8e8;overflow-y:scroll">
 						<div ng-repeat="(key, ditem) in project.discussion.slice().reverse()">
-							<h5 ng-if="ditem.deleted === true" class="strike-if"><strong>{{ditem.date | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST - {{ditem.username}}</strong></h5>
-							<h5 ng-if="ditem.deleted === false"><strong>{{ditem.date | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST - {{ditem.username}}</strong></h5>
+							<h5 ng-if="ditem.deleted === true" class="strike-if"><strong>{{ditem.date | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST - {{::ditem.username}}</strong></h5>
+							<h5 ng-if="ditem.deleted === false"><strong>{{ditem.date | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST - {{::ditem.username}}</strong></h5>
 							<div class="clearfix">
-								<button ng-show="authentication.user._id === ditem.userid && ditem.deleted === false" style="float:right" class="btn btn-danger" ng-click="deleteDiscussion(key)">Delete</button>
+								<button ng-if="authentication.user._id === ditem.userid && ditem.deleted === false" style="float:right" class="btn btn-danger" ng-click="deleteDiscussion(key)">Delete</button>
 								<div ng-if="ditem.deleted === true" class="strike-if" ng-bind-html="ditem.item | linky:'_blank'"></div>
 								<p ng-if="ditem.deleted === false" ng-bind-html="ditem.item | linky:'_blank'"></p>
 							</div>
@@ -86,7 +86,7 @@
 						</div>
 						<div class="col-md-12">
 							<div ng-repeat="(key, note) in project.clientNotes | orderBy:'-date':reverse">
-								<h5><strong>{{note.date | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST - {{note.username}}</strong></h5>
+								<h5><strong>{{note.date | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST - {{::note.username}}</strong></h5>
 								<div ng-bind-html="note.item"></div>
 							</div>
 						</div>
@@ -104,7 +104,7 @@
 			            	Scripts ({{project.scripts.length}}) <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
 			            </h4>
 		        	</accordion-heading>
-						<div data-ng-show="permitAdminDirector()" class="clearfix" style="padding-bottom:5px">
+						<div data-ng-if="permitAdminDirector()" class="clearfix" style="padding-bottom:5px">
 
 	                    	<fieldset>
 								<h4>Upload Script: </h4>
@@ -113,7 +113,7 @@
 		                         ng-multiple="true" ng-accept="'*.pdf'"
 		                         drop-available="dropAvailable">
 		                            <div ng-hide="dropAvailable">File Drop not available</div>
-		                            <div ng-show="dropAvailable">Drop PDFs</div>
+		                            <div ng-if="dropAvailable">Drop PDFs</div>
 		                            <div>or click to select</div>
 		                        </div>
 							</fieldset>
@@ -123,9 +123,9 @@
 								<div class="row">
                     				<div class="col-lg-10 col-md-10 col-sm-10">
 										<strong>{{key+1}}.</strong>
-										<a href="/res/scripts/{{project._id}}/{{script.file.name | encodeUri}}" target="_blank" data-ng-bind="script.file.name" download="{{script.file.name}}"></a>
-										<a href="/res/scripts/{{project._id}}/{{script.file.name}}" target="_blank">
-											<img src="/img/Adobe-Acrobat-icon.png" alt="download PDF" download="{{script.file.name}}">
+										<a href="/res/scripts/{{::project._id}}/{{script.file.name | encodeUri}}" target="_blank" data-ng-bind="script.file.name" download="{{::script.file.name}}"></a>
+										<a href="/res/scripts/{{::project._id}}/{{::script.file.name}}" target="_blank">
+											<img src="/img/Adobe-Acrobat-icon.png" alt="download PDF" download="{{::script.file.name}}">
 										</a>
 									</div>
 									<div class="col-lg-1 col-md-1 col-sm-1">
@@ -143,11 +143,11 @@
 					<accordion-group is-open="toggleRefs">
 					<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
 						<h4 class="panel-title accordion-toggle">
-			            	Reference Files ({{project.referenceFiles.length}})<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+			            	Reference Files ({{::project.referenceFiles.length}})<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
 			            </h4>
 		        	</accordion-heading>
 
-						<div data-ng-show="permitAdminProductionCoordinatorDirector() || isOwner()" class="clearfix" style="padding-bottom:5px">
+						<div data-ng-if="permitAdminProductionCoordinatorDirector() || isOwner()" class="clearfix" style="padding-bottom:5px">
 							<h4>Upload Reference: </h4>
 
 							<div ng-file-drop ng-file-select="uploadReferenceFile($files)" ng-model="files" ng-model-rejected="rejFiles"
@@ -155,7 +155,7 @@
 	                         ng-multiple="true" ng-accept="'*'"
 	                         drop-available="dropAvailable">
 	                            <div ng-hide="dropAvailable">File Drop not available</div>
-	                            <div ng-show="dropAvailable">Drop Anything you would like.</div>
+	                            <div ng-if="dropAvailable">Drop Anything you would like.</div>
 	                            <div>or click to select</div>
 	                        </div>
 
@@ -164,10 +164,10 @@
 							<li class="list-group-item" ng-repeat="(key, referenceFile) in project.referenceFiles">
 								<div class="row">
                     				<div class="col-lg-10 col-md-10 col-sm-10">
-										<strong>{{key+1}}.</strong> <a href="/res/referenceFiles/{{project._id}}/{{referenceFile.file.name | encodeUri}}" target="_blank" data-ng-bind="referenceFile.file.name" download="{{referenceFile.file.name}}"></a>
+										<strong>{{key+1}}.</strong> <a href="/res/referenceFiles/{{::project._id}}/{{referenceFile.file.name | encodeUri}}" target="_blank" data-ng-bind="referenceFile.file.name" download="{{::referenceFile.file.name}}"></a>
 
-										<div ng-show="checkForAudio(referenceFile.file.name)">
-											<button ng-click="playAudio(key, referenceFile.file.name, '/res/referenceFiles/{{project._id}}/')" class="btn btn-primary">
+										<div ng-if="checkForAudio(referenceFile.file.name)">
+											<button ng-click="playAudio(key, referenceFile.file.name, '/res/referenceFiles/{{::project._id}}/')" class="btn btn-primary">
 												<span ng-if="lastAudioID == key && audioStatus == 1">
 													<img src="/img/Aqua-Pause-icon.png" style="width:35px;height:auto" alt="play icon">
 												</span>
@@ -182,7 +182,7 @@
 
 									</div>
 									<div class="col-lg-1 col-md-1 col-sm-1">
-										<button data-ng-show="permitAdminProductionCoordinatorDirector() || isOwner()" ng-click="delReferenceFile(key)" target="_blank" class="btn btn-danger">Delete</button>
+										<button data-ng-if="permitAdminProductionCoordinatorDirector() || isOwner()" ng-click="delReferenceFile(key)" target="_blank" class="btn btn-danger">Delete</button>
 									</div>
 								</div>
 							</li>
@@ -204,7 +204,7 @@
 			            	Auditions ({{project.auditions.length}})<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
 			            </h4>
 		        	</accordion-heading>
-				 		<div data-ng-show="permitAdminDirector()" class="clearfix" style="padding-bottom:5px">
+				 		<div data-ng-if="permitAdminDirector()" class="clearfix" style="padding-bottom:5px">
 							<h4>Upload Audition Files: (*.mp3 only!)</h4>
 
 							<div ng-file-drop ng-file-select="uploadAudition($files)" ng-model="files" ng-model-rejected="rejFiles"
@@ -212,7 +212,7 @@
 	                         ng-multiple="true" ng-accept="'*.mp3'"
 	                         drop-available="dropAvailable">
 	                            <div ng-hide="dropAvailable">File Drop not available</div>
-	                            <div ng-show="dropAvailable">Drop *.mp3 files..</div>
+	                            <div ng-if="dropAvailable">Drop *.mp3 files..</div>
 	                            <div>or click to select</div>
 	                        </div>
 
@@ -256,27 +256,27 @@
 										{{key+1}}
 									</td>
 									<td>
-										<div ng-show="audition.filecheck === 2" style="font-size:18px;color:red;font-weight:700">
+										<div ng-if="audition.filecheck === 2" style="font-size:18px;color:red;font-weight:700">
 											FILE NOT FOUND ON SERVER! <br>PLEASE UPLOAD AGAIN!
 										</div>
 
-										<a href="/res/auditions/{{project._id}}/{{audition.file.name | encodeUri}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable" download="{{audition.file.name}}">ngAudio</a>
+										<a href="/res/auditions/{{::project._id}}/{{audition.file.name | encodeUri}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable" download="{{::audition.file.name}}">ngAudio</a>
 										<p ng-module="users" ng-controller="UsersController" data-ng-init="getOne(audition.approved.by.userId)">
 											<strong>Posted by:</strong> {{useredit.displayName}}
 										</p>
-										<p ng-show="audition.hidden == true" style="font-size:18px;color:red;font-weight:700">HIDDEN BY CLIENT</p>
-										<button ng-show="showRename === 0" ng-click="showRename = 1" class="btn btn-primary">Rename</button>
+										<p ng-if="audition.hidden == true" style="font-size:18px;color:red;font-weight:700">HIDDEN BY CLIENT</p>
+										<button ng-if="showRename === 0" ng-click="showRename = 1" class="btn btn-primary">Rename</button>
 
 
-										<div ng-show="showRename">
+										<div ng-if="showRename">
 											<input type="text" ng-model="project.auditions[key].rename" ng-init="project.auditions[key].rename = project.auditions[key].file.name" placeholder="Enter new filename" class="form-control">
 											<button ng-click="update(false);showRename = 0;" class="btn btn-primary">Update</button>
 											<button ng-click="showRename = 0;" class="btn btn-primary">Cancel</button>
 										</div>
-										<button data-ng-show="permitAdminDirector()" ng-click="delAudition(key)" class="btn btn-danger">Delete</button>
+										<button data-ng-if="permitAdminDirector()" ng-click="delAudition(key)" class="btn btn-danger">Delete</button>
 									</td>
 									<td>
-										<span ng-show="verifyAudio(key)">
+										<span ng-if="verifyAudio(key)">
 											<button ng-click="playAudio(key, audition.file.name)" class="btn btn-primary">
 												<span ng-if="lastAudioID == key && audioStatus == 1">
 													<img src="/img/Aqua-Pause-icon.png" style="width:35px;height:auto" alt="play icon">
@@ -301,12 +301,12 @@
 											Talent Not Assigned
 										</div>
 										<select ng-model="project.auditions[key].talent" ng-change="$parent.updateNoRefresh()">
-					                        <option ng-repeat="talent in project.talent" ng-selected="project.auditions[key].talent == talent.talentId" value="{{talent.talentId}}">{{talent.name}}</option>
+					                        <option ng-repeat="talent in project.talent" ng-selected="project.auditions[key].talent == talent.talentId" value="{{::talent.talentId}}">{{talent.name}}</option>
 					                    </select>
 					                </td>
 					                <td>
 					                	<rating ng-model="audition.avgRating" readonly="false" ng-click="updateRating(audition.file.path, false)" max="max" on-leave="overStar = audition.avgRating" on-hover="hoveringOver(value,key)"></rating>
-										<p data-ng-show="audition.avgRating">Average: <br>
+										<p data-ng-if="audition.avgRating">Average: <br>
 											<rating ng-model="audition.avgRating" readonly="true" max="max" on-leave="overStar = audition.avgRating" ></rating>
 									</td>
 									<td>
@@ -369,24 +369,24 @@
 							</tr>
 							<tr ng-repeat="(key, member) in project.talent | orderBy:predicate:reverse" ng-module="talents" ng-controller="TalentsController" data-ng-init="getOne(member.talentId)">
 								<td>
-									<a target="_blank" href="/#!/talents/{{member.talentId}}">
-										{{talent.name}} {{talent.lastNameCode}}
+									<a target="_blank" href="/#!/talents/{{::member.talentId}}">
+										{{::talent.name}} {{::talent.lastNameCode}}
 									</a>
 								</td>
 								<td>
-									<a target="_blank" href="/#!/projects/talent-upload/{{project._id}}/{{member.talentId}}" title="talent auditions upload link">^</a>
+									<a target="_blank" href="/#!/projects/talent-upload/{{::project._id}}/{{::member.talentId}}" title="talent auditions upload link">^</a>
 								</td>
 								<td>
-									{{talent.locationISDN}}
+									{{::talent.locationISDN}}
 								</td>
 								<td>
-									<span ng-show="member.requested == true">R</span>
+									<span ng-if="member.requested == true">R</span>
 								</td>
 								<td>
 									<select class="form-control" ng-model="talentStatus[member.talentId]" ng-init="talentStatus[member.talentId] = $parent.getTalentStatus(member.talentId) || talentStatus[0]" style="width:100px" ng-change="$parent.updateTalentStatus(member.talentId, talentStatus[member.talentId])" ng-options="item for item in talentStatus"></select>
 								</td>
 								<td>
-									{{member.part}}
+									{{::member.part}}
 								</td>
 								<td>
 									<button class="btn btn-primary" ng-click="$parent.sendTalentEmail(member.talentId)"><img style="width:30px;height:auto" src="/img/envelope.png" alt="envelope image"></button>
@@ -400,12 +400,12 @@
 									<button style="float:right" class="btn btn-primary" ng-click="$parent.saveTalentNote(member.talentId)">Save</button>
 								</td>
 								<td>
-									<button ng-show="member.submissions" target="_blank" href="#" ng-click="talentSubmissionsModal(member)" title="talent auditions upload link">></button>
+									<button ng-if="member.submissions" target="_blank" href="#" ng-click="talentSubmissionsModal(member)" title="talent auditions upload link">></button>
 								</td>
 							</tr>
 						</table>
 						</div>
-						<accordion close-others="oneAtATime" data-ng-show="permitAdminTalentDirectorProdCoord()">
+						<accordion close-others="oneAtATime" data-ng-if="permitAdminTalentDirectorProdCoord()">
 							<accordion-group is-open="statusInt.open">
 							<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
 								<h4 class="panel-title accordion-toggle">
@@ -427,16 +427,16 @@
 				                            </div>
 				                        </div>
 				                        <div class="col-lg-2 col-md-2 col-sm-2">
-				                            <label>union</label> <input type="checkbox" ng-model="searchText.unionStatus" ng-true-value="union" ng-false-value="" class="form-control">
+				                            <label>union</label> <input type="checkbox" ng-model="searchText.unionStatus" ng-true-value="'union'" class="form-control">
 				                        </div>
 				                        <div class="col-lg-2 col-md-2 col-sm-2">
-				                            <label>non-union</label> <input type="checkbox" ng-model="searchText.unionStatus" ng-true-value="non-union" ng-false-value="" class="form-control">
+				                            <label>non-union</label> <input type="checkbox" ng-model="searchText.unionStatus" ng-true-value="'non-union'" class="form-control">
 				                        </div>
 				                        <div class="col-lg-3 col-md-3 col-sm-3">
-				                            <label>union and non-union</label> <input type="checkbox" ng-model="searchUnions" ng-true-value="union non-union" ng-false-value="" class="form-control">
+				                            <label>union and non-union</label> <input type="checkbox" ng-model="searchUnions" ng-true-value="'union non-union'" class="form-control">
 				                        </div>
 				                        <div class="col-lg-2 col-md-2 col-sm-2">
-				                            <label>Emailer</label> <input type="checkbox" ng-model="searchText.type" ng-true-value="email" ng-false-value="" class="form-control">
+				                            <label>Emailer</label> <input type="checkbox" ng-model="searchText.type" ng-true-value="'email'" class="form-control">
 				                        </div>
 				                    </div>
 				                    <div class="row" style="padding-bottom:10px">
@@ -505,17 +505,17 @@
 											</tr>
 											<tr ng-repeat="(key, talent) in filtered = (talents | multiTerm:searchUnions:'AND' | filter:searchText:startsWith | multiTermFull:searchString:'AND') | startFrom:currentPage*limit | limitTo: limit">
 												<td>
-													<input ng-show="addTalent" type="checkbox" value="{{talent._id}}" ng-click="updateTalent(talent._id, talent.name + ' ' + talent.lastName, talent.email)" ng-checked="checkTalent(talent._id)">
+													<input ng-if="addTalent" type="checkbox" value="{{::talent._id}}" ng-click="updateTalent(talent._id, talent.name + ' ' + talent.lastName, talent.email)" ng-checked="checkTalent(talent._id)">
 												</td>
 												<td>
-													<input ng-show="addTalent" type="checkbox" value="{{talent._id}}" ng-click="updateRequestTalent(talent._id, talent.name + ' ' + talent.lastName, talent.email)" ng-checked="checkRequestedTalent(talent._id)">
+													<input ng-if="addTalent" type="checkbox" value="{{::talent._id}}" ng-click="updateRequestTalent(talent._id, talent.name + ' ' + talent.lastName, talent.email)" ng-checked="checkRequestedTalent(talent._id)">
 												</td>
 												<td>
 													<input type="text" class="form-control" ng-model="parts[talent._id]" ng-if="showPartFld(talent._id)">
 													<div ng-if="showPartFld(talent._id) == false">{{showPartString(talent._id)}}</div>
 												</td>
 												<td>
-													<a target="_blank" href="/#!/talents/{{talent._id}}">{{talent.name}} {{talent.lastName}}</a> - {{talent.locationISDN}} - Outage <span ng-show="!talent.outageTimes">None</span><span ng-show="talent.outageTimes != ''">{{talent.outageTimes}}</span>
+													<a target="_blank" href="/#!/talents/{{::talent._id}}">{{::talent.name}} {{::talent.lastName}}</a> - {{::talent.locationISDN}} - Outage <span ng-if="!talent.outageTimes">None</span><span ng-if="talent.outageTimes != ''">{{::talent.outageTimes}}</span>
 												</td>
 											</tr>
 										</table>
@@ -549,7 +549,7 @@
 
 		<div class="row">
 			<div class="col-lg-6 col-md-6 col-sm-6">
-				<accordion close-others="oneAtATime" data-ng-show="permitAdminProductionCoordinatorDirector()">
+				<accordion close-others="oneAtATime" data-ng-if="permitAdminProductionCoordinatorDirector()">
 					<accordion-group is-open="status.open">
 					<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
 						<h4 class="panel-title accordion-toggle">
@@ -565,7 +565,7 @@
 
 						<ul class="list-group">
 							<li class="list-group-item" ng-repeat="(key, member) in project.client" ng-module="users" ng-controller="UsersController" data-ng-init="getOne(member.userId)">
-								<input type="checkbox" ng-model="selectedMainClients[key]" ng-true-value="{{member.userId}}"> <a target="_blank" href="/#!/usersedit/{{member.userId}}">{{member.name}} {{member.company}}</a> - {{useredit.company}}
+								<input type="checkbox" ng-model="selectedMainClients[key]" ng-true-value="'{{::member.userId}}'"> <a target="_blank" href="/#!/usersedit/{{::member.userId}}">{{::member.name}} {{::member.company}}</a> - {{::useredit.company}}
 							</li>
 						</ul>
 
@@ -615,7 +615,7 @@
 									    </div>
 										<ul class="list-group">
 											<li class="list-group-item" ng-repeat="(key, user) in filtered = (users | filter:filterClient) | startFrom:currentPage*limit | limitTo: limit">
-												<input type="checkbox" value="{{user._id}}" ng-click="updateClient(user._id, user.displayName, user.email)" ng-checked="checkClientUsers(user._id)">
+												<input type="checkbox" value="{{::user._id}}" ng-click="updateClient(user._id, user.displayName, user.email)" ng-checked="checkClientUsers(user._id)">
 												<a target="_blank" href="/#!/usersedit/{{user._id}}">
 													{{user.displayName}}
 												</a>
@@ -647,7 +647,7 @@
 					</accordion-group>
 				</accordion>
 
-				<accordion close-others="oneAtATime" data-ng-show="permitAdminProductionCoordinatorDirector() || permitClient()">
+				<accordion close-others="oneAtATime" data-ng-if="permitAdminProductionCoordinatorDirector() || permitClient()">
 					<accordion-group is-open="status.open">
 					<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
 						<h4 class="panel-title accordion-toggle">
@@ -656,9 +656,9 @@
 		        	</accordion-heading>
 						<ul class="list-group">
 							<li class="list-group-item" ng-repeat="(key, member) in project.clientClient" ng-module="users" ng-controller="UsersController" data-ng-init="getOne(member.userId)">
-								<a target="_blank" href="/#!/usersedit/{{member.userId}}">
-									{{member.name}}
-								</a> - {{useredit.company}}
+								<a target="_blank" href="/#!/usersedit/{{::member.userId}}">
+									{{::member.name}}
+								</a> - {{::useredit.company}}
 							</li>
 						</ul>
 						<accordion close-others="oneAtATime" ng-if="permitAdminProductionCoordinator()">
@@ -707,9 +707,9 @@
 									    </div>
 										<ul class="list-group">
 											<li class="list-group-item" ng-repeat="(key, user) in filtered = (users | filter:filterClientClient) | startFrom:currentPage*limit | limitTo: limit">
-												<input type="checkbox" value="{{user._id}}" ng-click="updateClientClient(user._id, user.displayName, user.email)" ng-checked="checkClientClientUsers(user._id)">
-												<a target="_blank" href="/#!/usersedit/{{user._id}}">{{user.displayName}}</a>
-												 - {{user.company}}
+												<input type="checkbox" value="{{::user._id}}" ng-click="updateClientClient(user._id, user.displayName, user.email)" ng-checked="checkClientClientUsers(user._id)">
+												<a target="_blank" href="/#!/usersedit/{{::user._id}}">{{::user.displayName}}</a>
+												 - {{::user.company}}
 											</li>
 										</ul>
 										<div class="row">
@@ -738,7 +738,7 @@
 			</div>
 
 			<div class="col-lg-6 col-md-6 col-sm-6">
-				<accordion close-others="oneAtATime" data-ng-show="permitAdminProductionCoordinatorDirector()">
+				<accordion close-others="oneAtATime" data-ng-if="permitAdminProductionCoordinatorDirector()">
 					<accordion-group is-open="status.open">
 					<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
 						<h4 class="panel-title accordion-toggle">
@@ -747,7 +747,7 @@
 		        	</accordion-heading>
 					<accordion close-others="oneAtATime">
 						<div class="panel panel-default" ng-repeat="(key, phase) in project.phases">
-							<div class="panel-heading"><strong>{{project.phases[key].name}}</strong></div>
+							<div class="panel-heading"><strong>{{::project.phases[key].name}}</strong></div>
 							<div class="panel-body">
 								<span>
 									<div class="row">
@@ -784,7 +784,7 @@
 
 		</div>
 	</div>
-	<div class="pull-right" data-ng-show="permitAdminProductionCoordinator()" style="padding-bottom:75px">
+	<div class="pull-right" data-ng-if="permitAdminProductionCoordinator()" style="padding-bottom:75px">
 		<a class="btn btn-primary" href="/#!/projects/{{project._id}}/edit">
 			<i class="glyphicon glyphicon-edit"></i>
 		</a>
@@ -794,9 +794,9 @@
 	</div>
 
 	<div class="container" style="position:fixed;bottom:0;background:#fff;z-index:999;padding-top:5px">
-		<div class="row" data-ng-show="permitAdminDirector()">
+		<div class="row" data-ng-if="permitAdminDirector()">
 			<div class="col-lg-12 col-md-12 col-sm-12">
-				<ul style="clear:both" ng-show="rejFiles.length > 0" class="response">
+				<ul style="clear:both" ng-if="rejFiles.length > 0" class="response">
 					<li class="sel-file" ng-repeat="f in rejFiles">
 						Rejected file: {{f.name}} - size: {{f.size}}B - type: {{f.type}}
 					</li>

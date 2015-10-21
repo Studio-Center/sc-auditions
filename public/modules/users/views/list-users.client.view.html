@@ -8,10 +8,10 @@
             <label>Search:</label> <input ng-model="searchString" class="form-control">
         </div>
         <div class="col-lg-3 col-md-3 col-sm-3">
-            <label>Main Clients Only:</label> <input type="checkbox" ng-model="searchText.roles" ng-true-value="client" ng-false-value="" class="form-control">
+            <label>Main Clients Only:</label> <input type="checkbox" ng-model="searchText.roles" ng-true-value="'client'" class="form-control">
         </div>
         <div class="col-lg-3 col-md-3 col-sm-3">
-            <label>Additional Clients Only:</label> <input type="checkbox" ng-model="searchText.roles" ng-true-value="client-client" ng-false-value="" class="form-control">
+            <label>Additional Clients Only:</label> <input type="checkbox" ng-model="searchText.roles" ng-true-value="'client-client'" class="form-control">
         </div>
     </div>
     <div class="row">
@@ -53,8 +53,8 @@
 				by
 				<span data-ng-bind="user.displayName"></span>
 			</small>
-			<h4 class="list-group-item-heading">Username: {{user.username}}<br> Company: {{user.company}}<br> Name: {{user.displayName}}<br> Email: {{user.email}}<br> Phone: {{user.phone}}</h4>
-            <p>Notes: {{user.notes}}</p>
+			<h4 class="list-group-item-heading">Username: {{::user.username}}<br> Company: {{::user.company}}<br> Name: {{::user.displayName}}<br> Email: {{::user.email}}<br> Phone: {{::user.phone}}</h4>
+            <p>Notes: {{::user.notes}}</p>
         </a>
     </div>
     <div class="row">

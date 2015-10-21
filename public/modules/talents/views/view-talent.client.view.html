@@ -4,44 +4,44 @@
             <div class="col-lg-6 col-md-6 col-sm-6">
             	<div class="row">
 					<div>
-						<strong>First Name:</strong> 
-						{{talent.name}}
+						<strong>First Name:</strong>
+						{{::talent.name}}
 					</div>
 					<div>
-						<strong>Last Name:</strong> 
-						{{talent.lastName}}
+						<strong>Last Name:</strong>
+						{{::talent.lastName}}
 					</div>
 					<div>
-						<strong>Last Name Code:</strong> 
-						{{talent.lastNameCode}}
+						<strong>Last Name Code:</strong>
+						{{::talent.lastNameCode}}
 					</div>
 					<div>
-						<strong>Parent Name:</strong> 
-						{{talent.parentName}}
+						<strong>Parent Name:</strong>
+						{{::talent.parentName}}
 					</div>
 					<div>
-						<strong>Gender:</strong> 
-						{{talent.gender}} {{talent.ageRange}}
+						<strong>Gender:</strong>
+						{{::talent.gender}} {{::talent.ageRange}}
 					</div>
 					<div>
-						<strong>Email:</strong> 
+						<strong>Email:</strong>
 						<span ng-if="talent.email">
-							<a href="mailto:{{talent.email}}">{{talent.email}}</a>
+							<a href="mailto:{{::talent.email}}">{{::talent.email}}</a>
 						</span>
 					</div>
-					<div><strong>Email Alt:</strong> 
+					<div><strong>Email Alt:</strong>
 						<span ng-if="talent.email2">
-							<a href="mailto:{{talent.email2}}">{{talent.email2}}</a>
+							<a href="mailto:{{::talent.email2}}">{{::talent.email2}}</a>
 						</span>
 					</div>
 					<div><strong>Phone Number:</strong>
 						<span ng-if="talent.phone">
-							<a href="tel:{{talent.phone}}">{{talent.phone | tel}}</a>
+							<a href="tel:{{::talent.phone}}">{{::talent.phone | tel}}</a>
 						</span>
 					</div>
 					<div><strong>Phone Number Alt:</strong>
 						<span ng-if="talent.phone2">
-							<a href="tel:{{talent.phone2}}">{{talent.phone2 | tel}}</a>
+							<a href="tel:{{::talent.phone2}}">{{::talent.phone2 | tel}}</a>
 						</span>
 					</div>
 				</div>
@@ -50,48 +50,48 @@
 				<div class="row">
 					<div>
 						<strong>Preferred Contact Lanaguge</strong>
-						{{talent.prefLanguage}}
+						{{::talent.prefLanguage}}
 					</div>
 					<div>
-						<strong>Type:</strong> 
-						{{talent.type}} 
+						<strong>Type:</strong>
+						{{::talent.type}}
 					</div>
 					<div>
-						<strong>Union Status:</strong> 
-						<span ng-repeat="(key, usval) in talent.unionStatus">{{usval}} </span>
+						<strong>Union Status:</strong>
+						<span ng-repeat="(key, usval) in talent.unionStatus">{{::usval}} </span>
 						<br>
-						<span ng-repeat="(key, usval) in talent.unionJoined">{{usval}} </span>
+						<span ng-repeat="(key, usval) in talent.unionJoined">{{::usval}} </span>
 					</div>
 					<div>
-						<strong>Outage Times:</strong> 
-						{{talent.outageTimes}}
+						<strong>Outage Times:</strong>
+						{{::talent.outageTimes}}
 					</div>
 					<div>
-						<strong>Location/ISDN:</strong> 
-						{{talent.locationISDN}}
+						<strong>Location/ISDN:</strong>
+						{{::talent.locationISDN}}
 					</div>
 					<div>
-						<strong>Exclusivity:</strong> 
-						{{talent.exclusivity}}
+						<strong>Exclusivity:</strong>
+						{{::talent.exclusivity}}
 					</div>
 					<div>
-						<strong>ISDN Line 1:</strong> 
-						{{talent.ISDNLine1 | tel}}
+						<strong>ISDN Line 1:</strong>
+						{{::talent.ISDNLine1 | tel}}
 					</div>
 					<div>
-						<strong>ISDN Line 2:</strong> 
-						{{talent.ISDNLine2 | tel}}
+						<strong>ISDN Line 2:</strong>
+						{{::talent.ISDNLine2 | tel}}
 					</div>
 					<div>
-						<strong>Source Connect Username:</strong> 
-						{{talent.sourceConnectUsername}}
+						<strong>Source Connect Username:</strong>
+						{{::talent.sourceConnectUsername}}
 					</div>
 					<div>
-						<strong>Producer:</strong> 
-						{{talent.producerOptional}}
+						<strong>Producer:</strong>
+						{{::talent.producerOptional}}
 					</div>
 					<div>
-						<strong>StudioCenter.com Demo Link:</strong> 
+						<strong>StudioCenter.com Demo Link:</strong>
 						<span ng-show="talent.demoLink"><a href="{{talent.demoLink}}">{{talent.demoLink}}</a></span>
 					</div>
 				</div>
@@ -114,7 +114,7 @@
                                 <div> <strong>{{typecast.name}}</strong></div>
                                 <ul class="list-group">
                                     <li ng-if="talent.typeCasts.indexOf(attribute) > -1" class="list-group-item" ng-repeat="(key, attribute) in typecast.attributes">
-                                        {{attribute}} 
+                                        {{attribute}}
                                     </li>
                                 </ul>
                             </div>
@@ -140,7 +140,7 @@
 	</div>
 
 	<div class="page-header jumbotron">
-		
+
         <div class="controls" ng-module="projects">
             <div ng-controller="TalentsController" data-ng-init="findTalentProjects(talent._id)">
             	<div class="row">
@@ -188,7 +188,7 @@
 								{{key + 1}}
 							</td>
 							<td>
-								<strong><a target="_blank" data-ng-href="#!/projects/{{project._id}}">{{project.title}}</a></strong> 
+								<strong><a target="_blank" data-ng-href="#!/projects/{{project._id}}">{{project.title}}</a></strong>
 							</td>
 							<td>
 								{{project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST
