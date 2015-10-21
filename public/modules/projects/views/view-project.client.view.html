@@ -265,13 +265,12 @@
 											<strong>Posted by:</strong> {{useredit.displayName}}
 										</p>
 										<p ng-if="audition.hidden == true" style="font-size:18px;color:red;font-weight:700">HIDDEN BY CLIENT</p>
-										<button ng-if="showRename === 0" ng-click="showRename = 1" class="btn btn-primary">Rename</button>
-
+										<button ng-click="toggleShowRename()" class="btn btn-primary">Rename</button>
 
 										<div ng-if="showRename">
 											<input type="text" ng-model="project.auditions[key].rename" ng-init="project.auditions[key].rename = project.auditions[key].file.name" placeholder="Enter new filename" class="form-control">
-											<button ng-click="update(false);showRename = 0;" class="btn btn-primary">Update</button>
-											<button ng-click="showRename = 0;" class="btn btn-primary">Cancel</button>
+											<button ng-click="update(false);toggleShowRename();" class="btn btn-primary">Update</button>
+											<button ng-click="toggleShowRename()" class="btn btn-primary">Cancel</button>
 										</div>
 										<button data-ng-if="permitAdminDirector()" ng-click="delAudition(key)" class="btn btn-danger">Delete</button>
 									</td>
