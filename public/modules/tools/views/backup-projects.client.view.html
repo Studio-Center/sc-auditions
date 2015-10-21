@@ -10,18 +10,18 @@
         </div>
         <div class="row">
             <div class="col-lg-3 col-md-3 col-sm-3">
-            	<label>Select All:</label> 
+            	<label>Select All:</label>
             	<input type="checkbox" ng-model="selectAll" ng-change="selectAllProjects()" class="form-control">
             </div>
             <div class="col-lg-3 col-md-3 col-sm-3">
-            	<label>Completion Date:</label> 
+            	<label>Completion Date:</label>
             	<input type="date" class="form-control" ng-model="searchText.estimatedCompletionDate">
             </div>
             <div class="col-lg-3 col-md-3 col-sm-3" style="text-align:center">
             	<button class="btn btn-danger" ng-click="backupProjects()">Backup Selected</button>
             </div>
             <div class="col-lg-3 col-md-3 col-sm-3">
-                
+
             </div>
         </div>
         <div class="row">
@@ -48,7 +48,7 @@
                 <label>Search by Project Name:</label> <input ng-model="searchText.title" class="form-control">
             </div>
             <div class="col-lg-3 col-md-3 col-sm-3">
-                <label>Sort:</label> 
+                <label>Sort:</label>
                 <select ng-model="sortText" ng-init="sortText = 'created'" class="form-control">
                     <option value="created">Created</option>
                     <option value="title">Name</option>
@@ -64,7 +64,7 @@
                                     </select>
             </div>
             <div class="col-lg-3 col-md-3 col-sm-3">
-                <label>My Projects:</label> <input type="checkbox" name="userProjFilter" id="userProjFilter" ng-model="searchText" ng-true-value="{{authentication.user._id}}" ng-false-value="" class="form-control">
+                <label>My Projects:</label> <input type="checkbox" name="userProjFilter" id="userProjFilter" ng-model="searchText" ng-true-value="'{{authentication.user._id}}'" class="form-control">
             </div>
         </div>
         <div class="row">
@@ -72,7 +72,7 @@
                 <label>Search Entire Project:</label> <input ng-model="searchString" class="form-control">
             </div>
             <div class="col-lg-3 col-md-3 col-sm-3">
-                <label>In Progress:</label> <input type="checkbox" name="userProjFilter" id="userProjFilter" ng-model="searchText.status" ng-true-value="In Progress" ng-false-value="" ng-checked="permitProducers()" class="form-control">
+                <label>In Progress:</label> <input type="checkbox" name="userProjFilter" id="userProjFilter" ng-model="searchText.status" ng-true-value="'In Progress'" ng-checked="permitProducers()" class="form-control">
             </div>
         </div>
         <div class="row">
@@ -114,9 +114,9 @@
                             <div class="col-lg-8 col-md-8 col-sm-8">
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-sm-6">
-                                        <strong><a href="/#!/projects/{{project._id}}" target="_blank">{{project.title}}</a></strong> 
+                                        <strong><a href="/#!/projects/{{project._id}}" target="_blank">{{project.title}}</a></strong>
 
-                                        <small>Due {{project.estimatedCompletionDate | date:'short'}} EST</small> 
+                                        <small>Due {{project.estimatedCompletionDate | date:'short'}} EST</small>
                                     </div>
                                     <div class="col-lg-3 col-md-3 col-sm-3">
                                         <progressbar value="calcProjectProg(project)" type="success" ng-model="progress"><b>{{calcProjectProg(project)}}%</b></progressbar>
@@ -127,7 +127,7 @@
                             <div class="col-lg-4 col-md-4 col-sm-4">
                             	<div style="float:right">
     				        		<label>Backup:</label>
-    				        		<input type="checkbox" ng-model="projectsList" ng-true-value="{{project._id}}" ng-checked="checkToggleProject(project._id)" ng-click="toggleProject(project._id)">
+    				        		<input type="checkbox" ng-model="projectsList" ng-true-value="'{{project._id}}'" ng-checked="checkToggleProject(project._id)" ng-click="toggleProject(project._id)">
     				        	</div>
                                 <small>Created {{project.created | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST by {{project.user.displayName}}</small>
                             </div>

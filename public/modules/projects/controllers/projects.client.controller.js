@@ -102,7 +102,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	    		$scope.currentPage = page;
 	    	}
 	    };
-	    $scope.$watch('filtered', function(val){
+	    $scope.$watchCollection('filtered', function(val){
 	    	$scope.currentPage = 0;
 	    }, true);
 
@@ -1749,7 +1749,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			//$scope.loadAudio = 0;
 
 			// update project after all auditions file have been checked
-			$scope.$watch('procCnt', function(){
+			$scope.$watchCollection('procCnt', function(){
 				if($scope.procCnt > 0 && $scope.newFileCnt > 0){
 					if($scope.procCnt === $scope.newFileCnt){
 						// save project changes
@@ -1765,7 +1765,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		// load audio files into player after project object has finished loading
 
-		$scope.$watch('newProject.estimatedCompletionDate', function(val){
+		$scope.$watchCollection('newProject.estimatedCompletionDate', function(val){
 			var now = new Date();
 
 			if($scope.newProject.estimatedCompletionDate !== '' && $scope.newProject.estimatedCompletionDate < now){
@@ -1795,11 +1795,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}
 		};
 
-		$scope.$watch('project', function(val){
+		$scope.$watchCollection('project', function(val){
 
 			if(typeof $scope.project === 'object'){
 
-				$scope.$watch('project.auditions',function(){
+				$scope.$watchCollection('project.auditions',function(){
 					var file;
 
 					// audition file check
@@ -1843,7 +1843,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				});
 
 				// check for values then do things
-				$scope.$watch('project.referenceFiles',function(){
+				$scope.$watchCollection('project.referenceFiles',function(){
 					if(typeof $scope.project.referenceFiles === 'object'){
 						if($scope.project.referenceFiles.length > 0){
 							$scope.toggleRefs = true;
@@ -1877,7 +1877,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				// });
 
 				// update progress bar
-				$scope.$watch('project.phases', function(val){
+				$scope.$watchCollection('project.phases', function(val){
 
 					if(typeof $scope.project.phases !== 'undefined'){
 						var phaseLngth = $scope.project.phases.length;
@@ -2120,7 +2120,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		};
 
 		// play audio on load
-		$scope.$watch('audio', function(val){
+		$scope.$watchCollection('audio', function(val){
 			if(typeof $scope.audio === 'object'){
 				$scope.audio.play();
 			}
@@ -2508,7 +2508,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.newAudUpload;
 		$scope.audFiles = [];
 		$scope.uploadedAuds = [];
-		$scope.$watch('newAudUpload', function(){
+		$scope.$watchCollection('newAudUpload', function(){
 
 			// get curent index
 			var i = $scope.uploadedAuds.length;
