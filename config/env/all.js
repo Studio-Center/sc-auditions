@@ -22,6 +22,8 @@ module.exports = {
 				'public/lib/font-awesome/css/font-awesome.min.css'
 			],
 			js: [
+				'public/lib/es5-shim/es5-shim.min.js',
+				'public/lib/es5-shim/es5-sham.min.js',
 				'public/lib/circular-json/build/circular-json.js',
 				'public/lib/moment/moment.js',
 				'public/lib/modernizer/modernizr.js',
