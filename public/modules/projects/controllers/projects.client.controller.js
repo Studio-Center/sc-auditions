@@ -184,27 +184,27 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		    });
 		};
 
-      	// client portal specific methods
-      	$scope.selAudition = function(key){
+  	// client portal specific methods
+  	$scope.selAudition = function(key){
 			var idx = $scope.selectedAuditions.indexOf(key);
 			if (idx > -1){
 			    $scope.selectedAuditions.splice(idx, 1);
 			}else{
 			    $scope.selectedAuditions.push(key);
 			}
-      	};
-      	$scope.selCheck = function(filename){
+  	};
+  	$scope.selCheck = function(filename){
 			for(var i = 0; i < $scope.selectedAuditions.length; ++i){
       			if($scope.selectedAuditions[i] === filename){
       				return true;
       			}
       		}
       	};
-      	$scope.hideSelected = true;
-      	$scope.hideSelectedAuditions = function(){
+  	$scope.hideSelected = true;
+  	$scope.hideSelectedAuditions = function(){
       		$scope.hideSelected = !$scope.hideSelected;
-      	};
-      	$scope.hideAudition = function(filename){
+  	};
+  	$scope.hideAudition = function(filename){
       		// $scope.hideList.push(filename);
       		// get audition id
       		for(var i = 0; i < $scope.project.auditions.length; ++i){
@@ -213,8 +213,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       				$scope.updateNoRefresh();
       			}
       		}
-      	};
-      	$scope.showAudition = function(filename){
+  	};
+  	$scope.showAudition = function(filename){
 			// var idx = $scope.hideList.indexOf(filename);
 			// if (idx > -1){
 			//     $scope.hideList.splice(idx, 1);
@@ -337,10 +337,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       		var hiddenMatchCnt = 0, idx;
 
       		for(var i = 0; i < $scope.hideList.length; ++i){
-  				idx = $scope.selectedAuditions.indexOf($scope.hideList[i]);
-				if (idx > -1){
-					++hiddenMatchCnt;
-				}
+  					idx = $scope.selectedAuditions.indexOf($scope.hideList[i]);
+						if (idx > -1){
+							++hiddenMatchCnt;
+						}
       		}
 
       		if($scope.selectedAuditions.length > hiddenMatchCnt){
@@ -348,6 +348,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       		}
 
       	};
+				// $scope.$watchCollection('selectedAuditions', function(){
+				// });
       	// check for booked auditions
       	$scope.bookedShow = function(){
 
@@ -1552,8 +1554,22 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			// merge average rating
 			$scope.project.auditions[key].favorite = favoriteVal;
 
+			// automatically check favorited
+			var idx = $scope.selectedAuditions.indexOf(path);
+			if($scope.project.auditions[key].favorite === 1){
+				if (idx > -1){
+				}else{
+				    $scope.selectedAuditions.push(path);
+				}
+			} else {
+				if (idx > -1){
+				    $scope.selectedAuditions.splice(idx, 1);
+				}
+			}
+
 			// update project store
 			$scope.updateNoRefresh();
+
 		};
 
 		// update phase options
