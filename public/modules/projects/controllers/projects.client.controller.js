@@ -129,10 +129,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		      resolve: {
 		      	data: function () {
 			        return {
-			        	project: $scope.project._id,
-			        	auditions: $scope.selectedAuditions
+			        	project: $scope.project._id
 			        };
-				}
+						}
 		      }
 		    });
 
@@ -334,18 +333,25 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       	};
       	// show booked option for selected auditions
       	$scope.bookSelectedShow = function(){
-      		var hiddenMatchCnt = 0, idx;
 
-      		for(var i = 0; i < $scope.hideList.length; ++i){
-  					idx = $scope.selectedAuditions.indexOf($scope.hideList[i]);
-						if (idx > -1){
-							++hiddenMatchCnt;
-						}
+					for(var i = 0; i < $scope.project.auditions.length; ++i){
+      			if($scope.project.auditions[i].selected === true){
+      				return true;
+      			}
       		}
 
-      		if($scope.selectedAuditions.length > hiddenMatchCnt){
-      			return true;
+      		return false;
+
+      	};
+				$scope.bookShow = function(){
+
+      		for(var i = 0; i < $scope.project.auditions.length; ++i){
+      			if($scope.project.auditions[i].selected === true && (typeof $scope.project.auditions[i].booked === 'undefined' || $scope.project.auditions[i].booked === false)){
+      				return true;
+      			}
       		}
+
+      		return false;
 
       	};
 				// $scope.$watchCollection('selectedAuditions', function(){
@@ -1555,15 +1561,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			$scope.project.auditions[key].favorite = favoriteVal;
 
 			// automatically check favorited
-			var idx = $scope.selectedAuditions.indexOf(path);
 			if($scope.project.auditions[key].favorite === 1){
-				if (idx > -1){
-				}else{
-				    $scope.selectedAuditions.push(path);
+				if ($scope.project.auditions[key].selected === false){
+				    $scope.project.auditions[key].selected = true;
 				}
 			} else {
-				if (idx > -1){
-				    $scope.selectedAuditions.splice(idx, 1);
+				if ($scope.project.auditions[key].selected === true){
+				    $scope.project.auditions[key].selected = false;
 				}
 			}
 

@@ -8,7 +8,7 @@ angular.module('projects').controller('ProjectsModalController', ['$scope', '$st
 		// auditions data
 		$scope.data = data;
 		$scope.selectedAuds = [];
-		// audio playback 
+		// audio playback
 		$scope.audio = '';
 		$scope.lastAudioID = 0;
 		$scope.audioStatus = 0;
@@ -30,7 +30,7 @@ angular.module('projects').controller('ProjectsModalController', ['$scope', '$st
 
 		// Find existing Project
 		$scope.findOne = function() {
-			$scope.project = Projects.get({ 
+			$scope.project = Projects.get({
 				projectId: $stateParams.projectId
 			});
 		};
@@ -46,13 +46,13 @@ angular.module('projects').controller('ProjectsModalController', ['$scope', '$st
 		$scope.$watch('project', function(val){
 			$scope.$watch('project.auditions', function(val){
 
+				$scope.selectedAuds = [];
+
 				if(typeof $scope.project.auditions !== 'undefined'){
 
 					for(var i = 0; i < $scope.project.auditions.length; ++i){
-						for(var j = 0; j < $scope.data.auditions.length; ++j){
-							if($scope.data.auditions[j] === $scope.project.auditions[i].file.path){
-								$scope.selectedAuds.push($scope.project.auditions[i]);
-							}
+						if($scope.project.auditions[i].selected === true && (typeof $scope.project.auditions[i].booked === 'undefined' || $scope.project.auditions[i].booked === false)){
+							$scope.selectedAuds.push($scope.project.auditions[i]);
 						}
 					}
 
@@ -60,8 +60,26 @@ angular.module('projects').controller('ProjectsModalController', ['$scope', '$st
 
 			});
 		});
+		$scope.updateNoRefresh = function(){
 
+			// merge existing open project with updated project
+			$http.post('/projects/updateNoRefresh', {
+				project: $scope.project
+			}).success(function(data, status, headers, config) {
+
+				// update local project document
+				$scope.project = angular.extend($scope.project, data);
+
+				// remove update overlay
+				$scope.processing = false;
+
+			});
+
+		};
 		$scope.cancel = function () {
+			if(typeof $scope.audio === 'object'){
+				$scope.audio.stop();
+			}
 			$modalInstance.dismiss('cancel');
 		};
 
@@ -80,11 +98,24 @@ angular.module('projects').controller('ProjectsModalController', ['$scope', '$st
 				$scope.audioStatus = 2;
 			}
 		};
+		$scope.updatePlayCnt = function(filename){
+			// set play count
+			for(var i = 0; i < $scope.project.auditions.length; ++i){
+				if($scope.project.auditions[i].file.name === filename){
+					if(typeof $scope.project.auditions[i].playCnt === 'undefined'){
+						$scope.project.auditions[i].playCnt = 1;
+					} else {
+						$scope.project.auditions[i].playCnt += 1;
+					}
+				}
+			}
 
+			$scope.updateNoRefresh();
+		};
 		$scope.playAudio = function(key, filename, fileDir){
 
 			var fileName = '';
-			
+
 			// check media file play state
 			if(key !== $scope.lastAudioID && typeof $scope.audio === 'object'){
 				$scope.audio.stop();
@@ -133,7 +164,7 @@ angular.module('projects').controller('ProjectsModalController', ['$scope', '$st
 			// } else {
 				$scope.audio = ngAudio.load(fileName);
 				$scope.audio.unbind();
-				$scope.audioStatus = 1;	
+				$scope.audioStatus = 1;
 			// }
 
 			//console.log('load');
@@ -143,22 +174,22 @@ angular.module('projects').controller('ProjectsModalController', ['$scope', '$st
 			// store current audio key
 			$scope.lastAudioID = key;
 
-			
 		};
 
 		// play audio on load
-		$scope.$watch('audio', function(val){
-			$scope.audio.play();
-		});
+		// $scope.$watch('audio', function(val){
+		// 	$scope.audio.play();
+		// });
 
 		// assign selected items as booked then send out appropriate emails
 		$scope.bookSelected = function(){
 
 			$http.post('/projects/bookAuditions', {
 		        data: $scope.data
-		    }).
+	    }).
 			success(function(data, status, headers, config) {
 				$rootScope.$broadcast('refreshProject', $scope.data.project);
+				console.log('finished');
 				$modalInstance.close();
 			});
 

@@ -2320,6 +2320,8 @@ exports.uploadAudition = function(req, res, next){
 							avgRating: 0,
 							favorite: 0,
 							talent: audTalent,
+							selected: false,
+							booked: false,
 							approved:
 									{
 										by:
@@ -2517,7 +2519,6 @@ exports.downloadSelectedAuditions = function(req, res, next){
 exports.bookAuditions = function(req, res, next){
 
 	var projectId = req.body.data.project;
-	var auditions = req.body.data.auditions;
 
 	async.waterfall([
 		// gather info for selected project
@@ -2531,17 +2532,15 @@ exports.bookAuditions = function(req, res, next){
 
 			var selAuds = [];
 
-			async.eachSeries(auditions, function (audition, auditionCallback) {
-				for(var i = 0; i < project.auditions.length; ++i){
-					if(audition === project.auditions[i].file.path){
-						project.auditions[i].booked = true;
-						selAuds.push(project.auditions[i]);
-						auditionCallback();
-					}
+			async.eachSeries(project.auditions, function (audition, auditionCallback) {
+				if(audition.selected === true && (typeof audition.booked === 'undefined' || audition.booked === false)){
+					audition.booked = true;
+					selAuds.push(audition);
 				}
+				auditionCallback();
 			}, function (err) {
 				done(err, selAuds, project);
-		   	});
+	   	});
 		},
 		// update project
 		function(selAuds, project, done) {
@@ -2558,7 +2557,7 @@ exports.bookAuditions = function(req, res, next){
 					var socketio = req.app.get('socketio');
 						socketio.sockets.emit('projectUpdate', {id: project._id});
 						socketio.sockets.emit('callListUpdate', {filter: ''});
-					done(err, selAuds, project);
+						done(err, selAuds, project);
 				});
 
 			});
@@ -2577,7 +2576,7 @@ exports.bookAuditions = function(req, res, next){
 
 			}, function (err) {
 				done(err, clients, selAuds, project);
-		   	});
+	   	});
 		},
 		function(clients, selAuds, project, done){
 
@@ -2590,7 +2589,7 @@ exports.bookAuditions = function(req, res, next){
 
 			}, function (err) {
 				done(err, clientsEmails, selAuds, project);
-		   	});
+	   	});
 		},
 		// get project owner data
 		function(clientsEmails, selAuds, project, done) {
@@ -2666,7 +2665,7 @@ exports.bookAuditions = function(req, res, next){
 		if (err) {
 			return res.status(400).json(err);
 		} else {
-			return res.status(200);
+			return res.status(200).send();
 		}
 	});
 };
