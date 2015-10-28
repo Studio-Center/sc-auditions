@@ -163,7 +163,8 @@
 						</div>
 
 						<div class="col-md-4" style="text-align:center">
-							<a href="" class="btn btn-primary" ng-click="hideSelectedAuditions()">
+              <p>{{hiddenAudsCnt()}} Audition(s) Currently Hidden</p>
+							<a href="" ng-show="hiddenAudsCnt()" class="btn btn-primary" ng-click="hideSelectedAuditions()">
 								<span ng-if="hideSelected == false">
 								Hide Selected
 								</span>
@@ -171,7 +172,6 @@
 								Show Hidden
 								</span>
 							</a>
-							<p>{{hiddenAudsCnt()}} Audition(s) Currently Hidden</p>
 						</div>
 					</div>
 
