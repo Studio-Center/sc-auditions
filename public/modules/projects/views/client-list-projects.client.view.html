@@ -74,7 +74,7 @@
 							<tr ng-if="isDisplayed(audition.file.path) && (audition.filecheck === 1 || (audition.filecheckdate === undefined || audition.filecheckdate === ''))" ng-repeat="(key, audition) in project.auditions | filter:{published:true} | orderBy:predicate:reverse">
 
 								<td>
-									<input style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin:10px" ng-if="!audition.booked" type="checkbox" ng-click="selAudition(audition.file.path)" ng-checked="selCheck(audition.file.path)" ng-model="selectedAuditions" ng-true-value="{{key}}">
+									<input style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin:10px" ng-if="!audition.booked" type="checkbox" ng-click="updateNoRefresh()" ng-model="audition.selected">
 
 									<img ng-if="audition.booked" src="/img/green-check.png" style="width:30px;height:auto">
 								</td>
@@ -157,8 +157,8 @@
 
 						<div class="col-md-4" style="text-align:center">
 							<div ng-if="bookSelectedShow()">
-								<a href="" class="btn btn-primary" ng-click="downloadSelectedAuditions()">Download Selected</a>
-								<a href="" class="btn btn-primary" ng-click="bookSelectedAuditions()">Book Selected</a>
+								<a href="" class="btn btn-primary" ng-click="downloadSelectedAuditions()">Download Selected/Booked</a>
+								<a href="" ng-if="bookShow()" class="btn btn-primary" ng-click="bookSelectedAuditions()">Book Selected</a>
 							</div>
 						</div>
 
