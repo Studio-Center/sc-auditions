@@ -177,9 +177,11 @@ angular.module('projects').controller('ProjectsModalController', ['$scope', '$st
 		};
 
 		// play audio on load
-		// $scope.$watch('audio', function(val){
-		// 	$scope.audio.play();
-		// });
+		$scope.$watchCollection('audio', function(val){
+			if(typeof $scope.audio === 'object'){
+				$scope.audio.play();
+			}
+		});
 
 		// assign selected items as booked then send out appropriate emails
 		$scope.bookSelected = function(){
