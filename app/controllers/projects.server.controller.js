@@ -1392,6 +1392,12 @@ exports.create = function(req, res) {
 				// set project owner
 				project.owner = req.user._id;
 
+				// check for assigned clients, if none assigned update P&P phase
+				if(project.client.length === 0){
+					project.phases[2].status = 'Waiting For Clients to Be Added';
+				}
+
+				// save final project
 				project.save(function(err) {
 					if (err) {
 						return res.status(400).send({

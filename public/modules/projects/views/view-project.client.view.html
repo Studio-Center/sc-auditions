@@ -80,18 +80,23 @@
 							</div>
 						</div>
 					</div>
-					<div class="row" style="padding:10px">
-						<div class="col-md-12">
-							<h4>Client Notes</h4>
-						</div>
-						<div class="col-md-12">
-							<div ng-repeat="(key, note) in project.clientNotes | orderBy:'-date':reverse">
-								<h5><strong>{{note.date | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST - {{::note.username}}</strong></h5>
-								<div ng-bind-html="note.item"></div>
-							</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-lg-offset-6 col-lg-6 col-md-offset-6 col-md-6 col-sm-6 col-sm-offset-6">
+			<div class="panel panel-default" data-ng-if="permitAdminProductionCoordinatorDirector()">
+				<div class="panel-heading">
+						<h4>Client Notes</h4>
+				</div>
+				<fieldset>
+					<div style="max-height:200px;padding:10px;border-top:1px solid #e8e8e8;overflow-y:scroll">
+						<div ng-repeat="(key, note) in project.clientNotes | orderBy:'-date':reverse">
+							<h5><strong>{{note.date | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST - {{::note.username}}</strong></h5>
+							<div ng-bind-html="note.item"></div>
 						</div>
 					</div>
-				</div>
+				</fieldset>
 			</div>
 		</div>
 
