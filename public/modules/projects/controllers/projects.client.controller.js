@@ -1583,6 +1583,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			var newDate = moment(new Date()).format('MM/DD/YYYY h:mm a');
 			$scope.project.phases[key].changeDate = newDate;
 
+			// send email if P&P status set to specified values
 			if(String($scope.project.phases[key].name) === 'Posting and Publishing'){
 				if(String($scope.project.phases[key].status) === 'Holding for more talent' || String($scope.project.phases[key].status) === 'Holding For Requested Talent'){
 
@@ -1593,7 +1594,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				    $scope.email.message += 'Phase: ' + $scope.project.phases[key].name + '<br>';
 				    $scope.email.message += 'Status: ' + $scope.project.phases[key].status + '<br>';
 				    $scope.email.message += 'Start Date: ' + $scope.project.phases[key].startDate + '<br>';
-				    $scope.email.message += 'End Date: ' + $scope.project.phases[key].endDate + '<br>' + '<br>';
 				    $scope.email.message += 'Change Date: ' + $scope.project.phases[key].changeDate + '<br>' + '<br>';
 				    $scope.email.message += 'Added by: ' + Authentication.user.displayName + '<br>';
 				    $scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '<br>';
@@ -1612,10 +1612,36 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					};
 					$scope.project.discussion.push(item);
 
+				} else if(String($scope.project.phases[key].status) === 'Waiting For Clients to Be Added'){
+
+						// send update email
+						$scope.gatherToAddresses('updateStatus');
+					    $scope.email.subject = 'Please add Clients to ' + $scope.project.title;
+					    $scope.email.message += 'Project: ' + $scope.project.title + '<br>';
+					    $scope.email.message += 'Phase: ' + $scope.project.phases[key].name + '<br>';
+					    $scope.email.message += 'Status: ' + $scope.project.phases[key].status + '<br>';
+					    $scope.email.message += 'Start Date: ' + $scope.project.phases[key].startDate + '<br>';
+					    $scope.email.message += 'Change Date: ' + $scope.project.phases[key].changeDate + '<br>' + '<br>';
+					    $scope.email.message += 'Added by: ' + Authentication.user.displayName + '<br>';
+					    $scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '<br>';
+
+					    $http.post('/projects/sendemail', {
+							email: $scope.email
+						});
+
+						var discussion = 'Project phase ' + $scope.project.phases[key].name + ' status changed to ' + $scope.project.phases[key].status + ' on ' + newDate + ' EST by ' + Authentication.user.displayName;
+						var item = {
+							date: newDate,
+							userid: '',
+							username: 'System',
+							item: discussion,
+							deleted: false
+						};
+						$scope.project.discussion.push(item);
 				}
 			}
 
-		    if($scope.project.phases[key].status === 'complete'){
+	    if($scope.project.phases[key].status === 'complete'){
 		    	var now = new Date();
 		    	$scope.project.phases[key].endDate = now.toJSON();
 				// update project status only for "Posting and Publishing" phase
@@ -1629,7 +1655,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					}
 					$scope.sendClientEmail('closing');
 				}
-
 
 			}
 

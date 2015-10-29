@@ -42,7 +42,10 @@ var ProjectSchema = new Schema({
 		default: [{
 						name: 'Casting',
 						status: 'complete',
-						options: ['in progress','complete'],
+						options: [
+							'in progress',
+							'complete'
+						],
 						changeDate: '',
 						startDate: Date.now,
 						endDate: ''
@@ -50,7 +53,10 @@ var ProjectSchema = new Schema({
 					{
 						name: 'Talent Notification',
 						status: 'in progress',
-						options: ['in progress','complete'],
+						options: [
+							'in progress',
+							'complete'
+						],
 						changeDate: '',
 						startDate: Date.now,
 						endDate: ''
@@ -58,7 +64,13 @@ var ProjectSchema = new Schema({
 					{
 						name: 'Posting and Publishing',
 						status: 'in progress',
-						options: ['in progress','Holding for more talent','Holding For Requested Talent','complete'],
+						options: [
+							'in progress',
+							'Holding for more talent',
+							'Holding For Requested Talent',
+							'Waiting For Clients to Be Added',
+							'complete'
+						],
 						changeDate: '',
 						startDate: Date.now,
 						endDate: ''
@@ -68,7 +80,16 @@ var ProjectSchema = new Schema({
 	status: {
 		type: [{
 			type: String,
-			enum: ['In Progress', 'On Hold', 'Booked', 'Canceled', 'ReAuditioned', 'Dead', 'Closed - Pending Client Decision', 'Complete']
+			enum: [
+				'In Progress',
+				'On Hold',
+				'Booked',
+				'Canceled',
+				'ReAuditioned',
+				'Dead',
+				'Closed - Pending Client Decision',
+				'Complete'
+			]
 		}],
 		default: ['Not started']
 	},
@@ -86,7 +107,10 @@ var ProjectSchema = new Schema({
 	sounders: {
 		type: [{
 			type: String,
-			enum: ['Sounders', 'No Sounders - Approved By William']
+			enum: [
+				'Sounders',
+				'No Sounders - Approved By William'
+			]
 		}],
 		default: ['Sounders']
 	},
