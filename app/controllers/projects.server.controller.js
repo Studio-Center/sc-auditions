@@ -961,10 +961,15 @@ exports.lead = function(req, res){
 	    attachments: attachements
 	});
 
+	var uid = 'N/A';
+	if(typeof req.user !== 'undefined'){
+		uid = req.user._id;
+	};
+
 	// write change to log
 	var log = {
 		type: 'system',
-		sharedKey: String(req.user._id) || 'N/A',
+		sharedKey: uid,
 		description: 'new project lead submitted by ' + req.body.firstName + ' ' + req.body.lastName,
 		user: req.user
 	};
@@ -1491,6 +1496,21 @@ exports.deleteFileByName = function(req, res){
 
 	var appDir = path.dirname(require.main.filename);
 	var file = appDir + '/public' + req.body.fileLocation;
+
+	// remove file is exists
+	if (fs.existsSync(file)) {
+		fs.unlinkSync(file);
+		return res.status(200).send();
+	} else {
+		return res.status(200).send();
+	}
+};
+
+// handle remote file delete requests
+exports.deleteTempScript = function(req, res){
+
+	var appDir = path.dirname(require.main.filename);
+	var file = appDir + '/public/res/scripts/temp/' + req.body.fileLocation;
 
 	// remove file is exists
 	if (fs.existsSync(file)) {
@@ -2208,25 +2228,32 @@ exports.uploadTempScript = function(req, res, next){
     // add file path
     newPath += file.name;
 
+		// assign user data
+		var uid = '', uname = '';
+		if(typeof req.user !== 'undefined'){
+			uid = req.user._id;
+			uname = req.user.displayName;
+		}
+
     //console.log(newPath);
     var script = {
 					file: req.files.file,
-					userId: req.user._id,
+					userId: uid,
 					date: now.toJSON(),
-					name: req.user.displayName,
+					name: uname,
 					filecheck: 0,
 					filecheckdate: ''
 				};
 
 	scripts.push(script);
 
-    mv(tempPath, newPath, function(err) {
-        if (err){
-            return res.status(500).end();
-        }else{
-            return res.jsonp(scripts);
-        }
-    });
+  mv(tempPath, newPath, function(err) {
+      if (err){
+          return res.status(500).end();
+      }else{
+          return res.jsonp(scripts);
+      }
+  });
 };
 
 // file upload
