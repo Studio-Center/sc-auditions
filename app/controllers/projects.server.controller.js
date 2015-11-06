@@ -10,6 +10,7 @@ var mongoose = require('mongoose'),
 	Talent = mongoose.model('Talent'),
 	Typecast = mongoose.model('Typecast'),
 	Log = mongoose.model('Log'),
+	Newproject = mongoose.model('Newproject'),
 	fs = require('fs'),
 	rimraf = require('rimraf'),
 	config = require('../../config/config'),
@@ -937,9 +938,9 @@ exports.lead = function(req, res){
 	emailBody += 'Description: ' + req.body.describe + '\n';
 
 	//var file = req.files.file;
-    var appDir = path.dirname(require.main.filename);
-    var relativePath =  'res' + '/' + 'scripts' + '/temp/';
-    var newPath = appDir + '/public/' + relativePath;
+  var appDir = path.dirname(require.main.filename);
+  var relativePath =  'res' + '/' + 'scripts' + '/temp/';
+  var newPath = appDir + '/public/' + relativePath;
 
 	var attachements = [];
 
@@ -965,6 +966,14 @@ exports.lead = function(req, res){
 	if(typeof req.user !== 'undefined'){
 		uid = req.user._id;
 	};
+
+	// save submission to db for later retrieval
+	var newproject = {
+		project: emailBody,
+		attachements: req.body.scripts
+	};
+	var newproject = new Newproject(newproject);
+	newproject.save();
 
 	// write change to log
 	var log = {

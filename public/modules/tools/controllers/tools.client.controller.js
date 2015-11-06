@@ -110,7 +110,7 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 			var idx;
 
 			for(var i = 0; i < $scope.verifySelected.length; ++i){
-				for(var j = 0; j < $scope.emailClients.length; ++j){					
+				for(var j = 0; j < $scope.emailClients.length; ++j){
 					if(String($scope.verifySelected[i]) === String($scope.emailClients[j])){
 						idx = $scope.emailClients.indexOf($scope.emailClients[j]);
 						if (idx > -1){
@@ -188,7 +188,7 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 			});
 
 		};
-		// gather talents 
+		// gather talents
 		$scope.gatherTalentsMessagesLeft = function(){
 
 			$http.post('/tools/gatherTalentsMessagesLeft').
@@ -341,15 +341,15 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 
 		var performUploadBackupFile = function(file, i, $files){
 			$scope.upload = $upload.upload({
-			    url: 'projects/uploadBackup', //upload.php script, node.js route, or servlet url 
+			    url: 'projects/uploadBackup', //upload.php script, node.js route, or servlet url
 			    data: {},
-			    file: file, // or list of files ($files) for html5 only 
+			    file: file, // or list of files ($files) for html5 only
 			}).progress(function(evt) {
 			    $scope.uploadStatus = i + ' of ' + $files.length + ' files uploaded';
 			  	$scope.uploadfile = evt.config.file.name;
 			    $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
 			}).success(function(data, status, headers, config) {
-			    // file is uploaded successfully 
+			    // file is uploaded successfully
 			});
 		};
 
@@ -365,9 +365,9 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 
 		var performUploadTalentFile = function(file, i, $files){
 			$scope.upload = $upload.upload({
-			    url: 'tools/uploadTalentCSV', //upload.php script, node.js route, or servlet url 
+			    url: 'tools/uploadTalentCSV', //upload.php script, node.js route, or servlet url
 			    data: {},
-			    file: file, // or list of files ($files) for html5 only 
+			    file: file, // or list of files ($files) for html5 only
 			}).progress(function(evt) {
 			    $scope.uploadStatus = i + ' of ' + $files.length + ' files uploaded';
 			  	$scope.uploadfile = evt.config.file.name;
@@ -414,6 +414,22 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 				//$scope.alerts.push({type: 'success', msg: 'All talents have been imported into the database.'});
 			});
 
+		};
+
+		// new project Submissions
+		$scope.findNewProjects = function() {
+			$http.post('/tools/listNewprojects', {}).
+			success(function(data, status, headers, config) {
+				$scope.newprojects = data;
+			});
+		};
+		$scope.findNewProjectById = function() {
+			$http.post('/tools/newprojectByID', {
+				id: $stateParams.newprojectId
+			}).
+			success(function(data, status, headers, config) {
+				$scope.newproject = data;
+			});
 		};
 
 	}
