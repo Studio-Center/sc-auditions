@@ -670,17 +670,17 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		    $scope.submitted = true;
 
 				$http.post('/projects/lead', {
-			        firstName: $scope.newLead.firstName,
-			        lastName: $scope.newLead.lastName,
-			        company: $scope.newLead.company,
-			        phone: $scope.newLead.phone,
-			        email: $scope.newLead.email,
-			        describe: $scope.newLead.describe,
-			        scripts: $scope.scripts
-			    }).
+	        firstName: $scope.newLead.firstName,
+	        lastName: $scope.newLead.lastName,
+	        company: $scope.newLead.company,
+	        phone: $scope.newLead.phone,
+	        email: $scope.newLead.email,
+	        describe: $scope.newLead.describe,
+	        scripts: $scope.scripts
+		    }).
 				success(function(data, status, headers, config) {
-            	$location.path('/projects/new-audition-form/thanks');
-        	});
+        	$location.path('/projects/new-audition-form/thanks');
+      	});
 
 		};
 		$scope.leadFormPop = function(){
@@ -2334,9 +2334,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		// remove temporary script file
 		$scope.delTempScript = function(idx){
 
-			var file = '/res/scripts/temp/' + $scope.newProject.scripts[idx].file.name;
+			var file = $scope.newProject.scripts[idx].file.name;
 
-			$http.post('/projects/deletefile', {
+			$http.post('/projects/deleteTempScript', {
         fileLocation: file
 	    }).success(function(data, status, headers, config) {
 			});
@@ -2393,11 +2393,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
 	      }).success(function(data, status, headers, config) {
 	        // file is uploaded successfully
-	        //console.log(data);
+	        //console.log(data[0]);
 	        $scope.newProject.scripts.push(data[0]);
 	      });
 	  	};
-			
+
 	  	$scope.uploadTempScript = function($files) {
 	    	angular.forEach($files, function(file, key) {
 	    		performUploadTempScript(file, key, $files);

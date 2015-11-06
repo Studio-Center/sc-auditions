@@ -62,7 +62,7 @@ module.exports = function(app) {
 
 	// post lead via emailw
 	app.route('/projects/lead')
-		.post(users.requiresLogin, projects.lead);
+		.post(projects.lead);
 
 	// send non-group targetted email
 	app.route('/projects/sendemail')
@@ -114,6 +114,10 @@ module.exports = function(app) {
 	// upload temp script file
 	app.route('/projects/uploads/script/temp')
 		.post(multipartyMiddleware, projects.uploadTempScript);
+
+		// remove selected file from file system
+		app.route('/projects/deleteTempScript')
+			.post(multipartyMiddleware, projects.deleteTempScript);
 
 	// upload audition file
 	app.route('/projects/uploads/audition')
