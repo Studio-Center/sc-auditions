@@ -676,7 +676,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	        phone: $scope.newLead.phone,
 	        email: $scope.newLead.email,
 	        describe: $scope.newLead.describe,
-	        scripts: $scope.scripts
+	        scripts: $scope.newProject.scripts
 		    }).
 				success(function(data, status, headers, config) {
         	$location.path('/projects/new-audition-form/thanks');

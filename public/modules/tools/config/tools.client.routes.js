@@ -28,6 +28,14 @@ angular.module('tools').config(['$stateProvider',
 		state('toolTalentImport', {
 			url: '/tools/talent-import',
 			templateUrl: 'modules/tools/views/talent-import.client.view.html'
+		}).
+		state('toolListNewprojects', {
+			url: '/tools/list-newprojects',
+			templateUrl: 'modules/tools/views/list-newprojects.client.view.html'
+		}).
+		state('toolNewprojectByID', {
+			url: '/tools/new-project-byid/:newprojectId',
+			templateUrl: 'modules/tools/views/new-project-byid.client.view.html'
 		});
 		// state('createTool', {
 		// 	url: '/tools/create',

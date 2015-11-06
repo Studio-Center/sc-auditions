@@ -35,4 +35,10 @@ module.exports = function(app) {
 	app.route('/tools/processGoogleSheet')
 		.post(users.requiresLogin, tools.processGoogleSheet);
 
+	// added to display new project form submissions
+	app.route('/tools/listNewprojects')
+		.post(users.requiresLogin, tools.listNewprojects);
+	app.route('/tools/newprojectByID')
+		.post(users.requiresLogin, tools.newprojectByID);
+
 };

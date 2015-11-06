@@ -10,6 +10,7 @@ var mongoose = require('mongoose'),
 	Talent = mongoose.model('Talent'),
 	Typecast = mongoose.model('Typecast'),
 	Log = mongoose.model('Log'),
+	Newproject = mongoose.model('Newproject'),
 	fs = require('fs'),
 	config = require('../../config/config'),
 	_ = require('lodash'),
@@ -101,7 +102,7 @@ exports.sendTalentEmails = function(req, res){
 
 									callback(err);
 								});
-									
+
 							}
 
 						}, function (err) {
@@ -180,7 +181,7 @@ exports.sendTalentEmails = function(req, res){
 									transporter.sendMail(mailOptions, function(){
 										callback(err);
 									});
-										
+
 								}
 
 						}, function (err) {
@@ -199,19 +200,19 @@ exports.sendTalentEmails = function(req, res){
 			}
 		});
 	}
-	
+
 };
 
 // call list methods
 var gatherTalentsSearch = function(req, res, filter){
 
 	var callTalents = [], talentId;
-	var searchCriteria = {'talent': { 
-									$elemMatch: { 
+	var searchCriteria = {'talent': {
+									$elemMatch: {
 										'status': filter
-									} 
+									}
 								},
-						'status': { $nin: ['Closed - Pending Client Decision','Canceled','Dead','Complete','Booked','ReAuditioned']} 
+						'status': { $nin: ['Closed - Pending Client Decision','Canceled','Dead','Complete','Booked','ReAuditioned']}
 						};
 
 	Project.find(searchCriteria).sort('-estimatedCompletionDate').populate('project', 'displayName').exec(function(err, projects) {
@@ -220,7 +221,7 @@ var gatherTalentsSearch = function(req, res, filter){
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
-			
+
 			// walk through found projects
 			async.eachSeries(projects, function (project, callback) {
 				// walk through found talents
@@ -284,7 +285,7 @@ var gatherTalentsSearch = function(req, res, filter){
 					callback();
 
 				}
-			
+
 			}, function (err) {
 				if( err ) {
 					return res.status(400).send({
@@ -297,7 +298,7 @@ var gatherTalentsSearch = function(req, res, filter){
 					res.jsonp(callTalents);
 				}
            	});
-			
+
 		}
 	});
 };
@@ -332,9 +333,9 @@ exports.sendPreCloseSummary = function(req, res){
 	inOneHour.setHours(inOneHour.getHours() + 1);
 
 	var searchCriteria = {
-							'estimatedCompletionDate': 
+							'estimatedCompletionDate':
 													{
-														$gte: currentTime, 
+														$gte: currentTime,
 														$lte: inOneHour
 													},
 							'preClose': false
@@ -342,7 +343,7 @@ exports.sendPreCloseSummary = function(req, res){
 
 	// gather projects ending in the next hour
 	Project.find(searchCriteria).sort('-estimatedCompletionDate').populate('project', 'displayName').exec(function(err, projects) {
-		
+
 		// walk through all associated projects
 		async.eachSeries(projects, function (project, callback) {
 
@@ -365,9 +366,9 @@ exports.sendPreCloseSummary = function(req, res){
 				function(owner, done){
 
 					var searchGroups = [
-										'admin', 
-										'producer/auditions director', 
-										'production coordinator', 
+										'admin',
+										'producer/auditions director',
+										'production coordinator',
 										'talent director'
 										];
 
@@ -414,9 +415,9 @@ exports.sendPreCloseSummary = function(req, res){
 				function(talents, owner, producers, done){
 					var shortTblHeader = '<table><tr><th>First Name</th><th>Last Name</th></tr>';
 					var longTblHeader = '<table><tr><th>First Name</th><th>Last Name</th><th>Phone #</th><th>Alt Phone #</th><th>Location</th><th>Email</th></tr>';
-					var talentPosted = '<p>Talent Posted:</p>' + shortTblHeader, 
-						talentNotCalled = '<p>Talent Not Called:</p>' + longTblHeader, 
-						talentNotPosted = '<p>Talent Not Posted:</p>' + shortTblHeader, 
+					var talentPosted = '<p>Talent Posted:</p>' + shortTblHeader,
+						talentNotCalled = '<p>Talent Not Called:</p>' + longTblHeader,
+						talentNotPosted = '<p>Talent Not Posted:</p>' + shortTblHeader,
 						talentOut = '<p>Talent Out:</p>' + shortTblHeader;
 
 					async.eachSeries(talents, function (talent, talentCallback) {
@@ -506,9 +507,9 @@ exports.sendPreCloseSummary = function(req, res){
 					project.id = String(project._id);
 
 					res.render('templates/projects/pre-close-summary-email', {
-						talentPosted: talentPosted, 
-						talentNotCalled: talentNotCalled, 
-						talentNotPosted: talentNotPosted, 
+						talentPosted: talentPosted,
+						talentNotCalled: talentNotCalled,
+						talentNotPosted: talentNotPosted,
 						talentOut: talentOut,
 						project: project,
 						dueDate: newDate,
@@ -581,9 +582,9 @@ exports.sendPreCloseSummary = function(req, res){
 
 							// update connected clients
 							var socketio = req.app.get('socketio');
-							socketio.sockets.emit('projectUpdate', {id: project._id}); 
-							socketio.sockets.emit('callListUpdate', {filter: ''}); 
-						
+							socketio.sockets.emit('projectUpdate', {id: project._id});
+							socketio.sockets.emit('callListUpdate', {filter: ''});
+
 							done(err);
 						});
 					});
@@ -621,12 +622,12 @@ exports.uploadTalentCSV = function(req, res){
 	// parse uploaded CSV
 	var file = req.files.file;
 	var tempPath = file.path;
-	
+
 	var Converter = require('csvtojson').Converter;
 	var fileStream = fs.createReadStream(tempPath);
 
 	var converter = new Converter({constructResult:true});
-	//end_parsed will be emitted once parsing finished 
+	//end_parsed will be emitted once parsing finished
 	converter.on('end_parsed', function (jsonObj) {
 
 	   async.eachSeries(jsonObj, function (talent, talentCallback) {
@@ -649,7 +650,7 @@ exports.uploadTalentCSV = function(req, res){
 				locationISDN: talent.locationISDN
 			};
 	   		var newTalent = new Talent(talentData);
-	   		
+
 			talent.user = req.user;
 
 			// check for missing import data
@@ -734,16 +735,37 @@ exports.uploadTalentCSV = function(req, res){
 	   	});
 	});
 
-	//read from file 
+	//read from file
 	fileStream.pipe(converter);
 
 };
 
 // gather spreadsheet from Google
 exports.processGoogleSheet = function(req, res){
-	
+
 	// add code lateer
 
+};
+
+// list stored new projects
+exports.listNewprojects = function(req, res) {
+	Newproject.find().sort('-created').exec(function(err, newprojects) {
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			res.jsonp(newprojects);
+		}
+	});
+};
+exports.newprojectByID = function(req, res, next) {
+	console.log('test');
+	Newproject.findById(req.body.id).exec(function(err, newproject) {
+		if (err) return next(err);
+		if (! newproject) return next(new Error('Failed to load Newproject ' + id));
+		res.jsonp(newproject);
+	});
 };
 
 /**
