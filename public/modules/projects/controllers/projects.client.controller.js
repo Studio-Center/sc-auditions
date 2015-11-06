@@ -666,25 +666,21 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		// new project form
 		$scope.lead = function(){
 
-			if($scope.newLead.website.length === 0){
-
 				// Trigger validation flag.
-			    $scope.submitted = true;
+		    $scope.submitted = true;
 
 				$http.post('/projects/lead', {
-				        firstName: $scope.newLead.firstName,
-				        lastName: $scope.newLead.lastName,
-				        company: $scope.newLead.company,
-				        phone: $scope.newLead.phone,
-				        email: $scope.newLead.email,
-				        describe: $scope.newLead.describe,
-				        scripts: $scope.scripts
-				    }).
-					success(function(data, status, headers, config) {
-	            	$location.path('/projects/new-audition-form/thanks');
-	        	});
-
-			}
+			        firstName: $scope.newLead.firstName,
+			        lastName: $scope.newLead.lastName,
+			        company: $scope.newLead.company,
+			        phone: $scope.newLead.phone,
+			        email: $scope.newLead.email,
+			        describe: $scope.newLead.describe,
+			        scripts: $scope.scripts
+			    }).
+				success(function(data, status, headers, config) {
+            	$location.path('/projects/new-audition-form/thanks');
+        	});
 
 		};
 		$scope.leadFormPop = function(){
@@ -2386,13 +2382,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				});
 	  	};
 
-	  	$scope.uploadTempScript = function($files) {
-	    	angular.forEach($files, function(file, key) {
-	    		performUploadTempScript(file, key, $files);
-    		});
-	  	};
-
-	  	var performUploadTempScript = function(file, i, $files){
+			var performUploadTempScript = function(file, i, $files){
   		  $scope.upload = $upload.upload({
 	        url: 'projects/uploads/script/temp', //upload.php script, node.js route, or servlet url
 	        data: {project: $scope.project},
@@ -2406,6 +2396,12 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	        //console.log(data);
 	        $scope.newProject.scripts.push(data[0]);
 	      });
+	  	};
+			
+	  	$scope.uploadTempScript = function($files) {
+	    	angular.forEach($files, function(file, key) {
+	    		performUploadTempScript(file, key, $files);
+    		});
 	  	};
 
   	// set published status

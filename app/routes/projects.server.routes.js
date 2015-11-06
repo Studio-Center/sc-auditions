@@ -113,7 +113,7 @@ module.exports = function(app) {
 
 	// upload temp script file
 	app.route('/projects/uploads/script/temp')
-		.post(users.requiresLogin, multipartyMiddleware, projects.uploadTempScript);
+		.post(multipartyMiddleware, projects.uploadTempScript);
 
 	// upload audition file
 	app.route('/projects/uploads/audition')
