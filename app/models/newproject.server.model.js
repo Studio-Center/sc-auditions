@@ -15,6 +15,9 @@ var NewprojectSchema = new Schema({
 		required: 'Please enter a project',
 		trim: true
 	},
+	submission: {
+		type: String
+	},
   attachements: {
 		type: Array
 	},
