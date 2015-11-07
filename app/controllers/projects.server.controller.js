@@ -965,10 +965,10 @@ exports.lead = function(req, res){
 	var uid = 'N/A';
 	if(typeof req.user !== 'undefined'){
 		uid = req.user._id;
-	};
+	}
 
 	// build submission object
-	var submission = {
+	var sub = {
 		firstName: req.body.firstName,
 		lastName: req.body.lastName,
 		company: req.body.company,
@@ -980,10 +980,10 @@ exports.lead = function(req, res){
 	// save submission to db for later retrieval
 	var newproject = {
 		project: emailBody,
-		submission: submission,
+		sub: sub,
 		attachements: req.body.scripts
 	};
-	var newproject = new Newproject(newproject);
+	newproject = new Newproject(newproject);
 	newproject.save();
 
 	// write change to log
