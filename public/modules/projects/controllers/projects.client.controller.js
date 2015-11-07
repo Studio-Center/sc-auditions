@@ -1576,6 +1576,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.updateStatus = function(key){
 
 			// update change value
+			var discussion, item;
 			var newDate = moment(new Date()).format('MM/DD/YYYY h:mm a');
 			$scope.project.phases[key].changeDate = newDate;
 
@@ -1598,8 +1599,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 						email: $scope.email
 					});
 
-					var discussion = 'Project phase ' + $scope.project.phases[key].name + ' status changed to ' + $scope.project.phases[key].status + ' on ' + newDate + ' EST by ' + Authentication.user.displayName;
-					var item = {
+					discussion = 'Project phase ' + $scope.project.phases[key].name + ' status changed to ' + $scope.project.phases[key].status + ' on ' + newDate + ' EST by ' + Authentication.user.displayName;
+					item = {
 						date: newDate,
 						userid: '',
 						username: 'System',
@@ -1625,8 +1626,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 							email: $scope.email
 						});
 
-						var discussion = 'Project phase ' + $scope.project.phases[key].name + ' status changed to ' + $scope.project.phases[key].status + ' on ' + newDate + ' EST by ' + Authentication.user.displayName;
-						var item = {
+						discussion = 'Project phase ' + $scope.project.phases[key].name + ' status changed to ' + $scope.project.phases[key].status + ' on ' + newDate + ' EST by ' + Authentication.user.displayName;
+						item = {
 							date: newDate,
 							userid: '',
 							username: 'System',
