@@ -1070,9 +1070,9 @@ exports.create = function(req, res) {
 	project.user = req.user;
 
 	var appDir = '';
-    var tempPath = '';
-    var relativePath =  '';
-    var newPath = '';
+  var tempPath = '';
+  var relativePath =  '';
+  var newPath = '';
 
 	var allowedRoles = ['admin','producer/auditions director','production coordinator'];
 
@@ -1408,7 +1408,20 @@ exports.create = function(req, res) {
 
 				// check for assigned clients, if none assigned update P&P phase
 				if(project.client.length === 0){
+
+					// set project phase status
 					project.phases[2].status = 'Waiting For Clients to Be Added';
+
+					// gen project note
+					var discussion = 'Project phase ' + project.phases[2].name + ' status changed to ' + project.phases[2].status + ' on ' + now.toJSON() + ' EST by ' + req.user.displayName;
+					var item = {
+						date: now.toJSON(),
+						userid: '',
+						username: 'System',
+						item: discussion,
+						deleted: false
+					};
+					project.discussion.push(item);
 				}
 
 				// save final project
