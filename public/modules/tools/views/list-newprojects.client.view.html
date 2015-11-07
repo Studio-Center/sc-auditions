@@ -36,7 +36,12 @@
     </div>
     <div class="list-group item-list">
         <a data-ng-repeat="newproject in newprojects | filter:searchText | startFrom:currentPage*limit | limitTo: limit | orderBy:'-sort':reverse" data-ng-href="#!/tools/new-project-byid/{{::newproject._id}}" class="list-group-item">
-			<p><b>
+			<p>
+        {{newproject.submission.company}} -
+        {{newproject.submission.firstName}} -
+        {{newproject.submission.lastName}} -
+        {{newproject.submission.phone}}
+        <b>
 				Posted on
 				<span data-ng-bind="newproject.created | amDateFormat:'MM/DD/YY h:mm:ss a'"></span>
       </b></p>
