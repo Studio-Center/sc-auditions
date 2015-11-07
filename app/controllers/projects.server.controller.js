@@ -967,9 +967,20 @@ exports.lead = function(req, res){
 		uid = req.user._id;
 	};
 
+	// build submission object
+	var submission = {
+		firstName: req.body.firstName,
+		lastName: req.body.lastName,
+		company: req.body.company,
+		phone: req.body.phone,
+		email: req.body.email,
+		describe: req.body.describe
+	};
+
 	// save submission to db for later retrieval
 	var newproject = {
 		project: emailBody,
+		submission: submission,
 		attachements: req.body.scripts
 	};
 	var newproject = new Newproject(newproject);
