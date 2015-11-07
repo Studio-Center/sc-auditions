@@ -760,7 +760,6 @@ exports.listNewprojects = function(req, res) {
 	});
 };
 exports.newprojectByID = function(req, res, next) {
-	console.log('test');
 	Newproject.findById(req.body.id).exec(function(err, newproject) {
 		if (err) return next(err);
 		if (! newproject) return next(new Error('Failed to load Newproject ' + id));
