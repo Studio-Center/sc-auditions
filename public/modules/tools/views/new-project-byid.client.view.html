@@ -5,8 +5,9 @@
   <div>
     <pre>{{newproject.project}}</pre>
     <div ng-if="newproject.attachements">
+			<h3>Attachements</h3>
       <ol>
-        <li data-ng-repeat="attachement in newprojects.attachements">
+        <li data-ng-repeat="attachement in newproject.attachements">
           <a href="/res/scripts/temp/{{attachement.file.name}}" target="_blank">{{attachement.file.name}}</a>
         </li>
       </ol>
