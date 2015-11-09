@@ -1884,6 +1884,22 @@ var performLoadList = function(req, res, allowedRoles, i, j, limit){
 	}
 };
 
+// retrieve projects count
+exports.getProjectsCnt = function(req, res){
+
+	Project.count({}, function(err, count){
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			res.jsonp(count);
+		}
+	});
+	
+};
+
+// retrieve only a set amount of projects
 exports.findLimit = function(req, res) {
 
 	var limit = req.body.queryLimit || 50;

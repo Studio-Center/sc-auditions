@@ -5,6 +5,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	function($scope, $stateParams, $location, Authentication, Projects, $upload, ngAudio, ngAudioGlobals, $http, $modal, $rootScope, Socket, $cookies, $window ) {
 		$scope.authentication = Authentication;
 
+		$scope.projectsTotalCnt = 0;
 		$scope.project = {};
 		$scope.discussion = '';
 		// rating
@@ -1715,6 +1716,15 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}
 
 		};
+
+		$scope.getProjectsCnt = function(){
+
+			$http.post('/projects/getProjectsCnt', {}).
+			success(function(data, status, headers, config) {
+				$scope.projectsTotalCnt = data;
+			});
+
+		};
 		// Find a list of Projects
 		$scope.find = function() {
 			$scope.projects = Projects.query();
@@ -1727,6 +1737,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			success(function(data, status, headers, config) {
 				$scope.projects = [];
 				$scope.projects = data;
+
+				$scope.getProjectsCnt();
 			});
 		};
 		$scope.updateLimit = function(limit){

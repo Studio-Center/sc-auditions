@@ -14,6 +14,10 @@ module.exports = function(app) {
 	app.route('/projects/findLimit')
 		.post(users.requiresLogin, projects.findLimit);
 
+	// new methods for filtering projects based on user entry
+	app.route('/projects/getProjectsCnt')
+		.post(users.requiresLogin, projects.getProjectsCnt);
+
 	// list projects for clients
 	app.route('/projects-client')
 		.get(users.jwtauth, users.requiresLogin, projects.list);
