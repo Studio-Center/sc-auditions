@@ -17,6 +17,12 @@ module.exports = function(app) {
 	// gather filtered list of logs
 	app.route('/logs/listFilter')
 		.post(users.requiresLogin, logs.listFilter);
+	app.route('/logs/listTypeFilter')
+		.post(users.requiresLogin, logs.listTypeFilter);
+
+	// get records count
+	app.route('/logs/recCount')
+		.post(users.requiresLogin, logs.recCount);
 
 	// Finish by binding the Log middleware
 	app.param('logId', logs.logByID);

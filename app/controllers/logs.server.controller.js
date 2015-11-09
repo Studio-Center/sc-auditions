@@ -69,10 +69,53 @@ exports.delete = function(req, res) {
 	});
 };
 
+// get logs record cound
+exports.recCount = function(req, res){
+
+	var filter = req.body.filter;
+
+	if(filter){
+		Log.find({'type': filter}).count({}, function(err, count){
+			if (err) {
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
+			} else {
+				res.jsonp(count);
+			}
+		});
+	} else {
+		Log.count({}, function(err, count){
+			if (err) {
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
+			} else {
+				res.jsonp(count);
+			}
+		});
+	}
+};
+
 /**
  * List of Logs
  */
-exports.list = function(req, res) { Log.find().sort('-created').populate('user', 'displayName').exec(function(err, logs) {
+exports.list = function(req, res) {
+
+	// set and store limits
+	var startVal, finishVal;
+	if(req.body.startVal){
+		startVal = req.body.startVal;
+	} else {
+		startVal = 0;
+	}
+	if(req.body.limitVal){
+		limitVal = req.body.limitVal;
+	} else {
+		limitVal = 100;
+	}
+
+	Log.find().sort('-created').skip(startVal).limit(limitVal).populate('user', 'displayName').exec(function(err, logs) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
@@ -86,9 +129,22 @@ exports.list = function(req, res) { Log.find().sort('-created').populate('user',
 // present filtered list of logs
 exports.listFilter = function(req, res){
 
+	// set and store limits
+	var startVal, finishVal;
+	if(req.body.startVal){
+		startVal = req.body.startVal;
+	} else {
+		startVal = 0;
+	}
+	if(req.body.limitVal){
+		limitVal = req.body.limitVal;
+	} else {
+		limitVal = 100;
+	}
+
 	var filter = req.body.filter;
 
-	Log.find(filter).sort('-created').populate('user', 'displayName').exec(function(err, logs) {
+	Log.find(filter).sort('-created').skip(startVal).limit(limitVal).populate('user', 'displayName').exec(function(err, logs) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
@@ -97,6 +153,51 @@ exports.listFilter = function(req, res){
 			res.jsonp(logs);
 		}
 	});
+
+};
+
+// list type filter
+exports.listTypeFilter = function(req, res){
+
+	// set and store limits
+	var startVal, limitVal;
+	if(req.body.startVal){
+		startVal = req.body.startVal;
+	} else {
+		startVal = 0;
+	}
+	if(req.body.limitVal){
+		limitVal = req.body.limitVal;
+	} else {
+		limitVal = 100;
+	}
+
+	console.log(startVal);
+	console.log(limitVal);
+
+	var filter = req.body.filter;
+
+	if(filter){
+		Log.find({'type': filter}).sort('-created').skip(startVal).limit(limitVal).populate('user', 'displayName').exec(function(err, logs) {
+			if (err) {
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
+			} else {
+				res.jsonp(logs);
+			}
+		});
+	} else {
+		Log.find().sort('-created').skip(startVal).limit(limitVal).populate('user', 'displayName').exec(function(err, logs) {
+			if (err) {
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
+			} else {
+				res.jsonp(logs);
+			}
+		});
+	}
 
 };
 

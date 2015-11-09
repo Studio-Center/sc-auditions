@@ -6,29 +6,36 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
 		$scope.authentication = Authentication;
 
 		// used for paginator
+		$scope.logCnt;
+		$scope.page = 0;
+		$scope.searchText = {
+			type: ''
+		};
 		$scope.Math = window.Math;
 		$scope.currentPage = 0;
 		$scope.filtered = [];
-		$scope.limit = 0;
+		$scope.limit = 20;
 		$scope.range = function(min, max, step){
 		    step = step || 1;
 		    var input = [];
 		    for (var i = min; i <= max; i += step) input.push(i);
 		    return input;
 		};
-	    $scope.setPage = function () {
-	        $scope.currentPage = this.n;
-	    };
-	    $scope.changePage = function(page){
-	    	var curSel = page * $scope.limit;
+    $scope.setPage = function () {
+        $scope.currentPage = this.n;
 
-	    	if(curSel < $scope.filtered.length && curSel >= 0){
-	    		$scope.currentPage = page;
-	    	}
-	    };
-	    $scope.$watch('filtered', function(val){
-	    	$scope.currentPage = 0;
-	    }, true);
+				$scope.listTypeFilter(this.n);
+    };
+    $scope.changePage = function(page){
+    	var curSel = page * $scope.limit;
+
+    	if(curSel < $scope.filtered.length && curSel >= 0){
+    		$scope.currentPage = page;
+    	}
+    };
+    // $scope.$watch('filtered', function(val){
+    // 	$scope.currentPage = 0;
+    // }, true);
 
 		// Create new Log
 		$scope.create = function() {
@@ -75,6 +82,18 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
 			});
 		};
 
+		// get logs count
+		$scope.getLogsCount = function(){
+
+			$http.post('/logs/recCount', {
+				filter: $scope.searchText.type
+			}).
+			success(function(data, status, headers, config) {
+				$scope.logCnt = Number(data);
+			});
+
+		};
+
 		// Find a list of Logs
 		$scope.find = function() {
 			$scope.logs = Logs.query();
@@ -83,20 +102,54 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
 		// gather filtered list of logs
 		$scope.listFilter = function(listFilter){
 
-			console.log(listFilter);
-
 			$http.post('/logs/listFilter', {
-		        filter: listFilter
-		    }).
+        filter: listFilter
+		  }).
 			success(function(data, status, headers, config) {
 				$scope.logs = data;
 			});
 
 		};
+		// gather filtered list of logs
+		$scope.listTypeFilter = function(page, filter){
+
+			// init vars
+			var page, filter;
+
+			// gather page data
+			if(typeof page === 'undefined'){
+				page = $scope.page;
+			} else {
+				$scope.page = page;
+			}
+
+			// gather filter data
+			if(typeof filter === 'undefined'){
+				filter = $scope.searchText.type;
+			}
+
+			// det satrt val
+			var startVal = page * $scope.limit;
+
+			$http.post('/logs/listTypeFilter', {
+				startVal: startVal,
+				limitVal: $scope.limit,
+        filter: filter
+		  }).
+			success(function(data, status, headers, config) {
+				$scope.logs = [];
+				$scope.logs = data;
+			});
+
+		};
+		// update logs count for paginators
+		$scope.$watchCollection('logs', function(val){
+			$scope.getLogsCount();
+		});
 
 		// Find existing Log
 		$scope.findOne = function() {
-			$scope.log = Logs.get({ 
+			$scope.log = Logs.get({
 				logId: $stateParams.logId
 			});
 		};
