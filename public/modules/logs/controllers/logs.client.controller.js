@@ -14,7 +14,7 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
 		$scope.Math = window.Math;
 		$scope.currentPage = 0;
 		$scope.filtered = [];
-		$scope.limit = 20;
+		$scope.limit = 200;
 		$scope.range = function(min, max, step){
 		    step = step || 1;
 		    var input = [];
