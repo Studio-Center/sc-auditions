@@ -1,4 +1,4 @@
-<section data-ng-controller="LogsController" data-ng-init="find()">
+<section data-ng-controller="LogsController" data-ng-init="getLogsCount();listTypeFilter()">
     <div class="page-header">
         <h1>Logs</h1>
     </div>
@@ -9,17 +9,17 @@
         <div class="col-lg-6 col-md-6 col-sm-6">
             <label>Filter logs by type:</label><br>
             <div class="btn-group" data-toggle="buttons">
-                <label class="btn btn-primary" ng-model="searchText.type" btn-radio="'project'">Project</label>
-                <label class="btn btn-primary" ng-model="searchText.type" btn-radio="'talent'">Talent</label>
-                <label class="btn btn-primary" ng-model="searchText.type" btn-radio="'system'">System</label>
-                <label class="btn btn-primary" ng-model="searchText.type" btn-radio="''">All</label>
+                <label class="btn btn-primary" ng-model="searchText.type" btn-radio="'project'" ng-click="listTypeFilter('', 'project')">Project</label>
+                <label class="btn btn-primary" ng-model="searchText.type" btn-radio="'talent'" ng-click="listTypeFilter('', 'talent')">Talent</label>
+                <label class="btn btn-primary" ng-model="searchText.type" btn-radio="'system'" ng-click="listTypeFilter('', 'system')">System</label>
+                <label class="btn btn-primary" ng-model="searchText.type" btn-radio="''" ng-click="listTypeFilter()">All</label>
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
         	<h4></h4>
-            <select ng-init="limit = 20" ng-model="limit" class="form-control">
+            <select ng-init="limit = 20" ng-model="limit" class="form-control" ng-change="listTypeFilter()">
                 <option value="5" selected>Show 5 per page</option>
                 <option value="10">Show 10 per page</option>
                 <option value="15">Show 15 per page</option>
@@ -33,26 +33,26 @@
     </div>
     <div class="row">
         <div class="col-lg-2 col-md-2 col-sm-2">
-            <p style="margin-top:27px">{{filtered.length}} Note(s) Found</p>
+            <p style="margin-top:27px">{{logCnt}} Note(s) Found | Showing {{logs.length}}</p>
         </div>
         <div class="col-lg-10 col-md-10 col-sm-10">
             <div class="text-center">
             <ul class="pagination">
                 <li ng-class="{disabled: currentPage == 0}">
-                    <a href ng-click="changePage(currentPage-1)">« Prev</a>
+                    <a href ng-click="listTypeFilter(currentPage-1)">« Prev</a>
                 </li>
-                <li ng-repeat="n in range(0, Math.floor(filtered.length/limit))" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                <li ng-repeat="n in range(0, Math.floor(logCnt/limit))" ng-class="{active: n == currentPage}" ng-click="setPage()">
                     <a href ng-bind="n + 1">1</a>
                 </li>
-                <li ng-class="{disabled: currentPage == Math.floor(filtered.length/limit)}">
-                    <a href ng-click="changePage(currentPage+1)">Next »</a>
+                <li ng-class="{disabled: currentPage == Math.floor(logCnt/limit)}">
+                    <a href ng-click="listTypeFilter(currentPage+1)">Next »</a>
                 </li>
             </ul>
             </div>
         </div>
     </div>
     <div class="list-group">
-        <div data-ng-repeat="log in filtered = (logs | filter:searchString | filter:searchText:startsWith) | startFrom:currentPage*limit | limitTo: limit" class="list-group-item">
+        <div data-ng-repeat="log in filtered = (logs | filter:searchString | filter:searchText:startsWith)" class="list-group-item">
 			<small class="list-group-item-text">
 				Posted on
 				<span data-ng-bind="log.created | amDateFormat:'MM/DD/YY h:mm:ss a'"></span>
@@ -60,7 +60,7 @@
 				<span data-ng-bind="log.user.displayName"></span>
 			</small>
 			<p>
-                <strong>Log Type:</strong> 
+                <strong>Log Type:</strong>
                 <a ng-if="log.type == 'project'" href="/#!/projects/{{log.sharedKey}}" target="_blank">{{log.type}}</a>
                 <a ng-if="log.type == 'talent'" href="/#!/talents/{{log.sharedKey}}" target="_blank">{{log.type}}</a>
                 <span ng-if="log.type == 'system'">{{log.type}}</span>
@@ -70,19 +70,19 @@
     </div>
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
-            <div class="text-center">
-            <ul class="pagination">
-                <li ng-class="{disabled: currentPage == 0}">
-                    <a href ng-click="changePage(currentPage-1)">« Prev</a>
-                </li>
-                <li ng-repeat="n in range(0, Math.floor(filtered.length/limit))" ng-class="{active: n == currentPage}" ng-click="setPage()">
-                    <a href ng-bind="n + 1">1</a>
-                </li>
-                <li ng-class="{disabled: currentPage == Math.floor(filtered.length/limit)}">
-                    <a href ng-click="changePage(currentPage+1)">Next »</a>
-                </li>
-            </ul>
-            </div>
+          <div class="text-center">
+          <ul class="pagination">
+              <li ng-class="{disabled: currentPage == 0}">
+                  <a href ng-click="listTypeFilter(currentPage-1)">« Prev</a>
+              </li>
+              <li ng-repeat="n in range(0, Math.floor(logCnt/limit))" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                  <a href ng-bind="n + 1">1</a>
+              </li>
+              <li ng-class="{disabled: currentPage == Math.floor(logCnt/limit)}">
+                  <a href ng-click="listTypeFilter(currentPage+1)">Next »</a>
+              </li>
+          </ul>
+          </div>
         </div>
     </div>
 </section>
