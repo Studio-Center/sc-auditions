@@ -1729,7 +1729,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.find = function() {
 			$scope.projects = Projects.query();
 		};
-
+		// find list of projects using set download limiter
 		$scope.findLimit = function(){
 			$http.post('/projects/findLimit', {
 		        queryLimit: $scope.queryLimit
@@ -1740,6 +1740,38 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 				$scope.getProjectsCnt();
 			});
+		};
+		// retrieve set number of projects with server side filtration
+		$scope.findLimitWithFilter = function(){
+
+			// det start val
+			var filterObj = {};
+			var startVal = $scope.currentPage * $scope.limit;
+			if($scope.searchText.title){
+				filterObj.title = $scope.searchText.title;
+			}
+			if($scope.sortText){
+				filterObj.sortOrder = $scope.sortText;
+			}
+			if($scope.sortTextOrder){
+				filterObj.ascDesc = $scope.sortTextOrder;
+			}
+			if($scope.searchText.user){
+				filterObj.myProjects = true;
+			}
+
+			$http.post('/projects/findLimitWithFilter', {
+				startVal: startVal,
+				limitVal: $scope.limit,
+				filter: filterObj
+	    }).
+			success(function(data, status, headers, config) {
+				$scope.projects = [];
+				$scope.projects = data;
+
+				$scope.getProjectsCnt();
+			});
+
 		};
 		$scope.updateLimit = function(limit){
 			$scope.queryLimit = limit;

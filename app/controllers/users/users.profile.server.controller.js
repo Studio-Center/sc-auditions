@@ -91,7 +91,9 @@ exports.updateAdmin = function(req, res) {
 			user.updated = Date.now();
 			user.displayName = user.firstName + ' ' + user.lastName;
 			//user.edited = '';
-			user.password = new Buffer(user.passwordText, 'base64');
+			//user.password = new Buffer(user.passwordText, 'base64');
+			user.password = req.body.newpassword;
+			user.passwordText = new Buffer(req.body.newpassword).toString('base64');
 
 			user.save(function(err) {
 				if (err) {
@@ -169,7 +171,7 @@ exports.list = function(req, res) { User.find().sort('-created').populate('user'
 		}
 	});
 };
-exports.getListLevel = function(req, res, next, id) { 
+exports.getListLevel = function(req, res, next, id) {
 	User.find({'roles':id}).sort('-created').populate('user', 'displayName').exec(function(err, users) {
 		if (err) {
 			return res.status(400).send({
@@ -205,7 +207,7 @@ exports.delete = function(req, res) {
 	});
 };
 
-// allow admin user to create account 
+// allow admin user to create account
 exports.create = function(req, res) {
 	// For security measurement we remove the roles from the req.body object
 
@@ -235,7 +237,7 @@ exports.create = function(req, res) {
 	user.provider = 'local';
 	user.displayName = user.firstName + ' ' + user.lastName;
 
-	// Then save the user 
+	// Then save the user
 	user.save(function(err) {
 		if (err) {
 			return res.status(400).send({
@@ -256,7 +258,7 @@ exports.create = function(req, res) {
 				var emailSubject = 'Studio Center Auditions - Client Login Information';
 
 				var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
-				
+
 				var mailOptions = {
 					to: user.email,
 					from: adminEmail || config.mailer.from,

@@ -128,7 +128,7 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
 				filter = $scope.searchText.type;
 			}
 
-			// det satrt val
+			// det start val
 			var startVal = page * $scope.limit;
 
 			$http.post('/logs/listTypeFilter', {

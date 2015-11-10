@@ -130,7 +130,7 @@ exports.list = function(req, res) {
 exports.listFilter = function(req, res){
 
 	// set and store limits
-	var startVal, finishVal;
+	var startVal, limitVal;
 	if(req.body.startVal){
 		startVal = req.body.startVal;
 	} else {
@@ -171,9 +171,6 @@ exports.listTypeFilter = function(req, res){
 	} else {
 		limitVal = 100;
 	}
-
-	console.log(startVal);
-	console.log(limitVal);
 
 	var filter = req.body.filter;
 

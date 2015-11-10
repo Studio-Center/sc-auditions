@@ -11,7 +11,12 @@ module.exports = function(app) {
 		.get(users.requiresLogin, projects.list)
 		.post(users.requiresLogin, projects.create);
 
+	// load projects using a set collection count limit
 	app.route('/projects/findLimit')
+		.post(users.requiresLogin, projects.findLimit);
+
+	// filter project list based on user assigned filter values
+	app.route('/projects/findLimitWithFilter')
 		.post(users.requiresLogin, projects.findLimit);
 
 	// new methods for filtering projects based on user entry
