@@ -30,7 +30,7 @@
                                 </select>
         </div>
         <div class="col-lg-3 col-md-3 col-sm-3">
-            <label>My Projects:</label> <input type="checkbox" name="userProjFilter" id="userProjFilter" ng-model="searchText" ng-true-value="'{{authentication.user._id}}'" class="form-control">
+            <label>My Projects:</label> <input type="checkbox" name="userProjFilter" id="userProjFilter" ng-model="searchText.user._id" ng-true-value="'{{authentication.user._id}}'" ng-false-value="''" class="form-control">
         </div>
     </div>
     <div class="row">

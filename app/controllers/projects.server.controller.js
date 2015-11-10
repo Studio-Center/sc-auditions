@@ -1896,7 +1896,7 @@ exports.getProjectsCnt = function(req, res){
 			res.jsonp(count);
 		}
 	});
-	
+
 };
 
 // retrieve only a set amount of projects
@@ -1935,6 +1935,72 @@ exports.findLimit = function(req, res) {
 			}
 		}
 
+	}
+
+};
+// list projects using custom defined filter values
+exports.findLimitWithFilter = function(req, res) {
+
+	// set filter vars
+	var filterObj = {};
+	var sortOrder = {'-created': -1};
+	var projectName, entireProject, myProjects, sortOrder, ascDesc, inProgress;
+	// gen filter object
+	// filter by project title
+	if(req.body.filter.title){
+		filterObj.title = req.body.filter.title;
+	}
+	// filter my Projects
+	if(req.body.filter.myProjects){
+		filterObj.user._id = req.User._id;
+	}
+	// set collection sort order
+	if(req.body.filter.sortOrder){
+		var selSort = req.body.filter.sortOrder;
+		if(req.body.filter.ascDesc){
+			sortOrder = {selSort: (req.body.filter.ascDesc === 'reverse' ? -1 : '')};
+		} else {
+			sortOrder = {selSort: -1};
+		}
+	} else {
+		if(req.body.filter.ascDesc){
+			sortOrder = {'-created': (req.body.filter.ascDesc === 'reverse' ? -1 : '')};
+		}
+	}
+	// set in progress bit
+	if(req.body.filter.status){
+		filterObj.status = req.body.filter.status;
+	}
+	// set and store limits
+	var startVal, limitVal;
+	if(req.body.startVal){
+		startVal = req.body.startVal;
+	} else {
+		startVal = 0;
+	}
+	if(req.body.limitVal){
+		limitVal = req.body.limitVal;
+	} else {
+		limitVal = 100;
+	}
+
+	// permit certain user roles full access
+	var allowedRoles = ['admin','producer/auditions director', 'production coordinator','talent director'];
+
+	if (_.intersection(req.user.roles, allowedRoles).length) {
+
+		Project.find(filterObj).sort(sortOrder).skip(startVal).limit(limitVal).populate('user', 'displayName').limit(limit).exec(function(err, projects) {
+			if (err) {
+				//console.log(err);
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
+			} else {
+				return res.jsonp(projects);
+			}
+		});
+
+	// filter results as required for remaning uer roles
 	}
 
 };

@@ -10,6 +10,7 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
 		// various values
 
 		// used for paginator
+		$scope.loadPass = false;
 		$scope.Math = window.Math;
 		$scope.currentPage = 0;
 		$scope.filtered = [];
@@ -44,10 +45,10 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
 
 		// refresh list of users on refresh emit
 		$rootScope.$on('refresh', $scope.find());
-		$rootScope.$on('refreshFilter', 
-			function(event, args) { 
+		$rootScope.$on('refreshFilter',
+			function(event, args) {
 				$scope.findFilter(args);
-			} 
+			}
 		);
 
 		$scope.decodedPass = function(encodedPass){
@@ -61,13 +62,23 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
 
 		// Find existing Users
 		$scope.findOne = function() {
-			$scope.useredit = UsersEdit.get({ 
+			$scope.useredit = UsersEdit.get({
 				userIdEdit: $stateParams.userIdEdit
 			});
 		};
+		$scope.$watchCollection('useredit', function(){
+			// check for load password pass
+			if($scope.loadPass === false){
+				$scope.useredit.newpassword  = $scope.decodedPass($scope.useredit.passwordText);
+				// ensure password is loaded
+				if($scope.useredit.newpassword){
+					$scope.loadPass = true;
+				}
+			}
+		});
 
 		$scope.getOne = function(userId) {
-			$scope.useredit = UsersEdit.get({ 
+			$scope.useredit = UsersEdit.get({
 				userIdEdit: userId
 			});
 		};
