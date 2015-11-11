@@ -11,28 +11,28 @@
     </div>
     <div class="row">
         <div class="col-lg-3 col-md-3 col-sm-3">
-            <label>Search by Project Name:</label>
+            <label>Search by Project Title:</label>
             <input ng-model="searchText.title" class="form-control" ng-change="findLimitWithFilter()">
         </div>
         <div class="col-lg-3 col-md-3 col-sm-3">
-            <label>Sort:</label>
+            <label>Sort By:</label>
             <select ng-model="sortText" ng-init="sortText = 'created'" class="form-control" ng-change="findLimitWithFilter()">
-                <option value="created">Created</option>
-                <option value="title">Name</option>
-                <option value="estimatedCompletionDate">Due Time</option>
+                <option value="created">Project Creation Date/Time</option>
+                <option value="title">Project Title</option>
+                <option value="estimatedCompletionDate">Project Due Date/Time</option>
                 <option value="user._id">Project Creator</option>
-                <option value="status">Status</option>
+                <option value="status">Project Status</option>
             </select>
         </div>
         <div class="col-lg-3 col-md-3 col-sm-3">
-            <label>Order:</label>
+            <label>Order By:</label>
             <select ng-init="sortTextOrder = 'desc'" ng-model="sortTextOrder" class="form-control" ng-change="findLimitWithFilter()">
-                <option value="asc">Asc</option>
-                <option value="desc">Desc</option>
+                <option value="asc">Ascending</option>
+                <option value="desc">Descending</option>
             </select>
         </div>
         <div class="col-lg-3 col-md-3 col-sm-3">
-            <label>My Projects:</label>
+            <label>Display Only My Projects:</label>
             <input type="checkbox" name="userProjFilter" id="userProjFilter" ng-model="searchText.user" ng-true-value="'{{authentication.user._id}}'" ng-false-value="''" class="form-control" ng-click="findLimitWithFilter()">
         </div>
     </div>
@@ -40,18 +40,18 @@
       <div class="col-lg-9 col-md-9 col-sm-9">
           <label></label><br>
           <select ng-init="limit = 20" ng-model="limit" class="form-control" ng-change="findLimitWithFilter()">
-              <option value="5" selected>Show 5 per page</option>
-              <option value="10">Show 10 per page</option>
-              <option value="15">Show 15 per page</option>
-              <option value="20">Show 20 per page</option>
-              <option value="30">Show 30 per page</option>
-              <option value="50">Show 50 per page</option>
-              <option value="100">Show 100 per page</option>
-              <option value="200">Show 200 per page</option>
+              <option value="5" selected>Show 5 projects per page</option>
+              <option value="10">Show 10 projects per page</option>
+              <option value="15">Show 15 projects per page</option>
+              <option value="20">Show 20 projects per page</option>
+              <option value="30">Show 30 projects per page</option>
+              <option value="50">Show 50 projects per page</option>
+              <option value="100">Show 100 projects per page</option>
+              <option value="200">Show 200 projects per page</option>
           </select>
       </div>
         <div class="col-lg-3 col-md-3 col-sm-3">
-            <label>In Progress:</label>
+            <label>Display Only Projects In Progress:</label>
             <input type="checkbox" name="userProjFilter" id="userProjFilter" ng-model="searchText.status" ng-false-value="''" ng-true-value="'In Progress'" ng-checked="permitProducers()" class="form-control" ng-click="findLimitWithFilter()">
         </div>
     </div>
