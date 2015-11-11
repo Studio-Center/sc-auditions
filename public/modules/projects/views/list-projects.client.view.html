@@ -1,7 +1,7 @@
 <section data-ng-controller="ProjectsController" data-ng-init="findLimitWithFilter();defaults();">
     <div class="page-header">
         <h1>Projects</h1>
-        <a data-ng-show="permitAdminProductionCoordinator()" class="btn btn-default" href="#!/projects/create">Create New Project</a>
+        <a data-ng-show="permitAdminProductionCoordinator()" class="btn  btn-primary" href="#!/projects/create">Create New Project</a>
         <a ng-show="permitClient() === true" class="btn btn-default" href="#!/projects/new-audition-form">Start A New Audition Project</a>
     </div>
     <div class="row">
@@ -40,14 +40,14 @@
       <div class="col-lg-9 col-md-9 col-sm-9">
           <label></label><br>
           <select ng-init="limit = 20" ng-model="limit" class="form-control" ng-change="findLimitWithFilter()">
-              <option value="5" selected>Show 5 projects per page</option>
-              <option value="10">Show 10 projects per page</option>
-              <option value="15">Show 15 projects per page</option>
-              <option value="20">Show 20 projects per page</option>
-              <option value="30">Show 30 projects per page</option>
-              <option value="50">Show 50 projects per page</option>
-              <option value="100">Show 100 projects per page</option>
-              <option value="200">Show 200 projects per page</option>
+              <option value="5" selected>Show 5 Projects Per Page</option>
+              <option value="10">Show 10 Projects Per Page</option>
+              <option value="15">Show 15 Projects Per Page</option>
+              <option value="20">Show 20 Projects Per Page</option>
+              <option value="30">Show 30 Projects Per Page</option>
+              <option value="50">Show 50 Projects Per Page</option>
+              <option value="100">Show 100 Projects Per Page</option>
+              <option value="200">Show 200 Projects Per Page</option>
           </select>
       </div>
         <div class="col-lg-3 col-md-3 col-sm-3">
