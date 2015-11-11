@@ -49,7 +49,7 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 	    		$scope.currentPage = page;
 	    	}
 	    };
-	    $scope.$watch('filtered', function(val){
+	    $scope.$watchCollection('filtered', function(val){
 	    	$scope.currentPage = 0;
 	    }, true);
 
@@ -82,7 +82,7 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 			    $scope.talent.unionJoined.push(union);
 			}
 		};
-		
+
 		$scope.toggleTypecast = function(typeCast){
 			  var idx = $scope.talent.typeCasts.indexOf(typeCast);
 			  if (idx > -1){
@@ -108,7 +108,7 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 			    $scope.unionJoinSelected.push(union);
 			}
 		};
-		
+
 		$scope.toggleNewTypecast = function(typeCast){
 			  var idx = $scope.selTypecasts.indexOf(typeCast);
 			  if (idx > -1){
@@ -210,7 +210,7 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 
 		// Find existing Talent
 		$scope.findOne = function() {
-			$scope.talent = Talents.get({ 
+			$scope.talent = Talents.get({
 				talentId: $stateParams.talentId
 			});
 		};
@@ -218,7 +218,7 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 		// load talent assigned projects
 		$scope.findTalentProjects = function(){
 
-			$scope.$watch('talent._id', function(val){
+			$scope.$watchCollection('talent._id', function(val){
 
 				$http.post('/projects/filterByTalent', {
 			        talentId: $scope.talent._id,
@@ -267,7 +267,7 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 						// store projects data
 						$scope.projects = data;
 					});
-				});			
+				});
 
 			});
 
@@ -287,7 +287,7 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 			        project: data
 			    }).
 				success(function(data, status, headers, config) {
-					
+
 					// update projects listing
 					$http.post('/projects/filterByTalent', {
 				        talentId: $scope.talent._id,
@@ -304,7 +304,7 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 		};
 
 		$scope.getOne = function(talentId) {
-			$scope.talent = Talents.get({ 
+			$scope.talent = Talents.get({
 				talentId: talentId
 			});
 		};
@@ -312,12 +312,12 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 		// gather filtered list of logs
 		$scope.listFilter = function(){
 
-			$scope.$watch('talent._id', function(val){
+			$scope.$watchCollection('talent._id', function(val){
 
 				if(typeof $scope.talent._id !== 'undefined'){
 
 					var listFilter = {
-						type: 'talent', 
+						type: 'talent',
 						sharedKey: $scope.talent._id
 					};
 

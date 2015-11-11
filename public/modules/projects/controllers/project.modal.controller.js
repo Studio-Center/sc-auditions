@@ -35,7 +35,7 @@ angular.module('projects').controller('ProjectsModalController', ['$scope', '$st
 			});
 		};
 
-		$scope.$watch('data', function(val){
+		$scope.$watchCollection('data', function(val){
 			// load associated project
 			if(typeof $scope.data !== 'undefined'){
 				$scope.findOneById($scope.data.project);
@@ -43,8 +43,8 @@ angular.module('projects').controller('ProjectsModalController', ['$scope', '$st
 		});
 
 		// prune unneeded auditions
-		$scope.$watch('project', function(val){
-			$scope.$watch('project.auditions', function(val){
+		$scope.$watchCollection('project', function(val){
+			$scope.$watchCollection('project.auditions', function(val){
 
 				$scope.selectedAuds = [];
 
