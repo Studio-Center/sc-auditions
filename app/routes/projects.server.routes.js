@@ -17,7 +17,7 @@ module.exports = function(app) {
 
 	// filter project list based on user assigned filter values
 	app.route('/projects/findLimitWithFilter')
-		.post(users.requiresLogin, projects.findLimit);
+		.post(users.requiresLogin, projects.findLimitWithFilter);
 
 	// new methods for filtering projects based on user entry
 	app.route('/projects/getProjectsCnt')

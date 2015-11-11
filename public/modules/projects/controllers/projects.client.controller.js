@@ -101,19 +101,24 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		    for (var i = min; i <= max; i += step) input.push(i);
 		    return input;
 		};
-	    $scope.setPage = function () {
-	        $scope.currentPage = this.n;
-	    };
-	    $scope.changePage = function(page){
-	    	var curSel = page * $scope.limit;
+    $scope.setPage = function () {
+        $scope.currentPage = this.n;
 
-	    	if(curSel < $scope.filtered.length && curSel >= 0){
-	    		$scope.currentPage = page;
-	    	}
-	    };
-	    $scope.$watchCollection('filtered', function(val){
-	    	$scope.currentPage = 0;
-	    }, true);
+				// reload list of projects
+				$scope.findLimitWithFilter();
+    };
+    $scope.changePage = function(page){
+    	var curSel = page * $scope.limit;
+
+    	if(curSel < $scope.filtered.length && curSel >= 0){
+    		$scope.currentPage = page;
+
+				$scope.findLimitWithFilter();
+    	}
+    };
+    // $scope.$watchCollection('filtered', function(val){
+    // 	$scope.currentPage = 0;
+    // }, true);
 
 		$scope.hoveringOver = function(value,key,object) {
 	        $scope.overStar = value;
@@ -1716,10 +1721,48 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}
 
 		};
+		// gather filter values
+		$scope.getFilterVars = function(){
+			// det start val
+			var filterObj = {};
+			// filter by title
+			if($scope.searchText.title){
+				filterObj.title = $scope.searchText.title;
+			}
+			// filter sort options
+			if($scope.sortText){
+				filterObj.sortOrder = $scope.sortText;
+			} else {
+				filterObj.sortOrder = 'created';
+			}
+			// filter data order
+			if($scope.sortTextOrder){
+				filterObj.ascDesc = $scope.sortTextOrder;
+			} else {
+				filterObj.ascDesc = 'desc';
+			}
+			// filter out users projects
+			if($scope.searchText.user){
+				filterObj.myProjects = true;
+			} else {
+				filterObj.myProjects = false;
+			}
+			// filter in Progress
+			if($scope.searchText.status){
+				filterObj.status = 'In Progress';
+			}
 
+			return filterObj;
+		};
+		// get count of all projects in db
 		$scope.getProjectsCnt = function(){
 
-			$http.post('/projects/getProjectsCnt', {}).
+			// gen filter object
+			var filterObj = $scope.getFilterVars();
+
+			$http.post('/projects/getProjectsCnt', {
+				filter: filterObj
+			}).
 			success(function(data, status, headers, config) {
 				$scope.projectsTotalCnt = data;
 			});
@@ -1733,7 +1776,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.findLimit = function(){
 			$http.post('/projects/findLimit', {
 		        queryLimit: $scope.queryLimit
-		    }).
+	    }).
 			success(function(data, status, headers, config) {
 				$scope.projects = [];
 				$scope.projects = data;
@@ -1745,20 +1788,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.findLimitWithFilter = function(){
 
 			// det start val
-			var filterObj = {};
 			var startVal = $scope.currentPage * $scope.limit;
-			if($scope.searchText.title){
-				filterObj.title = $scope.searchText.title;
-			}
-			if($scope.sortText){
-				filterObj.sortOrder = $scope.sortText;
-			}
-			if($scope.sortTextOrder){
-				filterObj.ascDesc = $scope.sortTextOrder;
-			}
-			if($scope.searchText.user){
-				filterObj.myProjects = true;
-			}
+			// gather filter objects
+			var filterObj = $scope.getFilterVars();
 
 			$http.post('/projects/findLimitWithFilter', {
 				startVal: startVal,
@@ -1782,7 +1814,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		// dynamically update project view
 		Socket.on('projectsListUpdate', function() {
 
-			$scope.findLimit();
+			$scope.findLimitWithFilter();
 
 		});
 
