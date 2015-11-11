@@ -109,9 +109,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     };
     $scope.changePage = function(page){
     	var curSel = page * $scope.limit;
-			console.log(curSel);
 
-    	if(curSel < $scope.projectsTotalCnt.length && curSel >= 0){
+    	if(curSel < $scope.projectsTotalCnt && curSel >= 0){
     		$scope.currentPage = page;
 
 				$scope.findLimitWithFilter();

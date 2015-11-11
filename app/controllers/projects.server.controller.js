@@ -1890,7 +1890,7 @@ var getProjectsFilters = function(req){
 	var filterObj = {};
 	// filter by project title
 	if(req.body.filter.title){
-		filterObj.title = new RegExp(req.body.filter.title, "i");
+		filterObj.title = new RegExp(req.body.filter.title, 'i');
 	}
 	// filter my Projects
 	if(req.body.filter.myProjects === true){

@@ -113,9 +113,6 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
 		// gather filtered list of logs
 		$scope.listTypeFilter = function(page, filter){
 
-			// init vars
-			var page, filter;
-
 			// gather page data
 			if(typeof page === 'undefined'){
 				page = $scope.page;
