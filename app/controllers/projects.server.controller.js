@@ -1883,11 +1883,34 @@ var performLoadList = function(req, res, allowedRoles, i, j, limit){
 
 	}
 };
+// assemble filters
+var getProjectsFilters = function(req){
 
+	// gen filter object
+	var filterObj = {};
+	// filter by project title
+	if(req.body.filter.title){
+		filterObj.title = new RegExp(req.body.filter.title, "i");
+	}
+	// filter my Projects
+	if(req.body.filter.myProjects === true){
+		filterObj.user = req.user._id;
+	}
+	// set in progress bit
+	if(req.body.filter.status){
+		filterObj.status = req.body.filter.status;
+	}
+
+	return filterObj;
+};
 // retrieve projects count
 exports.getProjectsCnt = function(req, res){
 
-	Project.count({}, function(err, count){
+	// set filter vars
+	var projectName, entireProject, myProjects, inProgress;
+	var filterObj = getProjectsFilters(req);
+
+	Project.find(filterObj).count({}, function(err, count){
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
@@ -1942,34 +1965,18 @@ exports.findLimit = function(req, res) {
 exports.findLimitWithFilter = function(req, res) {
 
 	// set filter vars
-	var filterObj = {};
-	var sortOrder = {'-created': -1};
-	var projectName, entireProject, myProjects, sortOrder, ascDesc, inProgress;
-	// gen filter object
-	// filter by project title
-	if(req.body.filter.title){
-		filterObj.title = req.body.filter.title;
-	}
-	// filter my Projects
-	if(req.body.filter.myProjects){
-		filterObj.user._id = req.User._id;
-	}
+	var sortOrder = {};
+	var projectName, entireProject, myProjects, ascDesc, inProgress;
+	var filterObj = getProjectsFilters(req);
+
 	// set collection sort order
 	if(req.body.filter.sortOrder){
 		var selSort = req.body.filter.sortOrder;
-		if(req.body.filter.ascDesc){
-			sortOrder = {selSort: (req.body.filter.ascDesc === 'reverse' ? -1 : '')};
+		if(req.body.filter.ascDesc === 'desc'){
+			sortOrder[selSort] = -1;
 		} else {
-			sortOrder = {selSort: -1};
+			sortOrder[selSort] = 1;
 		}
-	} else {
-		if(req.body.filter.ascDesc){
-			sortOrder = {'-created': (req.body.filter.ascDesc === 'reverse' ? -1 : '')};
-		}
-	}
-	// set in progress bit
-	if(req.body.filter.status){
-		filterObj.status = req.body.filter.status;
 	}
 	// set and store limits
 	var startVal, limitVal;
@@ -1989,7 +1996,7 @@ exports.findLimitWithFilter = function(req, res) {
 
 	if (_.intersection(req.user.roles, allowedRoles).length) {
 
-		Project.find(filterObj).sort(sortOrder).skip(startVal).limit(limitVal).populate('user', 'displayName').limit(limit).exec(function(err, projects) {
+		Project.find(filterObj).sort(sortOrder).skip(startVal).limit(limitVal).populate('user', 'displayName').exec(function(err, projects) {
 			if (err) {
 				//console.log(err);
 				return res.status(400).send({
@@ -2001,6 +2008,16 @@ exports.findLimitWithFilter = function(req, res) {
 		});
 
 	// filter results as required for remaning uer roles
+	} else {
+
+		allowedRoles = ['user', 'talent', 'client', 'client-client'];
+
+		for(var i = 0; i < req.user.roles.length; ++i){
+			for(var j = 0; j < allowedRoles.length; ++j){
+				performLoadList(req, res, allowedRoles, i, j, limitVal);
+			}
+		}
+
 	}
 
 };

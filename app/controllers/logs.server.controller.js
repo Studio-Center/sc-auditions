@@ -103,7 +103,7 @@ exports.recCount = function(req, res){
 exports.list = function(req, res) {
 
 	// set and store limits
-	var startVal, finishVal;
+	var startVal, limitVal;
 	if(req.body.startVal){
 		startVal = req.body.startVal;
 	} else {

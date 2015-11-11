@@ -191,7 +191,7 @@ angular.module('projects').controller('ProjectsModalController', ['$scope', '$st
 	    }).
 			success(function(data, status, headers, config) {
 				$rootScope.$broadcast('refreshProject', $scope.data.project);
-				console.log('finished');
+				//console.log('finished');
 				$modalInstance.close();
 			});
 
