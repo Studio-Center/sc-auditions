@@ -93,7 +93,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.Math = window.Math;
 		$scope.currentPage = 0;
 		$scope.filtered = [];
-		$scope.limit = 0;
+		$scope.limit = 20;
 		$scope.queryLimit = 50;
 		$scope.range = function(min, max, step){
 		    step = step || 1;
