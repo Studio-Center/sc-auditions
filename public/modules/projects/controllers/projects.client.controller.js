@@ -1921,6 +1921,61 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}
 		};
 
+		// check files
+		$scope.checkFileWalk = function(){
+			var fn, file;
+
+			angular.forEach($scope.project.auditions, function(value, key){
+
+				if(typeof value.filecheck === 'undefined' || value.filecheck === 0){
+
+					// increment file count
+					$scope.newFileCnt += 1;
+
+					// new file location
+					fn = value.file.name;
+					file = '/res/auditions/'+$scope.project._id+'/'+fn;
+
+					// check for new file
+					$http.post('/projects/fileExists', {
+						file: file
+					// file found
+					}).success(function(data, status, headers, config) {
+						$scope.project.auditions[key].filecheck = 1;
+						$scope.project.auditions[key].filecheckdate = new Date();
+						$scope.procCnt += 1;
+					// file not found
+					}).error(function(data, status, headers, config) {
+						$scope.project.auditions[key].filecheck = 2;
+						$scope.project.auditions[key].filecheckdate = new Date();
+						$scope.procCnt += 1;
+					});
+
+				}
+
+				if(key === ($scope.project.auditions.length-1)) {
+					$scope.fileCheck = true;
+				}
+
+			});
+
+		};
+
+		// check all files assigned to project
+		$scope.checkAllFiles = function(){
+
+			// reset file check status for all files
+			for(var i = 0; i < $scope.project.auditions.length; ++i){
+				$scope.project.auditions[i].filecheck = 0;
+
+				// init file check walk on reset finish
+				if((i+1) === $scope.project.auditions.length){
+					$scope.checkFileWalk();
+				}
+			}
+
+		};
+
 		$scope.$watchCollection('project', function(val){
 
 			if(typeof $scope.project === 'object'){
@@ -1931,38 +1986,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					// audition file check
 					if($scope.fileCheck === false){
 
-						angular.forEach($scope.project.auditions, function(value, key){
-
-							if(typeof value.filecheck === 'undefined' || value.filecheck === 0){
-
-								// increment file count
-								$scope.newFileCnt += 1;
-
-								// new file location
-								file = '/res/auditions/'+$scope.project._id+'/'+value.file.name;
-
-								// check for new file
-								$http.post('/projects/fileExists', {
-									file: file
-								// file found
-								}).success(function(data, status, headers, config) {
-									$scope.project.auditions[key].filecheck = 1;
-									$scope.project.auditions[key].filecheckdate = new Date();
-									$scope.procCnt += 1;
-								// file not found
-								}).error(function(data, status, headers, config) {
-									$scope.project.auditions[key].filecheck = 2;
-									$scope.project.auditions[key].filecheckdate = new Date();
-									$scope.procCnt += 1;
-								});
-
-							}
-
-							if(key === ($scope.project.auditions.length-1)) {
-								$scope.fileCheck = true;
-							}
-
-						});
+						$scope.checkFileWalk();
 
 					}
 
