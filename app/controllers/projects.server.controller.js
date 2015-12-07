@@ -2620,28 +2620,28 @@ exports.downloadBookedAuditions = function(req, res, next){
 	// get app dir
 	var appDir = path.dirname(require.main.filename);
 	var relativePath =  'res' + '/' + 'auditions' + '/' + projectId + '/';
-    var newPath = appDir + '/public/' + relativePath;
-    var savePath = appDir + '/public/' + 'res' + '/' + 'archives' + '/';
-    var zipName = projectTitle + '.zip';
-    var newZip = savePath + zipName;
+  var newPath = appDir + '/public/' + relativePath;
+  var savePath = appDir + '/public/' + 'res' + '/' + 'archives' + '/';
+  var zipName = projectTitle + '.zip';
+  var newZip = savePath + zipName;
 
-    //console.log(newPath);
+  //console.log(newPath);
 
-    var output = fs.createWriteStream(newZip);
+  var output = fs.createWriteStream(newZip);
 	var archive = archiver('zip');
 
 	output.on('close', function() {
 	  res.jsonp({zip:zipName});
 	});
 
-    // add all booked auditions
-    for(var i = 0; i < bookedAuds.length; ++i){
-    	archive.file(newPath + bookedAuds[i], { name:bookedAuds[i] });
-    }
+  // add all booked auditions
+  for(var i = 0; i < bookedAuds.length; ++i){
+  	archive.file(newPath + bookedAuds[i], { name:bookedAuds[i] });
+  }
 
-    archive.pipe(output);
+  archive.pipe(output);
 
-    archive.finalize();
+  archive.finalize();
 
 };
 
@@ -2656,14 +2656,14 @@ exports.downloadSelectedAuditions = function(req, res, next){
 	// get app dir
 	var appDir = path.dirname(require.main.filename);
 	var relativePath =  'res' + '/' + 'auditions' + '/' + projectId + '/';
-    var newPath = appDir + '/public/' + relativePath;
-    var savePath = appDir + '/public/' + 'res' + '/' + 'archives' + '/';
-    var zipName = projectTitle + '.zip';
-    var newZip = savePath + zipName;
+  var newPath = appDir + '/public/' + relativePath;
+  var savePath = appDir + '/public/' + 'res' + '/' + 'archives' + '/';
+  var zipName = projectTitle + '.zip';
+  var newZip = savePath + zipName;
 
-    //console.log(newPath);
+  //console.log(newPath);
 
-    var output = fs.createWriteStream(newZip);
+  var output = fs.createWriteStream(newZip);
 	var archive = archiver('zip');
 
 	output.on('close', function() {
