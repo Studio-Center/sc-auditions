@@ -1546,10 +1546,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		};
 
 		// update audition rating
-		$scope.updateFavorite = function(path, redirect){
-			// determine if update should result in user redirect
-			redirect = typeof redirect === 'undefined' ? true : redirect;
-
+		$scope.updateFavorite = function(path){
 			// console.log($scope.rate[key]);
 			var key, favoriteVal = 1;
 
@@ -1580,6 +1577,27 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				    $scope.project.auditions[key].selected = false;
 				}
 			}
+
+			// update project store
+			$scope.updateNoRefresh();
+
+		};
+
+		// update selected status
+		$scope.updateSelected = function(path){
+
+			// // console.log($scope.rate[key]);
+			// var key, favoriteVal = 1;
+			//
+			// // get key for selected audition
+			// for(var j = 0; j < $scope.project.auditions.length; ++j){
+			// 	if($scope.project.auditions[j].file.path === path){
+			// 		key = j;
+			// 	}
+			// }
+			//
+			// // update selected value
+			// $scope.project.auditions[key].selected = !$scope.project.auditions[key].selected;
 
 			// update project store
 			$scope.updateNoRefresh();
