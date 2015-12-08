@@ -74,7 +74,7 @@
 							<tr ng-if="isDisplayed(audition.file.path) && (audition.filecheck === 1 || (audition.filecheckdate === undefined || audition.filecheckdate === ''))" ng-repeat="(key, audition) in project.auditions | filter:{published:true} | orderBy:predicate:reverse">
 
 								<td>
-									<input style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin:10px" ng-if="!audition.booked" type="checkbox" ng-click="updateNoRefresh()" ng-model="audition.selected">
+									<input style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin:10px" ng-if="!audition.booked" type="checkbox" ng-click="updateSelected(audition.file.path)" ng-model="audition.selected">
 
 									<img ng-if="audition.booked" src="/img/green-check.png" style="width:30px;height:auto">
 								</td>
@@ -104,10 +104,10 @@
 								</td>
 								<td style="text-align:center">
 									<span ng-if="audition.favorite == 1">
-										<a href="" ng-click="updateFavorite(audition.file.path, false)"><img style="width:35px;height:auto" src="/img/gold-trophy.png" alt="favorited audition"></a>
+										<a href="" ng-click="updateFavorite(audition.file.path)"><img style="width:35px;height:auto" src="/img/gold-trophy.png" alt="favorited audition"></a>
 									</span>
 									<span ng-if="audition.favorite != 1">
-										<a href="" ng-click="updateFavorite(audition.file.path, false)"><img style="width:35px;height:auto" src="/img/gray-trophy.png" alt="favorited audition"></a>
+										<a href="" ng-click="updateFavorite(audition.file.path)"><img style="width:35px;height:auto" src="/img/gray-trophy.png" alt="favorited audition"></a>
 									</span>
 								</td>
 								<td>
