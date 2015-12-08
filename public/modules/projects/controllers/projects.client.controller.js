@@ -1586,21 +1586,33 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		// update selected status
 		$scope.updateSelected = function(path){
 
-			// // console.log($scope.rate[key]);
-			// var key, favoriteVal = 1;
-			//
-			// // get key for selected audition
-			// for(var j = 0; j < $scope.project.auditions.length; ++j){
-			// 	if($scope.project.auditions[j].file.path === path){
-			// 		key = j;
-			// 	}
-			// }
-			//
-			// // update selected value
-			// $scope.project.auditions[key].selected = !$scope.project.auditions[key].selected;
+			// console.log($scope.rate[key]);
+			var key;
+
+			// get key for selected audition
+			for(var j = 0; j < $scope.project.auditions.length; ++j){
+				if($scope.project.auditions[j].file.path === path){
+					key = j;
+				}
+			}
+
+			// update selected value
+			$scope.project.auditions[key].selected = !$scope.project.auditions[key].selected;
 
 			// update project store
 			$scope.updateNoRefresh();
+
+		};
+
+		// update selected status
+		$scope.checkSelected = function(path){
+
+			// get key for selected audition
+			for(var j = 0; j < $scope.project.auditions.length; ++j){
+				if($scope.project.auditions[j].file.path === path && $scope.project.auditions[j].selected === true){
+					return true;
+				}
+			}
 
 		};
 

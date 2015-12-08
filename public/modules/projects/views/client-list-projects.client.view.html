@@ -72,9 +72,8 @@
 									<th>Hide</th>
 								</tr>
 							<tr ng-if="isDisplayed(audition.file.path) && (audition.filecheck === 1 || (audition.filecheckdate === undefined || audition.filecheckdate === ''))" ng-repeat="(key, audition) in project.auditions | filter:{published:true} | orderBy:predicate:reverse">
-
 								<td>
-									<input style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin:10px" ng-if="!audition.booked" type="checkbox" ng-click="updateSelected(audition.file.path)" ng-model="audition.selected">
+									<input style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin:10px" ng-if="!audition.booked" type="checkbox" ng-click="updateSelected(audition.file.path)" ng-checked="checkSelected(audition.file.path)">
 
 									<img ng-if="audition.booked" src="/img/green-check.png" style="width:30px;height:auto">
 								</td>
