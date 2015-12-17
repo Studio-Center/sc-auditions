@@ -330,7 +330,8 @@ exports.sendPreCloseSummary = function(req, res){
 	var currentTime = new Date();
 	//currentTime.setDate(currentTime.getHours() - 1);
 	var inOneHour = new Date();
-	inOneHour.setHours(inOneHour.getHours() + 1);
+	// modified 12/17/2015 for two hour intervals
+	inOneHour.setHours(inOneHour.getHours() + 2);
 
 	var searchCriteria = {
 							'estimatedCompletionDate':
