@@ -531,7 +531,7 @@ exports.sendPreCloseSummary = function(req, res){
 
 					var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
 
-					var emailSubject = project.title + ' - Pre-Close Summary (Due in 1 hr)' + ' - Due ' + newDate + ' EST';
+					var emailSubject = project.title + ' - Pre-Close Summary (Due in 2 hrs)' + ' - Due ' + newDate + ' EST';
 
 					var mailOptions = {
 						to: owner.email,
