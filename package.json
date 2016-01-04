@@ -1,8 +1,13 @@
 {
   "name": "studio-center-auditions",
   "description": "Studio Center auditions project management system",
-  "version": "0.9.1",
+  "version": "0.9.5",
   "author": "Studio Center",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Studio-Center/sc-auditions.git"
+  },
   "engines": {
     "node": "0.10.x",
     "npm": "1.4.x"
