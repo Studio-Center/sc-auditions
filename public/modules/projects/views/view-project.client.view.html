@@ -24,7 +24,7 @@
                     </div>
                 </div>
 				<h4>Created by {{::project.user.displayName}} {{project.created | amDateFormat:'MM/DD/YY h:mm:ss a'}} EST</h4>
-				<a class="btn btn-primary" href="/#!/projects-client/{{::project._id}}" target="_blank">View in Client Portal</a>
+				<a class="btn btn-primary" href="/#!/client/projects/{{::project._id}}" target="_blank">View in Client Portal</a>
 				<a data-ng-if="permitAdminProductionCoordinator() || isOwner()" class="btn btn-success" ng-click="toggleShowEdit()">Extend Audition</a>
 				<a data-ng-if="permitAdminProductionCoordinator() || isOwner()" class="btn btn-danger" href="/#!/projects/create/{{::project._id}}">ReAudition</a>
 			</div>
