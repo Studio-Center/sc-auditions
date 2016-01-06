@@ -121,58 +121,58 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     // }, true);
 
 		$scope.hoveringOver = function(value,key,object) {
-	        $scope.overStar = value;
-	        $scope.percent = 100 * (value / $scope.max);
-	        $scope.selCheckVal = value;
-      	};
+      $scope.overStar = value;
+      $scope.percent = 100 * (value / $scope.max);
+      $scope.selCheckVal = value;
+  	};
 
-      	// book clients modal
-      	$scope.bookSelectedAuditions = function(){
-      		var modalInstance = $modal.open({
-		      animation: true,
-		      templateUrl: 'modules/projects/views/book-auditon-modal.client.view.html',
-		      controller: 'ProjectsModalController',
-		      resolve: {
-		      	data: function () {
-			        return {
-			        	project: $scope.project._id
-			        };
-						}
-		      }
-		    });
-
-		    modalInstance.result.then(function (selectedItem) {
-		      //$scope.selected = selectedItem;
-		    }, function () {
-		      //$log.info('Modal dismissed at: ' + new Date());
-
-		    });
-      	};
-
-      	// create user modals
-      	$scope.createClient = function (owner) {
-
-		    var modalInstance = $modal.open({
-		      animation: true,
-		      templateUrl: 'modules/users/views/modal-create.client.view.html',
-		      controller: 'UsersModalController',
-		      resolve: {
-		      	owner: function () {
-			      	if(owner === 'client'){
-				        return 'client';
-				    } else {
-				        return 'client-client';
-				    }
+  	// book clients modal
+  	$scope.bookSelectedAuditions = function(){
+  		var modalInstance = $modal.open({
+      animation: true,
+      templateUrl: 'modules/projects/views/book-auditon-modal.client.view.html',
+      controller: 'ProjectsModalController',
+      resolve: {
+      	data: function () {
+	        return {
+	        	project: $scope.project._id
+	        };
 				}
-		      }
-		    });
+      }
+    });
 
-		    // modalInstance.result.then(function (selectedItem) {
-		    //   //$scope.selected = selectedItem;
-		    // }, function () {
-		    //   //$log.info('Modal dismissed at: ' + new Date());
+    modalInstance.result.then(function (selectedItem) {
+      //$scope.selected = selectedItem;
+    }, function () {
+      //$log.info('Modal dismissed at: ' + new Date());
 
-		    // });
+    });
+  	};
+
+  	// create user modals
+  	$scope.createClient = function (owner) {
+
+    var modalInstance = $modal.open({
+      animation: true,
+      templateUrl: 'modules/users/views/modal-create.client.view.html',
+      controller: 'UsersModalController',
+      resolve: {
+      	owner: function () {
+	      	if(owner === 'client'){
+		        return 'client';
+		    } else {
+		        return 'client-client';
+		    }
+		}
+      }
+    });
+
+    // modalInstance.result.then(function (selectedItem) {
+    //   //$scope.selected = selectedItem;
+    // }, function () {
+    //   //$log.info('Modal dismissed at: ' + new Date());
+
+    // });
 		};
 		// create talent modal
 		$scope.createTalent = function(){
@@ -226,48 +226,48 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			// }
 			// get audition id
 			for(var i = 0; i < $scope.project.auditions.length; ++i){
-      			if($scope.project.auditions[i].file.path === filename){
-      				$scope.project.auditions[i].hidden = false;
-      				$scope.updateNoRefresh();
-      			}
-      		}
-      	};
-      	$scope.isHidden = function(filename){
+  			if($scope.project.auditions[i].file.path === filename){
+  				$scope.project.auditions[i].hidden = false;
+  				$scope.updateNoRefresh();
+  			}
+  		}
+  	};
+  	$scope.isHidden = function(filename){
 
-      		for(var i = 0; i < $scope.project.auditions.length; ++i){
-      			if($scope.project.auditions[i].file.path === filename){
-      				return true;
-      			}
-      		}
+  		for(var i = 0; i < $scope.project.auditions.length; ++i){
+  			if($scope.project.auditions[i].file.path === filename){
+  				return true;
+  			}
+  		}
 
-      		return false;
-      	};
-      	$scope.isDisplayed = function(filename){
-      		for(var i = 0; i < $scope.project.auditions.length; ++i){
-      			if($scope.project.auditions[i].file.path === filename){
-      				if($scope.project.auditions[i].hidden === true && $scope.hideSelected === true){
-      					return false;
-      				} else {
-      					return true;
-      				}
-      			}
-      		}
-
-      		return false;
-      	};
-      	$scope.hiddenAudsCnt = function(){
-      		var hidCnt = 0;
-
-      		for(var i = 0; i < $scope.project.auditions.length; ++i){
-  				if($scope.project.auditions[i].hidden === true){
-  					hidCnt += 1;
+  		return false;
+  	};
+  	$scope.isDisplayed = function(filename){
+  		for(var i = 0; i < $scope.project.auditions.length; ++i){
+  			if($scope.project.auditions[i].file.path === filename){
+  				if($scope.project.auditions[i].hidden === true && $scope.hideSelected === true){
+  					return false;
+  				} else {
+  					return true;
   				}
-      		}
+  			}
+  		}
 
-      		return hidCnt;
-      	};
-      	// download all auditions from project
-      	$scope.downloadAllAuditions = function(){
+  		return false;
+  	};
+  	$scope.hiddenAudsCnt = function(){
+  		var hidCnt = 0;
+
+  		for(var i = 0; i < $scope.project.auditions.length; ++i){
+			if($scope.project.auditions[i].hidden === true){
+				hidCnt += 1;
+			}
+  		}
+
+  		return hidCnt;
+  	};
+  	// download all auditions from project
+  	$scope.downloadAllAuditions = function(){
 
 			$http.post('/projects/downloadallauditions', {
 		        project: $scope.project
@@ -282,7 +282,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				    1000
 				);
 			});
-      	};
+  	};
   	// download all auditions from project
   	$scope.downloadBookedAuditions = function(){
 
@@ -292,6 +292,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
   				bookedAuds.push($scope.project.auditions[i].file.name);
   			}
 
+				// download all booked auditions on final booked audition walk
 				if((i+1) === $scope.project.auditions.length){
 
 					$http.post('/projects/downloadBookedAuditions', {
@@ -323,13 +324,14 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
   				selectedAuds.push($scope.project.auditions[i].file.name);
   			}
 
+				// download all auditions on final audition file walk
 				if((i+1) === $scope.project.auditions.length){
 
 					$http.post('/projects/downloadSelectedAuditions', {
 				        projectId: $scope.project._id,
 				        projectTitle: $scope.project.title,
 				        selectedAuds: selectedAuds
-				    }).
+			    }).
 					success(function(data, status, headers, config) {
 						// send data to users browser
 						// wait one second for archive processing on server
@@ -348,116 +350,116 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
   	// show booked option for selected auditions
   	$scope.bookSelectedShow = function(){
 
-					for(var i = 0; i < $scope.project.auditions.length; ++i){
-      			if($scope.project.auditions[i].selected === true){
-      				return true;
-      			}
-      		}
+			for(var i = 0; i < $scope.project.auditions.length; ++i){
+  			if($scope.project.auditions[i].selected === true){
+  				return true;
+  			}
+  		}
 
-      		return false;
+  		return false;
 
-      	};
-				$scope.bookShow = function(){
+  	};
+		$scope.bookShow = function(){
 
-      		for(var i = 0; i < $scope.project.auditions.length; ++i){
-      			if($scope.project.auditions[i].selected === true && (typeof $scope.project.auditions[i].booked === 'undefined' || $scope.project.auditions[i].booked === false)){
-      				return true;
-      			}
-      		}
+  		for(var i = 0; i < $scope.project.auditions.length; ++i){
+  			if($scope.project.auditions[i].selected === true && (typeof $scope.project.auditions[i].booked === 'undefined' || $scope.project.auditions[i].booked === false)){
+  				return true;
+  			}
+  		}
 
-      		return false;
+  		return false;
 
-      	};
-				// $scope.$watchCollection('selectedAuditions', function(){
-				// });
-      	// check for booked auditions
-      	$scope.bookedShow = function(){
+  	};
+		// $scope.$watchCollection('selectedAuditions', function(){
+		// });
+  	// check for booked auditions
+  	$scope.bookedShow = function(){
 
-      		for(var i = 0; i < $scope.project.auditions.length; ++i){
-      			if($scope.project.auditions[i].booked === true){
-      				return true;
-      			}
-      		}
+  		for(var i = 0; i < $scope.project.auditions.length; ++i){
+  			if($scope.project.auditions[i].booked === true){
+  				return true;
+  			}
+  		}
 
-      		return false;
+  		return false;
 
-      	};
+  	};
 
-      	// compare dates check for within hour
-      	$scope.compareDates = function(projDate){
-      		var now = new Date();
-      		projDate = new Date(projDate);
+  	// compare dates check for within hour
+  	$scope.compareDates = function(projDate){
+  		var now = new Date();
+  		projDate = new Date(projDate);
 
-      		var hours = Math.abs(projDate - now) / 36e5;
+  		var hours = Math.abs(projDate - now) / 36e5;
 
-      		if(hours <= 1){
-      			return true;
-      		} else {
-     			return false;
-      		}
-      	};
-      	$scope.compareDatesDay = function(projDate){
-      		var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
+  		if(hours <= 1){
+  			return true;
+  		} else {
+ 			return false;
+  		}
+  	};
+  	$scope.compareDatesDay = function(projDate){
+  		var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
 
-      		var now = new Date();
-      		projDate = new Date(projDate);
+  		var now = new Date();
+  		projDate = new Date(projDate);
 
-      		var diffDays = Math.round(Math.abs((projDate.getTime() - now.getTime())/(oneDay)));
+  		var diffDays = Math.round(Math.abs((projDate.getTime() - now.getTime())/(oneDay)));
 
 
-      		if(Number(diffDays) >= 1){
-      			return true;
-      		} else {
-     			return false;
-      		}
-      	};
-      	$scope.checkPassed = function(projDate){
-      		var now = new Date();
-      		projDate = new Date(projDate);
+  		if(Number(diffDays) >= 1){
+  			return true;
+  		} else {
+ 			return false;
+  		}
+  	};
+  	$scope.checkPassed = function(projDate){
+  		var now = new Date();
+  		projDate = new Date(projDate);
 
-      		if(now > projDate){
-      			return true;
-      		} else {
-      			return false;
-      		}
-      	};
+  		if(now > projDate){
+  			return true;
+  		} else {
+  			return false;
+  		}
+  	};
 
-      	// show part field if talent value is not already checked
-      	$scope.showPartFld = function(id){
-      		if(typeof $scope.project.talent !== 'undefined'){
-	      		for(var i = 0; i < $scope.project.talent.length; ++i){
-	      			if($scope.project.talent[i].talentId === String(id)){
-	      				if($scope.project.talent[i].requested === true || $scope.project.talent[i].regular === true){
-	      					return false;
-	      				}
-	      			}
-	      		}
-      		}
-   			return true;
-     	};
-     	$scope.showPartString = function(id){
-      		for(var i = 0; i < $scope.project.talent.length; ++i){
-      			if($scope.project.talent[i].talentId === String(id)){
-      				if(typeof $scope.project.talent[i].part !== 'undefined'){
-	      				if($scope.project.talent[i].part !== ''){
-	      					return $scope.project.talent[i].part;
-	      				}
+  	// show part field if talent value is not already checked
+  	$scope.showPartFld = function(id){
+  		if(typeof $scope.project.talent !== 'undefined'){
+    		for(var i = 0; i < $scope.project.talent.length; ++i){
+    			if($scope.project.talent[i].talentId === String(id)){
+    				if($scope.project.talent[i].requested === true || $scope.project.talent[i].regular === true){
+    					return false;
+    				}
+    			}
+    		}
+  		}
+ 			return true;
+   	};
+   	$scope.showPartString = function(id){
+    		for(var i = 0; i < $scope.project.talent.length; ++i){
+    			if($scope.project.talent[i].talentId === String(id)){
+    				if(typeof $scope.project.talent[i].part !== 'undefined'){
+      				if($scope.project.talent[i].part !== ''){
+      					return $scope.project.talent[i].part;
       				}
-      			}
-      		}
-      	};
-     	$scope.showCreatePartFld = function(id){
-      		for(var i = 0; i < $scope.newProject.talent.length; ++i){
-      			if($scope.newProject.talent[i].talentId === String(id)){
-      				if($scope.newProject.talent[i].requested === true || $scope.newProject.talent[i].regular === true){
-      					return false;
-      				}
-      			}
-      		}
-   			return true;
-     	};
-     	$scope.defaults = function(){
-     		var allowRoles = ['producer/auditions director'];
+    				}
+    			}
+    		}
+    	};
+   	$scope.showCreatePartFld = function(id){
+    		for(var i = 0; i < $scope.newProject.talent.length; ++i){
+    			if($scope.newProject.talent[i].talentId === String(id)){
+    				if($scope.newProject.talent[i].requested === true || $scope.newProject.talent[i].regular === true){
+    					return false;
+    				}
+    			}
+    		}
+ 			return true;
+   	};
+   	$scope.defaults = function(){
+   		var allowRoles = ['producer/auditions director'];
 
 			for(var i = 0; i < Authentication.user.roles.length; ++i){
 				for(var j = 0; j < allowRoles.length; ++j){
@@ -466,7 +468,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					}
 				}
 			}
-     	};
+   	};
 		// verify users
 		$scope.isOwner = function(){
 			if(String($scope.project.owner) === String(Authentication.user._id) || String($scope.project.user._id) === String(Authentication.user._id)){
@@ -2688,7 +2690,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}
 		};
 
-		$scope.newAudUpload;
+		$scope.newAudUpload = '';
 		$scope.audFiles = [];
 		$scope.uploadedAuds = [];
 		$scope.$watchCollection('newAudUpload', function(){
@@ -2723,7 +2725,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 								// trigger new file check walk
 								$scope.fileCheck = false;
 
-						}(), 1000);
+						}, 1000);
 
 					}
 				}

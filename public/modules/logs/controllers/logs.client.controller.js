@@ -6,7 +6,7 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
 		$scope.authentication = Authentication;
 
 		// used for paginator
-		$scope.logCnt;
+		$scope.logCnt = '';
 		$scope.page = 0;
 		$scope.searchText = {
 			type: ''
