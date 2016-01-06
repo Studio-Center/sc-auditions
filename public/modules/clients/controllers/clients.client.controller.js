@@ -526,8 +526,8 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
   	$scope.bookSelectedAuditions = function(){
   		var modalInstance = $modal.open({
         animation: true,
-        templateUrl: 'modules/projects/views/book-auditon-modal.client.view.html',
-        controller: 'ProjectsModalController',
+        templateUrl: 'modules/clients/views/book-auditon-modal.client.view.html',
+        controller: 'BookModalController',
         resolve: {
         	data: function () {
   	        return {
@@ -541,7 +541,6 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
         //$scope.selected = selectedItem;
       }, function () {
         //$log.info('Modal dismissed at: ' + new Date());
-
       });
   	};
 
