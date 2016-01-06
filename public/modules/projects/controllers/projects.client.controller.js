@@ -41,7 +41,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.audio = '';
 		$scope.lastAudioID = 0;
 		$scope.audioStatus = 0;
-		$scope.newLead = {};
 		$scope.referenceFiles = [];
 		$scope.scripts = [];
 		$scope.newProject = {
@@ -63,9 +62,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.talentBooked = [];
 		$scope.talentNote = [];
 		$scope.verifyFilesList = {};
-		// projects client portal
-		$scope.selectedAuditions = [];
-		$scope.hideList = [];
 		// filter vars
 		$scope.predicate = '';
 		$scope.reverse = '';
@@ -126,29 +122,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       $scope.selCheckVal = value;
   	};
 
-  	// book clients modal
-  	$scope.bookSelectedAuditions = function(){
-  		var modalInstance = $modal.open({
-      animation: true,
-      templateUrl: 'modules/projects/views/book-auditon-modal.client.view.html',
-      controller: 'ProjectsModalController',
-      resolve: {
-      	data: function () {
-	        return {
-	        	project: $scope.project._id
-	        };
-				}
-      }
-    });
-
-    modalInstance.result.then(function (selectedItem) {
-      //$scope.selected = selectedItem;
-    }, function () {
-      //$log.info('Modal dismissed at: ' + new Date());
-
-    });
-  	};
-
   	// create user modals
   	$scope.createClient = function (owner) {
 
@@ -200,15 +173,12 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
   	};
   	$scope.selCheck = function(filename){
 			for(var i = 0; i < $scope.selectedAuditions.length; ++i){
-      			if($scope.selectedAuditions[i] === filename){
-      				return true;
-      			}
-      		}
-      	};
-  	$scope.hideSelected = true;
-  	$scope.hideSelectedAuditions = function(){
-      		$scope.hideSelected = !$scope.hideSelected;
+  			if($scope.selectedAuditions[i] === filename){
+  				return true;
+  			}
+  		}
   	};
+
   	$scope.hideAudition = function(filename){
       		// $scope.hideList.push(filename);
       		// get audition id
@@ -219,19 +189,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       			}
       		}
   	};
-  	$scope.showAudition = function(filename){
-			// var idx = $scope.hideList.indexOf(filename);
-			// if (idx > -1){
-			//     $scope.hideList.splice(idx, 1);
-			// }
-			// get audition id
-			for(var i = 0; i < $scope.project.auditions.length; ++i){
-  			if($scope.project.auditions[i].file.path === filename){
-  				$scope.project.auditions[i].hidden = false;
-  				$scope.updateNoRefresh();
-  			}
-  		}
-  	};
+
   	$scope.isHidden = function(filename){
 
   		for(var i = 0; i < $scope.project.auditions.length; ++i){
@@ -242,30 +200,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
   		return false;
   	};
-  	$scope.isDisplayed = function(filename){
-  		for(var i = 0; i < $scope.project.auditions.length; ++i){
-  			if($scope.project.auditions[i].file.path === filename){
-  				if($scope.project.auditions[i].hidden === true && $scope.hideSelected === true){
-  					return false;
-  				} else {
-  					return true;
-  				}
-  			}
-  		}
 
-  		return false;
-  	};
-  	$scope.hiddenAudsCnt = function(){
-  		var hidCnt = 0;
-
-  		for(var i = 0; i < $scope.project.auditions.length; ++i){
-			if($scope.project.auditions[i].hidden === true){
-				hidCnt += 1;
-			}
-  		}
-
-  		return hidCnt;
-  	};
   	// download all auditions from project
   	$scope.downloadAllAuditions = function(){
 
@@ -282,107 +217,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				    1000
 				);
 			});
-  	};
-  	// download all auditions from project
-  	$scope.downloadBookedAuditions = function(){
-
-  		var bookedAuds = [];
-  		for(var i = 0; i < $scope.project.auditions.length; ++i){
-  			if($scope.project.auditions[i].booked === true){
-  				bookedAuds.push($scope.project.auditions[i].file.name);
-  			}
-
-				// download all booked auditions on final booked audition walk
-				if((i+1) === $scope.project.auditions.length){
-
-					$http.post('/projects/downloadBookedAuditions', {
-						projectId: $scope.project._id,
-						projectTitle: $scope.project.title,
-		        bookedAuds: bookedAuds
-			    }).
-					success(function(data, status, headers, config) {
-						// send data to users browser
-						// wait one second for archive processing on server
-						setTimeout(
-							function(){
-								window.location.href = 'res/archives/' + encodeURIComponent(data.zip);
-							},
-						    1000
-						);
-					});
-
-				}
-  		}
-
-  	};
-  	// download all auditions from project
-  	$scope.downloadSelectedAuditions = function(){
-
-  		var selectedAuds = [];
-  		for(var i = 0; i < $scope.project.auditions.length; ++i){
-  			if($scope.project.auditions[i].selected === true){
-  				selectedAuds.push($scope.project.auditions[i].file.name);
-  			}
-
-				// download all auditions on final audition file walk
-				if((i+1) === $scope.project.auditions.length){
-
-					$http.post('/projects/downloadSelectedAuditions', {
-				        projectId: $scope.project._id,
-				        projectTitle: $scope.project.title,
-				        selectedAuds: selectedAuds
-			    }).
-					success(function(data, status, headers, config) {
-						// send data to users browser
-						// wait one second for archive processing on server
-						setTimeout(
-							function(){
-								window.location.href = 'res/archives/' + encodeURIComponent(data.zip);
-							},
-						    1000
-						);
-					});
-
-				}
-  		}
-
-  	};
-  	// show booked option for selected auditions
-  	$scope.bookSelectedShow = function(){
-
-			for(var i = 0; i < $scope.project.auditions.length; ++i){
-  			if($scope.project.auditions[i].selected === true){
-  				return true;
-  			}
-  		}
-
-  		return false;
-
-  	};
-		$scope.bookShow = function(){
-
-  		for(var i = 0; i < $scope.project.auditions.length; ++i){
-  			if($scope.project.auditions[i].selected === true && (typeof $scope.project.auditions[i].booked === 'undefined' || $scope.project.auditions[i].booked === false)){
-  				return true;
-  			}
-  		}
-
-  		return false;
-
-  	};
-		// $scope.$watchCollection('selectedAuditions', function(){
-		// });
-  	// check for booked auditions
-  	$scope.bookedShow = function(){
-
-  		for(var i = 0; i < $scope.project.auditions.length; ++i){
-  			if($scope.project.auditions[i].booked === true){
-  				return true;
-  			}
-  		}
-
-  		return false;
-
   	};
 
   	// compare dates check for within hour
@@ -676,36 +510,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 			} else {
 				alert('Please select clients to email!');
-			}
-		};
-
-		// new project form
-		$scope.lead = function(){
-
-				// Trigger validation flag.
-		    $scope.submitted = true;
-
-				$http.post('/projects/lead', {
-	        firstName: $scope.newLead.firstName,
-	        lastName: $scope.newLead.lastName,
-	        company: $scope.newLead.company,
-	        phone: $scope.newLead.phone,
-	        email: $scope.newLead.email,
-	        describe: $scope.newLead.describe,
-	        scripts: $scope.newProject.scripts
-		    }).
-				success(function(data, status, headers, config) {
-        	$location.path('/projects/new-audition-form/thanks');
-      	});
-
-		};
-		$scope.leadFormPop = function(){
-			if(typeof Authentication.user === 'object'){
-				$scope.newLead.firstName = Authentication.user.firstName;
-		        $scope.newLead.lastName = Authentication.user.lastName;
-		        $scope.newLead.company = Authentication.user.company;
-		        $scope.newLead.phone = Authentication.user.phone;
-		        $scope.newLead.email = Authentication.user.email;
 			}
 		};
 
@@ -1479,17 +1283,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		// client update
 
 		// update audition rating
-		$scope.curRatings = function(){
-			if(typeof $scope.project !== 'undefined' && typeof $scope.project.auditions !== 'undefined'){
-				for(var j = 0; j < $scope.project.auditions.length; ++j){
-					for(var i = 0; i < $scope.project.auditions[j].rating.length; ++i){
-						if($scope.project.auditions[j].rating[i].userId === Authentication.user._id){
-							$scope.project.auditions[j].curRating = $scope.project.auditions[j].rating[i].value;
-						}
-					}
-				}
-			}
-		};
 		$scope.lookUpRating = function(key){
 			for(var i = 0; i < $scope.project.auditions[key].rating.length; ++i){
 				if($scope.project.auditions[key].rating[i].userId === Authentication.user._id){
@@ -1545,77 +1338,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 			// update project store
 			$scope.updateNoRefresh();
-		};
-
-		// update audition rating
-		$scope.updateFavorite = function(path){
-			// console.log($scope.rate[key]);
-			var key, favoriteVal = 1;
-
-			// get key for selected audition
-			for(var j = 0; j < $scope.project.auditions.length; ++j){
-				if($scope.project.auditions[j].file.path === path){
-					key = j;
-				}
-			}
-
-			// determine existing favorite setting
-			if(typeof $scope.project.auditions[key].favorite !== 'undefined'){
-				if($scope.project.auditions[key].favorite === 1){
-					favoriteVal = 0;
-				}
-			}
-
-			// merge average rating
-			$scope.project.auditions[key].favorite = favoriteVal;
-
-			// automatically check favorited
-			if($scope.project.auditions[key].favorite === 1){
-				if ($scope.project.auditions[key].selected === false){
-				    $scope.project.auditions[key].selected = true;
-				}
-			} else {
-				if ($scope.project.auditions[key].selected === true){
-				    $scope.project.auditions[key].selected = false;
-				}
-			}
-
-			// update project store
-			$scope.updateNoRefresh();
-
-		};
-
-		// update selected status
-		$scope.updateSelected = function(path){
-
-			// console.log($scope.rate[key]);
-			var key;
-
-			// get key for selected audition
-			for(var j = 0; j < $scope.project.auditions.length; ++j){
-				if($scope.project.auditions[j].file.path === path){
-					key = j;
-				}
-			}
-
-			// update selected value
-			$scope.project.auditions[key].selected = !$scope.project.auditions[key].selected;
-
-			// update project store
-			$scope.updateNoRefresh();
-
-		};
-
-		// update selected status
-		$scope.checkSelected = function(path){
-
-			// get key for selected audition
-			for(var j = 0; j < $scope.project.auditions.length; ++j){
-				if($scope.project.auditions[j].file.path === path && $scope.project.auditions[j].selected === true){
-					return true;
-				}
-			}
-
 		};
 
 		// update phase options
@@ -2229,13 +1951,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				return;
 			}
 
-			// // disable previous
-			// if(typeof $scope.audio === 'object'){
-			// 	if(key !== $scope.lastAudioID){
-			// 		$scope.audio[$scope.lastAudioID].stop();
-			// 	}
-			// }
-
 			// assign file name
 			if(typeof fileDir === 'undefined'){
 				fileName = '/res/auditions/' + $scope.project._id + '/' + filename;
@@ -2243,19 +1958,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				fileName = fileDir + '/' + filename;
 			}
 
-			// if(typeof $scope.audio === 'object'){
-			// 	if($scope.audio.id !== fileName){
-			// 		$scope.audio = ngAudio.load(fileName);
-			// 		$scope.audio.unbind();
-			// 		$scope.audioStatus = 1;
-			// 	}
-			// } else {
-				$scope.audio = ngAudio.load(fileName);
-				$scope.audio.unbind();
-				$scope.audioStatus = 1;
-			// }
-
-			//console.log('load');
+			$scope.audio = ngAudio.load(fileName);
+			$scope.audio.unbind();
+			$scope.audioStatus = 1;
 
 			$scope.updatePlayCnt(filename);
 
@@ -2397,40 +2102,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 					$scope.discussion = '';
 					this.discussion = '';
-
-			    $http.post('/projects/sendemail', {
-					email: $scope.email
-				});
-				// update project store
-				//$scope.update();
-				$scope.updateNoRefresh();
-			}
-		};
-
-		// save client note
-		$scope.saveClientNote = function(){
-
-			if(typeof $scope.clientNotes !== 'undefined' && this.clientNotes !== ''){
-				var now = new Date();
-				var item = {
-							date: now.toJSON(),
-							userid: Authentication.user._id,
-							username: Authentication.user.displayName,
-							item: this.clientNotes,
-							deleted: false
-						};
-
-				$scope.project.clientNotes.push(item);
-
-				// send update email
-				$scope.gatherToAddresses('saveDiscussion');
-			    $scope.email.subject = $scope.project.title + ' client note added';
-			    $scope.email.message = 'Client Note Item: ' + this.clientNotes + '<br>';
-			    $scope.email.message += 'Project: ' + $scope.project.title + '<br>';
-			    $scope.email.message += 'Added by: ' + Authentication.user.displayName + '<br>';
-			    $scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '<br>';
-
-				this.clientNotes = '';
 
 			    $http.post('/projects/sendemail', {
 					email: $scope.email

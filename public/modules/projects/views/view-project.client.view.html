@@ -172,7 +172,7 @@
 										<strong>{{key+1}}.</strong> <a href="/res/referenceFiles/{{::project._id}}/{{referenceFile.file.name | encodeUri}}" target="_blank" data-ng-bind="referenceFile.file.name" download="{{::referenceFile.file.name}}"></a>
 
 										<div ng-if="checkForAudio(referenceFile.file.name)">
-											<button ng-click="playAudio(key, referenceFile.file.name, '/res/referenceFiles/{{::project._id}}/')" class="btn btn-primary">
+											<button ng-click="playAudioNoTrack(key, referenceFile.file.name, '/res/referenceFiles/{{::project._id}}/')" class="btn btn-primary">
 												<span ng-if="lastAudioID == key && audioStatus == 1">
 													<img src="/img/Aqua-Pause-icon.png" style="width:35px;height:auto" alt="play icon">
 												</span>
@@ -282,7 +282,7 @@
 									</td>
 									<td>
 										<span ng-if="verifyAudio(key)">
-											<button ng-click="playAudio(key, audition.file.name)" class="btn btn-primary">
+											<button ng-click="playAudioNoTrack(key, audition.file.name)" class="btn btn-primary">
 												<span ng-if="lastAudioID == key && audioStatus == 1">
 													<img src="/img/Aqua-Pause-icon.png" style="width:35px;height:auto" alt="play icon">
 												</span>

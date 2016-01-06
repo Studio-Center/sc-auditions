@@ -9,14 +9,6 @@ angular.module('projects').config(['$stateProvider', '$urlRouterProvider',
 			url: '/projects',
 			templateUrl: 'modules/projects/views/list-projects.client.view.html'
 		}).
-		state('clientListProjects', {
-			url: '/projects-client',
-			templateUrl: 'modules/projects/views/client-list-projects.client.view.html'
-		}).
-		state('clientListProjectsSingle', {
-			url: '/projects-client/:projectId',
-			templateUrl: 'modules/projects/views/client-list-projects.client.view.html'
-		}).
 		state('createProject', {
 			abstract: true,
 			url: '/projects/create',
@@ -48,14 +40,6 @@ angular.module('projects').config(['$stateProvider', '$urlRouterProvider',
 			url: '/talent',
 			parent: 'createDupProject',
 			templateUrl: 'modules/projects/views/create-project/talent.client.view.html'
-		}).
-		state('newAuditionProject', {
-			url: '/projects/new-audition-form',
-			templateUrl: 'modules/projects/views/new-audition-project.client.view.html'
-		}).
-		state('newAuditionProjectThanks', {
-			url: '/projects/new-audition-form/thanks',
-			templateUrl: 'modules/projects/views/new-audition-project-thanks.client.view.html'
 		}).
 		state('talentAuditionUploadProject', {
 			url: '/projects/talent-upload/:projectId/:talentId',
