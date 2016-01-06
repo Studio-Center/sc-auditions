@@ -13,6 +13,17 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
     $scope.newLead = {};
     ngAudioGlobals.unlock = false;
     $scope.clientNotes = '';
+		$scope.newProject = {
+			title: '',
+			estimatedCompletionDate: '',
+			notifyClient: true,
+			client: [],
+			scripts: [],
+			copiedScripts: [],
+			referenceFiles: [],
+			copiedReferenceFiles: [],
+			talent: []
+		};
     // filter vars
     $scope.predicate = '';
     // rating
