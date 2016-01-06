@@ -28,7 +28,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 				if($scope.authentication.user.roles[0] === 'admin' || $scope.authentication.user.roles[0] === 'producer/auditions director'){
 					$location.path('/projects');
 				} else if($scope.authentication.user.roles[0] === 'client' || $scope.authentication.user.roles[0] === 'client-client') {
-					$location.path('/projects-client');
+					$location.path('/clients/projects');
 				} else {
 					$location.path('/');
 				}
