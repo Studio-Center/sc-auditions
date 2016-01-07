@@ -1939,59 +1939,67 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		    $scope.newProject.copiedScripts.splice(idx, 1);
 		};
 
-	  	var performScriptUpload = function(file, i, $files){
-	  		$scope.upload = $upload.upload({
-		        url: 'projects/uploads/script', //upload.php script, node.js route, or servlet url
-		        //method: 'POST' or 'PUT',
-		        data: {project: $scope.project},
-		        file: file, // or list of files ($files) for html5 only
-        }).progress(function(evt) {
-		        $scope.uploadStatus = (i + 1) + ' of ' + $files.length + ' files uploaded';
-		      	$scope.uploadfile = evt.config.file.name;
-		        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
-		        }).success(function(data, status, headers, config) {
-		        // file is uploaded successfully
-					//$scope.project = angular.extend($scope.project, data);
-
-					$scope.project.scripts.push(data);
-
-					// save project on finish
-					if((i+1) === $files.length){
-						// update project store
-						$scope.updateNoRefresh();
-					}
-
-				});
-	  	};
-
-	  	// upload script file
-			$scope.uploadScript = function($files) {
-		    angular.forEach($files, function(file, key) {
-		      performScriptUpload(file, key, $files);
-				});
-	  	};
-
-			var performUploadTempScript = function(file, i, $files){
-  		  $scope.upload = $upload.upload({
-	        url: 'projects/uploads/script/temp', //upload.php script, node.js route, or servlet url
+		var performScriptUpload = function(file, i, $files){
+  		$scope.upload = $upload.upload({
+	        url: 'projects/uploads/script', //upload.php script, node.js route, or servlet url
+	        //method: 'POST' or 'PUT',
 	        data: {project: $scope.project},
 	        file: file, // or list of files ($files) for html5 only
-	      }).progress(function(evt) {
+      }).progress(function(evt) {
 	        $scope.uploadStatus = (i + 1) + ' of ' + $files.length + ' files uploaded';
 	      	$scope.uploadfile = evt.config.file.name;
 	        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
-	      }).success(function(data, status, headers, config) {
+	        }).success(function(data, status, headers, config) {
 	        // file is uploaded successfully
-	        //console.log(data[0]);
-	        $scope.newProject.scripts.push(data[0]);
-	      });
-	  	};
+				//$scope.project = angular.extend($scope.project, data);
 
-	  	$scope.uploadTempScript = function($files) {
-	    	angular.forEach($files, function(file, key) {
-	    		performUploadTempScript(file, key, $files);
-    		});
-	  	};
+				$scope.project.scripts.push(data);
+
+				// save project on finish
+				if((i+1) === $files.length){
+
+					// send out update emails to assigned project talentIds
+					$http.post('/projects/sendTalentScriptUpdateEmail', {
+						projectId: $scope.project._id,
+						talents: $scope.project.talent
+					});
+
+					// update project store
+					$scope.updateNoRefresh();
+
+				}
+
+			});
+  	};
+
+  	// upload script file
+		$scope.uploadScript = function($files) {
+	    angular.forEach($files, function(file, key) {
+	      performScriptUpload(file, key, $files);
+			});
+  	};
+
+		var performUploadTempScript = function(file, i, $files){
+		  $scope.upload = $upload.upload({
+        url: 'projects/uploads/script/temp', //upload.php script, node.js route, or servlet url
+        data: {project: $scope.project},
+        file: file, // or list of files ($files) for html5 only
+      }).progress(function(evt) {
+        $scope.uploadStatus = (i + 1) + ' of ' + $files.length + ' files uploaded';
+      	$scope.uploadfile = evt.config.file.name;
+        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
+      }).success(function(data, status, headers, config) {
+        // file is uploaded successfully
+        //console.log(data[0]);
+        $scope.newProject.scripts.push(data[0]);
+      });
+  	};
+
+  	$scope.uploadTempScript = function($files) {
+    	angular.forEach($files, function(file, key) {
+    		performUploadTempScript(file, key, $files);
+  		});
+  	};
 
   	// set published status
   	$scope.updatePublished = function(key){
@@ -2016,6 +2024,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 				// save project on finish
 				if((i+1) === $files.length){
+
+					// send out update emails to assigned project talentIds
+					$http.post('/projects/sendTalentScriptUpdateEmail', {
+						projectId: $scope.project._id,
+						talents: $scope.project.talent
+					});
+					
 					// update project store
 					$scope.updateNoRefresh();
 				}

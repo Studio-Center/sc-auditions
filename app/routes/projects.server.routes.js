@@ -96,9 +96,8 @@ module.exports = function(app) {
 		.post(users.requiresLogin, projects.updateTalentNote);
 	app.route('/projects/sendTalentCanceledEmail')
 		.post(users.requiresLogin, projects.sendTalentCanceledEmail);
-
-	// app.route('/projects/uploads')
-	// 	.post(users.requiresLogin, multipartyMiddleware, projects.uploadFile);
+	app.route('/projects/sendTalentScriptUpdateEmail')
+		.post(users.requiresLogin, projects.sendTalentScriptUpdateEmail);
 
 	// check file exists
 	app.route('/projects/fileExists')
