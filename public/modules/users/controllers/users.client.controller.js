@@ -68,10 +68,11 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
 		};
 		$scope.$watchCollection('useredit', function(){
 			// check for load password pass
-			if($scope.loadPass === false && typeof $scope.useredit !== 'undefined'){
-				$scope.useredit.newpassword  = $scope.decodedPass($scope.useredit.passwordText);
+			if($scope.loadPass === false && typeof $scope.useredit !== 'undefined' && typeof $scope.useredit._id !== 'undefined'){
+				var storedPW = $scope.decodedPass($scope.useredit.passwordText);
+				$scope.useredit.newpassword  = storedPW;
 				// ensure password is loaded
-				if($scope.useredit.newpassword){
+				if($scope.useredit.newpassword || storedPW === ''){
 					$scope.loadPass = true;
 				}
 			}
