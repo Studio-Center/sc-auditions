@@ -493,6 +493,92 @@ exports.sendTalentCanceledEmail = function(req, res){
 
 };
 
+// send project assigned talent new emails if projects gets new scripts
+exports.sendTalentScriptUpdateEmail = function(req, res){
+
+	var project, i;
+	var projectId = req.body.projectId;
+	var talents = req.body.talents;
+
+	// reload project
+	Project.findOne({'_id':projectId}).sort('-created').exec(function(err, project) {
+
+		var email =  {
+							projectId: '',
+							to: [],
+							bcc: [],
+							subject: '',
+							header: '',
+							footer: '',
+							scripts: '',
+							referenceFiles: ''
+						};
+
+		// add scripts and assets to email body
+		email.scripts = '\n' + '<strong>Scripts:</strong>' + '<br>';
+		if(typeof project.scripts !== 'undefined'){
+			if(project.scripts.length > 0){
+				for(i = 0; i < project.scripts.length; ++i){
+					email.scripts += '<a href="http://' + req.headers.host + '/res/scripts/' + project._id + '/' + project.scripts[i].file.name + '">' + project.scripts[i].file.name + '</a><br>';
+				}
+			} else {
+				email.scripts += 'None';
+			}
+		} else {
+			email.scripts += 'None';
+		}
+		email.referenceFiles = '\n' + '<strong>Reference Files:</strong>' + '<br>';
+		if(typeof project.referenceFiles !== 'undefined'){
+			if(project.referenceFiles.length > 0){
+				for(var j = 0; j < project.referenceFiles.length; ++j){
+					email.referenceFiles += '<a href="http://' + req.headers.host + '/res/referenceFiles/' + project._id + '/' + project.referenceFiles[j].file.name + '">' + project.referenceFiles[j].file.name + '</a><br>';
+				}
+			} else {
+				email.referenceFiles += 'None';
+			}
+		} else {
+			email.referenceFiles += 'None';
+		}
+
+		// walk through and email all selected clients
+		async.eachSeries(talents, function (selTalent, callback) {
+
+			Talent.findOne({'_id':selTalent.talentId}).sort('-created').exec(function(err, talentInfo) {
+
+				// check for null talent return
+				if(talentInfo !== null){
+
+					// filter based on current talent status
+					if(talentInfo.type.toLowerCase() === 'email'){
+
+						emailTalent(selTalent, talentInfo, email, project, req, res);
+
+						callback();
+
+					} else {
+						callback();
+					}
+
+				} else {
+					callback();
+				}
+			});
+
+		}, function (err) {
+
+			if( err ) {
+				//console.log(err);
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
+			}
+
+   	});
+
+	});
+
+};
+
 // gather project data
 exports.getproject = function(req, res){
 
@@ -2130,8 +2216,6 @@ exports.uploadScript = function(req, res, next){
     // the multiparty middleware
     var file = req.files.file;
     //console.log(req.files);
-    //console.log(file.name);
-    //console.log(file.type);
 
     var project = JSON.parse(req.body.data);
     project = project.project;
@@ -2151,59 +2235,34 @@ exports.uploadScript = function(req, res, next){
     //console.log(file.name);
     newPath += file.name;
 
-    //console.log(newPath);
-
     mv(tempPath, newPath, function(err) {
-        //console.log(err);
+
         if (err){
             return res.status(500).end();
         }else{
-    //     	Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
-				// if (err) return next(err);
-				// if (! project) return next(new Error('Failed to load Project '));
-				// req.project = project ;
 
-				var script = {
-								file: req.files.file,
-								by: {
-									userId: req.user._id,
-									date: now.toJSON(),
-									name: req.user.displayName
-								}
-							};
+					// generate new script object
+					var script = {
+									file: req.files.file,
+									by: {
+										userId: req.user._id,
+										date: now.toJSON(),
+										name: req.user.displayName
+									}
+								};
 
-				// write change to log
-				var log = {
-					type: 'project',
-					sharedKey: String(project._id),
-					description: project.title + ' script uploaded ' + file.name,
-					user: req.user
-				};
-				log = new Log(log);
-				log.save();
+					// write change to log
+					var log = {
+						type: 'project',
+						sharedKey: String(project._id),
+						description: project.title + ' script uploaded ' + file.name,
+						user: req.user
+					};
+					log = new Log(log);
+					log.save();
 
-				return res.jsonp(script);
+					return res.jsonp(script);
 
-				// // assign script object to body
-				// project.scripts.push(script);
-
-				// project = _.extend(req.project, project);
-
-				// project.save(function(err) {
-				// 	if (err) {
-				// 		return res.status(400).send({
-				// 			message: errorHandler.getErrorMessage(err)
-				// 		});
-				// 	} else {
-
-				// 		var socketio = req.app.get('socketio');
-				// 		socketio.sockets.emit('projectUpdate', {id: project._id});
-				// 		socketio.sockets.emit('callListUpdate', {filter: ''});
-				// 		return res.jsonp(project);
-				// 	}
-				// });
-			// });
-            //res.status(200).end();
         }
     });
 };
