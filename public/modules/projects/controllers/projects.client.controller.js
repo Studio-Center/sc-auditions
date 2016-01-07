@@ -1965,6 +1965,18 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 						chgMade: 'Script'
 					});
 
+					// generate new system note
+					var now = Date.now();
+					var item = {
+						date: now,
+						userid: '',
+						username: 'System',
+						item: 'New scripts uploaded',
+						deleted: false
+					};
+      		// add to project discussion
+      		$scope.project.discussion.push(item);
+
 					// update project store
 					$scope.updateNoRefresh();
 
@@ -2032,6 +2044,18 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 						talents: $scope.project.talent,
 						chgMade: 'Reference'
 					});
+
+					// generate new system note
+					var now = Date.now();
+					var item = {
+						date: now,
+						userid: '',
+						username: 'System',
+						item: 'New reference files uploaded',
+						deleted: false
+					};
+      		// add to project discussion
+      		$scope.project.discussion.push(item);
 
 					// update project store
 					$scope.updateNoRefresh();
