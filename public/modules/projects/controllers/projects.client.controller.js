@@ -1971,7 +1971,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 						date: now,
 						userid: '',
 						username: 'System',
-						item: 'New scripts uploaded',
+						item: 'New scripts uploaded, talent notifed',
 						deleted: false
 					};
       		// add to project discussion
@@ -2051,7 +2051,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 						date: now,
 						userid: '',
 						username: 'System',
-						item: 'New reference files uploaded',
+						item: 'New reference files uploaded, talent notifed',
 						deleted: false
 					};
       		// add to project discussion
