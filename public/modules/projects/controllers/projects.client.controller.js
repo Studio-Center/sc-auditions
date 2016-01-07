@@ -1961,7 +1961,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					// send out update emails to assigned project talentIds
 					$http.post('/projects/sendTalentScriptUpdateEmail', {
 						projectId: $scope.project._id,
-						talents: $scope.project.talent
+						talents: $scope.project.talent,
+						chgMade: 'Script'
 					});
 
 					// update project store
@@ -2028,9 +2029,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					// send out update emails to assigned project talentIds
 					$http.post('/projects/sendTalentScriptUpdateEmail', {
 						projectId: $scope.project._id,
-						talents: $scope.project.talent
+						talents: $scope.project.talent,
+						chgMade: 'Reference'
 					});
-					
+
 					// update project store
 					$scope.updateNoRefresh();
 				}

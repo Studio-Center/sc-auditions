@@ -109,7 +109,7 @@ exports.sendEmail = function(req, res){
 	}
 };
 
-var emailTalent = function(selTalent, talentInfo, email, project, req, res){
+var emailTalent = function(selTalent, talentInfo, email, project, req, res, subjectAd){
 
 	async.waterfall([
 		function(done) {
@@ -190,6 +190,9 @@ var emailTalent = function(selTalent, talentInfo, email, project, req, res){
 				emailSubject = nameArr[0] + ' has a REQUESTED Audition - ' + project.title + ' - Due ' + dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
 			} else {
 				emailSubject = nameArr[0] + ' has an Audition - ' + project.title + ' - Due ' + dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
+			}
+			if(typeof subjectAd !== 'undefined'){
+				emailSubject = subjectAd + ' change ' + emailSubject;
 			}
 
 			var mailOptions = {
@@ -499,6 +502,7 @@ exports.sendTalentScriptUpdateEmail = function(req, res){
 	var project, i;
 	var projectId = req.body.projectId;
 	var talents = req.body.talents;
+	var chgMade = req.body.chgMade;
 
 	// reload project
 	Project.findOne({'_id':projectId}).sort('-created').exec(function(err, project) {
@@ -551,7 +555,7 @@ exports.sendTalentScriptUpdateEmail = function(req, res){
 					// filter based on current talent status
 					if(talentInfo.type.toLowerCase() === 'email'){
 
-						emailTalent(selTalent, talentInfo, email, project, req, res);
+						emailTalent(selTalent, talentInfo, email, project, req, res, chgMade);
 
 						callback();
 
