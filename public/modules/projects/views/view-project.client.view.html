@@ -526,22 +526,22 @@
 										</table>
 										</div>
 										<div class="row">
-									        <div class="col-lg-12 col-md-12 col-sm-12">
-									            <div class="text-center">
-									            <ul class="pagination">
-									                <li ng-class="{disabled: currentPage == 0}">
-									                    <a href ng-click="currentPage=currentPage-1">« Prev</a>
-									                </li>
-									                <li ng-repeat="n in range(0, Math.floor(filtered.length/limit))" ng-class="{active: n == currentPage}" ng-click="setPage()">
-									                    <a href ng-bind="n + 1">1</a>
-									                </li>
-									                <li ng-class="{disabled: currentPage == Math.floor(filtered.length/limit)}">
-									                    <a href ng-click="currentPage=currentPage+1">Next »</a>
-									                </li>
-									            </ul>
-									            </div>
-									        </div>
-									    </div>
+							        <div class="col-lg-12 col-md-12 col-sm-12">
+						            <div class="text-center">
+							            <ul class="pagination">
+						                <li ng-class="{disabled: currentPage == 0}">
+					                    <a href ng-click="currentPage=currentPage-1">« Prev</a>
+						                </li>
+						                <li ng-repeat="n in range(0, Math.floor(filtered.length/limit))" ng-class="{active: n == currentPage}" ng-click="setPage()">
+					                    <a href ng-bind="n + 1">1</a>
+						                </li>
+						                <li ng-class="{disabled: currentPage == Math.floor(filtered.length/limit)}">
+					                    <a href ng-click="currentPage=currentPage+1">Next »</a>
+						                </li>
+							            </ul>
+						            </div>
+							        </div>
+								    </div>
 									</div>
 								</div>
 							</accordion-group>

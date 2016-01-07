@@ -67,12 +67,12 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.reverse = '';
 		$scope.searchText = {};
 
-		// on close check
-		$scope.$on('$locationChangeStart', function( event ) {
-
-			// nothing for the moment
-
-		});
+		// // on close check
+		// $scope.$on('$locationChangeStart', function( event ) {
+		//
+		// 	// nothing for the moment
+		//
+		// });
 
 		$scope.toggleShowRename = function(){
 			$scope.showRename = !$scope.showRename;
@@ -450,62 +450,60 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			if($scope.selectedMainClients.length > 0){
 
 				// update email count
-	    		if(typeof $scope.project.counts === 'undefined'){
-	    			$scope.project.counts = {};
-	    		}
-	    		if(typeof $scope.project.counts[type] === 'undefined'){
-	    			$scope.project.counts[type] = 0;
-	    		}
-	    		$scope.project.counts[type] += 1;
+    		if(typeof $scope.project.counts === 'undefined'){
+    			$scope.project.counts = {};
+    		}
+    		if(typeof $scope.project.counts[type] === 'undefined'){
+    			$scope.project.counts[type] = 0;
+    		}
+    		$scope.project.counts[type] += 1;
 
 				$http.post('/projects/sendclientemail', {
-			        type: type,
-			        project: $scope.project,
-			        clients: $scope.selectedMainClients,
-			        count: $scope.project.counts[type]
-			    }).
+		        type: type,
+		        project: $scope.project,
+		        clients: $scope.selectedMainClients,
+		        count: $scope.project.counts[type]
+		    }).
 				success(function(data, status, headers, config) {
-	        		alert('Clients sent ' + type + ' Email ');
-	        		$scope.selectedMainClients = [];
+      		alert('Clients sent ' + type + ' Email ');
+      		$scope.selectedMainClients = [];
 
 					var note, now = Date.now();
 					var item = {
-								date: now,
-								userid: '',
-								username: 'System',
-								item: '',
-								deleted: false
-							};
+						date: now,
+						userid: '',
+						username: 'System',
+						item: '',
+						deleted: false
+					};
 
+      		// add note
+      		switch(type){
+      			case 'opening':
+						note = 'Client Notified of Project Start by ' + Authentication.user.displayName;
+					break;
+					case 'carryover':
+						note = 'Client sent Carryover by ' + Authentication.user.displayName;
+					break;
+					case 'closing':
+						note = 'Client Notified of Project Completion by ' + Authentication.user.displayName;
+					break;
+      		}
 
+      		// add note to note object
+      		item.item = note;
 
-	        		// add note
-	        		switch(type){
-	        			case 'opening':
-							note = 'Client Notified of Project Start by ' + Authentication.user.displayName;
-						break;
-						case 'carryover':
-							note = 'Client sent Carryover by ' + Authentication.user.displayName;
-						break;
-						case 'closing':
-							note = 'Client Notified of Project Completion by ' + Authentication.user.displayName;
-						break;
-	        		}
+      		// add to project discussion
+      		$scope.project.discussion.push(item);
 
-	        		// add note to note object
-	        		item.item = note;
-
-	        		// add to project discussion
-	        		$scope.project.discussion.push(item);
-
-	        		// update project store
+      		// update project store
 					//$scope.update();
 					$scope.updateNoRefresh();
-	        	}).
+      	}).
 				error(function(data, status, headers, config) {
 					alert('An error occured while sending client emails. Please contact your administrator.');
-				    // called asynchronously if an error occurs
-				    // or server returns response with an error status.
+			    // called asynchronously if an error occurs
+			    // or server returns response with an error status.
 				});
 
 			} else {
@@ -918,7 +916,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				}
 			}
 
-
 		};
 
 		$scope.getTalentStatus = function(talentId){
@@ -929,28 +926,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				}
 			}
 
-		};
-
-		$scope.updateTeam = function(userId, displayName, email){
-			// gen user object
-			var user = {'userId': userId, 'name': displayName, 'email': email};
-
-			// check for existing item
-			var found = 0;
-			for(var i = 0; i < $scope.project.team.length; ++i){
-				if($scope.project.team[i].userId === userId){
-					$scope.project.team.splice(i, 1);
-					found = 1;
-				}
-			}
-
-			if(found === 0){
-				$scope.project.team.push(user);
-			}
-
-			// update project store
-			//$scope.update();
-			$scope.updateNoRefresh();
 		};
 
 		$scope.updateClientClient = function(userId, displayName, email){
@@ -1091,65 +1066,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		};
 
-		// save audition note item
-		$scope.saveAudtionNote = function(key){
-
-			var now = new Date();
-			var item = {
-						date: now.toJSON(),
-						userid: Authentication.user._id,
-						username: Authentication.user.displayName,
-						item: this.auditions[key].discussion
-					};
-
-			$scope.project.auditions[key].discussion.push(item);
-
-			// update project store
-			//$scope.update();
-			$scope.updateNoRefresh();
-		};
-
-		// update auditions approval status
-		$scope.scrApprov = function(key){
-
-			var now = new Date();
-
-			if($scope.project.scripts[key].approved.selected === true){
-				$scope.project.scripts[key].approved.selected = false;
-				$scope.project.scripts[key].approved.by.userId = '';
-				$scope.project.scripts[key].approved.by.name = '';
-				$scope.project.scripts[key].approved.by.date = '';
-			} else {
-				$scope.project.scripts[key].approved.selected = true;
-				$scope.project.scripts[key].approved.by.userId = Authentication.user._id;
-				$scope.project.scripts[key].approved.by.name = Authentication.user.fdisplayName;
-				$scope.project.scripts[key].approved.by.date = now.toJSON();
-
-			}
-
-			// update project store
-			//$scope.update();
-			$scope.updateNoRefresh();
-		};
-
-		// save audition note item
-		$scope.saveScriptNote = function(key){
-
-			var now = new Date();
-			var item = {
-						date: now.toJSON(),
-						userid: Authentication.user._id,
-						username: Authentication.user.displayName,
-						item: this.scripts[key].discussion
-					};
-
-			$scope.project.scripts[key].discussion.push(item);
-
-			// update project store
-			//$scope.update();
-			$scope.updateNoRefresh();
-		};
-
 		// Create new Project
 		$scope.create = function() {
 
@@ -1249,9 +1165,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.dupCheck = function(){
 
 			if($stateParams.projectId){
-				// $scope.newProject = Projects.get({
-				// 	projectId: $stateParams.projectId
-				// });
 
 				$http.get('/projects/' + $stateParams.projectId, {})
 				.success(function(data, status, headers, config) {
@@ -1272,10 +1185,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				$scope.newProjTalentLink = 'createDupProject.talent';
 				$scope.newProjLink = 'createDupProject.project';
 
-				// $scope.$watch('newProject', function(){
-				// 	// new project adjustments
-				// 	$scope.newProject.title = $scope.newProject.title + ' ReAudtion';
-				// });
 			}
 
 		};
@@ -1283,13 +1192,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		// client update
 
 		// update audition rating
-		$scope.lookUpRating = function(key){
-			for(var i = 0; i < $scope.project.auditions[key].rating.length; ++i){
-				if($scope.project.auditions[key].rating[i].userId === Authentication.user._id){
-					return $scope.project.auditions[key].rating[i].value;
-				}
-			}
-		};
 		$scope.updateRating = function(path, redirect){
 			// determine if update should result in user redirect
 			redirect = typeof redirect === 'undefined' ? true : redirect;
@@ -1652,7 +1554,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		};
 
 		// load audio files into player after project object has finished loading
-
 		$scope.$watchCollection('newProject.estimatedCompletionDate', function(val){
 			var now = new Date();
 
@@ -1763,31 +1664,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					}
 				});
 
-				// load auditions
-				// $scope.$watch('project.auditions', function(val){
-
-				// 	if(typeof $scope.project.auditions === 'object'){
-				// 		// if($scope.loadAudio === 0){
-				// 		// 	$scope.loadAudioPlayer();
-				// 		// 	$scope.loadAudio = 1;
-				// 		// }
-
-				// 		// load audition ratings
-				// 		for(var i = 0; i < $scope.project.auditions.length; ++i){
-				// 			// gather average value
-				// 			$scope.ratingsAvg[i] = 0;
-				// 			// gather per user rating
-				// 			for(var j = 0; j < $scope.project.auditions[i].rating.length; ++j){
-				// 				if($scope.project.auditions[i].rating[j].userId === String(Authentication.user._id)){
-				// 					$scope.ratings[i] = $scope.project.auditions[i].rating[j].value;
-				// 				}
-				// 				$scope.ratingsAvg[i] += $scope.project.auditions[i].rating[j].value;
-				// 			}
-				// 			$scope.ratingsAvg[i] = $scope.ratingsAvg[i] / $scope.project.auditions[i].rating.length;
-				// 		}
-				// 	}
-				// });
-
 				// update progress bar
 				$scope.$watchCollection('project.phases', function(val){
 
@@ -1819,43 +1695,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}
 		});
 
-		// load audio files
-		$scope.loadAudioPlayer = function(){
-			if(typeof $scope.project.auditions !== 'undefined'){
-				var loadCnt = $scope.project.auditions.length;
-				var curVal = 0;
-				if($scope.project.auditions.length > 1){
-					loadCnt = loadCnt - 1;
-				}
-				angular.forEach($scope.project.auditions, function(value, key){
-					if(value){
-						if(typeof value.file !== 'undefined'){
-							if(value.file.type === 'audio/mp3' || value.file.type === 'audio/mpeg'){
-								var fileName = '/res/auditions/'+$scope.project._id+'/'+value.file.name;
-								// only load audio file if needed
-								if(typeof $scope.audio[key] === 'object'){
-									if($scope.audio[key].id !== fileName){
-										$scope.audio[key] = ngAudio.load(fileName);
-										$scope.audio[key].unbind();
-									}
-								} else {
-									$scope.audio[key] = ngAudio.load(fileName);
-									$scope.audio[key].unbind();
-								}
-								if($scope.project.auditions.length === 1){
-									curVal = 1;
-								} else {
-									curVal = key;
-								}
-								$scope.uploadfile = 'loading audio ' + parseInt(100.0 * curVal / loadCnt) + '%';
-								$scope.uploadprogress = parseInt(100.0 * curVal / loadCnt);
-							}
-						}
-					}
-				});
-			}
-		};
-
+		// verify audio objects
 		$scope.verifyAudio = function(key){
 			if(typeof $scope.project.auditions[key] === 'object'){
 				if(typeof $scope.project.auditions[key].file === 'object'){
@@ -1905,69 +1745,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				$scope.audio.stop();
 				$scope.audioStatus = 2;
 			}
-		};
-
-		$scope.updatePlayCnt = function(filename){
-			// set play count
-			for(var i = 0; i < $scope.project.auditions.length; ++i){
-				if($scope.project.auditions[i].file.name === filename){
-					if(typeof $scope.project.auditions[i].playCnt === 'undefined'){
-						$scope.project.auditions[i].playCnt = 1;
-					} else {
-						$scope.project.auditions[i].playCnt += 1;
-					}
-				}
-			}
-
-			$scope.updateNoRefresh();
-		};
-
-		$scope.playAudio = function(key, filename, fileDir){
-
-			var fileName = '';
-
-			// check media file play state
-			if(key !== $scope.lastAudioID && typeof $scope.audio === 'object'){
-				$scope.audio.stop();
-			}
-			if(typeof $scope.audio === 'object' && key === $scope.lastAudioID && $scope.audioStatus === 1 && typeof $scope.audio === 'object'){
-				$scope.audio.pause();
-				$scope.audioStatus = 0;
-				//console.log('pause');
-				return;
-			}
-			if(typeof $scope.audio === 'object' && key === $scope.lastAudioID && $scope.audioStatus === 0 && typeof $scope.audio === 'object'){
-				$scope.audio.play();
-				$scope.audioStatus = 1;
-				$scope.updatePlayCnt(filename);
-				//console.log('play');
-				return;
-			}
-			if(typeof $scope.audio === 'object' && key === $scope.lastAudioID && $scope.audioStatus === 2 && typeof $scope.audio === 'object'){
-				$scope.audio.play();
-				$scope.audioStatus = 1;
-				//console.log('play');
-				$scope.updatePlayCnt(filename);
-				return;
-			}
-
-			// assign file name
-			if(typeof fileDir === 'undefined'){
-				fileName = '/res/auditions/' + $scope.project._id + '/' + filename;
-			} else {
-				fileName = fileDir + '/' + filename;
-			}
-
-			$scope.audio = ngAudio.load(fileName);
-			$scope.audio.unbind();
-			$scope.audioStatus = 1;
-
-			$scope.updatePlayCnt(filename);
-
-			// store current audio key
-			$scope.lastAudioID = key;
-
-
 		};
 
 		$scope.playAudioNoTrack = function(key, filename, fileDir){
