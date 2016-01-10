@@ -2467,7 +2467,9 @@ exports.uploadAudition = function(req, res, next){
 
 		// read in project document
     //var project = JSON.parse(req.body.data);
-    var projectId = req.body.data.projectId;
+		var recBody = JSON.parse(req.body.data);
+		var projectId = recBody.projectId;
+		console.log(projectId);
 
     //var file = req.files.file;
     var appDir = path.dirname(require.main.filename);
