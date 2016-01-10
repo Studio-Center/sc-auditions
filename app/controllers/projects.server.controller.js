@@ -2466,13 +2466,13 @@ exports.uploadAudition = function(req, res, next){
     //console.log(file.type);
 
 		// read in project document
-    var project = JSON.parse(req.body.data);
-    project = project.project;
+    //var project = JSON.parse(req.body.data);
+    var projectId = req.body.data.projectId;
 
     //var file = req.files.file;
     var appDir = path.dirname(require.main.filename);
     var tempPath = file.path;
-    var relativePath =  'res' + '/' + 'auditions' + '/' + project._id + '/';
+    var relativePath =  'res' + '/' + 'auditions' + '/' + projectId + '/';
     var newPath = appDir + '/public/' + relativePath;
 
     // create project directory if not found
@@ -2511,7 +2511,7 @@ exports.uploadAudition = function(req, res, next){
 				});
 			},
 			function(talent, done) {
-				Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
+				Project.findById(projectId).populate('user', 'displayName').exec(function(err, project) {
 					done(err, talent, project);
 				});
 			},
