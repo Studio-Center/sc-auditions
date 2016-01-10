@@ -2252,7 +2252,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 			$scope.upload = $upload.upload({
 	        url: 'projects/uploads/audition', //upload.php script, node.js route, or servlet url
-	        data: {project: $scope.project},
+	        data: {projectId: $scope.project._id},
 	        file: file // or list of files ($files) for html5 only
 	    }).progress(function(evt) {
 	      	$scope.uploadStatus = (i + 1) + ' of ' + $files.length + ' files uploaded';
