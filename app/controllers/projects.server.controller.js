@@ -2221,13 +2221,15 @@ exports.uploadScript = function(req, res, next){
     var file = req.files.file;
     //console.log(req.files);
 
-    var project = JSON.parse(req.body.data);
-    project = project.project;
+    // var project = JSON.parse(req.body.data);
+    // project = project.project;
+		var recBody = JSON.parse(req.body.data);
+		var projectId = recBody.projectId;
 
     //var file = req.files.file;
     var appDir = path.dirname(require.main.filename);
     var tempPath = file.path;
-    var relativePath =  'res' + '/' + 'scripts' + '/' + project._id + '/';
+    var relativePath =  'res' + '/' + 'scripts' + '/' + projectId + '/';
     var newPath = appDir + '/public/' + relativePath;
 
     // create project directory if not found
@@ -2239,36 +2241,41 @@ exports.uploadScript = function(req, res, next){
     //console.log(file.name);
     newPath += file.name;
 
-    mv(tempPath, newPath, function(err) {
+		Project.findById(projectId).populate('user', 'displayName').exec(function(err, project) {
 
-        if (err){
-            return res.status(500).end();
-        }else{
+	    mv(tempPath, newPath, function(err) {
 
-					// generate new script object
-					var script = {
-									file: req.files.file,
-									by: {
-										userId: req.user._id,
-										date: now.toJSON(),
-										name: req.user.displayName
-									}
-								};
+	        if (err){
+	            return res.status(500).end();
+	        }else{
 
-					// write change to log
-					var log = {
-						type: 'project',
-						sharedKey: String(project._id),
-						description: project.title + ' script uploaded ' + file.name,
-						user: req.user
-					};
-					log = new Log(log);
-					log.save();
+						// generate new script object
+						var script = {
+										file: req.files.file,
+										by: {
+											userId: req.user._id,
+											date: now.toJSON(),
+											name: req.user.displayName
+										}
+									};
 
-					return res.jsonp(script);
+						// write change to log
+						var log = {
+							type: 'project',
+							sharedKey: String(projectId),
+							description: project.title + ' script uploaded ' + file.name,
+							user: req.user
+						};
+						log = new Log(log);
+						log.save();
 
-        }
-    });
+						return res.jsonp(script);
+
+	        }
+	    });
+
+		});
+
 };
 
 // file upload
@@ -2280,13 +2287,15 @@ exports.uploadReferenceFile = function(req, res, next){
     //console.log(file.name);
     //console.log(file.type);
 
-    var project = JSON.parse(req.body.data);
-    project = project.project;
+    // var project = JSON.parse(req.body.data);
+    // project = project.project;
+		var recBody = JSON.parse(req.body.data);
+		var projectId = recBody.projectId;
 
     //var file = req.files.file;
     var appDir = path.dirname(require.main.filename);
     var tempPath = file.path;
-    var relativePath =  'res' + '/' + 'referenceFiles' + '/' + project._id + '/';
+    var relativePath =  'res' + '/' + 'referenceFiles' + '/' + projectId + '/';
     var newPath = appDir + '/public/' + relativePath;
 
     // create project directory if not found
@@ -2298,71 +2307,44 @@ exports.uploadReferenceFile = function(req, res, next){
     //console.log(file.name);
     newPath += file.name;
 
-    //console.log(newPath);
+		Project.findById(projectId).populate('user', 'displayName').exec(function(err, project) {
 
-    mv(tempPath, newPath, function(err) {
-        //console.log(err);
-        if (err){
-            return res.status(500).end();
-        }else{
-    //     	Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
-				// if (err) return next(err);
-				// if (! project) return next(new Error('Failed to load Project '));
-				// req.project = project ;
+	    mv(tempPath, newPath, function(err) {
+	        //console.log(err);
+	        if (err){
+	            return res.status(500).end();
+	        }else{
+	    //     	Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
+					// if (err) return next(err);
+					// if (! project) return next(new Error('Failed to load Project '));
+					// req.project = project ;
 
-				var referenceFile = {
-							file: req.files.file,
-							by: {
-								userId: req.user._id,
-								date: now.toJSON(),
-								name: req.user.displayName
-							}
-							};
+					var referenceFile = {
+								file: req.files.file,
+								by: {
+									userId: req.user._id,
+									date: now.toJSON(),
+									name: req.user.displayName
+								}
+								};
 
-				// write change to log
-				var log = {
-					type: 'project',
-					sharedKey: String(project._id),
-					description: project.title + ' reference file uploaded ' + file.name,
-					user: req.user
-				};
-				log = new Log(log);
-				log.save();
+					// write change to log
+					var log = {
+						type: 'project',
+						sharedKey: String(projectId),
+						description: project.title + ' reference file uploaded ' + file.name,
+						user: req.user
+					};
+					log = new Log(log);
+					log.save();
 
-				return res.jsonp(referenceFile);
+					return res.jsonp(referenceFile);
 
-				// // assign script object to body
-				// project.referenceFiles.push(referenceFile);
+	        }
+	    });
 
-				// project = _.extend(req.project, project);
+		});
 
-				// project.save(function(err) {
-				// 	if (err) {
-				// 		return res.status(400).send({
-				// 			message: errorHandler.getErrorMessage(err)
-				// 		});
-				// 	} else {
-
-				// 		// write change to log
-				// 		var log = {
-				// 			type: 'project',
-				// 			sharedKey: String(project._id),
-				// 			description: project.title + ' reference file uploaded ' + file.name,
-				// 			user: req.user
-				// 		}
-				// 		log = new Log(log);
-				// 		log.save();
-
-				// 		var socketio = req.app.get('socketio');
-				// 		socketio.sockets.emit('projectUpdate', {id: project._id});
-				// 		socketio.sockets.emit('callListUpdate', {filter: ''});
-				// 		return res.jsonp(project);
-				// 	}
-				// });
-			// });
-            //res.status(200).end();
-        }
-    });
 };
 
 exports.uploadTempReferenceFile = function(req, res, next){
@@ -2469,7 +2451,6 @@ exports.uploadAudition = function(req, res, next){
     //var project = JSON.parse(req.body.data);
 		var recBody = JSON.parse(req.body.data);
 		var projectId = recBody.projectId;
-		console.log(projectId);
 
     //var file = req.files.file;
     var appDir = path.dirname(require.main.filename);
