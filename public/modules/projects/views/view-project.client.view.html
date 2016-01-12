@@ -2,7 +2,7 @@
 	<div class="page-header">
 		<div class="row">
 			<div class="col-lg-8 col-md-8 col-sm-8">
-				<h2 style="margin:0">{{::project.title}} <small>Due {{project.estimatedCompletionDate | amDateFormat:'M/DD/YY h:mm:ss a'}} EST</small> </h2>
+				<h2 style="margin:0"><a href="/#!/projects/{{::project._id}}">{{::project.title}}</a> <small>Due {{project.estimatedCompletionDate | amDateFormat:'M/DD/YY h:mm:ss a'}} EST</small> </h2>
 				<div class="form-group" ng-if="showDateEdit">
           <div class="panel panel-default">
               <div class="panel-heading">
@@ -23,7 +23,7 @@
               </div>
 	          </div>
 	      	</div>
-				<h4>Created by {{::project.user.displayName}} {{project.created | amDateFormat:'M/DD/YY h:mm:ss a'}} EST</h4>
+				<h4>Created by <a href="/#!/usersedit/{{::project.user._id}}" target="_blank">{{::project.user.displayName}}</a> {{project.created | amDateFormat:'M/DD/YY h:mm:ss a'}} EST</h4>
 				<a class="btn btn-primary" href="/#!/clients/projects/{{::project._id}}" target="_blank">View in Client Portal</a>
 				<a data-ng-if="permitAdminProductionCoordinator() || isOwner()" class="btn btn-success" ng-click="toggleShowEdit()">Extend Audition</a>
 				<a data-ng-if="permitAdminProductionCoordinator() || isOwner()" class="btn btn-danger" href="/#!/projects/create/{{::project._id}}">ReAudition</a>
