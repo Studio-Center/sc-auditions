@@ -1,8 +1,8 @@
 'use strict';
 
 // Projects controller
-angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$upload', 'ngAudio', 'ngAudioGlobals', '$http', '$modal', '$rootScope', 'Socket', '$cookies', '$window',
-	function($scope, $stateParams, $location, Authentication, Projects, $upload, ngAudio, ngAudioGlobals, $http, $modal, $rootScope, Socket, $cookies, $window ) {
+angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$upload', 'ngAudio', 'ngAudioGlobals', '$http', '$modal', '$rootScope', 'Socket', '$cookies', 'moment', '$window',
+	function($scope, $stateParams, $location, Authentication, Projects, $upload, ngAudio, ngAudioGlobals, $http, $modal, $rootScope, Socket, $cookies, moment, $window ) {
 		$scope.authentication = Authentication;
 
 		$scope.projectsTotalCnt = 0;
@@ -667,7 +667,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 							'status': 'Cast',
 							part: $scope.parts[talentId] || '',
 							regular: true,
-							requested: false
+							requested: false,
+							added: moment().tz('America/New_York').format()
 						};
 			var log;
 
@@ -745,7 +746,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 							'status': 'Cast',
 							part: $scope.parts[talentId] || '',
 							regular: false,
-							requested: true
+							requested: true,
+							added: moment().tz('America/New_York').format()
 						};
 			var log;
 
@@ -823,7 +825,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 							'status': 'Cast',
 							part: $scope.parts[talentId] || '',
 							regular: true,
-							requested: false
+							requested: false,
+							added: moment().tz('America/New_York').format()
 						};
 
 			// check for existing item
@@ -864,7 +867,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 							'status': 'Cast',
 							part: $scope.parts[talentId] || '',
 							regular: false,
-							requested: true
+							requested: true,
+							added: moment().tz('America/New_York').format()
 						};
 
 			// check for existing item
