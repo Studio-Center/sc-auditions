@@ -2,11 +2,11 @@
 	<div class="page-header">
 		<h1 data-ng-bind="useredit.displayName"></h1>
 		<p class="list-group-item-heading">
-			Company: {{useredit.company}}<br> 
-			Name: {{useredit.displayName}}<br> 
-			Username: {{useredit.username}}<br> 
-			Password: {{decodedPass(useredit.passwordText)}}<br> 
-			Email: {{useredit.email}}<br> 
+			Company: {{useredit.company}}<br>
+			Name: {{useredit.displayName}}<br>
+			Username: {{useredit.username}}<br>
+			Password: {{decodedPass(useredit.passwordText)}}<br>
+			Email: <a href="mailto:{{useredit.email}}">{{useredit.email}}</a><br> 
 			Phone: {{useredit.phone}}</p>
 		<p>Notes: {{user.notes}}</p>
 	</div>
