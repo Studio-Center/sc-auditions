@@ -9,6 +9,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.project = {};
 		$scope.discussion = '';
 		// rating
+		$scope.Date = function(DateVal){return new Date(DateVal)};
 		$scope.hide = 0;
 		$scope.max = 5;
 		$scope.isReadonly = false;
