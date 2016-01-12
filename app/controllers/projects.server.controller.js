@@ -1183,7 +1183,7 @@ exports.create = function(req, res) {
 		if(req.body.notifyClient === true){
 			// create new project note stating client notified
 			var discussionTxt = 'Client Notified of Project Start by ' + req.user.displayName;
-			var item = {date: now.toJSON(), userid: '', username: 'system', item: discussionTxt, deleted: false};
+			var item = {date: moment().tz('America/New_York').format(), userid: '', username: 'system', item: discussionTxt, deleted: false};
 
 			project.discussion.push(item);
 		}
@@ -1514,9 +1514,9 @@ exports.create = function(req, res) {
 					project.phases[2].status = 'Waiting For Clients to Be Added';
 
 					// gen project note
-					var discussion = 'Project phase ' + project.phases[2].name + ' status changed to ' + project.phases[2].status + ' on ' + now.toJSON() + ' EST by ' + req.user.displayName;
+					var discussion = 'Project phase ' + project.phases[2].name + ' status changed to ' + project.phases[2].status + ' on ' + moment().tz('America/New_York').format() + ' EST by ' + req.user.displayName;
 					var item = {
-						date: now.toJSON(),
+						date: moment().tz('America/New_York').format(),
 						userid: '',
 						username: 'System',
 						item: discussion,
@@ -2254,7 +2254,7 @@ exports.uploadScript = function(req, res, next){
 										file: req.files.file,
 										by: {
 											userId: req.user._id,
-											date: now.toJSON(),
+											date: moment().tz('America/New_York').format(),
 											name: req.user.displayName
 										}
 									};
@@ -2323,7 +2323,7 @@ exports.uploadReferenceFile = function(req, res, next){
 								file: req.files.file,
 								by: {
 									userId: req.user._id,
-									date: now.toJSON(),
+									date: moment().tz('America/New_York').format(),
 									name: req.user.displayName
 								}
 								};
@@ -2370,7 +2370,7 @@ exports.uploadTempReferenceFile = function(req, res, next){
     				file: req.files.file,
     				by: {
 							userId: req.user._id,
-							date: now.toJSON(),
+							date: moment().tz('America/New_York').format(),
 							name: req.user.displayName
 						}
 				};
@@ -2416,7 +2416,7 @@ exports.uploadTempScript = function(req, res, next){
     var script = {
 					file: req.files.file,
 					userId: uid,
-					date: now.toJSON(),
+					date: moment().tz('America/New_York').format(),
 					name: uname,
 					filecheck: 0,
 					filecheckdate: ''
@@ -2442,44 +2442,44 @@ exports.uploadAudition = function(req, res, next){
 	var lastNameCode = '';
 
 	// We are able to access req.files.file thanks to
-    // the multiparty middleware
-    var file = req.files.file;
-    //console.log(file.name);
-    //console.log(file.type);
+  // the multiparty middleware
+  var file = req.files.file;
+  //console.log(file.name);
+  //console.log(file.type);
 
-		// read in project document
-    //var project = JSON.parse(req.body.data);
-		var recBody = JSON.parse(req.body.data);
-		var projectId = recBody.projectId;
+	// read in project document
+  //var project = JSON.parse(req.body.data);
+	var recBody = JSON.parse(req.body.data);
+	var projectId = recBody.projectId;
 
-    //var file = req.files.file;
-    var appDir = path.dirname(require.main.filename);
-    var tempPath = file.path;
-    var relativePath =  'res' + '/' + 'auditions' + '/' + projectId + '/';
-    var newPath = appDir + '/public/' + relativePath;
+  //var file = req.files.file;
+  var appDir = path.dirname(require.main.filename);
+  var tempPath = file.path;
+  var relativePath =  'res' + '/' + 'auditions' + '/' + projectId + '/';
+  var newPath = appDir + '/public/' + relativePath;
 
-    // create project directory if not found
-    if (!fs.existsSync(newPath)) {
-    	fs.mkdirSync(newPath);
-    }
+  // create project directory if not found
+  if (!fs.existsSync(newPath)) {
+  	fs.mkdirSync(newPath);
+  }
 
-    // add file path
-    newPath += file.name;
-    //console.log(newPath);
+  // add file path
+  newPath += file.name;
+  //console.log(newPath);
 
-    // strip talent name and last name code from audition
-    var regStr = /([a-zA-Z]+)\.\w{3}$/i.exec(file.name);
-    if(regStr !== null){
-			var regStrOP = regStr[1];
+  // strip talent name and last name code from audition
+  var regStr = /([a-zA-Z]+)\.\w{3}$/i.exec(file.name);
+  if(regStr !== null){
+		var regStrOP = regStr[1];
 
-			var lastNm = /([A-Z])[a-z]*$/.exec(regStrOP);
-			if(lastNm !== null){
-				var lastNmPos = lastNm.index;
+		var lastNm = /([A-Z])[a-z]*$/.exec(regStrOP);
+		if(lastNm !== null){
+			var lastNmPos = lastNm.index;
 
-				firstName = regStrOP.slice(0,lastNmPos);
-				lastNameCode = regStrOP.slice(lastNmPos, regStrOP.length);
-			}
+			firstName = regStrOP.slice(0,lastNmPos);
+			lastNameCode = regStrOP.slice(lastNmPos, regStrOP.length);
 		}
+	}
 
 		async.waterfall([
 			// gather info for selected project
@@ -2538,7 +2538,7 @@ exports.uploadAudition = function(req, res, next){
 										by:
 										{
 											userId: req.user._id,
-											date: now.toJSON(),
+											date: moment().tz('America/New_York').format(),
 											name: req.user.displayName
 										}
 									}
@@ -2613,7 +2613,7 @@ exports.uploadTempAudition = function(req, res, next){
 									by:
 									{
 										userId: '',
-										date: now.toJSON(),
+										date: moment().tz('America/New_York').format(),
 										name: ''
 									}
 								}
