@@ -71,8 +71,14 @@
 					</fieldset>
 					<div style="max-height:200px;padding:10px;border-top:1px solid #e8e8e8;overflow-y:scroll">
 						<div ng-repeat="(key, ditem) in project.discussion.slice().reverse()">
-							<h5 ng-if="ditem.deleted === true" class="strike-if"><strong>{{ditem.date | amDateFormat:'M/DD/YY h:mm:ss a'}} EST - {{::ditem.username}}</strong></h5>
-							<h5 ng-if="ditem.deleted === false"><strong>{{ditem.date | amDateFormat:'M/DD/YY h:mm:ss a'}} EST - {{::ditem.username}}</strong></h5>
+							<h5 ng-if="ditem.deleted === true" class="strike-if"><strong>{{ditem.date | amDateFormat:'M/DD/YY h:mm:ss a'}} EST -
+								<a ng-if="ditem.userid" href="/#!/usersedit/{{::ditem.userid}}" target="_blank">{{::ditem.username}}</a>
+								<span ng-if="ditem.userid === ''">{{::ditem.username}}</span>
+							</strong></h5>
+							<h5 ng-if="ditem.deleted === false"><strong>{{ditem.date | amDateFormat:'M/DD/YY h:mm:ss a'}} EST -
+								<a ng-if="ditem.userid" href="/#!/usersedit/{{::ditem.userid}}" target="_blank">{{::ditem.username}}</a>
+								<span ng-if="ditem.userid === ''">{{::ditem.username}}</span>
+							</strong></h5>
 							<div class="clearfix">
 								<button ng-if="authentication.user._id === ditem.userid && ditem.deleted === false" style="float:right" class="btn btn-danger" ng-click="deleteDiscussion(key)">Delete</button>
 								<div ng-if="ditem.deleted === true" class="strike-if" ng-bind-html="ditem.item | linky:'_blank'"></div>
