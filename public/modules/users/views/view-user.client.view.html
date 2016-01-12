@@ -5,8 +5,10 @@
 			Company: {{useredit.company}}<br>
 			Name: {{useredit.displayName}}<br>
 			Username: {{useredit.username}}<br>
-			Password: {{decodedPass(useredit.passwordText)}}<br>
-			Email: <a href="mailto:{{useredit.email}}">{{useredit.email}}</a><br> 
+			<span ng-if="authentication.user.roles[0] === 'admin' || authentication.user.roles[0] === 'production coordinator'">
+				Password: {{decodedPass(useredit.passwordText)}}<br>
+			</span>
+			Email: <a href="mailto:{{useredit.email}}">{{useredit.email}}</a><br>
 			Phone: {{useredit.phone}}</p>
 		<p>Notes: {{user.notes}}</p>
 	</div>
