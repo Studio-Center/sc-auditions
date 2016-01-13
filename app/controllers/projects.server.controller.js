@@ -1215,19 +1215,19 @@ exports.create = function(req, res) {
 			for(j = 0; j < project.referenceFiles.length; ++j){
 				if(typeof project.referenceFiles[j] !== 'undefined'){
 					appDir = path.dirname(require.main.filename);
-				    tempPath = appDir + '/public/res/referenceFiles/temp/' + project.referenceFiles[j].file.name;
-				    relativePath =  'res/referenceFiles/' + project._id + '/';
-				    newPath = appDir + '/public/' + relativePath;
+			    tempPath = appDir + '/public/res/referenceFiles/temp/' + project.referenceFiles[j].file.name;
+			    relativePath =  'res/referenceFiles/' + project._id + '/';
+			    newPath = appDir + '/public/' + relativePath;
 
-				    // create project directory if not found
-				    if (!fs.existsSync(newPath)) {
-				    	fs.mkdirSync(newPath);
-				    }
+			    // create project directory if not found
+			    if (!fs.existsSync(newPath)) {
+			    	fs.mkdirSync(newPath);
+			    }
 
-				    // add file path
-				    newPath += project.referenceFiles[j].file.name;
+			    // add file path
+			    newPath += project.referenceFiles[j].file.name;
 
-				    moveFile(tempPath, newPath);
+			    moveFile(tempPath, newPath);
 				}
 			}
 		}
@@ -1238,22 +1238,22 @@ exports.create = function(req, res) {
 				for(i = 0; i < req.body.copiedScripts.length; ++i){
 					if(typeof req.body.copiedScripts[i] !== 'undefined'){
 						appDir = path.dirname(require.main.filename);
-					    tempPath = appDir + '/public/res/scripts/' + req.body.id + '/' + req.body.copiedScripts[i].file.name;
-					    relativePath =  'res/scripts/' + project._id + '/';
-					    newPath = appDir + '/public/' + relativePath;
+				    tempPath = appDir + '/public/res/scripts/' + req.body.id + '/' + req.body.copiedScripts[i].file.name;
+				    relativePath =  'res/scripts/' + project._id + '/';
+				    newPath = appDir + '/public/' + relativePath;
 
-					    // create project directory if not found
-					    if (!fs.existsSync(newPath)) {
-					    	fs.mkdirSync(newPath);
-					    }
+				    // create project directory if not found
+				    if (!fs.existsSync(newPath)) {
+				    	fs.mkdirSync(newPath);
+				    }
 
-					    // add file path
-					    newPath += req.body.copiedScripts[i].file.name;
+				    // add file path
+				    newPath += req.body.copiedScripts[i].file.name;
 
-					    moveFile(tempPath, newPath);
+				    moveFile(tempPath, newPath);
 
-					    // add script file to project ref list
-					    project.scripts.push(req.body.copiedScripts[i]);
+				    // add script file to project ref list
+				    project.scripts.push(req.body.copiedScripts[i]);
 					}
 				}
 			}
@@ -1261,22 +1261,22 @@ exports.create = function(req, res) {
 				for(j = 0; j < req.body.copiedReferenceFiles.length; ++j){
 					if(typeof req.body.copiedReferenceFiles[j] !== 'undefined'){
 						appDir = path.dirname(require.main.filename);
-					    tempPath = appDir + '/public/res/referenceFiles/' + req.body.id + '/' + req.body.copiedReferenceFiles[j].file.name;
-					    relativePath =  'res/referenceFiles/' + project._id + '/';
-					    newPath = appDir + '/public/' + relativePath;
+				    tempPath = appDir + '/public/res/referenceFiles/' + req.body.id + '/' + req.body.copiedReferenceFiles[j].file.name;
+				    relativePath =  'res/referenceFiles/' + project._id + '/';
+				    newPath = appDir + '/public/' + relativePath;
 
-					    // create project directory if not found
-					    if (!fs.existsSync(newPath)) {
-					    	fs.mkdirSync(newPath);
-					    }
+				    // create project directory if not found
+				    if (!fs.existsSync(newPath)) {
+				    	fs.mkdirSync(newPath);
+				    }
 
-					    // add file path
-					    newPath += req.body.copiedReferenceFiles[j].file.name;
+				    // add file path
+				    newPath += req.body.copiedReferenceFiles[j].file.name;
 
-					    moveFile(tempPath, newPath);
+				    moveFile(tempPath, newPath);
 
-					    // add ref file to project ref list
-					    project.referenceFiles.push(req.body.copiedReferenceFiles[j]);
+				    // add ref file to project ref list
+				    project.referenceFiles.push(req.body.copiedReferenceFiles[j]);
 					}
 				}
 			}
@@ -1328,7 +1328,7 @@ exports.create = function(req, res) {
 			},
 			function(admins, directors, coordinators, talentdirectors, done) {
 
-				var email =  {
+				var i, email =  {
 								projectId: '',
 								to: [],
 								bcc: [],
@@ -1338,7 +1338,6 @@ exports.create = function(req, res) {
 								scripts: '',
 								referenceFiles: ''
 							};
-				var i;
 
 				// add previously queried roles to email list
 				for(i = 0; i < admins.length; ++i){
@@ -1356,10 +1355,10 @@ exports.create = function(req, res) {
 
 				email.subject = 'Audition Project Created - ' + project.title + ' - Due ' + dateFormat(project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
 
-			    email.header = '<strong>Project:</strong> ' + project.title + '<br>';
-			    email.header += '<strong>Due:</strong> ' + dateFormat(project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST<br>';
-			    email.header += '<strong>Created by:</strong> ' + req.user.displayName + '<br>';
-			    email.header += '<strong>Description:</strong> ' + project.description + '<br>';
+		    email.header = '<strong>Project:</strong> ' + project.title + '<br>';
+		    email.header += '<strong>Due:</strong> ' + dateFormat(project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST<br>';
+		    email.header += '<strong>Created by:</strong> ' + req.user.displayName + '<br>';
+		    email.header += '<strong>Description:</strong> ' + project.description + '<br>';
 
 				// add scripts and assets to email body
 				email.scripts = '\n' + '<strong>Scripts:</strong>' + '<br>';
@@ -2416,9 +2415,11 @@ exports.uploadTempScript = function(req, res, next){
     //console.log(newPath);
     var script = {
 					file: req.files.file,
-					userId: uid,
-					date: moment().tz('America/New_York').format(),
-					name: uname,
+					by: {
+						userId: req.user._id,
+						date: moment().tz('America/New_York').format(),
+						name: req.user.displayName
+					},
 					filecheck: 0,
 					filecheckdate: ''
 				};
