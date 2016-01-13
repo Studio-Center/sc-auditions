@@ -2204,7 +2204,8 @@ exports.uploadFile = function(req, res, next){
 				type: 'project',
 				sharedKey: String(project._id),
 				description: project.title + ' file uploaded ' + file.name,
-				user: req.user
+				user: req.user,
+				date: moment().tz('America/New_York').format()
 			};
 			log = new Log(log);
 			log.save();

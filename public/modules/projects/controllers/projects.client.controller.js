@@ -1,8 +1,8 @@
 'use strict';
 
 // Projects controller
-angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$upload', 'ngAudio', 'ngAudioGlobals', '$http', '$modal', '$rootScope', 'Socket', '$cookies', 'moment', '$window',
-	function($scope, $stateParams, $location, Authentication, Projects, $upload, ngAudio, ngAudioGlobals, $http, $modal, $rootScope, Socket, $cookies, moment, $window ) {
+angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$upload', 'ngAudio', '$http', '$modal', '$rootScope', 'Socket', '$cookies', 'moment', '$window',
+	function($scope, $stateParams, $location, Authentication, Projects, $upload, ngAudio, $http, $modal, $rootScope, Socket, $cookies, moment, $window ) {
 		$scope.authentication = Authentication;
 
 		$scope.projectsTotalCnt = 0;
@@ -24,7 +24,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.addTalent = true;
 		$scope.newProjTalentLink = 'createProject.talent';
 		$scope.newProjLink = 'createProject.project';
-		ngAudioGlobals.unlock = false;
+		//ngAudioGlobals.unlock = false;
 		$scope.clientNotes = '';
 		$scope.auditions = [];
 		$scope.projProgress = [];
@@ -1746,7 +1746,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		$scope.stopAudio = function(){
 			if(typeof $scope.audio === 'object'){
+				$scope.audio.unbind();
 				$scope.audio.stop();
+				// console.log('stop');
 				$scope.audioStatus = 2;
 			}
 		};
@@ -1756,27 +1758,31 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			var fileName = '';
 
 			// check media file play state
+			// console.log(typeof $scope.audio);
+			// console.log($scope.lastAudioID);
 			if(key !== $scope.lastAudioID && typeof $scope.audio === 'object'){
+				$scope.audio.unbind();
 				$scope.audio.stop();
+				// console.log('stop');
 			}
-			if(typeof $scope.audio === 'object' && key === $scope.lastAudioID && $scope.audioStatus === 1 && typeof $scope.audio === 'object'){
+			if(typeof $scope.audio === 'object' && key === $scope.lastAudioID && $scope.audioStatus === 1){
 				$scope.audio.pause();
 				$scope.audioStatus = 0;
 				//console.log('pause');
 				return;
 			}
-			if(typeof $scope.audio === 'object' && key === $scope.lastAudioID && $scope.audioStatus === 0 && typeof $scope.audio === 'object'){
+			if(typeof $scope.audio === 'object' && key === $scope.lastAudioID && $scope.audioStatus === 0){
 				$scope.audio.play();
 				$scope.audioStatus = 1;
-				//console.log('play');
+				// console.log('play');
 				return;
 			}
-			if(typeof $scope.audio === 'object' && key === $scope.lastAudioID && $scope.audioStatus === 2 && typeof $scope.audio === 'object'){
-				$scope.audio.play();
-				$scope.audioStatus = 1;
-				//console.log('play');
-				return;
-			}
+			// if(typeof $scope.audio === 'object' && key === $scope.lastAudioID && $scope.audioStatus === 2){
+			// 	$scope.audio.play();
+			// 	$scope.audioStatus = 1;
+			// 	// console.log('play');
+			// 	return;
+			// }
 
 			// assign file name
 			if(typeof fileDir === 'undefined'){
@@ -1785,22 +1791,25 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				fileName = fileDir + '/' + filename;
 			}
 
-			$scope.audio = ngAudio.load(fileName);
-			$scope.audio.unbind();
-			$scope.audioStatus = 1;
+			if($scope.audio = ngAudio.load(fileName)){
+				$scope.loop = 0;
+				//$scope.audio.unbind();
+				$scope.audioStatus = 1;
 
-			// store current audio key
-			$scope.lastAudioID = key;
+				// store current audio key
+				$scope.lastAudioID = key;
 
+				$scope.audio.play();
+			}
 
 		};
 
 		// play audio on load
-		$scope.$watchCollection('audio', function(val){
-			if(typeof $scope.audio === 'object'){
-				$scope.audio.play();
-			}
-		});
+		// $scope.$watchCollection('audio', function(val){
+		// 	if(typeof $scope.audio === 'object'){
+		// 		$scope.audio.play();
+		// 	}
+		// });
 
 		$scope.updateDueDate = function(){
 
