@@ -13,11 +13,9 @@ module.exports = {
 	assets: {
 		lib: {
 			css: [
-				'public/lib/bootstrap/dist/css/bootstrap.css',
-				'public/lib/bootstrap/dist/css/bootstrap-theme.css',
+				'public/lib/bootstrap/dist/css/bootstrap.min.css',
+				'public/lib/bootstrap/dist/css/bootstrap-theme.min.css',
 				'public/lib/bootstrapaccessibilityplugin/plugins/css/bootstrap-accessibility.css',
-				'public/lib/soundmanager/demo/demo/play-mp3-links/css/inlineplayer.css',
-				'public/lib/soundmanager/demo/flashblock/flashblock.css',
 				'public/lib/angular-bootstrap-datetimepicker/src/css/datetimepicker.css',
 				'public/lib/font-awesome/css/font-awesome.min.css'
 			],
