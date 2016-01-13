@@ -133,14 +133,14 @@
 						<li class="list-group-item" ng-repeat="(key, script) in project.scripts">
 							<div class="row">
         				<div class="col-lg-10 col-md-10 col-sm-10">
-									<strong>{{key+1}}.</strong>
 									<span style="display:inline-block">
-										<a href="/res/scripts/{{::project._id}}/{{script.file.name | encodeUri}}" target="_blank" data-ng-bind="script.file.name" download="{{::script.file.name}}"></a><br>
+										<strong>{{key+1}}.</strong>
+										<a href="/res/scripts/{{::project._id}}/{{script.file.name | encodeUri}}" target="_blank" data-ng-bind="script.file.name" download="{{::script.file.name}}"></a>
+										<a href="/res/scripts/{{::project._id}}/{{::script.file.name}}" target="_blank">
+											<img src="/img/Adobe-Acrobat-icon.png" alt="download PDF" download="{{::script.file.name}}">
+										</a><br>
 										{{::script.by.date | amDateFormat:'M/DD/YY h:mm:ss a'}}
 									</span>
-									<a href="/res/scripts/{{::project._id}}/{{::script.file.name}}" target="_blank">
-										<img src="/img/Adobe-Acrobat-icon.png" alt="download PDF" download="{{::script.file.name}}">
-									</a>
 								</div>
 								<div class="col-lg-1 col-md-1 col-sm-1">
 									<button ng-click="delScript(key)" target="_blank" class="btn btn-danger">Delete</button>
@@ -178,8 +178,8 @@
 							<li class="list-group-item" ng-repeat="(key, referenceFile) in project.referenceFiles">
 								<div class="row">
           				<div class="col-lg-10 col-md-10 col-sm-10">
-										<strong>{{key+1}}.</strong>
 										<span style="display:inline-block">
+											<strong>{{key+1}}.</strong>
 											<a href="/res/referenceFiles/{{::project._id}}/{{referenceFile.file.name | encodeUri}}" target="_blank" data-ng-bind="referenceFile.file.name" download="{{::referenceFile.file.name}}"></a><br>
 											{{::referenceFile.by.date | amDateFormat:'M/DD/YY h:mm:ss a'}}
 										</span>
@@ -187,14 +187,17 @@
 										<div ng-if="checkForAudio(referenceFile.file.name)">
 											<button ng-click="playAudioNoTrack(key, referenceFile.file.name, '/res/referenceFiles/{{::project._id}}/')" class="btn btn-primary">
 												<span ng-if="lastAudioID == key && audioStatus == 1">
-													<img src="/img/Aqua-Pause-icon.png" style="width:35px;height:auto" alt="play icon">
+													<img src="/img/Aqua-Pause-icon.png" style="width:35px;height:auto" alt="pause icon">
+													<div>
+						                <input class="form-control" type="range" min="0" max="1" step="0.01" ng-model="audio.progress">
+								        	</div>
 												</span>
 												<span ng-if="lastAudioID != key || audioStatus != 1">
 													<img src="/img/aqua-play-icon.png" style="width:35px;height:auto" alt="play icon">
 												</span>
 											</button>
 											<button ng-click="stopAudio()" class="btn btn-primary" ng-if="lastAudioID == key && audioStatus == 1">
-												<img src="/img/Aqua-Stop-icon.png" style="width:35px;height:auto" alt="play icon">
+												<img src="/img/Aqua-Stop-icon.png" style="width:35px;height:auto" alt="stop icon">
 											</button>
 										</div>
 
@@ -300,9 +303,7 @@
 												<span ng-if="lastAudioID == key && audioStatus == 1">
 													<img src="/img/Aqua-Pause-icon.png" style="width:35px;height:auto" alt="pause icon">
 													<div>
-
-								                <input class="form-control" type="range" min="0" max="1" step="0.01" ng-model="audio.progress">
-
+						                <input class="form-control" type="range" min="0" max="1" step="0.01" ng-model="audio.progress">
 								        	</div>
 												</span>
 												<span ng-if="lastAudioID != key || audioStatus != 1">
