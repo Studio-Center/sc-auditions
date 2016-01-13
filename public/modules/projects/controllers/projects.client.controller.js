@@ -262,34 +262,30 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
   	$scope.showPartFld = function(id){
   		if(typeof $scope.project.talent !== 'undefined'){
     		for(var i = 0; i < $scope.project.talent.length; ++i){
-    			if($scope.project.talent[i].talentId === String(id)){
-    				if($scope.project.talent[i].requested === true || $scope.project.talent[i].regular === true){
-    					return false;
-    				}
+    			if($scope.project.talent[i].talentId === String(id) && ($scope.project.talent[i].requested === true || $scope.project.talent[i].regular === true)){
+  					return false;
     			}
     		}
   		}
  			return true;
    	};
    	$scope.showPartString = function(id){
+			if(typeof $scope.project.talent !== 'undefined'){
     		for(var i = 0; i < $scope.project.talent.length; ++i){
-    			if($scope.project.talent[i].talentId === String(id)){
-    				if(typeof $scope.project.talent[i].part !== 'undefined'){
-      				if($scope.project.talent[i].part !== ''){
-      					return $scope.project.talent[i].part;
-      				}
-    				}
+    			if($scope.project.talent[i].talentId === String(id) && typeof $scope.project.talent[i].part !== 'undefined' && $scope.project.talent[i].part !== ''){
+  					return $scope.project.talent[i].part;
     			}
     		}
-    	};
+			}
+  	};
    	$scope.showCreatePartFld = function(id){
-    		for(var i = 0; i < $scope.newProject.talent.length; ++i){
-    			if($scope.newProject.talent[i].talentId === String(id)){
-    				if($scope.newProject.talent[i].requested === true || $scope.newProject.talent[i].regular === true){
-    					return false;
-    				}
-    			}
-    		}
+			if(typeof $scope.newProject.talent !== 'undefined'){
+	  		for(var i = 0; i < $scope.newProject.talent.length; ++i){
+	  			if($scope.newProject.talent[i].talentId === String(id) && ($scope.newProject.talent[i].requested === true || $scope.newProject.talent[i].regular === true)){
+						return false;
+	  			}
+	  		}
+			}
  			return true;
    	};
    	$scope.defaults = function(){
@@ -427,10 +423,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				if(talent.talentId === talentId){
 
 					$http.post('/projects/sendtalentemail', {
-				        talent: talent,
-				        project: $scope.project,
-				        override: true
-				    }).
+			        talent: talent,
+			        project: $scope.project,
+			        override: true
+			    }).
 					success(function(data, status, headers, config) {
 						alert('Selected talent has been emailed.');
 
@@ -564,37 +560,25 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				}
 			}
 
-			// attach team to email chain
-			// grant all team members access to all email communications
-			// for(var k = 0; k < $scope.project.team.length; ++k){
-			// 	if($scope.project.team[k].email !== '' && re.test($scope.project.team[k].email)){
-			// 		emailCnt += 1;
-			// 		toEmails[emailCnt] = $scope.project.team[k].email;
-			// 	}
-			// }
 			// check for accounts associated
 			$scope.email.to = toEmails;
 		};
 
 		// update group checkbox selectors
 		$scope.checkClientClientUsers = function(userId){
-			if(typeof $scope.project === 'object'){
-				if(typeof $scope.project.clientClient === 'object'){
-					for(var i = 0; i < $scope.project.clientClient.length; ++i){
-						if($scope.project.clientClient[i].userId === userId){
-							return true;
-						}
+			if(typeof $scope.project === 'object' && typeof $scope.project.clientClient === 'object'){
+				for(var i = 0; i < $scope.project.clientClient.length; ++i){
+					if($scope.project.clientClient[i].userId === userId){
+						return true;
 					}
 				}
 			}
 		};
 		$scope.checkClientUsers = function(userId){
-			if(typeof $scope.project === 'object'){
-				if(typeof $scope.project.client === 'object'){
-					for(var i = 0; i < $scope.project.client.length; ++i){
-						if($scope.project.client[i].userId === userId){
-							return true;
-						}
+			if(typeof $scope.project === 'object' && typeof $scope.project.client === 'object'){
+				for(var i = 0; i < $scope.project.client.length; ++i){
+					if($scope.project.client[i].userId === userId){
+						return true;
 					}
 				}
 			}
@@ -609,34 +593,28 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}
 		};
 		$scope.checkTeam = function(userId){
-			if(typeof $scope.project === 'object'){
-				if(typeof $scope.project.team === 'object'){
-					for(var i = 0; i < $scope.project.team.length; ++i){
-						if($scope.project.team[i].userId === userId){
-							return true;
-						}
+			if(typeof $scope.project === 'object' && typeof $scope.project.team === 'object'){
+				for(var i = 0; i < $scope.project.team.length; ++i){
+					if($scope.project.team[i].userId === userId){
+						return true;
 					}
 				}
 			}
 		};
 		$scope.checkTalent = function(talentId){
-			if(typeof $scope.project === 'object'){
-				if(typeof $scope.project.talent === 'object'){
-					for(var i = 0; i < $scope.project.talent.length; ++i){
-						if($scope.project.talent[i].talentId === talentId && $scope.project.talent[i].regular === true){
-							return true;
-						}
+			if(typeof $scope.project === 'object' && typeof $scope.project.talent === 'object'){
+				for(var i = 0; i < $scope.project.talent.length; ++i){
+					if($scope.project.talent[i].talentId === talentId && $scope.project.talent[i].regular === true){
+						return true;
 					}
 				}
 			}
 		};
 		$scope.checkRequestedTalent = function(talentId){
-			if(typeof $scope.project === 'object'){
-				if(typeof $scope.project.talent === 'object'){
-					for(var i = 0; i < $scope.project.talent.length; ++i){
-						if($scope.project.talent[i].talentId === talentId && $scope.project.talent[i].requested === true){
-							return true;
-						}
+			if(typeof $scope.project === 'object' && typeof $scope.project.talent === 'object'){
+				for(var i = 0; i < $scope.project.talent.length; ++i){
+					if($scope.project.talent[i].talentId === talentId && $scope.project.talent[i].requested === true){
+						return true;
 					}
 				}
 			}
@@ -659,7 +637,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.updateTalent = function(talentId, talentName, email){
 
 			// gen talent object
-			var talent = {
+			var log, talent = {
 							'talentId': talentId,
 							'name': talentName,
 							'email': email,
@@ -670,7 +648,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 							requested: false,
 							added: moment().tz('America/New_York').format()
 						};
-			var log;
 
 			$scope.addTalent = false;
 
@@ -724,12 +701,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}
 
 			$http.post('/projects/sendTalentEmail', {
-		        talent: talent,
-		        project: $scope.project
-		    }).
+	        talent: talent,
+	        project: $scope.project
+	    }).
 			success(function(data, status, headers, config) {
 				$scope.project = angular.extend($scope.project, data);
-
 				$scope.addTalent = true;
 			});
 
@@ -738,7 +714,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		};
 		$scope.updateRequestTalent = function(talentId, talentName, email){
 			// gen talent object
-			var talent = {
+			var log, found = 0, talent = {
 							'talentId': talentId,
 							'name': talentName,
 							'email': email,
@@ -749,12 +725,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 							requested: true,
 							added: moment().tz('America/New_York').format()
 						};
-			var log;
 
 			$scope.addTalent = false;
 
 			// check for existing item
-			var found = 0;
 			for(var i = 0; i < $scope.project.talent.length; ++i){
 				if($scope.project.talent[i].talentId === talentId){
 					// reset regular talent status
@@ -803,9 +777,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}
 
 			$http.post('/projects/sendTalentEmail', {
-		        talent: talent,
-		        project: $scope.project
-		    }).
+	        talent: talent,
+	        project: $scope.project
+	    }).
 			success(function(data, status, headers, config) {
 				$scope.project = angular.extend($scope.project, data);
 
@@ -817,7 +791,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		};
 		$scope.updateCreateTalent = function(talentId, talentName, email){
 			// gen talent object
-			var talent = {
+			var found = 0, talent = {
 							'talentId': talentId,
 							'name': talentName,
 							'email': email,
@@ -830,7 +804,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 						};
 
 			// check for existing item
-			var found = 0;
 			for(var i = 0; i < $scope.newProject.talent.length; ++i){
 				if($scope.newProject.talent[i].talentId === talentId){
 					// reset requested status
@@ -859,7 +832,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		};
 		$scope.updateRequestCreateTalent = function(talentId, talentName, email){
 			// gen talent object
-			var talent = {
+			var found = 0, talent = {
 							'talentId': talentId,
 							'name': talentName,
 							'email': email,
@@ -872,7 +845,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 						};
 
 			// check for existing item
-			var found = 0;
 			for(var i = 0; i < $scope.newProject.talent.length; ++i){
 				if($scope.newProject.talent[i].talentId === talentId){
 					// reset regular talent if set
@@ -923,21 +895,22 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		};
 
 		$scope.getTalentStatus = function(talentId){
-
 			for(var i = 0; i < $scope.project.talent.length; ++i){
 				if(String($scope.project.talent[i].talentId) === String(talentId)){
 					 return $scope.project.talent[i].status;
 				}
 			}
-
 		};
 
 		$scope.updateClientClient = function(userId, displayName, email){
 			// gen user object
-			var user = {'userId': userId, 'name': displayName, 'email': email};
+			var found = 0,user = {
+									'userId': userId,
+									'name': displayName,
+									'email': email
+								};
 
 			// check for existing item
-			var found = 0;
 			for(var i = 0; i < $scope.project.clientClient.length; ++i){
 				if($scope.project.clientClient[i].userId === userId){
 					$scope.project.clientClient.splice(i, 1);
@@ -956,14 +929,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		$scope.updateClient = function(userId, displayName, email){
 			// gen user object
-			var user = {
+			var found = 0, user = {
 						'userId': userId,
 						'name': displayName,
 						'email': email
 					};
 
 			// check for existing item
-			var found = 0;
 			for(var i = 0; i < $scope.project.client.length; ++i){
 				if($scope.project.client[i].userId === userId){
 					$scope.project.client.splice(i, 1);
@@ -982,14 +954,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		$scope.updateCreateClient = function(userId, displayName, email){
 			// gen user object
-			var user = {
+			var found = 0, user = {
 						'userId': userId,
 						'name': displayName,
 						'email': email
 					};
 
 			// check for existing item
-			var found = 0;
 			for(var i = 0; i < $scope.newProject.client.length; ++i){
 				if($scope.newProject.client[i].userId === userId){
 					$scope.newProject.client.splice(i, 1);
@@ -1019,7 +990,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					$scope.project.log = log;
 
 					// update project store
-					//$scope.update();
 					$scope.updateNoRefresh();
 
 				}
@@ -1028,7 +998,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		// gather booked data
 		$scope.getBooked = function(talentId){
-
 			for(var i = 0; i < $scope.project.talent.length; ++i){
 				if($scope.project.talent[i].talentId === talentId){
 					if($scope.project.talent[i].booked === true){
@@ -1036,20 +1005,17 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					}
 				}
 			}
-
 		};
 
 		// get talent audition note
 		$scope.getTalentNote = function(talentId){
 
-			if(typeof $scope.project !== 'undefined'){
-				if(typeof $scope.project.talent !== 'undefined'){
-					for(var i = 0; i < $scope.project.talent.length; ++i){
-						if($scope.project.talent[i].talentId === talentId){
+			if(typeof $scope.project !== 'undefined' && typeof $scope.project.talent !== 'undefined'){
+				for(var i = 0; i < $scope.project.talent.length; ++i){
+					if($scope.project.talent[i].talentId === talentId){
 
-							return $scope.project.talent[i].note;
+						return $scope.project.talent[i].note;
 
-						}
 					}
 				}
 			}
@@ -1060,11 +1026,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 			for(var i = 0; i < $scope.project.talent.length; ++i){
 				if($scope.project.talent[i].talentId === talentId){
-
 					$scope.project.talent[i].note = $scope.talentNote[talentId];
-
 					$scope.updateNoRefresh();
-
 				}
 			}
 
@@ -1074,8 +1037,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.create = function() {
 
 			// method vars
-			var proStatus = 'In Progress';
-			var id = '';
+			var proStatus = 'In Progress', id = '';
 
 			// update project status, if needed
 			if(typeof $scope.newProject._id !== 'undefined'){
@@ -1260,17 +1222,17 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 					// send update email
 					$scope.gatherToAddresses('updateStatus');
-				    $scope.email.subject = $scope.project.title + ' Phase ' + $scope.project.phases[key].name + ' Status Update';
-				    $scope.email.message += 'Project: ' + $scope.project.title + '<br>';
-				    $scope.email.message += 'Phase: ' + $scope.project.phases[key].name + '<br>';
-				    $scope.email.message += 'Status: ' + $scope.project.phases[key].status + '<br>';
-				    $scope.email.message += 'Start Date: ' + $scope.project.phases[key].startDate + '<br>';
-				    $scope.email.message += 'Change Date: ' + $scope.project.phases[key].changeDate + '<br>' + '<br>';
-				    $scope.email.message += 'Added by: ' + Authentication.user.displayName + '<br>';
-				    $scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '<br>';
+			    $scope.email.subject = $scope.project.title + ' Phase ' + $scope.project.phases[key].name + ' Status Update';
+			    $scope.email.message += 'Project: ' + $scope.project.title + '<br>';
+			    $scope.email.message += 'Phase: ' + $scope.project.phases[key].name + '<br>';
+			    $scope.email.message += 'Status: ' + $scope.project.phases[key].status + '<br>';
+			    $scope.email.message += 'Start Date: ' + $scope.project.phases[key].startDate + '<br>';
+			    $scope.email.message += 'Change Date: ' + $scope.project.phases[key].changeDate + '<br>' + '<br>';
+			    $scope.email.message += 'Added by: ' + Authentication.user.displayName + '<br>';
+			    $scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '<br>';
 
-				    $http.post('/projects/sendemail', {
-						email: $scope.email
+			    $http.post('/projects/sendemail', {
+					email: $scope.email
 					});
 
 					discussion = 'Project phase ' + $scope.project.phases[key].name + ' status changed to ' + $scope.project.phases[key].status + ' on ' + newDate + ' EST by ' + Authentication.user.displayName;
@@ -1313,8 +1275,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}
 
 	    if($scope.project.phases[key].status === 'complete'){
-		    	var now = new Date();
-		    	$scope.project.phases[key].endDate = now.toJSON();
+	    	var now = new Date();
+	    	$scope.project.phases[key].endDate = now.toJSON();
 				// update project status only for "Posting and Publishing" phase
 				if($scope.project.phases[key].name === 'Posting and Publishing'){
 					// reset overall project status to closed
@@ -1338,7 +1300,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.updateSoundersStatus = function(){
 
 			var now = new Date();
-
 			var item = {
 							date: now,
 							userid: '',
@@ -1348,7 +1309,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 						};
 
 			$scope.project.discussion.push(item);
-
 			$scope.updateNoRefresh();
 
 		};
@@ -1356,7 +1316,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.updateProjectStatus = function(){
 
 			var now = new Date();
-
 			var item = {
 							date: now,
 							userid: '',
@@ -1443,7 +1402,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		// find list of projects using set download limiter
 		$scope.findLimit = function(){
 			$http.post('/projects/findLimit', {
-		        queryLimit: $scope.queryLimit
+        queryLimit: $scope.queryLimit
 	    }).
 			success(function(data, status, headers, config) {
 				$scope.projects = [];
@@ -1468,22 +1427,18 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			success(function(data, status, headers, config) {
 				$scope.projects = [];
 				$scope.projects = data;
-
 				$scope.getProjectsCnt();
 			});
 
 		};
 		$scope.updateLimit = function(limit){
 			$scope.queryLimit = limit;
-
 			$scope.findLimit();
 		};
 
 		// dynamically update project view
 		Socket.on('projectsListUpdate', function() {
-
 			$scope.findLimitWithFilter();
-
 		});
 
 		// find single project by id
@@ -1538,9 +1493,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 			// load project document
 			this.findOne();
-
-			// enable audio load after watch
-			//$scope.loadAudio = 0;
 
 			// update project after all auditions file have been checked
 			$scope.$watchCollection('procCnt', function(){
@@ -1652,9 +1604,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 					// audition file check
 					if($scope.fileCheck === false){
-
 						$scope.checkFileWalk();
-
 					}
 
 				});
@@ -1844,8 +1794,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			// walk through and update phases if project closed to reset phase settings
 			if(String($scope.project.status) === 'Closed - Pending Client Decision'){
 
-				console.log('test');
-
 				for(var i = 0; i < $scope.project.phases.length; ++i){
 					if($scope.project.phases[i].name === 'Posting and Publishing'){
 						$scope.project.phases[i].status = 'in progress';
@@ -1884,17 +1832,17 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 				// send update email
 				$scope.gatherToAddresses('saveDiscussion');
-			    $scope.email.subject = $scope.project.title + ' discussion added';
-			    $scope.email.message = 'Discussion Item: ' + this.discussion + '<br>';
-			    $scope.email.message += 'Project: ' + $scope.project.title + '<br>';
-			    $scope.email.message += 'Added by: ' + Authentication.user.displayName + '<br>';
-			    $scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '<br>';
+		    $scope.email.subject = $scope.project.title + ' discussion added';
+		    $scope.email.message = 'Discussion Item: ' + this.discussion + '<br>';
+		    $scope.email.message += 'Project: ' + $scope.project.title + '<br>';
+		    $scope.email.message += 'Added by: ' + Authentication.user.displayName + '<br>';
+		    $scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '<br>';
 
-					$scope.discussion = '';
-					this.discussion = '';
+				$scope.discussion = '';
+				this.discussion = '';
 
-			    $http.post('/projects/sendemail', {
-					email: $scope.email
+		    $http.post('/projects/sendemail', {
+				email: $scope.email
 				});
 				// update project store
 				//$scope.update();
@@ -1910,7 +1858,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			$scope.project.discussion[selVal].deleted = true;
 
 			// update project store
-			//$scope.update();
 			$scope.updateNoRefresh();
 		};
 
@@ -1921,13 +1868,12 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				var file = '/res/scripts/' + $scope.project._id + '/' + $scope.project.scripts[idx].file.name;
 
 				$http.put('/projects/deletefile', {
-			        fileLocation: file
+	        fileLocation: file
 			  });
 
 				$scope.project.scripts.splice(idx, 1);
 
 				// update project store
-				//$scope.update();
 				$scope.updateNoRefresh();
 
 			}
@@ -1941,9 +1887,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			$http.post('/projects/deleteTempScript', {
         fileLocation: file
 	    }).success(function(data, status, headers, config) {
+				$scope.newProject.scripts.splice(idx, 1);
 			});
-
-	    $scope.newProject.scripts.splice(idx, 1);
 
 		};
 
@@ -1954,16 +1899,16 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		var performScriptUpload = function(file, i, $files){
   		$scope.upload = $upload.upload({
-	        url: 'projects/uploads/script', //upload.php script, node.js route, or servlet url
-	        //method: 'POST' or 'PUT',
-	        data: {projectId: $scope.project._id},
-	        file: file, // or list of files ($files) for html5 only
+        url: 'projects/uploads/script', //upload.php script, node.js route, or servlet url
+        //method: 'POST' or 'PUT',
+        data: {projectId: $scope.project._id},
+        file: file, // or list of files ($files) for html5 only
       }).progress(function(evt) {
-	        $scope.uploadStatus = (i + 1) + ' of ' + $files.length + ' files uploaded';
-	      	$scope.uploadfile = evt.config.file.name;
-	        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
-	        }).success(function(data, status, headers, config) {
-	        // file is uploaded successfully
+        $scope.uploadStatus = (i + 1) + ' of ' + $files.length + ' files uploaded';
+      	$scope.uploadfile = evt.config.file.name;
+        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
+        }).success(function(data, status, headers, config) {
+        // file is uploaded successfully
 				//$scope.project = angular.extend($scope.project, data);
 
 				$scope.project.scripts.push(data);
@@ -2029,7 +1974,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
         $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
       }).success(function(data, status, headers, config) {
         // file is uploaded successfully
-        //console.log(data[0]);
         $scope.newProject.scripts.push(data[0]);
       });
   	};
@@ -2043,7 +1987,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
   	// set published status
   	$scope.updatePublished = function(key){
   		// update project store
-			//$scope.update();
 			$scope.updateNoRefresh();
   	};
 
@@ -2057,7 +2000,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	      	$scope.uploadfile = evt.config.file.name;
 	        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
 	    }).success(function(data, status, headers, config) {
-				//$scope.project = angular.extend($scope.project, data);
 
 				$scope.project.referenceFiles.push(data);
 
@@ -2184,9 +2126,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			// verify user wants to delete file
 			if (confirm('Are you sure?')) {
 
-				// tell audio system to reload files
-				//$scope.loadAudio = 0;
-
 				$scope.processing = true;
 
 				if(typeof $scope.project.auditions[idx].file !== 'undefined'){
@@ -2210,7 +2149,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					$scope.project.auditions.splice(idx, 1);
 
 					// update project store
-					//$scope.update();
 					$scope.updateNoRefresh();
 
 				}
@@ -2304,7 +2242,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
 	    }).success(function(data, status, headers, config) {
 	        // file is uploaded successfully
-	        //console.log(data);
 	        $scope.auditions.push(data);
 	    });
   	};
