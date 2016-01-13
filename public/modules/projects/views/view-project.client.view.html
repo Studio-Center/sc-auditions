@@ -31,7 +31,7 @@
 			<div class="col-lg-4 col-md-4 col-sm-4">
 					<progressbar value="dynamic" type="success" ng-model="progress"><b>{{dynamic}}%</b></progressbar>
 					<div ng-if="permitAdminDirector() === false" class="panel-body" data-ng-bind="project.status" style="text-align:center"></div>
-					<select class="form-control" style="display:block;margin:0 auto" ng-if="permitAdminDirector()" ng-model="project.status" ng-change="updateProjectStatus()">
+					<select class="form-control" style="display:block;margin:0 auto" ng-if="permitAdminDirector()" ng-model="project.status" ng-change="updateProjectStatus()" ng-class="{redBG: project.status == 'In Progress' && checkPassed(project.estimatedCompletionDate), greenBg: project.status == 'Booked', lgreenBG: project.status == 'Closed - Pending Client Decision', orangeBG: project.status == 'On Hold', lgray: project.status == 'Cancelled', mgray: project.status == 'ReAuditioned', gray: project.status == 'Dead', blueBg: project.status == 'In Progress' && compareDates(project.estimatedCompletionDate),lblueBG: project.status == 'In Progress' && compareDatesDay(project.estimatedCompletionDate) == false && compareDates(project.estimatedCompletionDate) == false, defClr: project.status == 'In Progress' && compareDatesDay(project.estimatedCompletionDate), yellowBg: project.sounders == 'No Sounders - Approved By William' && compareDates(project.estimatedCompletionDate), lyellowBg: project.sounders == 'No Sounders - Approved By William' && compareDates(project.estimatedCompletionDate) == false}">
               <option ng-repeat="item in statusOpts" value="{{item}}">{{item}}</option>
           </select>
           <div ng-if="permitAdmin()" ng-controller="UsersController" data-ng-init="findFilter('production coordinator')">
