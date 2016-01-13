@@ -5,7 +5,7 @@
 			Company: {{useredit.company}}<br>
 			Name: {{useredit.displayName}}<br>
 			Username: {{useredit.username}}<br>
-			<span ng-if="authentication.user.roles[0] === 'admin' || authentication.user.roles[0] === 'production coordinator'">
+			<span ng-if="authentication.user.roles[0] === 'admin' || authentication.user.roles[0] === 'production coordinator' || authentication.user._id ===  useredit._id">
 				Password: {{decodedPass(useredit.passwordText)}}<br>
 			</span>
 			Email: <a href="mailto:{{useredit.email}}">{{useredit.email}}</a><br>
