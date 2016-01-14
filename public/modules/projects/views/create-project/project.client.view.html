@@ -75,11 +75,11 @@
                     </div>
                     <ul class="list-group">
                         <li class="list-group-item" ng-repeat="(key, user) in filtered = (users | filter:filterClient) | startFrom:currentPage*limit | limitTo: limit">
-                            <input type="checkbox" value="{{user._id}}" ng-click="updateCreateClient(user._id, user.displayName, user.email)" ng-checked="checkClientUsersCreate(user._id)">
-                            <a target="_blank" href="/#!/usersedit/{{user._id}}">
-                                {{user.firstName}} {{user.lastName}}
+                            <input type="checkbox" value="{{::user._id}}" ng-click="updateCreateClient(user._id, user.displayName, user.email)" ng-checked="checkClientUsersCreate(user._id)">
+                            <a target="_blank" href="/#!/usersedit/{{::user._id}}">
+                                {{::user.firstName}} {{::user.lastName}}
                             </a>
-                            - {{user.company}}
+                            - {{::user.company}}
                         </li>
                     </ul>
 
@@ -120,7 +120,7 @@
     <div class="row">
         <div class="col-lg-10 col-md-10 col-sm-10">
             <select class="form-control" style="display:block;margin:0 auto" ng-model="newProject.sounders"  ng-class="{blueBg: newProject.sounders == 'Sounders', yellowBg: newProject.sounders == 'No Sounders - Approved By William'}" ng-init="newProject.sounders = 'Sounders'">
-                <option ng-repeat="item in soundersOpts" value="{{item}}">{{item}}</option>
+                <option ng-repeat="item in soundersOpts" value="{{::item}}">{{::item}}</option>
             </select>
         </div>
         <div class="col-lg-2 col-md-2 col-sm-2" style="text-align:center;padding-bottom:9px">
@@ -163,8 +163,8 @@
                     <div class="row">
                         <div class="col-lg-11 col-md-11 col-sm-11">
                             <strong>{{key+1}}.</strong>
-                            <a href="/res/scripts/{{newProject._id}}/{{script.file.name | encodeUri}}" target="_blank" data-ng-bind="script.file.name"></a>
-                            <a href="/res/scripts/{{newProject._id}}/{{script.file.name | encodeUri}}" target="_blank">
+                            <a href="/res/scripts/{{::newProject._id}}/{{script.file.name | encodeUri}}" target="_blank" data-ng-bind="script.file.name"></a>
+                            <a href="/res/scripts/{{::newProject._id}}/{{script.file.name | encodeUri}}" target="_blank">
                                 <img src="/img/Adobe-Acrobat-icon.png" alt="download PDF">
                             </a>
                         </div>
@@ -219,7 +219,7 @@
                     <div class="row">
                         <div class="col-lg-11 col-md-11 col-sm-11">
                             <strong>{{key+1}}.</strong>
-                            <a href="/res/referenceFiles/{{newProject._id}}/{{referenceFile.file.name | encodeUri}}" target="_blank" data-ng-bind="referenceFile.file.name"></a>
+                            <a href="/res/referenceFiles/{{::newProject._id}}/{{referenceFile.file.name | encodeUri}}" target="_blank" data-ng-bind="referenceFile.file.name"></a>
                         </div>
                         <div class="col-lg-1 col-md-1 col-sm-1">
                             <button ng-click="delCopyReferenceFile(key)" target="_blank" class="btn btn-danger">Delete</button>
