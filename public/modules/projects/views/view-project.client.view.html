@@ -32,7 +32,7 @@
 					<progressbar value="dynamic" type="success" ng-model="progress"><b>{{dynamic}}%</b></progressbar>
 					<div ng-if="permitAdminDirector() === false" class="panel-body" data-ng-bind="project.status" style="text-align:center"></div>
 					<select class="form-control" style="display:block;margin:0 auto" ng-if="permitAdminDirector()" ng-model="project.status" ng-change="updateProjectStatus()" ng-class="{redBG: project.status == 'In Progress' && checkPassed(project.estimatedCompletionDate), greenBg: project.status == 'Booked', lgreenBG: project.status == 'Closed - Pending Client Decision', orangeBG: project.status == 'On Hold', lgray: project.status == 'Cancelled', mgray: project.status == 'ReAuditioned', gray: project.status == 'Dead', blueBg: project.status == 'In Progress' && compareDates(project.estimatedCompletionDate),lblueBG: project.status == 'In Progress' && compareDatesDay(project.estimatedCompletionDate) == false && compareDates(project.estimatedCompletionDate) == false, defClr: project.status == 'In Progress' && compareDatesDay(project.estimatedCompletionDate), yellowBg: project.sounders == 'No Sounders - Approved By William' && compareDates(project.estimatedCompletionDate), lyellowBg: project.sounders == 'No Sounders - Approved By William' && compareDates(project.estimatedCompletionDate) == false}">
-              <option ng-repeat="item in statusOpts" value="{{item}}">{{item}}</option>
+              <option ng-repeat="item in statusOpts" value="{{::item}}">{{::item}}</option>
           </select>
           <div ng-if="permitAdmin()" ng-controller="UsersController" data-ng-init="findFilter('production coordinator')">
           	<label>Owner</label>
@@ -59,7 +59,7 @@
         	</div>
         	<fieldset>
 						<select class="form-control" style="display:block;margin:0 auto" ng-if="permitAdmin() || isOwner()" ng-class="{blueBg: project.sounders == 'Sounders', yellowBg: project.sounders == 'No Sounders - Approved By William'}" ng-model="project.sounders" ng-change="updateSoundersStatus()">
-                <option ng-repeat="item in soundersOpts" value="{{item}}">{{item}}</option>
+                <option ng-repeat="item in soundersOpts" value="{{::item}}">{{::item}}</option>
               </select>
               <div ng-if="!permitAdmin() && !isOwner()" style="padding:10px;font-weight:700" ng-class="{blueBg: project.sounders == 'Sounders', yellowBg: project.sounders == 'No Sounders - Approved By William'}">
               	{{project.sounders[0]}}
@@ -284,7 +284,7 @@
 
 										<a href="/res/auditions/{{::project._id}}/{{audition.file.name | encodeUri}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable" download="{{::audition.file.name}}">ngAudio</a>
 										<p ng-module="users" ng-controller="UsersController" data-ng-init="getOne(audition.approved.by.userId)">
-											<strong>Posted by:</strong> <a href="/#!/usersedit/{{useredit._id}}" target="_blank">{{useredit.displayName}}</a><br>
+											<strong>Posted by:</strong> <a href="/#!/usersedit/{{useredit._id}}" target="_blank">{{::useredit.displayName}}</a><br>
 											<strong>On:</strong> {{::project.auditions[key].approved.by.date | amDateFormat:'M/DD/YY h:mm:ss a'}}
 										</p>
 										<p ng-if="audition.hidden == true" style="font-size:18px;color:red;font-weight:700">HIDDEN BY CLIENT</p>
@@ -326,7 +326,7 @@
 											Talent Not Assigned
 										</div>
 										<select ng-model="project.auditions[key].talent" ng-change="$parent.updateNoRefresh()">
-                      <option ng-repeat="talent in project.talent" ng-selected="project.auditions[key].talent == talent.talentId" value="{{::talent.talentId}}">{{talent.name}}</option>
+                      <option ng-repeat="talent in project.talent" ng-selected="project.auditions[key].talent == talent.talentId" value="{{::talent.talentId}}">{{::talent.name}}</option>
                     </select>
 	                </td>
 	                <td>
@@ -538,7 +538,7 @@
 												</td>
 												<td>
 													<input type="text" class="form-control" ng-model="parts[talent._id]" ng-if="showPartFld(talent._id)">
-													<div ng-if="showPartFld(talent._id) == false">{{showPartString(talent._id)}}</div>
+													<div ng-if="showPartFld(talent._id) == false">{{::showPartString(talent._id)}}</div>
 												</td>
 												<td>
 													<a target="_blank" href="/#!/talents/{{::talent._id}}">{{::talent.name}} {{::talent.lastName}}</a> - {{::talent.locationISDN}} - Outage <span ng-if="!talent.outageTimes">None</span><span ng-if="talent.outageTimes != ''">{{::talent.outageTimes}}</span>
@@ -642,10 +642,10 @@
 										<ul class="list-group">
 											<li class="list-group-item" ng-repeat="(key, user) in filtered = (users | filter:filterClient) | startFrom:currentPage*limit | limitTo: limit">
 												<input type="checkbox" value="{{::user._id}}" ng-click="updateClient(user._id, user.displayName, user.email)" ng-checked="checkClientUsers(user._id)">
-												<a target="_blank" href="/#!/usersedit/{{user._id}}">
-													{{user.displayName}}
+												<a target="_blank" href="/#!/usersedit/{{::user._id}}">
+													{{::user.displayName}}
 												</a>
-												 - {{user.company}}
+												 - {{::user.company}}
 											</li>
 										</ul>
 										<div class="row">
@@ -811,7 +811,7 @@
 		</div>
 	</div>
 	<div class="pull-right" data-ng-if="permitAdminProductionCoordinator()" style="padding-bottom:75px">
-		<a class="btn btn-primary" href="/#!/projects/{{project._id}}/edit">
+		<a class="btn btn-primary" href="/#!/projects/{{::project._id}}/edit">
 			<i class="glyphicon glyphicon-edit"></i>
 		</a>
 		<a class="btn btn-primary" data-ng-click="remove();">

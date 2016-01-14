@@ -49,7 +49,7 @@
                         <div class="col-lg-3 col-md-3 col-sm-3">
                             <select ng-model="searchText.locationISDN" class="form-control" style="margin-top:15px">
                                 <option value="">All Locations</option>
-                                <option ng-repeat="item in locations" value="{{item}}">{{item}}</option>
+                                <option ng-repeat="item in locations" value="{{::item}}">{{::item}}</option>
                             </select>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-6">
@@ -113,17 +113,17 @@
                         <li class="list-group-item" ng-repeat="(key, talent) in filtered = (talents | multiTerm:searchUnions:'AND' | filter:searchText:startsWith | multiTermFull:searchString:'AND') | startFrom:currentPage*limit | limitTo: limit">
                             <div class="row">
                                 <div class="col-lg-1 col-md-1 col-sm-1">
-                                    <input type="checkbox" value="{{talent._id}}" ng-click="updateCreateTalent(talent._id, talent.name + ' ' + talent.lastName, talent.email)" ng-checked="checkCreateTalent(talent._id)">
+                                    <input type="checkbox" value="{{::talent._id}}" ng-click="updateCreateTalent(talent._id, talent.name + ' ' + talent.lastName, talent.email)" ng-checked="checkCreateTalent(talent._id)">
                                 </div>
                                 <div class="col-lg-1 col-md-1 col-sm-1">
-                                    <input type="checkbox" value="{{talent._id}}" ng-click="updateRequestCreateTalent(talent._id, talent.name + ' ' + talent.lastName, talent.email)" ng-checked="checkRequestedCreateTalent(talent._id)">
+                                    <input type="checkbox" value="{{::talent._id}}" ng-click="updateRequestCreateTalent(talent._id, talent.name + ' ' + talent.lastName, talent.email)" ng-checked="checkRequestedCreateTalent(talent._id)">
                                 </div>
                                 <div class="col-lg-4 col-md-4 col-sm-4">
                                     <input type="text" class="form-control" ng-model="parts[talent._id]" ng-if="showCreatePartFld(talent._id)">
-                                    {{parts[talent._id]}}
+                                    {{::parts[talent._id]}}
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-6">
-                                    <a target="_blank" href="/#!/talents/{{talent._id}}">{{talent.name}} {{talent.lastName}}</a> - {{talent.locationISDN}} - Outage <span ng-show="!talent.outageTimes">None</span><span ng-show="talent.outageTimes != ''">{{talent.outageTimes}}</span>
+                                    <a target="_blank" href="/#!/talents/{{::talent._id}}">{{::talent.name}} {{::talent.lastName}}</a> - {{::talent.locationISDN}} - Outage <span ng-show="!talent.outageTimes">None</span><span ng-show="talent.outageTimes != ''">{{::talent.outageTimes}}</span>
                                 </div>
                             </div>
                         </li>
