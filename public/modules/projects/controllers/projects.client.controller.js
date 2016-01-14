@@ -75,6 +75,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		//
 		// });
 
+		// clear mem leaks on controller destroy
+		$scope.$on('$destroy', function (event) {
+        Socket.removeAllListeners();
+        // or something like
+        // socket.removeListener(this);
+    });
+
 		$scope.toggleShowRename = function(){
 			$scope.showRename = !$scope.showRename;
 		};

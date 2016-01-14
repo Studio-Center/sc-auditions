@@ -36,6 +36,13 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 		$scope.selectedAuditions = [];
 		$scope.hideList = [];
 
+		// clear mem leaks on controller destroy
+		$scope.$on('$destroy', function (event) {
+        Socket.removeAllListeners();
+        // or something like
+        // socket.removeListener(this);
+    });
+
     $scope.updateNoRefresh = function(){
 
 			// merge existing open project with updated project

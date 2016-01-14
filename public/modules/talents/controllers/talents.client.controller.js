@@ -6,6 +6,7 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 		$scope.authentication = Authentication;
 
 		// talent static options
+		$scope.watchersObj = {};
 		$scope.typeOptions = ['Email','Phone'];
 		$scope.unionOptions = ['union','non-union'];
 		$scope.locations = ['Offsite', 'Las Vegas', 'New York', 'Richmond', 'Santa Monica', 'Virginia Beach', 'Washington DC'];
@@ -21,6 +22,13 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 		$scope.projectTalentIdx = [];
 		$scope.talentStatus = ['Cast', 'Emailed', 'Scheduled', 'Message left', 'Out', 'Received needs to be posted', 'Posted', 'Not Posted (Bad Read)', 'Missed', 'Canceled'];
 		$scope.archived = false;
+
+		// clear mem leaks on controller destroy
+		$scope.$on('$destroy', function (event) {
+        Socket.removeAllListeners();
+        // or something like
+        // socket.removeListener(this);
+    });
 
 		// listing filter
 		$scope.startsWith = function (actual, expected) {
@@ -49,7 +57,7 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 	    		$scope.currentPage = page;
 	    	}
 	    };
-	    $scope.$watchCollection('filtered', function(val){
+	    $scope.watchersObj['filtered'] = $scope.$watchCollection('filtered', function(val){
 	    	$scope.currentPage = 0;
 	    }, true);
 
@@ -218,7 +226,7 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 		// load talent assigned projects
 		$scope.findTalentProjects = function(){
 
-			$scope.$watchCollection('talent._id', function(val){
+			$scope.watchersObj['talent._id'] = $scope.$watchCollection('talent._id', function(val){
 
 				$http.post('/projects/filterByTalent', {
 			        talentId: $scope.talent._id,
@@ -312,7 +320,7 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 		// gather filtered list of logs
 		$scope.listFilter = function(){
 
-			$scope.$watchCollection('talent._id', function(val){
+			$scope.watchersObj['talent._id_flt'] = $scope.$watchCollection('talent._id', function(val){
 
 				if(typeof $scope.talent._id !== 'undefined'){
 
