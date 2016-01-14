@@ -39,8 +39,6 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 		// clear mem leaks on controller destroy
 		$scope.$on('$destroy', function (event) {
         Socket.removeAllListeners();
-        // or something like
-        // socket.removeListener(this);
     });
 
     $scope.updateNoRefresh = function(){
