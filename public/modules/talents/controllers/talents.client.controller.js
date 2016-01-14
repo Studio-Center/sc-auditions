@@ -26,8 +26,11 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 		// clear mem leaks on controller destroy
 		$scope.$on('$destroy', function (event) {
         Socket.removeAllListeners();
-        // or something like
-        // socket.removeListener(this);
+
+				angular.forEach($scope.watchersObj, function(watcherObj, key) {
+					watcherObj();
+					delete $scope.watchersObj[key];
+				});
     });
 
 		// listing filter
