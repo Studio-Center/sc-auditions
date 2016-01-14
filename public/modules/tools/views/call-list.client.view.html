@@ -19,41 +19,41 @@
             		<table class="table table-striped">
             			<tr>
             				<th>
-                                <a href="" ng-click="updatePred(predicate == 'data.name' ? '-data.name' : 'data.name'); reverse=false">Talent Name</a></span>
-                                <span ng-if="predicate == '-data.name'">(^)</span>
-                                <span ng-if="predicate == 'data.name'">(V)</span>
-                            </th>
+                        <a href="" ng-click="updatePred(predicate == 'data.name' ? '-data.name' : 'data.name'); reverse=false">Talent Name</a></span>
+                        <span ng-if="predicate == '-data.name'">(^)</span>
+                        <span ng-if="predicate == 'data.name'">(V)</span>
+                    </th>
             				<th>
-                                <a href="" ng-click="updatePred(predicate == 'data.parentName' ? '-data.parentName' : 'data.parentName'); reverse=false">Parent Name</a></span>
-                                <span ng-if="predicate == '-data.parentName'">(^)</span>
-                                <span ng-if="predicate == 'data.parentName'">(V)</span>
-                            </th>
+                        <a href="" ng-click="updatePred(predicate == 'data.parentName' ? '-data.parentName' : 'data.parentName'); reverse=false">Parent Name</a></span>
+                        <span ng-if="predicate == '-data.parentName'">(^)</span>
+                        <span ng-if="predicate == 'data.parentName'">(V)</span>
+                    </th>
             				<th>Phone #</th>
             				<th>Alt Phone #</th>
             				<th>
-                                <a href="" ng-click="updatePred(predicate == 'data.locationISDN' ? '-data.locationISDN' : 'data.locationISDN'); reverse=false">Location</a></span>
-                                <span ng-if="predicate == '-data.locationISDN'">(^)</span>
-                                <span ng-if="predicate == 'data.locationISDN'">(V)</span>
-                            </th>
+                        <a href="" ng-click="updatePred(predicate == 'data.locationISDN' ? '-data.locationISDN' : 'data.locationISDN'); reverse=false">Location</a></span>
+                        <span ng-if="predicate == '-data.locationISDN'">(^)</span>
+                        <span ng-if="predicate == 'data.locationISDN'">(V)</span>
+                    </th>
             				<th>
-                                <a href="" ng-click="updatePred(predicate == 'project.title' ? '-project.title' : 'project.title'); reverse=false">Project</a></span>
-                                <span ng-if="predicate == '-project.title'">(^)</span>
-                                <span ng-if="predicate == 'project.title'">(V)</span>
-                            </th>
+                        <a href="" ng-click="updatePred(predicate == 'project.title' ? '-project.title' : 'project.title'); reverse=false">Project</a></span>
+                        <span ng-if="predicate == '-project.title'">(^)</span>
+                        <span ng-if="predicate == 'project.title'">(V)</span>
+                    </th>
             				<th>
-                                <a href="" ng-click="updatePred(predicate == 'project.estimatedCompletionDate' ? '-project.estimatedCompletionDate' : 'project.estimatedCompletionDate'); reverse=false">Due Time/Date</a></span>
-                                <span ng-if="predicate == '-project.estimatedCompletionDate'">(^)</span>
-                                <span ng-if="predicate == 'project.estimatedCompletionDate'">(V)</span>
-                            </th>
-                            <th>
-                                Requested
-                            </th>
-                            <th>
-                                Scripts
-                            </th>
-                            <th style="min-width:220px">
-                                Notes
-                            </th>
+                        <a href="" ng-click="updatePred(predicate == 'project.estimatedCompletionDate' ? '-project.estimatedCompletionDate' : 'project.estimatedCompletionDate'); reverse=false">Due Time/Date</a></span>
+                        <span ng-if="predicate == '-project.estimatedCompletionDate'">(^)</span>
+                        <span ng-if="predicate == 'project.estimatedCompletionDate'">(V)</span>
+                    </th>
+                    <th>
+                        Requested
+                    </th>
+                    <th>
+                        Scripts
+                    </th>
+                    <th style="min-width:220px">
+                        Notes
+                    </th>
             				<th>Status</th>
             				<th>Email</th>
             			</tr>
@@ -61,33 +61,33 @@
         	    			<td><a target="_blank" href="/#!/talents/{{::talent.data._id}}">{{::talent.data.name}} {{::talent.data.lastName}}</a></td>
         	    			<td>{{::talent.data.parentName}}</td>
         	    			<td>
-                                <span ng-if="talent.data.phone">
-                                    <a href="tel:{{::talent.data.phone}}">{{::talent.data.phone | tel}}</a>
-                                </span>
-                            </td>
+                        <span ng-if="talent.data.phone">
+                            <a href="tel:{{::talent.data.phone}}">{{::talent.data.phone | tel}}</a>
+                        </span>
+                    </td>
         	    			<td>
-                                <span ng-if="talent.data.phone2">
-                                    <a href="tel:{{::talent.data.phone2}}">{{::talent.data.phone2 | tel}}</a>
-                                </span>
-                            </td>
+                        <span ng-if="talent.data.phone2">
+                            <a href="tel:{{::talent.data.phone2}}">{{::talent.data.phone2 | tel}}</a>
+                        </span>
+                    </td>
         	    			<td>{{::talent.data.locationISDN}}</td>
         	    			<td><a href="/#!/projects/{{::talent.project._id}}" target="_blank">{{::talent.project.title}}</a></td>
         	    			<td>{{::talent.project.estimatedCompletionDate | amDateFormat:'MM/DD/YY h:mm a'}}</td>
-                            <td>
-                                <span ng-show="talent.requested">
-                                    <img src="/img/green-check.png" alt="rquested talent">
-                                </span>
-                            </td>
-                            <td>
-                                <span ng-repeat="(key, script) in talent.project.scripts">
-                                    <a href="/res/scripts/{{::talent.project._id}}/{{::script.file.name}}" popover="{{::script.file.name}}" popover-trigger="mouseenter" popover-placement="top" popover-popup-delay="250" popover-append-to-body="true" target="_blank"><img src="/img/Adobe-Acrobat-icon.png" alt="download PDF"></a>
-                                </span>
-                            </td>
-                            <td>
-                                <textarea style="min-height: 100px" ng-model="talentNote[talent.data._id][talent.project._id]" name="talentNote[talent.data._id][talent.project._id]" ng-init="talentNote[talent.data._id][talent.project._id] = talent.project.note" class="form-control">
-                                </textarea>
-                                <button style="float:right" class="btn btn-primary" ng-click="saveTalentNote(talent.data._id, talent.project._id)">Save</button>
-                            </td>
+                    <td>
+                        <span ng-show="talent.requested">
+                            <img src="/img/green-check.png" alt="rquested talent">
+                        </span>
+                    </td>
+                    <td>
+                        <span ng-repeat="(key, script) in talent.project.scripts">
+                            <a href="/res/scripts/{{::talent.project._id}}/{{::script.file.name}}" popover="{{::script.file.name}}" popover-trigger="mouseenter" popover-placement="top" popover-popup-delay="250" popover-append-to-body="true" target="_blank"><img src="/img/Adobe-Acrobat-icon.png" alt="download PDF"></a>
+                        </span>
+                    </td>
+                    <td>
+                        <textarea style="min-height: 100px" ng-model="talentNote[talent.data._id][talent.project._id]" name="talentNote[talent.data._id][talent.project._id]" ng-init="talentNote[talent.data._id][talent.project._id] = talent.project.note" class="form-control">
+                        </textarea>
+                        <button style="float:right" class="btn btn-primary" ng-click="saveTalentNote(talent.data._id, talent.project._id)">Save</button>
+                    </td>
         					<td><select class="form-control" ng-model="callProjects[key].status" style="width:100px" ng-change="updateStatus(talent.data._id,talent.project._id, callProjects[key].status)" ng-options="item for item in talentStatus"></select></td>
         					<td><button class="btn btn-primary" ng-click="emailCallListTalent(talent,talent.project._id)"><img style="width:30px;height:auto" src="/img/envelope.png" alt="envelope image"></button></td>
         	    		</tr>
@@ -111,41 +111,41 @@
             		<table class="table table-striped">
             			<tr>
             				<th>
-                                <a href="" ng-click="updatePred(predicate == 'data.name' ? '-data.name' : 'data.name'); reverse=false">Talent Name</a></span>
-                                <span ng-if="predicate == '-data.name'">(^)</span>
-                                <span ng-if="predicate == 'data.name'">(V)</span>
-                            </th>
-                            <th>
-                                <a href="" ng-click="updatePred(predicate == 'data.parentName' ? '-data.parentName' : 'data.parentName'); reverse=false">Parent Name</a></span>
-                                <span ng-if="predicate == '-data.parentName'">(^)</span>
-                                <span ng-if="predicate == 'data.parentName'">(V)</span>
-                            </th>
-                            <th>Phone #</th>
-                            <th>Alt Phone #</th>
-                            <th>
-                                <a href="" ng-click="updatePred(predicate == 'data.locationISDN' ? '-data.locationISDN' : 'data.locationISDN'); reverse=false">Location</a></span>
-                                <span ng-if="predicate == '-data.locationISDN'">(^)</span>
-                                <span ng-if="predicate == 'data.locationISDN'">(V)</span>
-                            </th>
-                            <th>
-                                <a href="" ng-click="updatePred(predicate == 'project.title' ? '-project.title' : 'project.title'); reverse=false">Project</a></span>
-                                <span ng-if="predicate == '-project.title'">(^)</span>
-                                <span ng-if="predicate == 'project.title'">(V)</span>
-                            </th>
-                            <th>
-                                <a href="" ng-click="updatePred(predicate == 'project.estimatedCompletionDate' ? '-project.estimatedCompletionDate' : 'project.estimatedCompletionDate'); reverse=false">Due Time/Date</a></span>
-                                <span ng-if="predicate == '-project.estimatedCompletionDate'">(^)</span>
-                                <span ng-if="predicate == 'project.estimatedCompletionDate'">(V)</span>
-                            </th>
-                            <th>
-                                Requested
-                            </th>
-                            <th>
-                                Scripts
-                            </th>
-                            <th style="min-width:220px">
-                                Notes
-                            </th>
+                        <a href="" ng-click="updatePred(predicate == 'data.name' ? '-data.name' : 'data.name'); reverse=false">Talent Name</a></span>
+                        <span ng-if="predicate == '-data.name'">(^)</span>
+                        <span ng-if="predicate == 'data.name'">(V)</span>
+                    </th>
+                    <th>
+                        <a href="" ng-click="updatePred(predicate == 'data.parentName' ? '-data.parentName' : 'data.parentName'); reverse=false">Parent Name</a></span>
+                        <span ng-if="predicate == '-data.parentName'">(^)</span>
+                        <span ng-if="predicate == 'data.parentName'">(V)</span>
+                    </th>
+                    <th>Phone #</th>
+                    <th>Alt Phone #</th>
+                    <th>
+                        <a href="" ng-click="updatePred(predicate == 'data.locationISDN' ? '-data.locationISDN' : 'data.locationISDN'); reverse=false">Location</a></span>
+                        <span ng-if="predicate == '-data.locationISDN'">(^)</span>
+                        <span ng-if="predicate == 'data.locationISDN'">(V)</span>
+                    </th>
+                    <th>
+                        <a href="" ng-click="updatePred(predicate == 'project.title' ? '-project.title' : 'project.title'); reverse=false">Project</a></span>
+                        <span ng-if="predicate == '-project.title'">(^)</span>
+                        <span ng-if="predicate == 'project.title'">(V)</span>
+                    </th>
+                    <th>
+                        <a href="" ng-click="updatePred(predicate == 'project.estimatedCompletionDate' ? '-project.estimatedCompletionDate' : 'project.estimatedCompletionDate'); reverse=false">Due Time/Date</a></span>
+                        <span ng-if="predicate == '-project.estimatedCompletionDate'">(^)</span>
+                        <span ng-if="predicate == 'project.estimatedCompletionDate'">(V)</span>
+                    </th>
+                    <th>
+                        Requested
+                    </th>
+                    <th>
+                        Scripts
+                    </th>
+                    <th style="min-width:220px">
+                        Notes
+                    </th>
             				<th>Status</th>
             				<th>Email</th>
             			</tr>
@@ -201,41 +201,41 @@
             		<table class="table table-striped">
             			<tr>
             				<th>
-                                <a href="" ng-click="updatePred(predicate == 'data.name' ? '-data.name' : 'data.name'); reverse=false">Talent Name</a></span>
-                                <span ng-if="predicate == '-data.name'">(^)</span>
-                                <span ng-if="predicate == 'data.name'">(V)</span>
-                            </th>
-                            <th>
-                                <a href="" ng-click="updatePred(predicate == 'data.parentName' ? '-data.parentName' : 'data.parentName'); reverse=false">Parent Name</a></span>
-                                <span ng-if="predicate == '-data.parentName'">(^)</span>
-                                <span ng-if="predicate == 'data.parentName'">(V)</span>
-                            </th>
-                            <th>Phone #</th>
-                            <th>Alt Phone #</th>
-                            <th>
-                                <a href="" ng-click="updatePred(predicate == 'data.locationISDN' ? '-data.locationISDN' : 'data.locationISDN'); reverse=false">Location</a></span>
-                                <span ng-if="predicate == '-data.locationISDN'">(^)</span>
-                                <span ng-if="predicate == 'data.locationISDN'">(V)</span>
-                            </th>
-                            <th>
-                                <a href="" ng-click="updatePred(predicate == 'project.title' ? '-project.title' : 'project.title'); reverse=false">Project</a></span>
-                                <span ng-if="predicate == '-project.title'">(^)</span>
-                                <span ng-if="predicate == 'project.title'">(V)</span>
-                            </th>
-                            <th>
-                                <a href="" ng-click="updatePred(predicate == 'project.estimatedCompletionDate' ? '-project.estimatedCompletionDate' : 'project.estimatedCompletionDate'); reverse=false">Due Time/Date</a></span>
-                                <span ng-if="predicate == '-project.estimatedCompletionDate'">(^)</span>
-                                <span ng-if="predicate == 'project.estimatedCompletionDate'">(V)</span>
-                            </th>
-                            <th>
-                                Requested
-                            </th>
-                            <th>
-                                Scripts
-                            </th>
-                            <th style="min-width:220px">
-                                Notes
-                            </th>
+                        <a href="" ng-click="updatePred(predicate == 'data.name' ? '-data.name' : 'data.name'); reverse=false">Talent Name</a></span>
+                        <span ng-if="predicate == '-data.name'">(^)</span>
+                        <span ng-if="predicate == 'data.name'">(V)</span>
+                    </th>
+                    <th>
+                        <a href="" ng-click="updatePred(predicate == 'data.parentName' ? '-data.parentName' : 'data.parentName'); reverse=false">Parent Name</a></span>
+                        <span ng-if="predicate == '-data.parentName'">(^)</span>
+                        <span ng-if="predicate == 'data.parentName'">(V)</span>
+                    </th>
+                    <th>Phone #</th>
+                    <th>Alt Phone #</th>
+                    <th>
+                        <a href="" ng-click="updatePred(predicate == 'data.locationISDN' ? '-data.locationISDN' : 'data.locationISDN'); reverse=false">Location</a></span>
+                        <span ng-if="predicate == '-data.locationISDN'">(^)</span>
+                        <span ng-if="predicate == 'data.locationISDN'">(V)</span>
+                    </th>
+                    <th>
+                        <a href="" ng-click="updatePred(predicate == 'project.title' ? '-project.title' : 'project.title'); reverse=false">Project</a></span>
+                        <span ng-if="predicate == '-project.title'">(^)</span>
+                        <span ng-if="predicate == 'project.title'">(V)</span>
+                    </th>
+                    <th>
+                        <a href="" ng-click="updatePred(predicate == 'project.estimatedCompletionDate' ? '-project.estimatedCompletionDate' : 'project.estimatedCompletionDate'); reverse=false">Due Time/Date</a></span>
+                        <span ng-if="predicate == '-project.estimatedCompletionDate'">(^)</span>
+                        <span ng-if="predicate == 'project.estimatedCompletionDate'">(V)</span>
+                    </th>
+                    <th>
+                        Requested
+                    </th>
+                    <th>
+                        Scripts
+                    </th>
+                    <th style="min-width:220px">
+                        Notes
+                    </th>
             				<th>Status</th>
             				<th>Email</th>
             			</tr>

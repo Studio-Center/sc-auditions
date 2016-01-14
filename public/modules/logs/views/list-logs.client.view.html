@@ -61,9 +61,9 @@
 			</small>
 			<p>
                 <strong>Log Type:</strong>
-                <a ng-if="log.type == 'project'" href="/#!/projects/{{log.sharedKey}}" target="_blank">{{log.type}}</a>
-                <a ng-if="log.type == 'talent'" href="/#!/talents/{{log.sharedKey}}" target="_blank">{{log.type}}</a>
-                <span ng-if="log.type == 'system'">{{log.type}}</span>
+                <a ng-if="log.type == 'project'" href="/#!/projects/{{::log.sharedKey}}" target="_blank">{{::log.type}}</a>
+                <a ng-if="log.type == 'talent'" href="/#!/talents/{{::log.sharedKey}}" target="_blank">{{::log.type}}</a>
+                <span ng-if="log.type == 'system'">{{::log.type}}</span>
             </p>
 			<h4 class="list-group-item-heading" data-ng-bind="log.description"></h4>
         </div>
