@@ -1498,28 +1498,32 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		};
 
 		// update project after all auditions file have been checked
-		$scope.watchersObj['procCnt'] = $scope.$watchCollection('procCnt', function(){
-			if($scope.procCnt > 0 && $scope.newFileCnt > 0){
-				if($scope.procCnt === $scope.newFileCnt){
-					// save project changes
-					$scope.updateNoRefresh();
-					// reset count vars
-					$scope.newFileCnt = 0;
-					$scope.procCnt = 0;
+		if(typeof $scope.watchersObj['procCnt'] !== 'object'){
+			$scope.watchersObj['procCnt'] = $scope.$watchCollection('procCnt', function(){
+				if($scope.procCnt > 0 && $scope.newFileCnt > 0){
+					if($scope.procCnt === $scope.newFileCnt){
+						// save project changes
+						$scope.updateNoRefresh();
+						// reset count vars
+						$scope.newFileCnt = 0;
+						$scope.procCnt = 0;
+					}
 				}
-			}
-		});
+			});
+		}
 
 		// load audio files into player after project object has finished loading
-		$scope.$watchCollection('newProject.estimatedCompletionDate', function(val){
-			var now = new Date();
+		if(typeof $scope.watchersObj['newProject.estimatedCompletionDate'] !== 'object'){
+			$scope.$watchCollection('newProject.estimatedCompletionDate', function(val){
+				var now = new Date();
 
-			if($scope.newProject.estimatedCompletionDate !== '' && $scope.newProject.estimatedCompletionDate < now){
-				$scope.dateNotice = 'Date selected passed. Please select a future date and time!';
-			} else {
-				$scope.dateNotice = '';
-			}
-		});
+				if($scope.newProject.estimatedCompletionDate !== '' && $scope.newProject.estimatedCompletionDate < now){
+					$scope.dateNotice = 'Date selected passed. Please select a future date and time!';
+				} else {
+					$scope.dateNotice = '';
+				}
+			});
+		}
 
 		$scope.calcProjectProg = function(curProject){
 			if(typeof curProject.phases !== 'undefined'){
@@ -1596,59 +1600,68 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		};
 
-		$scope.$watchCollection('project', function(val){
+		if(typeof $scope.watchersObj['project'] !== 'object'){
+			$scope.watchersObj['project'] = $scope.$watchCollection('project', function(val){
 
-			if(typeof $scope.project === 'object'){
+				if(typeof $scope.project === 'object'){
 
-				$scope.watchersObj['project.auditions'] = $scope.$watchCollection('project.auditions',function(){
-					var file;
+					if(typeof $scope.watchersObj['project.auditions'] !== 'object'){
+						$scope.watchersObj['project.auditions'] = $scope.$watchCollection('project.auditions',function(){
+							var file;
 
-					// audition file check
-					if($scope.fileCheck === false){
-						$scope.checkFileWalk();
-					}
-
-				});
-
-				// check for values then do things
-				$scope.watchersObj['project.referenceFiles'] = $scope.$watchCollection('project.referenceFiles',function(){
-					if(typeof $scope.project.referenceFiles === 'object'){
-						if($scope.project.referenceFiles.length > 0){
-							$scope.toggleRefs = true;
-						}
-					}
-				});
-
-				// update progress bar
-				$scope.watchersObj['project.phases'] = $scope.$watchCollection('project.phases', function(val){
-
-					if(typeof $scope.project.phases !== 'undefined'){
-						var phaseLngth = $scope.project.phases.length;
-						var complSteps = 0;
-
-						// determine completed steps
-						for(var i = 0; i < phaseLngth; ++i){
-							if($scope.project.phases[i].status === 'complete'){
-								complSteps++;
+							// audition file check
+							if($scope.fileCheck === false){
+								$scope.checkFileWalk();
 							}
-						}
 
-						// configure progress bar values
-						var perc = Math.floor((100 / phaseLngth) * complSteps);
-
-						// if(perc >= 100){
-						// 	$scope.project.status = 'Complete';
-						// } else {
-						// 	//$scope.project.status = 'In Progress';
-						// }
-
-						// set progress bar values
-						$scope.dynamic = perc;
+						});
 					}
 
-				});
-			}
-		});
+					// check for values then do things
+					if(typeof $scope.watchersObj['project.referenceFiles'] !== 'object'){
+						$scope.watchersObj['project.referenceFiles'] = $scope.$watchCollection('project.referenceFiles',function(){
+							if(typeof $scope.project.referenceFiles === 'object'){
+								if($scope.project.referenceFiles.length > 0){
+									$scope.toggleRefs = true;
+								}
+							}
+						});
+					}
+
+					// update progress bar
+					if(typeof $scope.watchersObj['project.phases'] !== 'object'){
+						$scope.watchersObj['project.phases'] = $scope.$watchCollection('project.phases', function(val){
+
+							if(typeof $scope.project.phases !== 'undefined'){
+								var phaseLngth = $scope.project.phases.length;
+								var complSteps = 0;
+
+								// determine completed steps
+								for(var i = 0; i < phaseLngth; ++i){
+									if($scope.project.phases[i].status === 'complete'){
+										complSteps++;
+									}
+								}
+
+								// configure progress bar values
+								var perc = Math.floor((100 / phaseLngth) * complSteps);
+
+								// if(perc >= 100){
+								// 	$scope.project.status = 'Complete';
+								// } else {
+								// 	//$scope.project.status = 'In Progress';
+								// }
+
+								// set progress bar values
+								$scope.dynamic = perc;
+							}
+
+						});
+					}
+
+				}
+			});
+		}
 
 		// verify audio objects
 		$scope.verifyAudio = function(key){
@@ -2160,46 +2173,48 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.newAudUpload = '';
 		$scope.audFiles = [];
 		$scope.uploadedAuds = [];
-		$scope.$watchCollection('newAudUpload', function(){
+		if(typeof $scope.watchersObj['newAudUpload'] !== 'object'){
+			$scope.$watchCollection('newAudUpload', function(){
 
-			// get curent index
-			var i = $scope.uploadedAuds.length;
+				// get curent index
+				var i = $scope.uploadedAuds.length;
 
-			// file is uploaded successfully
-			$scope.uploadedAuds[i] = $scope.newAudUpload;
+				// file is uploaded successfully
+				$scope.uploadedAuds[i] = $scope.newAudUpload;
 
-			// update talents with posted status for uploaded talent
-			angular.forEach($scope.project.talent, function(talent, key) {
-				if(talent.talentId === $scope.newAudUpload.talent){
-					$scope.project.talent[key].status = 'Posted';
-				}
-
-				// save on finish loop
-				if($scope.project.talent.length === (key+1)){
-
-					// save project on finish
-					if($scope.audFiles.length === (i+1)){
-
-						$scope.project.auditions = $scope.project.auditions.concat($scope.uploadedAuds);
-
-						// save with pause, ensure loop finished
-						setTimeout(function(){
-
-								$scope.verifyFilesList = [];
-
-								// update project store
-								$scope.updateNoRefresh();
-								// trigger new file check walk
-								$scope.fileCheck = false;
-
-						}, 1000);
-
+				// update talents with posted status for uploaded talent
+				angular.forEach($scope.project.talent, function(talent, key) {
+					if(talent.talentId === $scope.newAudUpload.talent){
+						$scope.project.talent[key].status = 'Posted';
 					}
-				}
+
+					// save on finish loop
+					if($scope.project.talent.length === (key+1)){
+
+						// save project on finish
+						if($scope.audFiles.length === (i+1)){
+
+							$scope.project.auditions = $scope.project.auditions.concat($scope.uploadedAuds);
+
+							// save with pause, ensure loop finished
+							setTimeout(function(){
+
+									$scope.verifyFilesList = [];
+
+									// update project store
+									$scope.updateNoRefresh();
+									// trigger new file check walk
+									$scope.fileCheck = false;
+
+							}, 1000);
+
+						}
+					}
+
+				});
 
 			});
-
-		});
+		}
 		var performUploadAudition = function(file, i, $files){
 
 			$scope.upload = $upload.upload({
