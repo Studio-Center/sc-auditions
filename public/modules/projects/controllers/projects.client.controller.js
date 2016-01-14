@@ -8,6 +8,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.projectsTotalCnt = 0;
 		$scope.project = {};
 		$scope.discussion = '';
+		$scope.watchersObj = {};
 		// rating
 		$scope.hide = 0;
 		$scope.max = 5;
@@ -1494,20 +1495,20 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			// load project document
 			this.findOne();
 
-			// update project after all auditions file have been checked
-			$scope.$watchCollection('procCnt', function(){
-				if($scope.procCnt > 0 && $scope.newFileCnt > 0){
-					if($scope.procCnt === $scope.newFileCnt){
-						// save project changes
-						$scope.updateNoRefresh();
-						// reset count vars
-						$scope.newFileCnt = 0;
-						$scope.procCnt = 0;
-					}
-				}
-			});
-
 		};
+
+		// update project after all auditions file have been checked
+		$scope.watchersObj['procCnt'] = $scope.$watchCollection('procCnt', function(){
+			if($scope.procCnt > 0 && $scope.newFileCnt > 0){
+				if($scope.procCnt === $scope.newFileCnt){
+					// save project changes
+					$scope.updateNoRefresh();
+					// reset count vars
+					$scope.newFileCnt = 0;
+					$scope.procCnt = 0;
+				}
+			}
+		});
 
 		// load audio files into player after project object has finished loading
 		$scope.$watchCollection('newProject.estimatedCompletionDate', function(val){
@@ -1599,7 +1600,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 			if(typeof $scope.project === 'object'){
 
-				$scope.$watchCollection('project.auditions',function(){
+				$scope.watchersObj['project.auditions'] = $scope.$watchCollection('project.auditions',function(){
 					var file;
 
 					// audition file check
@@ -1610,7 +1611,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				});
 
 				// check for values then do things
-				$scope.$watchCollection('project.referenceFiles',function(){
+				$scope.watchersObj['project.referenceFiles'] = $scope.$watchCollection('project.referenceFiles',function(){
 					if(typeof $scope.project.referenceFiles === 'object'){
 						if($scope.project.referenceFiles.length > 0){
 							$scope.toggleRefs = true;
@@ -1619,7 +1620,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				});
 
 				// update progress bar
-				$scope.$watchCollection('project.phases', function(val){
+				$scope.watchersObj['project.phases'] = $scope.$watchCollection('project.phases', function(val){
 
 					if(typeof $scope.project.phases !== 'undefined'){
 						var phaseLngth = $scope.project.phases.length;
