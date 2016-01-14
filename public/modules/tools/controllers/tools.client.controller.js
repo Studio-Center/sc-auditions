@@ -38,6 +38,13 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 			password: ''
 		};
 
+		// clear mem leaks on controller destroy
+		$scope.$on('$destroy', function (event) {
+        Socket.removeAllListeners();
+        // or something like
+        // socket.removeListener(this);
+    });
+
 		$scope.predicate = '';
 
 		$scope.updatePred = function(pred){

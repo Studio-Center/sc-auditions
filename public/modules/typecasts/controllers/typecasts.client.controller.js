@@ -8,6 +8,13 @@ angular.module('typecasts').controller('TypecastsController', ['$scope', '$state
 		// controller level vals
 		$scope.newAtrribute = '';
 
+		// clear mem leaks on controller destroy
+		$scope.$on('$destroy', function (event) {
+        Socket.removeAllListeners();
+        // or something like
+        // socket.removeListener(this);
+    });
+
 		// used for paginator
 		$scope.Math = window.Math;
 		$scope.currentPage = 0;
@@ -92,7 +99,7 @@ angular.module('typecasts').controller('TypecastsController', ['$scope', '$state
 
 		// Find existing Typecast
 		$scope.findOne = function() {
-			$scope.typecast = Typecasts.get({ 
+			$scope.typecast = Typecasts.get({
 				typecastId: $stateParams.typecastId
 			});
 		};

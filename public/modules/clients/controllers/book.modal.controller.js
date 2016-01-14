@@ -12,6 +12,7 @@ angular.module('clients').controller('BookModalController', ['$scope', '$statePa
 		$scope.audio = '';
 		$scope.lastAudioID = 0;
 		$scope.audioStatus = 0;
+		$scope.watchersObj = {};
 
 		// find single project by id
 		$scope.findOneById = function(id) {
@@ -35,16 +36,16 @@ angular.module('clients').controller('BookModalController', ['$scope', '$statePa
 			});
 		};
 
-		$scope.$watchCollection('data', function(val){
+		$scope.watchersObj['data'] = $scope.$watchCollection('data', function(val){
 			// load associated project
 			if(typeof $scope.data !== 'undefined'){
 				$scope.findOneById($scope.data.project);
-			}
+			}$scope.watchersObj['procCnt'] =
 		});
 
 		// prune unneeded auditions
-		$scope.$watchCollection('project', function(val){
-			$scope.$watchCollection('project.auditions', function(val){
+		$scope.watchersObj['project'] = $scope.$watchCollection('project', function(val){
+			$scope.watchersObj['project.auditions'] = $scope.$watchCollection('project.auditions', function(val){
 
 				$scope.selectedAuds = [];
 
