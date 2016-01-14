@@ -40,7 +40,7 @@ angular.module('clients').controller('BookModalController', ['$scope', '$statePa
 			// load associated project
 			if(typeof $scope.data !== 'undefined'){
 				$scope.findOneById($scope.data.project);
-			}$scope.watchersObj['procCnt'] =
+			}
 		});
 
 		// prune unneeded auditions
