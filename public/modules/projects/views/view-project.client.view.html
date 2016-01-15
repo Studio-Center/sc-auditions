@@ -284,7 +284,7 @@
 
 										<a href="/res/auditions/{{::project._id}}/{{audition.file.name | encodeUri}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable" download="{{::audition.file.name}}">ngAudio</a>
 										<p ng-module="users" ng-controller="UsersController" data-ng-init="getOne(audition.approved.by.userId)">
-											<strong>Posted by:</strong> <a href="/#!/usersedit/{{useredit._id}}" target="_blank">{{::useredit.displayName}}</a><br>
+											<strong>Posted by:</strong> <a href="/#!/usersedit/{{::useredit._id}}" target="_blank">{{::useredit.displayName}}</a><br>
 											<strong>On:</strong> {{::project.auditions[key].approved.by.date | amDateFormat:'M/DD/YY h:mm:ss a'}}
 										</p>
 										<p ng-if="audition.hidden == true" style="font-size:18px;color:red;font-weight:700">HIDDEN BY CLIENT</p>
