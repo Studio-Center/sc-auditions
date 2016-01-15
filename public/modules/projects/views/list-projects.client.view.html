@@ -100,16 +100,16 @@
                         <div class="col-lg-8 col-md-8 col-sm-8">
                             <div class="row">
                                 <div class="col-lg-8 col-md-8 col-sm-8">
-                                    <strong>{{::project.title}}</strong> <small>Due {{::project.estimatedCompletionDate | amDateFormat:'M/DD/YY h:mm a'}} EST</small>
+                                    <strong ng-bind="project.title"></strong> <small>Due <span ng-bind="project.estimatedCompletionDate | amDateFormat:'M/DD/YY h:mm a'"></span> EST</small>
                                 </div>
                                 <div class="col-lg-3 col-md-3 col-sm-3">
-                                    <progressbar value="calcProjectProg(project)" type="success" ng-model="progress"><b>{{::calcProjectProg(project)}}%</b></progressbar>
+                                    <progressbar value="calcProjectProg(project)" type="success" ng-model="progress"><b ng-bind="calcProjectProg(project) + '%'"></b></progressbar>
                                 </div>
                                 <div class="col-lg-1 col-md-1 col-sm-1"></div>
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-4 col-sm-4">
-                            <small>Created {{::project.created | amDateFormat:'M/DD/YY h:mm:ss a'}} EST by {{::project.user.displayName}}</small>
+                            <small>Created <span ng-bind="project.created | amDateFormat:'M/DD/YY h:mm:ss a'"></span> EST by <span ng-bind="project.user.displayName"></span></small>
                         </div>
                     </div>
                 </a>
