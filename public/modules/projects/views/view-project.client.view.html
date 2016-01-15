@@ -2,7 +2,7 @@
 	<div class="page-header">
 		<div class="row">
 			<div class="col-lg-8 col-md-8 col-sm-8">
-				<h2 style="margin:0"><a ng-href="/#!/projects/{{::project._id}}" ng-bind="project.title"></a> <small>Due {{project.estimatedCompletionDate | amDateFormat:'M/DD/YY h:mm:ss a'}} EST</small> </h2>
+				<h2 style="margin:0"><a ng-href="/#!/projects/{{::project._id}}" ng-bind="::project.title"></a> <small>Due {{project.estimatedCompletionDate | amDateFormat:'M/DD/YY h:mm:ss a'}} EST</small> </h2>
 				<div class="form-group" ng-if="showDateEdit">
           <div class="panel panel-default">
               <div class="panel-heading">
@@ -18,19 +18,19 @@
                     <datetimepicker ng-change="updateDueDate()" data-ng-model="project.estimatedCompletionDate" data-datetimepicker-config="{ minuteStep: 30 }"/>
 
                   	</div>
-                   <div style="color:red;font-weight:700" ng-bind="dateNotice"></div>
+                   <div style="color:red;font-weight:700" ng-bind="::dateNotice"></div>
                </div>
               </div>
 	          </div>
 	      	</div>
-				<h4>Created by <a ng-href="/#!/usersedit/{{::project.user._id}}" target="_blank" ng-bind="project.user.displayName"></a> <span ng-bind="project.created | amDateFormat:'M/DD/YY h:mm:ss a'"></span> EST</h4>
+				<h4>Created by <a ng-href="/#!/usersedit/{{::project.user._id}}" target="_blank" ng-bind="::project.user.displayName"></a> <span ng-bind="project.created | amDateFormat:'M/DD/YY h:mm:ss a'"></span> EST</h4>
 				<a class="btn btn-primary" href="/#!/clients/projects/{{::project._id}}" target="_blank">View in Client Portal</a>
 				<a data-ng-if="permitAdminProductionCoordinator() || isOwner()" class="btn btn-success" ng-click="toggleShowEdit()">Extend Audition</a>
 				<a data-ng-if="permitAdminProductionCoordinator() || isOwner()" class="btn btn-danger" href="/#!/projects/create/{{::project._id}}">ReAudition</a>
 			</div>
 			<div class="col-lg-4 col-md-4 col-sm-4">
 					<progressbar value="dynamic" type="success" ng-model="progress"><b>{{dynamic}}%</b></progressbar>
-					<div ng-if="permitAdminDirector() === false" class="panel-body" data-ng-bind="project.status" style="text-align:center"></div>
+					<div ng-if="permitAdminDirector() === false" class="panel-body" ng-bind="::project.status" style="text-align:center"></div>
 					<select class="form-control" style="display:block;margin:0 auto" ng-if="permitAdminDirector()" ng-model="project.status" ng-change="updateProjectStatus()" ng-class="{redBG: project.status == 'In Progress' && checkPassed(project.estimatedCompletionDate), greenBg: project.status == 'Booked', lgreenBG: project.status == 'Closed - Pending Client Decision', orangeBG: project.status == 'On Hold', lgray: project.status == 'Cancelled', mgray: project.status == 'ReAuditioned', gray: project.status == 'Dead', blueBg: project.status == 'In Progress' && compareDates(project.estimatedCompletionDate),lblueBG: project.status == 'In Progress' && compareDatesDay(project.estimatedCompletionDate) == false && compareDates(project.estimatedCompletionDate) == false, defClr: project.status == 'In Progress' && compareDatesDay(project.estimatedCompletionDate), yellowBg: project.sounders == 'No Sounders - Approved By William' && compareDates(project.estimatedCompletionDate), lyellowBg: project.sounders == 'No Sounders - Approved By William' && compareDates(project.estimatedCompletionDate) == false}">
               <option ng-repeat="item in statusOpts" value="{{::item}}">{{::item}}</option>
           </select>
@@ -72,12 +72,12 @@
 					<div style="max-height:200px;padding:10px;border-top:1px solid #e8e8e8;overflow-y:scroll">
 						<div ng-repeat="(key, ditem) in project.discussion.slice().reverse()">
 							<h5 ng-if="ditem.deleted === true" class="strike-if"><strong>{{ditem.date | amDateFormat:'M/DD/YY h:mm:ss a'}} EST -
-								<a ng-if="ditem.userid" href="/#!/usersedit/{{::ditem.userid}}" target="_blank" ng-bind="ditem.username"></a>
-								<span ng-if="ditem.userid === ''" ng-bind="ditem.username"></span>
+								<a ng-if="ditem.userid" href="/#!/usersedit/{{::ditem.userid}}" target="_blank" ng-bind="::ditem.username"></a>
+								<span ng-if="ditem.userid === ''" ng-bind="::ditem.username"></span>
 							</strong></h5>
 							<h5 ng-if="ditem.deleted === false"><strong>{{ditem.date | amDateFormat:'M/DD/YY h:mm:ss a'}} EST -
-								<a ng-if="ditem.userid" href="/#!/usersedit/{{::ditem.userid}}" target="_blank" ng-bind="ditem.username"></a>
-								<span ng-if="ditem.userid === ''" ng-bind="ditem.username"></span>
+								<a ng-if="ditem.userid" href="/#!/usersedit/{{::ditem.userid}}" target="_blank" ng-bind="::ditem.username"></a>
+								<span ng-if="ditem.userid === ''" ng-bind="::ditem.username"></span>
 							</strong></h5>
 							<div class="clearfix">
 								<button ng-if="authentication.user._id === ditem.userid && ditem.deleted === false" style="float:right" class="btn btn-danger" ng-click="deleteDiscussion(key)">Delete</button>
@@ -98,7 +98,7 @@
 				<fieldset>
 					<div style="max-height:200px;padding:10px;border-top:1px solid #e8e8e8;overflow-y:scroll">
 						<div ng-repeat="(key, note) in project.clientNotes | orderBy:'-date':reverse">
-							<h5><strong><span ng-bind="note.date | amDateFormat:'M/DD/YY h:mm:ss a'"></span> EST - <span ng-bind="note.username"></span></strong></h5>
+							<h5><strong><span ng-bind="::note.date | amDateFormat:'M/DD/YY h:mm:ss a'"></span> EST - <span ng-bind="::note.username"></span></strong></h5>
 							<div ng-bind-html="note.item"></div>
 						</div>
 					</div>
@@ -134,12 +134,12 @@
 							<div class="row">
         				<div class="col-lg-10 col-md-10 col-sm-10">
 									<span style="display:inline-block">
-										<strong ng-bind="key+1+'.'"></strong>
-										<a ng-href="/res/scripts/{{::project._id}}/{{script.file.name | encodeUri}}" target="_blank" data-ng-bind="script.file.name" download="{{::script.file.name}}"></a>
+										<strong ng-bind="::key+1+'.'"></strong>
+										<a ng-href="/res/scripts/{{::project._id}}/{{script.file.name | encodeUri}}" target="_blank" ng-bind="::script.file.name" download="{{::script.file.name}}"></a>
 										<a ng-href="/res/scripts/{{::project._id}}/{{::script.file.name}}" target="_blank">
 											<img src="/img/Adobe-Acrobat-icon.png" alt="download PDF" download="{{::script.file.name}}">
 										</a><br>
-										<span ng-bind="script.by.date | amDateFormat:'M/DD/YY h:mm:ss a'"></span>
+										<span ng-bind="::script.by.date | amDateFormat:'M/DD/YY h:mm:ss a'"></span>
 									</span>
 								</div>
 								<div class="col-lg-1 col-md-1 col-sm-1">
@@ -179,9 +179,9 @@
 								<div class="row">
           				<div class="col-lg-10 col-md-10 col-sm-10">
 										<span style="display:inline-block">
-											<strong ng-bind="key+1+'.'"></strong>
-											<a ng-href="/res/referenceFiles/{{::project._id}}/{{referenceFile.file.name | encodeUri}}" target="_blank" data-ng-bind="referenceFile.file.name" download="{{::referenceFile.file.name}}"></a><br>
-											<span ng-bind="referenceFile.by.date | amDateFormat:'M/DD/YY h:mm:ss a'"></span>
+											<strong ng-bind="::key+1+'.'"></strong>
+											<a ng-href="/res/referenceFiles/{{::project._id}}/{{referenceFile.file.name | encodeUri}}" target="_blank" ng-bind="::referenceFile.file.name" download="{{::referenceFile.file.name}}"></a><br>
+											<span ng-bind="::referenceFile.by.date | amDateFormat:'M/DD/YY h:mm:ss a'"></span>
 										</span>
 
 										<div ng-if="checkForAudio(referenceFile.file.name)">
@@ -275,19 +275,19 @@
 								</tr>
 								<tr ng-repeat="(key, audition) in project.auditions track by $index">
 									<td>
-										<span ng-bind="key+1"></span>
+										<span ng-bind="::key+1"></span>
 									</td>
 									<td>
 										<div ng-if="audition.filecheck === 2" style="font-size:18px;color:red;font-weight:700">
 											FILE NOT FOUND ON SERVER! <br>PLEASE UPLOAD AGAIN!
 										</div>
 
-										<a ng-href="/res/auditions/{{::project._id}}/{{audition.file.name | encodeUri}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable" download="{{::audition.file.name}}">ngAudio</a>
+										<a ng-href="/res/auditions/{{::project._id}}/{{audition.file.name | encodeUri}}" target="_blank" data-ng-bind="::audition.file.name" class="inline-playable" download="{{::audition.file.name}}">ngAudio</a>
 										<p ng-module="users" ng-controller="UsersController" data-ng-init="getOne(audition.approved.by.userId)">
 											<strong>Posted by:</strong> <a ng-href="/#!/usersedit/{{::useredit._id}}" target="_blank">
-												<span ng-bind="useredit.displayName"></span>
+												<span ng-bind="::useredit.displayName"></span>
 											</a><br>
-											<strong>On:</strong> <span ng-bind="project.auditions[key].approved.by.date | amDateFormat:'M/DD/YY h:mm:ss a'"></span>
+											<strong>On:</strong> <span ng-bind="::project.auditions[key].approved.by.date | amDateFormat:'M/DD/YY h:mm:ss a'"></span>
 										</p>
 										<p ng-if="audition.hidden == true" style="font-size:18px;color:red;font-weight:700">HIDDEN BY CLIENT</p>
 										<button ng-click="toggleShowRename()" class="btn btn-primary">Rename</button>
@@ -395,13 +395,13 @@
 							<tr ng-repeat="(key, member) in project.talent | orderBy:predicate:reverse" ng-module="talents" ng-controller="TalentsController" data-ng-init="getOne(member.talentId)">
 								<td>
 									<a target="_blank" ng-href="/#!/talents/{{::member.talentId}}" ng-bind="talent.name + ' ' + talent.lastNameCode"></a><br>
-									<span ng-bind="member.added | amDateFormat:'M/DD/YY h:mm:ss a'"></span>
+									<span ng-bind="::member.added | amDateFormat:'M/DD/YY h:mm:ss a'"></span>
 								</td>
 								<td>
 									<a target="_blank" ng-href="/#!/projects/talent-upload/{{::project._id}}/{{::member.talentId}}" title="talent auditions upload link">^</a>
 								</td>
 								<td>
-									<span ng-bind="talent.locationISDN"></span>
+									<span ng-bind="::talent.locationISDN"></span>
 								</td>
 								<td>
 									<span ng-if="member.requested == true">R</span>
@@ -410,7 +410,7 @@
 									<select class="form-control" ng-model="talentStatus[member.talentId]" ng-init="talentStatus[member.talentId] = $parent.getTalentStatus(member.talentId) || talentStatus[0]" style="width:100px" ng-change="$parent.updateTalentStatus(member.talentId, talentStatus[member.talentId])" ng-options="item for item in talentStatus"></select>
 								</td>
 								<td>
-									<span ng-bind="member.part"></span>
+									<span ng-bind="::member.part"></span>
 								</td>
 								<td>
 									<button class="btn btn-primary" ng-click="$parent.sendTalentEmail(member.talentId)">
@@ -538,10 +538,10 @@
 												</td>
 												<td>
 													<input type="text" class="form-control" ng-model="parts[talent._id]" ng-if="showPartFld(talent._id)">
-													<div ng-if="showPartFld(talent._id) == false" ng-bind="showPartString(talent._id)"></div>
+													<div ng-if="showPartFld(talent._id) == false" ng-bind="::showPartString(talent._id)"></div>
 												</td>
 												<td>
-													<a target="_blank" href="/#!/talents/{{::talent._id}}" ng-bind="talent.name + ' ' + talent.lastName"></a> - <span ng-bind="talent.locationISDN"></span> - Outage <span ng-if="!talent.outageTimes">None</span><span ng-if="talent.outageTimes != ''" ng-bind="talent.outageTimes"></span>
+													<a target="_blank" href="/#!/talents/{{::talent._id}}" ng-bind="::talent.name + ' ' + talent.lastName"></a> - <span ng-bind="talent.locationISDN"></span> - Outage <span ng-if="!talent.outageTimes">None</span><span ng-if="talent.outageTimes != ''" ng-bind="::talent.outageTimes"></span>
 												</td>
 											</tr>
 										</table>
@@ -591,7 +591,7 @@
 
 						<ul class="list-group">
 							<li class="list-group-item" ng-repeat="(key, member) in project.client" ng-module="users" ng-controller="UsersController" data-ng-init="getOne(member.userId)">
-								<input type="checkbox" ng-model="selectedMainClients[key]" ng-true-value="'{{::member.userId}}'"> <a target="_blank" ng-href="/#!/usersedit/{{::member.userId}}" ng-bind="member.name + ' ' + member.company"></a> - <span ng-bind="useredit.company"></span>
+								<input type="checkbox" ng-model="selectedMainClients[key]" ng-true-value="'{{::member.userId}}'"> <a target="_blank" ng-href="/#!/usersedit/{{::member.userId}}" ng-bind="::member.name + ' ' + member.company"></a> - <span ng-bind="::useredit.company"></span>
 							</li>
 						</ul>
 
@@ -642,8 +642,8 @@
 										<ul class="list-group">
 											<li class="list-group-item" ng-repeat="(key, user) in filtered = (users | filter:filterClient) | startFrom:currentPage*limit | limitTo: limit">
 												<input type="checkbox" value="{{::user._id}}" ng-click="updateClient(user._id, user.displayName, user.email)" ng-checked="checkClientUsers(user._id)">
-												<a target="_blank" ng-href="/#!/usersedit/{{::user._id}}" ng-bind="user.displayName"></a>
-												 - <span ng-bind="user.company"></span>
+												<a target="_blank" ng-href="/#!/usersedit/{{::user._id}}" ng-bind="::user.displayName"></a>
+												 - <span ng-bind="::user.company"></span>
 											</li>
 										</ul>
 										<div class="row">
@@ -680,8 +680,8 @@
 		        	</accordion-heading>
 						<ul class="list-group">
 							<li class="list-group-item" ng-repeat="(key, member) in project.clientClient" ng-module="users" ng-controller="UsersController" data-ng-init="getOne(member.userId)">
-								<a target="_blank" ng-href="/#!/usersedit/{{::member.userId}}" ng-bind="member.name">
-								</a> - <span ng-bind="useredit.company"></span>
+								<a target="_blank" ng-href="/#!/usersedit/{{::member.userId}}" ng-bind="::member.name">
+								</a> - <span ng-bind="::useredit.company"></span>
 							</li>
 						</ul>
 						<accordion close-others="oneAtATime" ng-if="permitAdminProductionCoordinator()">
@@ -731,8 +731,8 @@
 										<ul class="list-group">
 											<li class="list-group-item" ng-repeat="(key, user) in filtered = (users | filter:filterClientClient) | startFrom:currentPage*limit | limitTo: limit">
 												<input type="checkbox" value="{{::user._id}}" ng-click="updateClientClient(user._id, user.displayName, user.email)" ng-checked="checkClientClientUsers(user._id)">
-												<a target="_blank" href="/#!/usersedit/{{::user._id}}" ng-bind="user.displayName"></a>
-												 - <span ng-bind="user.company"></span>
+												<a target="_blank" href="/#!/usersedit/{{::user._id}}" ng-bind="::user.displayName"></a>
+												 - <span ng-bind="::user.company"></span>
 											</li>
 										</ul>
 										<div class="row">
@@ -770,7 +770,7 @@
 		        	</accordion-heading>
 					<accordion close-others="oneAtATime">
 						<div class="panel panel-default" ng-repeat="(key, phase) in project.phases">
-							<div class="panel-heading"><strong ng-bind="project.phases[key].name"></strong></div>
+							<div class="panel-heading"><strong ng-bind="::project.phases[key].name"></strong></div>
 							<div class="panel-body">
 								<span>
 									<div class="row">
