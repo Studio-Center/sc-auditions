@@ -17,10 +17,10 @@ angular.module('clients').controller('BookModalController', ['$scope', '$statePa
 		// clear all watchers
 		// clear mem leaks on controller destroy
 		$scope.$on('$destroy', function (event) {
-			angular.forEach($scope.watchersObj, function(watcherObj, key) {
-				watcherObj();
-				delete $scope.watchersObj[key];
-			});
+			// angular.forEach($scope.watchersObj, function(watcherObj, key) {
+			// 	watcherObj();
+			// 	delete $scope.watchersObj[key];
+			// });
 		});
 		// find single project by id
 		$scope.findOneById = function(id) {

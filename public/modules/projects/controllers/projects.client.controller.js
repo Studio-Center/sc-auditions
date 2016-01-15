@@ -80,11 +80,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			// clear all socket listeners
       Socket.removeAllListeners();
 
-			// clear all watchers
-			angular.forEach($scope.watchersObj, function(watcherObj, key) {
-				watcherObj();
-				delete $scope.watchersObj[key];
-			});
+			// // clear all watchers
+			// angular.forEach($scope.watchersObj, function(watcherObj, key) {
+			// 	watcherObj();
+			// 	delete $scope.watchersObj[key];
+			// });
     });
 
 		$scope.toggleShowRename = function(){
