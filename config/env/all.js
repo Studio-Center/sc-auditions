@@ -25,7 +25,7 @@ module.exports = {
 				'public/lib/circular-json/build/circular-json.js',
 				'public/lib/moment/moment.js',
 				'public/lib/modernizer/modernizr.js',
-				'public/lib/moment-timezone/moment-timezone-with-data.min.js',
+				'public/lib/moment-timezone/builds/moment-timezone-with-data.min.js',
 				'public/lib/angular/angular.min.js',
 				'public/lib/angular-base64/angular-base64.min.js',
 				'public/lib/angular-route/angular-route.min.js',
