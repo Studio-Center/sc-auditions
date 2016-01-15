@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('core').controller('HeaderController', ['$scope', 'Authentication', 'Menus', '$window', '$rootScope', '$location',
-	function($scope, Authentication, Menus, $window, $rootScope, $location) {
+angular.module('core').controller('HeaderController', ['$scope', 'Authentication', 'Menus', '$window', '$rootScope', '$location', 'Socket',
+	function($scope, Authentication, Menus, $window, $rootScope, $location, Socket) {
 		$scope.authentication = Authentication;
 		$scope.isCollapsed = false;
 		$scope.menu = Menus.getMenu('topbar');
@@ -19,6 +19,10 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
 		$rootScope.$on('$viewContentLoaded', function(event) {
 		  $window.ga('send', 'pageview', { page: $location.url() });
 		});
+
+		$scope.connectionCnt = function(){
+			//return Socket.sockets.length;
+		};
 
 	}
 ]);
