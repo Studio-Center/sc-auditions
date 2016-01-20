@@ -3,7 +3,7 @@
   "description": "Studio Center auditions project management system",
   "version": "1.0.1",
   "author": "Studio Center",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git://github.com/Studio-Center/sc-auditions.git"
