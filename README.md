@@ -10,12 +10,13 @@ Clients are given a client portal which allows them to playback and rank auditio
 
 ## Requirements
 
-NodeJS 0.10.4
-Redis-Server
-MongoDB
-Bower
-Grunt
-More dependencies can be found within package.json and bower.json
+- **NodeJS 0.10.4**
+- **Redis-Server**
+- **MongoDB**
+- **Bower**
+- **Grunt**
+- **Socket.io**
+- More dependencies can be found within package.json and bower.json
 
 ## Installation
 
