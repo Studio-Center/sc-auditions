@@ -1,5 +1,7 @@
 [![Studio Center Logo](https://studiocenter.com/sites/default/files/homepage-header.png)](https://studiocenter.com/)
 
+[![Build Status](https://travis-ci.org/Studio-Center/sc-auditions.svg?branch=master)](https://travis-ci.org/Studio-Center/sc-auditions)
+
 Studio Center Auditions Web Application developed using the MEAN.JS stack.
 
 ## Overview
