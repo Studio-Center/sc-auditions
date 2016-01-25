@@ -1887,6 +1887,21 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			$scope.updateNoRefresh();
 		};
 
+		// update project when audition talent assignment is adjusted
+		$scope.updateTalentAssignedStatus = function(selTalent){
+			// update talents with posted status for uploaded talent
+			for(var i = 0;i < $scope.project.talent.length; ++i){
+				if($scope.project.talent[i].talentId === selTalent && $scope.project.talent[i].status !== 'Posted'){
+					$scope.project.talent[i].status = 'Posted';
+				}
+				if($scope.project.talent.length === (i+1)){
+					// update project store
+					$scope.updateNoRefresh();
+				}
+			};
+
+		};
+
 		$scope.delScript = function(idx){
 			// verify user wants to delete file
 			if (confirm('Are you sure?')) {

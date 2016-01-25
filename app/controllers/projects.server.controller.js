@@ -24,8 +24,7 @@ var mongoose = require('mongoose'),
 	archiver = require('archiver'),
 	dateFormat = require('dateformat'),
 	// set date and timezone
-	moment = require('moment-timezone'),
-	now = new Date();
+	moment = require('moment-timezone');
 
 exports.sendEmail = function(req, res){
 
@@ -2446,8 +2445,6 @@ exports.uploadAudition = function(req, res, next){
 	// We are able to access req.files.file thanks to
   // the multiparty middleware
   var file = req.files.file;
-  //console.log(file.name);
-  //console.log(file.type);
 
 	// read in project document
   //var project = JSON.parse(req.body.data);
@@ -2508,11 +2505,6 @@ exports.uploadAudition = function(req, res, next){
 					if(talent !== null){
 						if(String(talent._id) === curTalent.talentId){
 							audTalent = curTalent.talentId;
-
-							// project.talent[project.talent.indexOf(curTalent)].status = 'Posted';
-
-							// project.markModified('talent');
-
 							talentCallback();
 						} else {
 							talentCallback();
@@ -2536,14 +2528,14 @@ exports.uploadAudition = function(req, res, next){
 							selected: false,
 							booked: false,
 							approved:
+								{
+									by:
 									{
-										by:
-										{
-											userId: req.user._id,
-											date: moment().tz('America/New_York').format(),
-											name: req.user.displayName
-										}
+										userId: req.user._id,
+										date: moment().tz('America/New_York').format(),
+										name: req.user.displayName
 									}
+								}
 							};
 
 					// write change to log

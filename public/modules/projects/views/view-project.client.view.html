@@ -325,7 +325,7 @@
 											<img src="img/warning.jpg" alt="talent warning icon" style="width:20px;height:auto">
 											Talent Not Assigned
 										</div>
-										<select ng-model="project.auditions[key].talent" ng-change="$parent.updateNoRefresh()">
+										<select ng-model="project.auditions[key].talent" ng-change="$parent.updateTalentAssignedStatus(project.auditions[key].talent)">
                       <option ng-repeat="talent in project.talent | orderBy:'name'" ng-selected="project.auditions[key].talent == talent.talentId" value="{{::talent.talentId}}">{{::talent.name}}</option>
                     </select>
 	                </td>
