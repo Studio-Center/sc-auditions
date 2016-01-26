@@ -334,7 +334,7 @@
 										<rating ng-model="audition.avgRating" readonly="true" max="max" on-leave="overStar = audition.avgRating" ></rating>
 									</td>
 									<td>
-										<input type="checkbox" value="true" ng-click="updatePublished(key)" ng-model="project.auditions[key].published">
+										<input style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin:10px" type="checkbox" value="true" ng-click="updatePublished(key)" ng-model="project.auditions[key].published">
 									</td>
 									<td>
 										<img ng-if="audition.booked" src="/img/green-check.png" style="width:20px;height:auto">
@@ -417,7 +417,7 @@
 									</button>
 								</td>
 								<td>
-									<input type="checkbox" data-ng-model="talentBooked[key]" ng-checked="$parent.getBooked(member.talentId)" ng-click="$parent.toggleBooked(member.talentId)">
+									<input style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin:10px" type="checkbox" data-ng-model="talentBooked[key]" ng-checked="$parent.getBooked(member.talentId)" ng-click="$parent.toggleBooked(member.talentId)">
 								</td>
 								<td>
 									<textarea ng-model="talentNote[member.talentId]" name="talentNote[member.talentId]" ng-init="talentNote[member.talentId] = $parent.getTalentNote(member.talentId)" class="form-control">
@@ -452,16 +452,16 @@
 				                            </div>
 				                        </div>
 				                        <div class="col-lg-2 col-md-2 col-sm-2">
-				                            <label>union</label> <input type="checkbox" ng-model="searchText.unionStatus" ng-true-value="'union'" class="form-control">
+				                            <label>union</label> <input style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin:10px" type="checkbox" ng-model="searchText.unionStatus" ng-true-value="'union'" class="form-control">
 				                        </div>
 				                        <div class="col-lg-2 col-md-2 col-sm-2">
-				                            <label>non-union</label> <input type="checkbox" ng-model="searchText.unionStatus" ng-true-value="'non-union'" class="form-control">
+				                            <label>non-union</label> <input style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin:10px" type="checkbox" ng-model="searchText.unionStatus" ng-true-value="'non-union'" class="form-control">
 				                        </div>
 				                        <div class="col-lg-3 col-md-3 col-sm-3">
-				                            <label>union and non-union</label> <input type="checkbox" ng-model="searchUnions" ng-true-value="'union non-union'" class="form-control">
+				                            <label>union and non-union</label> <input style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin:10px" type="checkbox" ng-model="searchUnions" ng-true-value="'union non-union'" class="form-control">
 				                        </div>
 				                        <div class="col-lg-2 col-md-2 col-sm-2">
-				                            <label>Emailer</label> <input type="checkbox" ng-model="searchText.type" ng-true-value="'email'" class="form-control">
+				                            <label>Emailer</label> <input style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin:10px" type="checkbox" ng-model="searchText.type" ng-true-value="'email'" class="form-control">
 				                        </div>
 				                    </div>
 				                    <div class="row" style="padding-bottom:10px">
@@ -530,10 +530,10 @@
 											</tr>
 											<tr ng-repeat="(key, talent) in filtered = (talents | multiTerm:searchUnions:'AND' | filter:searchText:startsWith | multiTermFull:searchString:'AND') | startFrom:currentPage*limit | limitTo: limit">
 												<td>
-													<input ng-if="addTalent" type="checkbox" value="{{::talent._id}}" ng-click="updateTalent(talent._id, talent.name + ' ' + talent.lastName, talent.email)" ng-checked="checkTalent(talent._id)">
+													<input style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin:10px" ng-if="addTalent" type="checkbox" value="{{::talent._id}}" ng-click="updateTalent(talent._id, talent.name + ' ' + talent.lastName, talent.email)" ng-checked="checkTalent(talent._id)">
 												</td>
 												<td>
-													<input ng-if="addTalent" type="checkbox" value="{{::talent._id}}" ng-click="updateRequestTalent(talent._id, talent.name + ' ' + talent.lastName, talent.email)" ng-checked="checkRequestedTalent(talent._id)">
+													<input style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin:10px" ng-if="addTalent" type="checkbox" value="{{::talent._id}}" ng-click="updateRequestTalent(talent._id, talent.name + ' ' + talent.lastName, talent.email)" ng-checked="checkRequestedTalent(talent._id)">
 												</td>
 												<td>
 													<input type="text" class="form-control" ng-model="parts[talent._id]" ng-if="showPartFld(talent._id)">
@@ -590,7 +590,7 @@
 
 						<ul class="list-group">
 							<li class="list-group-item" ng-repeat="(key, member) in project.client" ng-module="users" ng-controller="UsersController" data-ng-init="getOne(member.userId)">
-								<input type="checkbox" ng-model="selectedMainClients[key]" ng-true-value="'{{::member.userId}}'"> <a target="_blank" ng-href="/#!/usersedit/{{::member.userId}}" ng-bind="::member.name + ' ' + member.company"></a> - <span ng-bind="::useredit.company"></span>
+								<input style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin:10px" type="checkbox" ng-model="selectedMainClients[key]" ng-true-value="'{{::member.userId}}'"> <a target="_blank" ng-href="/#!/usersedit/{{::member.userId}}" ng-bind="::member.name + ' ' + member.company"></a> - <span ng-bind="::useredit.company"></span>
 							</li>
 						</ul>
 
@@ -640,7 +640,7 @@
 									    </div>
 										<ul class="list-group">
 											<li class="list-group-item" ng-repeat="(key, user) in filtered = (users | filter:filterClient) | startFrom:currentPage*limit | limitTo: limit">
-												<input type="checkbox" value="{{::user._id}}" ng-click="updateClient(user._id, user.displayName, user.email)" ng-checked="checkClientUsers(user._id)">
+												<input style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin:10px" type="checkbox" value="{{::user._id}}" ng-click="updateClient(user._id, user.displayName, user.email)" ng-checked="checkClientUsers(user._id)">
 												<a target="_blank" ng-href="/#!/usersedit/{{::user._id}}" ng-bind="::user.displayName"></a>
 												 - <span ng-bind="::user.company"></span>
 											</li>
@@ -729,7 +729,7 @@
 									    </div>
 										<ul class="list-group">
 											<li class="list-group-item" ng-repeat="(key, user) in filtered = (users | filter:filterClientClient) | startFrom:currentPage*limit | limitTo: limit">
-												<input type="checkbox" value="{{::user._id}}" ng-click="updateClientClient(user._id, user.displayName, user.email)" ng-checked="checkClientClientUsers(user._id)">
+												<input style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin:10px" type="checkbox" value="{{::user._id}}" ng-click="updateClientClient(user._id, user.displayName, user.email)" ng-checked="checkClientClientUsers(user._id)">
 												<a target="_blank" href="/#!/usersedit/{{::user._id}}" ng-bind="::user.displayName"></a>
 												 - <span ng-bind="::user.company"></span>
 											</li>
