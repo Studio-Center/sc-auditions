@@ -4,17 +4,27 @@
  * Module dependencies.
  */
 var _ = require('lodash'),
-	glob = require('glob');
+	glob = require('glob'),
+	fs = require('fs');
 	// set application widen timezone
 	process.env.TZ = 'America/New_York';
 
 /**
  * Load app configurations
  */
-module.exports = _.extend(
-	require('./env/all'),
-	require('./env/' + process.env.NODE_ENV) || {}
-);
+// check for hidden config files
+if(fs.existsSync('scad/env/' + process.env.NODE_ENV)) {
+	module.exports = _.extend(
+		require('./env/all'),
+		require('scad/env/' + process.env.NODE_ENV) || {}
+	);
+	// load default config files
+} else {
+	module.exports = _.extend(
+		require('./env/all'),
+		require('./env/' + process.env.NODE_ENV) || {}
+	);
+}
 /**
  * Get files by glob patterns
  */
@@ -28,7 +38,7 @@ module.exports.getGlobbedFiles = function(globPatterns, removeRoot) {
 	// The output array
 	var output = [];
 
-	// If glob pattern is array so we use each pattern in a recursive way, otherwise we use glob 
+	// If glob pattern is array so we use each pattern in a recursive way, otherwise we use glob
 	if (_.isArray(globPatterns)) {
 		globPatterns.forEach(function(globPattern) {
 			output = _.union(output, _this.getGlobbedFiles(globPattern, removeRoot));

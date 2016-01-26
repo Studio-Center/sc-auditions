@@ -44,7 +44,7 @@ angular.module('clients').controller('BookModalController', ['$scope', '$statePa
 			});
 		};
 
-		$scope.watchersObj['data'] = $scope.$watchCollection('data', function(val){
+		$scope.watchersObj.data = $scope.$watchCollection('data', function(val){
 			// load associated project
 			if(typeof $scope.data !== 'undefined'){
 				$scope.findOneById($scope.data.project);
@@ -52,8 +52,8 @@ angular.module('clients').controller('BookModalController', ['$scope', '$statePa
 		});
 
 		// prune unneeded auditions
-		$scope.watchersObj['project'] = $scope.$watchCollection('project', function(val){
-			$scope.watchersObj['project.auditions'] = $scope.$watchCollection('project.auditions', function(val){
+		$scope.watchersObj.project = $scope.$watchCollection('project', function(val){
+			$scope.watchersObj.project.auditions = $scope.$watchCollection('project.auditions', function(val){
 
 				$scope.selectedAuds = [];
 

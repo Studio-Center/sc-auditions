@@ -60,7 +60,7 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 	    		$scope.currentPage = page;
 	    	}
 	    };
-	    $scope.watchersObj['filtered'] = $scope.$watchCollection('filtered', function(val){
+	    $scope.watchersObj.filtered = $scope.$watchCollection('filtered', function(val){
 	    	$scope.currentPage = 0;
 	    }, true);
 

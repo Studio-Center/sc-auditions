@@ -1510,8 +1510,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		};
 
 		// update project after all auditions file have been checked
-		if(typeof $scope.watchersObj['procCnt'] !== 'object'){
-			$scope.watchersObj['procCnt'] = $scope.$watchCollection('procCnt', function(){
+		if(typeof $scope.watchersObj.procCnt !== 'object'){
+			$scope.watchersObj.procCnt = $scope.$watchCollection('procCnt', function(){
 				if($scope.procCnt > 0 && $scope.newFileCnt > 0){
 					if($scope.procCnt === $scope.newFileCnt){
 						// save project changes
@@ -1612,13 +1612,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		};
 
-		if(typeof $scope.watchersObj['project'] !== 'object'){
-			$scope.watchersObj['project'] = $scope.$watchCollection('project', function(val){
+		if(typeof $scope.watchersObj.project !== 'object'){
+			$scope.watchersObj.project = $scope.$watchCollection('project', function(val){
 
 				if(typeof $scope.project === 'object'){
 
-					if(typeof $scope.watchersObj['project.auditions'] !== 'object'){
-						$scope.watchersObj['project.auditions'] = $scope.$watchCollection('project.auditions',function(){
+					if(typeof $scope.watchersObj.project.auditions !== 'object'){
+						$scope.watchersObj.project.auditions = $scope.$watchCollection('project.auditions',function(){
 							var file;
 
 							// audition file check
@@ -1630,8 +1630,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					}
 
 					// check for values then do things
-					if(typeof $scope.watchersObj['project.referenceFiles'] !== 'object'){
-						$scope.watchersObj['project.referenceFiles'] = $scope.$watchCollection('project.referenceFiles',function(){
+					if(typeof $scope.watchersObj.project.referenceFiles !== 'object'){
+						$scope.watchersObj.project.referenceFiles = $scope.$watchCollection('project.referenceFiles',function(){
 							if(typeof $scope.project.referenceFiles === 'object'){
 								if($scope.project.referenceFiles.length > 0){
 									$scope.toggleRefs = true;
@@ -1641,8 +1641,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					}
 
 					// update progress bar
-					if(typeof $scope.watchersObj['project.phases'] !== 'object'){
-						$scope.watchersObj['project.phases'] = $scope.$watchCollection('project.phases', function(val){
+					if(typeof $scope.watchersObj.project.phases !== 'object'){
+						$scope.watchersObj.project.phases = $scope.$watchCollection('project.phases', function(val){
 
 							if(typeof $scope.project.phases !== 'undefined'){
 								var phaseLngth = $scope.project.phases.length;
@@ -1898,7 +1898,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					// update project store
 					$scope.updateNoRefresh();
 				}
-			};
+			}
 
 		};
 
@@ -2200,7 +2200,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.newAudUpload = '';
 		$scope.audFiles = [];
 		$scope.uploadedAuds = [];
-		if(typeof $scope.watchersObj['newAudUpload'] !== 'object'){
+		if(typeof $scope.watchersObj.newAudUpload !== 'object'){
 			$scope.$watchCollection('newAudUpload', function(){
 
 				// get curent index
