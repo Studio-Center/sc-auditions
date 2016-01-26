@@ -30,11 +30,7 @@ module.exports = {
 		notifications: 'audition-notification@studiocenter.com',
 		options: {
 		    auth: {
-<<<<<<< HEAD
 		        api_key: 'SENDGRID_API_KEY'
-=======
-		        api_key: ''
->>>>>>> origin/master
 		    }
 		}
 	}

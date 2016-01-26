@@ -2,11 +2,7 @@
 
 module.exports = {
 	db: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://' + (process.env.DB_1_PORT_27017_TCP_ADDR || 'localhost') + '/studio-center-auditions',
-<<<<<<< HEAD
 	domain: 'studiocenterauditions.com', // change to whatever domain you plan to use
-=======
-	domain: 'studiocenterauditions.com',
->>>>>>> origin/master
 	assets: {
 		lib: {
 			css: [
@@ -55,7 +51,6 @@ module.exports = {
 		css: 'public/dist/application.min.css',
 		js: 'public/dist/application.min.js'
 	},
-<<<<<<< HEAD
   facebook: {
 		clientID: process.env.FACEBOOK_ID || 'APP_ID',
 		clientSecret: process.env.FACEBOOK_SECRET || 'APP_SECRET',
@@ -75,38 +70,13 @@ module.exports = {
 		clientID: process.env.LINKEDIN_ID || 'APP_ID',
 		clientSecret: process.env.LINKEDIN_SECRET || 'APP_SECRET',
 		callbackURL: '/auth/linkedin/callback'
-=======
-	facebook: {
-		clientID: process.env.FACEBOOK_ID || '848445448582782',
-		clientSecret: process.env.FACEBOOK_SECRET || '9f937db4218b73809eb52ec3c43e7e12',
-		callbackURL: 'http://studiocenterauditions.com/auth/facebook/callback'
-	},
-	twitter: {
-		clientID: process.env.TWITTER_KEY || 'MJAdQiMJz13Qd5OzNo9RMVqhc',
-		clientSecret: process.env.TWITTER_SECRET || 'gJRB8srQ2ipQ7aWSW120tM5XJ2OvHRfR4NhRppCzd9IDfJXiuk',
-		callbackURL: 'http://studiocenterauditions.com/auth/twitter/callback'
-	},
-	google: {
-		clientID: process.env.GOOGLE_ID || '1037177876522.apps.googleusercontent.com',
-		clientSecret: process.env.GOOGLE_SECRET || 'HhBkixnP1j8bFyXJ2l8srmiJ',
-		callbackURL: 'http://studiocenterauditions.com/auth/google/callback'
-	},
-	linkedin: {
-		clientID: process.env.LINKEDIN_ID || '77fpjkn9n5c8ag',
-		clientSecret: process.env.LINKEDIN_SECRET || 'PZElXXIipnGRY4rP',
-		callbackURL: 'http://studiocenterauditions.com/auth/linkedin/callback'
->>>>>>> origin/master
 	},
 	mailer: {
 		from: process.env.MAILER_FROM || 'no-reply@studiocenter.com',
 		notifications: 'audition-notification@studiocenter.com',
 		options: {
 		    auth: {
-<<<<<<< HEAD
 		        api_key: 'SENDGRID_API_KEY'
-=======
-		        api_key: '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'
->>>>>>> origin/master
 		    }
 		}
 	}
