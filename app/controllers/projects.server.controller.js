@@ -2228,8 +2228,14 @@ exports.uploadScript = function(req, res, next){
     //var file = req.files.file;
     var appDir = path.dirname(require.main.filename);
     var tempPath = file.path;
-    var relativePath =  'res' + '/' + 'scripts' + '/' + projectId + '/';
+		var scriptPath =  'res' + '/' + 'scripts/';
+    var relativePath =  scriptPath + projectId + '/';
     var newPath = appDir + '/public/' + relativePath;
+
+		// check for existing parent directory, create if needed
+		if (!fs.existsSync(appDir + '/public/' + scriptPath)) {
+			fs.mkdirSync(appDir + '/public/' + scriptPath);
+		}
 
     // create project directory if not found
     if (!fs.existsSync(newPath)) {
@@ -2294,8 +2300,14 @@ exports.uploadReferenceFile = function(req, res, next){
     //var file = req.files.file;
     var appDir = path.dirname(require.main.filename);
     var tempPath = file.path;
-    var relativePath =  'res' + '/' + 'referenceFiles' + '/' + projectId + '/';
+		var refsPath =  'res' + '/' + 'referenceFiles/';
+    var relativePath =  refsPath + projectId + '/';
     var newPath = appDir + '/public/' + relativePath;
+
+		// check for existing parent directory, create if needed
+		if (!fs.existsSync(appDir + '/public/' + refsPath)) {
+			fs.mkdirSync(appDir + '/public/' + refsPath);
+		}
 
     // create project directory if not found
     if (!fs.existsSync(newPath)) {
@@ -2358,8 +2370,19 @@ exports.uploadTempReferenceFile = function(req, res, next){
     //var file = req.files.file;
     var appDir = path.dirname(require.main.filename);
     var tempPath = file.path;
-    var relativePath =  'res' + '/' + 'referenceFiles' + '/temp/';
+		var refsPath =  'res' + '/' + 'referenceFiles/';
+    var relativePath =  refsPath + 'temp/';
     var newPath = appDir + '/public/' + relativePath;
+
+		// check for existing parent directory, create if needed
+		if (!fs.existsSync(appDir + '/public/' + refsPath)) {
+			fs.mkdirSync(appDir + '/public/' + refsPath);
+		}
+
+		// check for existing temp directory, create if needed
+		if (!fs.existsSync(newPath)) {
+			fs.mkdirSync(newPath);
+		}
 
     // add file path
     newPath += file.name;
@@ -2398,8 +2421,19 @@ exports.uploadTempScript = function(req, res, next){
     //var file = req.files.file;
     var appDir = path.dirname(require.main.filename);
     var tempPath = file.path;
-    var relativePath =  'res' + '/' + 'scripts' + '/temp/';
+		var scriptPath =  'res' + '/' + 'scripts/';
+		var relativePath =  scriptPath + 'temp/';
     var newPath = appDir + '/public/' + relativePath;
+
+		// check for existing parent directory, create if needed
+		if (!fs.existsSync(appDir + '/public/' + scriptPath)) {
+			fs.mkdirSync(appDir + '/public/' + scriptPath);
+		}
+
+		// check for existing temp directory, create if needed
+		if (!fs.existsSync(newPath)) {
+			fs.mkdirSync(newPath);
+		}
 
     // add file path
     newPath += file.name;
@@ -2454,8 +2488,14 @@ exports.uploadAudition = function(req, res, next){
   //var file = req.files.file;
   var appDir = path.dirname(require.main.filename);
   var tempPath = file.path;
-  var relativePath =  'res' + '/' + 'auditions' + '/' + projectId + '/';
+	var audPath =  'res' + '/' + 'auditions/';
+  var relativePath =  audPath + projectId + '/';
   var newPath = appDir + '/public/' + relativePath;
+
+	// check for existing parent directory, create if needed
+	if (!fs.existsSync(appDir + '/public/' + audPath)) {
+		fs.mkdirSync(appDir + '/public/' + audPath);
+	}
 
   // create project directory if not found
   if (!fs.existsSync(newPath)) {
@@ -2574,8 +2614,14 @@ exports.uploadTempAudition = function(req, res, next){
     //var file = req.files.file;
     var appDir = path.dirname(require.main.filename);
     var tempPath = file.path;
-    var relativePath =  'res' + '/' + 'auditions' + '/temp/';
+		var audPath =  'res' + '/' + 'auditions/';
+		var relativePath =  audPath + 'temp/';
     var newPath = appDir + '/public/' + relativePath;
+
+		// check for existing parent directory, create if needed
+		if (!fs.existsSync(appDir + '/public/' + audPath)) {
+			fs.mkdirSync(appDir + '/public/' + audPath);
+		}
 
     // create project directory if not found
     if (!fs.existsSync(newPath)) {
@@ -2629,6 +2675,11 @@ exports.downloadAllAuditions = function(req, res, next){
     var zipName = req.body.project.title + '.zip';
     var newZip = savePath + zipName;
 
+		// check for existing parent directory, create if needed
+		if (!fs.existsSync(savePath)) {
+			fs.mkdirSync(savePath);
+		}
+
     //console.log(newPath);
 
     var output = fs.createWriteStream(newZip);
@@ -2665,6 +2716,11 @@ exports.downloadBookedAuditions = function(req, res, next){
   var zipName = projectTitle + '.zip';
   var newZip = savePath + zipName;
 
+	// check for existing parent directory, create if needed
+	if (!fs.existsSync(savePath)) {
+		fs.mkdirSync(savePath);
+	}
+
   //console.log(newPath);
 
   var output = fs.createWriteStream(newZip);
@@ -2700,6 +2756,11 @@ exports.downloadSelectedAuditions = function(req, res, next){
   var savePath = appDir + '/public/' + 'res' + '/' + 'archives' + '/';
   var zipName = projectTitle + '.zip';
   var newZip = savePath + zipName;
+
+	// check for existing parent directory, create if needed
+	if (!fs.existsSync(savePath)) {
+		fs.mkdirSync(savePath);
+	}
 
   //console.log(newPath);
 
@@ -2879,12 +2940,17 @@ exports.backupProjectsById = function(req, res, next){
 
 	// get app dir
 	var appDir = path.dirname(require.main.filename);
-    var archivesPath = appDir + '/public/' + 'res' + '/' + 'archives' + '/';
+  var archivesPath = appDir + '/public/' + 'res' + '/' + 'archives' + '/';
 	var curDate = moment().format('MMM Do YY');
 	var zippedFilename = 'Auditions Project Backup Bundle - ' + curDate + '.zip';
-    var newZip = archivesPath + zippedFilename;
-    var backupDir = archivesPath + req.user._id + '_backup';
-    var auditionsDir, scriptsDir, referenceFilesDir, projectBuDir;
+  var newZip = archivesPath + zippedFilename;
+  var backupDir = archivesPath + req.user._id + '_backup';
+  var auditionsDir, scriptsDir, referenceFilesDir, projectBuDir;
+
+	// check for existing parent directory, create if needed
+	if (!fs.existsSync(archivesPath)) {
+		fs.mkdirSync(archivesPath);
+	}
 
     // remove existing backup file
     if (fs.existsSync(newZip)) {
@@ -3025,6 +3091,11 @@ exports.uploadBackup = function(req, res, next){
 	var archivesPath = appDir + '/public/' + 'res' + '/' + 'archives' + '/';
 	var backupPath = archivesPath + 'backups/';
 	var savePath = archivesPath + file.name;
+
+	// check for existing parent directory, create if needed
+	if (!fs.existsSync(archivesPath)) {
+		fs.mkdirSync(archivesPath);
+	}
 
 	// remove backups directory, if exists
 	if(fs.existsSync(backupPath)) {
@@ -3187,17 +3258,23 @@ exports.uploadTalentAudition = function(req, res, next){
 
 	// get app dir
 	var appDir = path.dirname(require.main.filename);
-    var auditionsPath = appDir + '/public/' + 'res' + '/' + 'auditions' + '/' + 'temp' + '/';
-    var talentUploadPath = appDir + '/public/' + 'res' + '/' + 'talentUploads' + '/' + project._id + '/';
-    var talentUploadTalentPath = talentUploadPath + talentId + '/';
+  var auditionsPath = appDir + '/public/' + 'res' + '/' + 'auditions' + '/' + 'temp' + '/';
+	var talentUploadParent = appDir + '/public/' + 'res' + '/' + 'talentUploads' + '/';
+	var talentUploadPath = talentUploadParent + project._id + '/';
+  var talentUploadTalentPath = talentUploadPath + talentId + '/';
 
-    // create project directory if not found
-    if (!fs.existsSync(talentUploadPath)) {
-    	fs.mkdirSync(talentUploadPath);
-    }
-    if (!fs.existsSync(talentUploadTalentPath)) {
-    	fs.mkdirSync(talentUploadTalentPath);
-    }
+	// check for existing parent directory, create if needed
+	if (!fs.existsSync(talentUploadParent)) {
+		fs.mkdirSync(talentUploadParent);
+	}
+
+  // create project directory if not found
+  if (!fs.existsSync(talentUploadPath)) {
+  	fs.mkdirSync(talentUploadPath);
+  }
+  if (!fs.existsSync(talentUploadTalentPath)) {
+  	fs.mkdirSync(talentUploadTalentPath);
+  }
 
 	// walk through submitted auditions
 	async.waterfall([
@@ -3289,7 +3366,7 @@ exports.uploadTalentAudition = function(req, res, next){
 		}
 		], function(err) {
 			if (err) {
-				console.log(err);
+				// console.log(err);
 				return res.status(400).send({
 					message: errorHandler.getErrorMessage(err)
 				});
