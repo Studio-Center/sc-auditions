@@ -31,6 +31,7 @@ module.exports = {
 		options: {
 		    auth: {
 <<<<<<< HEAD
+<<<<<<< HEAD
 		        api_key: ''
 =======
 <<<<<<< HEAD
@@ -39,6 +40,9 @@ module.exports = {
 		        api_key: ''
 >>>>>>> origin/master
 >>>>>>> 1e7e44efc9b7223326b7558803eed6299715ecf1
+=======
+		        api_key: 'SENDGRID_API_KEY'
+>>>>>>> 4362ed6d0087859d44b39b37cbda4e7d252465f5
 		    }
 		}
 	}
