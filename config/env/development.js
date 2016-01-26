@@ -30,7 +30,7 @@ module.exports = {
 		notifications: 'audition-notification@studiocenter.com',
 		options: {
 		    auth: {
-		        api_key: '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'
+		        api_key: ''
 		    }
 		}
 	}
