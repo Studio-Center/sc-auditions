@@ -9,3 +9,4 @@ public/lib/*
 app/tests/coverage/
 .bower-*/
 .idea/
+config/env/production.js
