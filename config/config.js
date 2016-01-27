@@ -4,8 +4,7 @@
  * Module dependencies.
  */
 var _ = require('lodash'),
-	glob = require('glob'),
-	fs = require('fs');
+	glob = require('glob');
 	// set application widen timezone
 	process.env.TZ = 'America/New_York';
 
@@ -13,18 +12,10 @@ var _ = require('lodash'),
  * Load app configurations
  */
 // check for hidden config files
-if(fs.existsSync('scad/env/' + process.env.NODE_ENV)) {
-	module.exports = _.extend(
-		require('./env/all'),
-		require('scad/env/' + process.env.NODE_ENV) || {}
-	);
-	// load default config files
-} else {
-	module.exports = _.extend(
-		require('./env/all'),
-		require('./env/' + process.env.NODE_ENV) || {}
-	);
-}
+module.exports = _.extend(
+	require('./env/all'),
+	require('./env/' + process.env.NODE_ENV) || {}
+);
 /**
  * Get files by glob patterns
  */
