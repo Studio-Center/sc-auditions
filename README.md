@@ -57,5 +57,18 @@ mongo
 show dbs
 use my-selected-db
 db.my-selected-db.update({},{$set:{'group':'["admin"]'}})
+```
 
+## Move to production
+
+Rename config/env/production-demo.js or copy to config/env/production.js and apply changes as needed for your production environment. Set your NODE_ENV environment variable to production then launch your app using grunt, forever, or whatever way you would like. For a single NodeJS production instance the string below will do.
+
+```
+NODE_ENV=production forever start server.js
+```
+
+or
+
+```
+NODE_ENV=production grunt
 ```
