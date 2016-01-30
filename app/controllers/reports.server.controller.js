@@ -23,7 +23,8 @@ var mongoose = require('mongoose'),
 	dateFormat = require('dateformat'),
 	// set date and timezone
 	moment = require('moment-timezone'),
-	os = require('os');
+	os = require('os'),
+	njds = require('nodejs-disks');
 
 exports.emailMissingAuds = function(req, res){
 
@@ -605,8 +606,20 @@ exports.systemStats = function(req, res, next){
 		uptime: os.uptime(),
 		loadavg: os.loadavg(),
 		nodev: process.version,
-		mongov: mongoose.version
+		mongov: mongoose.version,
+		disks: ''
 	}
 
-	res.jsonp(stats);
+	njds.drives(
+				function (err, drives) {
+						njds.drivesDetail(
+								drives,
+								function (err, data) {
+									stats.disks = data;
+									res.jsonp(stats);
+								}
+					);
+			}
+	)
+
 }

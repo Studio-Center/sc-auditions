@@ -36,8 +36,25 @@
               </span>
           </p>
           <h4>Software</h4>
-          NodeJS {{sysstats.nodev}}<br>
-          MongoDB {{sysstats.mongov}}
+          <p>
+            NodeJS {{sysstats.nodev}}<br>
+            MongoDB {{sysstats.mongov}}
+          </p>
+          <h4>Disks</h4>
+          <table class="table table-striped">
+            <tr>
+              <th>Used</th>
+              <th>Available</th>
+              <th>Total</th>
+              <th>Mount Point</th>
+            </tr>
+            <tr ng-repeat="disk in sysstats.disks">
+              <td>{{disk.used}}</td>
+              <td>{{disk.available}}</td>
+              <td>{{disk.total}}</td>
+              <td>{{disk.mountpoint}}</td>
+            </tr>
+          </table>
 				</div>
 			</div>
 	  </div>
