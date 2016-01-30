@@ -21,17 +21,18 @@
           </p>
           <h4>Memory</h4>
           <p>
-            Total: {{(sysstats.totalmem/1024)/1024}}<br>
-            Free: {{(sysstats.freemem/1024)/1024}}
+            Total: {{(sysstats.totalmem/1024)/1024}} MB<br>
+            Free: {{(sysstats.freemem/1024)/1024}} MB
           </p>
           <h4>Uptime</h4>
           <p>
-            {{sysstats.uptime}}
+            {{sysstats.uptime/60}} minutes<br>
+            {{((sysstats.uptime/60)/60)/24}} days
           </p>
           <h4>Load Average</h4>
           <p>
               <span ng-repeat="load in sysstats.loadavg">
-                {{load}}<br>
+                {{load}} %<br>
               </span>
           </p>
 				</div>
