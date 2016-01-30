@@ -25,4 +25,8 @@ module.exports = function(app) {
 	app.route('/reports/convertToCSV')
 		.post(users.requiresLogin, reports.convertToCSV);
 
+	app.route('/reports/systemStats')
+		.post(users.requiresLogin, reports.systemStats);
+
+
 };

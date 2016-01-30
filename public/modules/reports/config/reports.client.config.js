@@ -8,5 +8,6 @@ angular.module('reports').run(['Menus',
 		//Menus.addSubMenuItem('topbar', 'reports', 'Generate Reports', 'reports');
 		Menus.addSubMenuItem('topbar', 'reports', 'Missing Auditions', 'reports/missing-auditions');
 		Menus.addSubMenuItem('topbar', 'reports', 'Auditions Booked', 'reports/auditions-booked');
+		Menus.addSubMenuItem('topbar', 'reports', 'Server Stats', 'reports/server-stats');
 	}
 ]);

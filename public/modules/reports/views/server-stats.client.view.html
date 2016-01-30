@@ -1,0 +1,40 @@
+<section data-ng-controller="ReportsController" data-ng-init="systemInfo()">
+    <div class="page-header">
+      <h1>Server Stats</h1>
+      <div class="row">
+      	<div class="col-md-12">
+          <h4>Platform</h4>
+          <p>
+            {{sysstats.platform}}
+          </p>
+
+          <h4>Architecture</h4>
+          <p>
+            {{sysstats.arch}}
+          </p>
+          <h4>CPU(s)</h4>
+          <p>
+            <span ng-repeat="cpu in sysstats.cpus">
+              {{cpu.model}}<br>
+              {{cpu.speed}}<br>
+            </span>
+          </p>
+          <h4>Memory</h4>
+          <p>
+            Total: {{(sysstats.totalmem/1024)/1024}}<br>
+            Free: {{(sysstats.freemem/1024)/1024}}
+          </p>
+          <h4>Uptime</h4>
+          <p>
+            {{sysstats.uptime}}
+          </p>
+          <h4>Load Average</h4>
+          <p>
+              <span ng-repeat="load in sysstats.loadavg">
+                {{load}}<br>
+              </span>
+          </p>
+				</div>
+			</div>
+	  </div>
+</section>

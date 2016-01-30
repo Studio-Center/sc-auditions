@@ -6,6 +6,7 @@ angular.module('reports').controller('ReportsController', ['$scope', '$statePara
 	function($scope, $stateParams, $location, Authentication, Reports, $http ) {
 		$scope.authentication = Authentication;
 		$scope.dateFilter = '';
+		$scope.sysstats = {};
 
 		// find missing auditions report methods
 		$scope.findMissingAuditions = function(){
@@ -49,7 +50,7 @@ angular.module('reports').controller('ReportsController', ['$scope', '$statePara
 					jsonDoc: localDoc
 				}).
 				success(function(data, status, headers, config) {
-					
+
 					var a         = document.createElement('a');
 					a.href        = 'data:attachment/csv,' + escape(data);
 					a.target      = '_blank';
@@ -61,6 +62,18 @@ angular.module('reports').controller('ReportsController', ['$scope', '$statePara
 				});
 
 			}
+
+		};
+
+		// gather system information
+		$scope.systemInfo = function(){
+
+			// query server
+			$http.post('/reports/systemStats',
+			{}).
+			success(function(data, status, headers, config) {
+				$scope.sysstats = data;
+			});
 
 		};
 

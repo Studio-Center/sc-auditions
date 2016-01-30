@@ -56,7 +56,8 @@ Something like this:
 mongo
 show dbs
 use my-selected-db
-db.my-selected-db.update({},{$set:{'role':'["admin"]'}})
+show collections
+db.users.update({},{$set:{'roles':["admin"]}})
 ```
 
 ## Move to production

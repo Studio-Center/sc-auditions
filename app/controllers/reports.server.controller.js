@@ -23,7 +23,7 @@ var mongoose = require('mongoose'),
 	dateFormat = require('dateformat'),
 	// set date and timezone
 	moment = require('moment-timezone'),
-	now = new Date();
+	os = require('os');
 
 exports.emailMissingAuds = function(req, res){
 
@@ -85,7 +85,7 @@ exports.emailMissingAuds = function(req, res){
 					done('', to);
 				},
 				function(to, done) {
-				
+
 					// walk through found projects
 					async.forEach(projects, function (project, callback) {
 						// walk through found talents
@@ -94,8 +94,8 @@ exports.emailMissingAuds = function(req, res){
 							// create project object
 							callTalents[project._id] = {
 														project: {
-																	_id: '', 
-																	title: '', 
+																	_id: '',
+																	title: '',
 																	estimatedCompletionDate: ''
 																},
 														missingAudsCnt: 0,
@@ -125,7 +125,7 @@ exports.emailMissingAuds = function(req, res){
 												callTalents[project._id].talents[talentId].data = talentInfo;
 												++callTalents[project._id].missingAudsCnt;
 												++missingCnt;
-											} 
+											}
 											done('');
 										}
 										], function(err) {
@@ -153,7 +153,7 @@ exports.emailMissingAuds = function(req, res){
 							callback();
 
 						}
-					
+
 					}, function (err) {
 
 						res.render('templates/missing-auds-email', {
@@ -207,7 +207,7 @@ exports.emailMissingAuds = function(req, res){
 					return res.status(200).send();
 				}
 			});
-			
+
 		}
 	});
 
@@ -231,7 +231,7 @@ exports.findMissingAuds = function(req, res){
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
-			
+
 			// walk through found projects
 			async.forEach(projects, function (project, callback) {
 				// walk through found talents
@@ -240,8 +240,8 @@ exports.findMissingAuds = function(req, res){
 					// create project object
 					callTalents[project._id] = {
 												project: {
-															_id: '', 
-															title: '', 
+															_id: '',
+															title: '',
 															estimatedCompletionDate: ''
 														},
 												missingAudsCnt: 0,
@@ -271,7 +271,7 @@ exports.findMissingAuds = function(req, res){
 										callTalents[project._id].talents[talentId].data = talentInfo;
 										++callTalents[project._id].missingAudsCnt;
 										++missingCnt;
-									} 
+									}
 									done('');
 								}
 								], function(err) {
@@ -299,7 +299,7 @@ exports.findMissingAuds = function(req, res){
 					callback();
 
 				}
-			
+
 			}, function (err) {
 				if( err ) {
 					return res.status(400).send({
@@ -309,7 +309,7 @@ exports.findMissingAuds = function(req, res){
 					return res.jsonp({count: missingCnt, results:callTalents});
 				}
            	});
-			
+
 		}
 	});
 };
@@ -365,7 +365,7 @@ exports.convertToCSV = function(req, res){
 					talents.push(talent.name);
 
 					talentCallback();
-				
+
 				}, function (err) {
 					if( err && err !== '') {
 						return res.status(400).send({
@@ -388,7 +388,7 @@ exports.convertToCSV = function(req, res){
 					json2csv({ data: projects, fields: fields }, function(err, csv) {
 					if (err) console.log(err);
 
-						res.header('Content-Disposition', 'attachment;filename=Auditions-Booked.csv'); 
+						res.header('Content-Disposition', 'attachment;filename=Auditions-Booked.csv');
 						res.type('text/csv');
 						res.send(csv);
 					});
@@ -407,13 +407,13 @@ exports.findAuditionsBooked = function(req, res){
 
 // method vars
 var statusOpts = [
-					'In Progress', 
-					'On Hold', 
-					'Booked', 
-					'Canceled', 
-					'ReAuditioned', 
-					'Dead', 
-					'Closed - Pending Client Decision', 
+					'In Progress',
+					'On Hold',
+					'Booked',
+					'Canceled',
+					'ReAuditioned',
+					'Dead',
+					'Closed - Pending Client Decision',
 					'Complete'
 				];
 // projects
@@ -527,22 +527,22 @@ var yesterday = new Date(req.body.dateFilterStart);
 							case 'In Progress':
 								++pCStatsData.totalInProgress;
 							break;
-							case 'On Hold': 
+							case 'On Hold':
 								++pCStatsData.totalOnHold;
 							break;
-							case 'Booked': 
+							case 'Booked':
 								++pCStatsData.totalBooked;
 							break;
-							case 'Canceled': 
+							case 'Canceled':
 								++pCStatsData.totalBooked;
 							break;
-							case 'ReAuditioned': 
+							case 'ReAuditioned':
 								++pCStatsData.totalCanceled;
 							break;
-							case 'Dead': 
+							case 'Dead':
 								++pCStatsData.totalDead;
 							break;
-							case 'Closed - Pending Client Decision': 
+							case 'Closed - Pending Client Decision':
 								++pCStatsData.totalClosed;
 							break;
 						}
@@ -560,7 +560,7 @@ var yesterday = new Date(req.body.dateFilterStart);
 					projectCallback();
 
 				});
-				
+
 				} else {
 					projectCallback();
 				}
@@ -592,3 +592,19 @@ exports.hasAuthorization = function(req, res, next) {
 	}
 	next();
 };
+
+// gather system stats
+exports.systemStats = function(req, res, next){
+
+	var stats = {
+		arch: os.arch(),
+		cpus: os.cpus(),
+		totalmem: os.totalmem(),
+		freemem: os.freemem(),
+		platform: os.platform(),
+		uptime: os.uptime(),
+		loadavg: os.loadavg()
+	}
+
+	res.jsonp(stats);
+}
