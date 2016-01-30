@@ -16,7 +16,7 @@
           <p>
             <span ng-repeat="cpu in sysstats.cpus">
               {{cpu.model}}<br>
-              {{cpu.speed | number:2}}<br>
+              {{cpu.speed | number:2}} Mhz<br>
             </span>
           </p>
           <h4>Memory</h4>
@@ -32,7 +32,7 @@
           <h4>Load Average</h4>
           <p>
               <span ng-repeat="load in sysstats.loadavg">
-                {{load | number:2}} %<br>
+                {{load | number:4}} %<br>
               </span>
           </p>
           <h4>Software</h4>
