@@ -16,23 +16,23 @@
           <p>
             <span ng-repeat="cpu in sysstats.cpus">
               {{cpu.model}}<br>
-              {{cpu.speed}}<br>
+              {{cpu.speed | number:2}}<br>
             </span>
           </p>
           <h4>Memory</h4>
           <p>
-            Total: {{(sysstats.totalmem/1024)/1024}} MB<br>
-            Free: {{(sysstats.freemem/1024)/1024}} MB
+            Total: {{(sysstats.totalmem/1024)/1024 | number:2}} MB<br>
+            Free: {{(sysstats.freemem/1024)/1024 | number:2}} MB
           </p>
           <h4>Uptime</h4>
           <p>
-            {{sysstats.uptime/60}} minutes<br>
-            {{((sysstats.uptime/60)/60)/24}} days
+            {{sysstats.uptime/60 | number:2}} minutes<br>
+            {{((sysstats.uptime/60)/60)/24 | number:2}} days
           </p>
           <h4>Load Average</h4>
           <p>
               <span ng-repeat="load in sysstats.loadavg">
-                {{load}} %<br>
+                {{load | number:2}} %<br>
               </span>
           </p>
           <h4>Software</h4>
@@ -49,9 +49,9 @@
               <th>Mount Point</th>
             </tr>
             <tr ng-repeat="disk in sysstats.disks">
-              <td>{{disk.used}}</td>
-              <td>{{disk.available}}</td>
-              <td>{{disk.total}}</td>
+              <td>{{disk.used | number:2}}</td>
+              <td>{{disk.available | number:2}}</td>
+              <td>{{disk.total | number:2}}</td>
               <td>{{disk.mountpoint}}</td>
             </tr>
           </table>
