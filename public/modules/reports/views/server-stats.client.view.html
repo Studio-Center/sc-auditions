@@ -49,9 +49,9 @@
               <th>Mount Point</th>
             </tr>
             <tr ng-repeat="disk in sysstats.disks">
-              <td>{{disk.used | number:2}}</td>
-              <td>{{disk.available | number:2}}</td>
-              <td>{{disk.total | number:2}}</td>
+              <td>{{disk.used}}</td>
+              <td>{{disk.available}}</td>
+              <td>{{disk.total}}</td>
               <td>{{disk.mountpoint}}</td>
             </tr>
           </table>
