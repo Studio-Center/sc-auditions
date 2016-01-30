@@ -7,6 +7,7 @@ angular.module('reports').controller('ReportsController', ['$scope', '$statePara
 		$scope.authentication = Authentication;
 		$scope.dateFilter = '';
 		$scope.sysstats = {};
+		$scope.intervalID = '';
 
 		// find missing auditions report methods
 		$scope.findMissingAuditions = function(){
@@ -75,6 +76,7 @@ angular.module('reports').controller('ReportsController', ['$scope', '$statePara
 				$scope.sysstats = data;
 			});
 
+			//$scope.intervalID = window.setInterval($scope.systemInfo, 1000);
 		};
 
 	}

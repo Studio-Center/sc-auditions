@@ -603,7 +603,9 @@ exports.systemStats = function(req, res, next){
 		freemem: os.freemem(),
 		platform: os.platform(),
 		uptime: os.uptime(),
-		loadavg: os.loadavg()
+		loadavg: os.loadavg(),
+		nodev: process.version,
+		mongov: mongoose.version
 	}
 
 	res.jsonp(stats);
