@@ -169,7 +169,6 @@
           <span ng-if="predicate == '-part'">(^)</span>
           <span ng-if="predicate == 'part'">(V)</span>
         </th>
-        <th></th>
       </tr>
       <tr ng-repeat="(key, member) in newProject.talent | orderBy:predicate:reverse" ng-module="talents" ng-controller="TalentsController" data-ng-init="getOne(member.talentId)">
         <td>
