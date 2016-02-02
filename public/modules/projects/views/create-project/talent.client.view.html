@@ -113,10 +113,10 @@
                         <li class="list-group-item" ng-repeat="(key, talent) in filtered = (talents | multiTerm:searchUnions:'AND' | filter:searchText:startsWith | multiTermFull:searchString:'AND') | startFrom:currentPage*limit | limitTo: limit">
                             <div class="row">
                                 <div class="col-lg-1 col-md-1 col-sm-1">
-                                    <input type="checkbox" value="{{::talent._id}}" ng-click="updateCreateTalent(talent._id, talent.name + ' ' + talent.lastName, talent.email)" ng-checked="checkCreateTalent(talent._id)">
+                                    <input style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin:10px" type="checkbox" value="{{::talent._id}}" ng-click="updateCreateTalent(talent._id, talent.name + ' ' + talent.lastName, talent.email)" ng-checked="checkCreateTalent(talent._id)">
                                 </div>
                                 <div class="col-lg-1 col-md-1 col-sm-1">
-                                    <input type="checkbox" value="{{::talent._id}}" ng-click="updateRequestCreateTalent(talent._id, talent.name + ' ' + talent.lastName, talent.email)" ng-checked="checkRequestedCreateTalent(talent._id)">
+                                    <input style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin:10px" type="checkbox" value="{{::talent._id}}" ng-click="updateRequestCreateTalent(talent._id, talent.name + ' ' + talent.lastName, talent.email)" ng-checked="checkRequestedCreateTalent(talent._id)">
                                 </div>
                                 <div class="col-lg-4 col-md-4 col-sm-4">
                                     <input type="text" class="form-control" ng-model="parts[talent._id]" ng-if="showCreatePartFld(talent._id)">
@@ -148,6 +148,53 @@
                 </div>
             </div>
         </div>
+
+      <div class="panel-heading">
+          <strong>Selected Talent</strong>
+      </div>
+      <div class="table-responsive">
+      <table class="table table-striped">
+      <tr>
+        <th>
+          <a href="" ng-click="updatePred(predicate == 'name' ? '-name' : 'name'); reverse=false">Name</a></span>
+          <span ng-if="predicate == '-name'">(^)</span>
+          <span ng-if="predicate == 'name'">(V)</span>
+        </th>
+        <th>
+          TL
+        </th>
+        <th>
+          Location
+        </th>
+        <th>Requested</th>
+        <th>
+          <a href="" ng-click="updatePred(predicate == 'part' ? '-part' : 'part'); reverse=false">Part</a></span>
+          <span ng-if="predicate == '-part'">(^)</span>
+          <span ng-if="predicate == 'part'">(V)</span>
+        </th>
+        <th></th>
+      </tr>
+      <tr ng-repeat="(key, member) in newProject.talent | orderBy:predicate:reverse" ng-module="talents" ng-controller="TalentsController" data-ng-init="getOne(member.talentId)">
+        <td>
+          <a target="_blank" ng-href="/#!/talents/{{::member.talentId}}" ng-bind="talent.name + ' ' + talent.lastNameCode"></a><br>
+          <span ng-bind="::member.added | amDateFormat:'M/DD/YY h:mm:ss a'"></span>
+        </td>
+        <td>
+          <a target="_blank" ng-href="/#!/projects/talent-upload/{{::project._id}}/{{::member.talentId}}" title="talent auditions upload link">^</a>
+        </td>
+        <td>
+          <span ng-bind="::talent.locationISDN"></span>
+        </td>
+        <td>
+          <span ng-if="member.requested == true">R</span>
+        </td>
+        <td>
+          <span ng-bind="::member.part"></span>
+        </td>
+      </tr>
+    </table>
+    </div>
+
     </div>
 </div>
 
