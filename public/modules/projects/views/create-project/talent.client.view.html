@@ -161,9 +161,6 @@
           <span ng-if="predicate == 'name'">(V)</span>
         </th>
         <th>
-          TL
-        </th>
-        <th>
           Location
         </th>
         <th>Requested</th>
@@ -178,9 +175,6 @@
         <td>
           <a target="_blank" ng-href="/#!/talents/{{::member.talentId}}" ng-bind="talent.name + ' ' + talent.lastNameCode"></a><br>
           <span ng-bind="::member.added | amDateFormat:'M/DD/YY h:mm:ss a'"></span>
-        </td>
-        <td>
-          <a target="_blank" ng-href="/#!/projects/talent-upload/{{::project._id}}/{{::member.talentId}}" title="talent auditions upload link">^</a>
         </td>
         <td>
           <span ng-bind="::talent.locationISDN"></span>
