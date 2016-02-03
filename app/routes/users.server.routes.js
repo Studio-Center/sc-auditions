@@ -33,6 +33,14 @@ module.exports = function(app) {
 
 	app.route('/users/accounts').delete(users.removeOAuthProvider);
 
+	// gather filtered list of users
+	app.route('/users/findLimitWithFilter')
+		.post(users.requiresLogin, users.findLimitWithFilter);
+
+	// get records count
+	app.route('/users/recCount')
+		.post(users.requiresLogin, users.getUsersCnt);
+
 	// Setting up the users password api
 	app.route('/users/password').post(users.changePassword);
 	app.route('/auth/forgot').post(users.forgot);

@@ -422,8 +422,6 @@ exports.findLimitWithFilter = function(req, res) {
 		limitVal = 100;
 	}
 
-	console.log(filterObj);
-
 	Talent.find(filterObj).sort({'locationISDN': 1,'lastName': 1,'-created': -1}).skip(startVal).limit(limitVal).populate('user', 'displayName').exec(function(err, talents) {
 		if (err) {
 			return res.status(400).send({

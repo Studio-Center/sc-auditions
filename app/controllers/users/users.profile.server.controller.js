@@ -308,3 +308,74 @@ exports.create = function(req, res) {
 		}
 	});
 };
+
+// assemble filters
+var getUsersFilters = function(req){
+
+	// gen filter object
+	var filterObj = {};
+	// filter by project title
+	if(req.body.filter.fName){
+		filterObj.firstName = new RegExp(req.body.filter.fName, 'i');
+	}
+	if(req.body.filter.lName){
+		filterObj.lastName = new RegExp(req.body.filter.lName, 'i');
+	}
+	if(req.body.filter.email){
+		filterObj.email = new RegExp(req.body.filter.email, 'i');
+	}
+	if(req.body.filter.company){
+		filterObj.company = new RegExp(req.body.filter.company, 'i');
+	}
+	// filter by role
+	if(req.body.filter.roles){
+		filterObj.roles = req.body.filter.roles;
+	}
+
+	return filterObj;
+};
+// retrieve talents count
+exports.getUsersCnt = function(req, res){
+
+	// set filter vars
+	var filterObj = getUsersFilters(req);
+
+	User.find(filterObj).count({}, function(err, count){
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			res.jsonp(count);
+		}
+	});
+
+};
+
+exports.findLimitWithFilter = function(req, res) {
+
+	// set filter vars
+	var filterObj = getUsersFilters(req);
+	// set and store limits
+	var startVal, limitVal;
+	if(req.body.startVal){
+		startVal = req.body.startVal;
+	} else {
+		startVal = 0;
+	}
+	if(req.body.limitVal){
+		limitVal = req.body.limitVal;
+	} else {
+		limitVal = 100;
+	}
+
+	User.find(filterObj).sort({'lastName': 1,'-created': -1}).skip(startVal).limit(limitVal).populate('user', 'displayName').exec(function(err, users) {
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			res.jsonp(users);
+		}
+	});
+};

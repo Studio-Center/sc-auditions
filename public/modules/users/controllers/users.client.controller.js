@@ -6,6 +6,9 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
 		$scope.authentication = Authentication;
 
 		$scope.roleOpts = ['user', 'admin', 'producer/auditions director', 'production coordinator', 'talent director', 'client', 'client-client'];
+		$scope.filter = {};
+		$scope.filterOverride = '';
+		$scope.usersTotalCnt = 0;
 
 		// various values
 
@@ -14,33 +17,40 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
 		$scope.Math = window.Math;
 		$scope.currentPage = 0;
 		$scope.filtered = [];
-		$scope.limit = 0;
+		$scope.limit = 20;
+		$scope.queryLimit = 50;
 		$scope.range = function(min, max, step){
 		    step = step || 1;
 		    var input = [];
 		    for (var i = min; i <= max; i += step) input.push(i);
 		    return input;
 		};
-	    $scope.setPage = function () {
-	        $scope.currentPage = this.n;
-	    };
-	    $scope.changePage = function(page){
-	    	var curSel = page * $scope.limit;
+		$scope.setPage = function () {
+        $scope.currentPage = this.n;
 
-	    	if(curSel < $scope.filtered.length && curSel >= 0){
-	    		$scope.currentPage = page;
-	    	}
-	    };
-	    $scope.$watchCollection('filtered', function(val){
-	    	$scope.currentPage = 0;
-	    }, true);
+				// reload list
+				$scope.findLimitWithFilter();
+    };
+    $scope.changePage = function(page){
+    	var curSel = page * $scope.limit;
+
+    	if(curSel < $scope.usersTotalCnt && curSel >= 0){
+    		$scope.currentPage = page;
+				$scope.findLimitWithFilter();
+    	}
+    };
+    $scope.$watchCollection('filtered', function(val){
+    	$scope.currentPage = 0;
+    }, true);
 
 		// Find a list of Users
 		$scope.find = function() {
 			$scope.users = UsersEdit.query();
 		};
 		$scope.findFilter = function(selUserLevel) {
-			$scope.users = UsersFind.query({userLevel: selUserLevel});
+			//$scope.users = UsersFind.query({userLevel: selUserLevel});
+			$scope.filterOverride = selUserLevel;
+			$scope.findLimitWithFilter();
 		};
 
 		// refresh list of users on refresh emit
@@ -143,5 +153,70 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
 				$scope.error = response.message;
 			});
 		};
+
+		// gather filter values
+		$scope.getFilterVars = function(){
+			// det start val
+			var filterObj = {};
+			// filter by title
+			if($scope.filter.fName){
+				filterObj.fName = $scope.filter.fName;
+			}
+			if($scope.filter.lName){
+				filterObj.lName = $scope.filter.lName;
+			}
+			if($scope.filter.email){
+				filterObj.email = $scope.filter.email;
+			}
+			if($scope.filter.company){
+				filterObj.company = $scope.filter.company;
+			}
+			// role
+			if($scope.filter.roles){
+				filterObj.roles = $scope.filter.roles;
+			}
+
+			return filterObj;
+		};
+		// get count of all projects in db
+		$scope.getUsersCnt = function(){
+
+			// gen filter object
+			var filterObj = $scope.getFilterVars();
+
+			$http.post('/users/recCount', {
+				filter: filterObj
+			}).
+			success(function(data, status, headers, config) {
+				$scope.usersTotalCnt = data;
+			});
+
+		};
+		// gather filtered list of talents
+		$scope.findLimitWithFilter = function(listFilter){
+
+			// det start val
+			var startVal = $scope.currentPage * $scope.limit;
+			// gather filter objects
+			var filterObj = $scope.getFilterVars();
+
+			// roles filter override
+			if($scope.filterOverride){
+					filterObj.roles = $scope.filterOverride;
+			}
+
+			$http.post('/users/findLimitWithFilter', {
+				startVal: startVal,
+				limitVal: $scope.limit,
+				filter: filterObj
+		  }).
+			success(function(data, status, headers, config) {
+				$scope.users = [];
+				$scope.users = data;
+				$scope.getUsersCnt();
+			});
+
+		};
+
 	}
 ]);

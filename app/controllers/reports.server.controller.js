@@ -608,7 +608,7 @@ exports.systemStats = function(req, res, next){
 		nodev: process.version,
 		mongov: mongoose.version,
 		disks: ''
-	}
+	};
 
 	njds.drives(
 				function (err, drives) {
@@ -620,6 +620,6 @@ exports.systemStats = function(req, res, next){
 								}
 					);
 			}
-	)
+	);
 
-}
+};
