@@ -14,6 +14,14 @@ module.exports = function(app) {
 		.put(users.requiresLogin, talents.hasAuthorization, talents.update)
 		.delete(users.requiresLogin, talents.hasAuthorization, talents.delete);
 
+	// gather filtered list of talents
+	app.route('/talents/findLimitWithFilter')
+		.post(users.requiresLogin, talents.findLimitWithFilter);
+
+	// get records count
+	app.route('/talents/recCount')
+		.post(users.requiresLogin, talents.getTalentsCnt);
+
 	// Finish by binding the Talent middleware
 	app.param('talentId', talents.talentByID);
 };

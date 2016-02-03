@@ -6,6 +6,8 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 		$scope.authentication = Authentication;
 
 		// talent static options
+		$scope.talentsTotalCnt = 0;
+		$scope.filter = {};
 		$scope.watchersObj = {};
 		$scope.typeOptions = ['Email','Phone'];
 		$scope.unionOptions = ['union','non-union'];
@@ -43,26 +45,28 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 		$scope.Math = window.Math;
 		$scope.currentPage = 0;
 		$scope.filtered = [];
-		$scope.limit = 0;
+		$scope.limit = 20;
+		$scope.queryLimit = 50;
 		$scope.range = function(min, max, step){
 		    step = step || 1;
 		    var input = [];
 		    for (var i = min; i <= max; i += step) input.push(i);
 		    return input;
 		};
-	    $scope.setPage = function () {
-	        $scope.currentPage = this.n;
-	    };
-	    $scope.changePage = function(page){
-	    	var curSel = page * $scope.limit;
+		$scope.setPage = function () {
+        $scope.currentPage = this.n;
 
-	    	if(curSel < $scope.filtered.length && curSel >= 0){
-	    		$scope.currentPage = page;
-	    	}
-	    };
-	    $scope.watchersObj.filtered = $scope.$watchCollection('filtered', function(val){
-	    	$scope.currentPage = 0;
-	    }, true);
+				// reload list
+				$scope.findLimitWithFilter();
+    };
+    $scope.changePage = function(page){
+    	var curSel = page * $scope.limit;
+
+    	if(curSel < $scope.talentsTotalCnt && curSel >= 0){
+    		$scope.currentPage = page;
+				$scope.findLimitWithFilter();
+    	}
+    };
 
 		// user access rules
 		$scope.permitAdminDirector = function(){
@@ -343,6 +347,82 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 
 				}
 
+			});
+
+		};
+
+		// gather filter values
+		$scope.getFilterVars = function(){
+			// det start val
+			var filterObj = {};
+			// filter by title
+			if($scope.filter.fName){
+				filterObj.fName = $scope.filter.fName;
+			}
+			if($scope.filter.lName){
+				filterObj.lName = $scope.filter.lName;
+			}
+			if($scope.filter.email){
+				filterObj.email = $scope.filter.email;
+			}
+			// filter by gender
+			if($scope.filter.gender){
+				filterObj.gender = $scope.filter.gender;
+			}
+			// unionStatus
+			if($scope.filter.unionStatus){
+				filterObj.unionStatus = $scope.filter.unionStatus;
+			}
+			// type
+			if($scope.filter.type){
+				filterObj.type = $scope.filter.type;
+			}
+			// ageRange
+			if($scope.filter.ageRange){
+				filterObj.ageRange = $scope.filter.ageRange;
+			}
+			// locationISDN
+			if($scope.filter.locationISDN){
+				filterObj.locationISDN = $scope.filter.locationISDN;
+			}
+			// locationISDN
+			if($scope.filter.typeCasts){
+				filterObj.typeCasts = $scope.filter.typeCasts;
+			}
+
+			return filterObj;
+		};
+		// get count of all projects in db
+		$scope.getTalentsCnt = function(){
+
+			// gen filter object
+			var filterObj = $scope.getFilterVars();
+
+			$http.post('/talents/recCount', {
+				filter: filterObj
+			}).
+			success(function(data, status, headers, config) {
+				$scope.talentsTotalCnt = data;
+			});
+
+		};
+		// gather filtered list of talents
+		$scope.findLimitWithFilter = function(listFilter){
+
+			// det start val
+			var startVal = $scope.currentPage * $scope.limit;
+			// gather filter objects
+			var filterObj = $scope.getFilterVars();
+
+			$http.post('/talents/findLimitWithFilter', {
+				startVal: startVal,
+				limitVal: $scope.limit,
+				filter: filterObj
+		  }).
+			success(function(data, status, headers, config) {
+				$scope.talents = [];
+				$scope.talents = data;
+				$scope.getTalentsCnt();
 			});
 
 		};

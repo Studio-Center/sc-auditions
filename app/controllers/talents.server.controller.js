@@ -188,7 +188,7 @@ exports.create = function(req, res) {
 				if (err) return console.log(err);
 			});
 				var socketio = req.app.get('socketio');
-				socketio.sockets.emit('talentsListUpdate'); 
+				socketio.sockets.emit('talentsListUpdate');
 
 				return res.jsonp(talent);
 			}
@@ -331,7 +331,7 @@ exports.delete = function(req, res) {
 					done(err);
 				} else {
 					var socketio = req.app.get('socketio');
-					socketio.sockets.emit('talentsListUpdate'); 
+					socketio.sockets.emit('talentsListUpdate');
 
 					res.jsonp(talent);
 					done(err);
@@ -342,7 +342,97 @@ exports.delete = function(req, res) {
 		if (err) return console.log(err);
 	});
 
-	
+
+};
+
+// assemble filters
+var getTalentsFilters = function(req){
+
+	// gen filter object
+	var filterObj = {};
+	// filter by project title
+	if(req.body.filter.fName){
+		filterObj.name = new RegExp(req.body.filter.fName, 'i');
+	}
+	if(req.body.filter.lName){
+		filterObj.lastName = new RegExp(req.body.filter.lName, 'i');
+	}
+	if(req.body.filter.email){
+		filterObj.email = new RegExp(req.body.filter.email, 'i');
+	}
+	// filter by gender
+	if(req.body.filter.gender){
+		filterObj.gender = req.body.filter.gender;
+	}
+	// unionStatus
+	if(req.body.filter.unionStatus){
+		filterObj.unionStatus = req.body.filter.unionStatus;
+	}
+	// type
+	if(req.body.filter.type){
+		filterObj.type = req.body.filter.type;
+	}
+	// ageRange
+	if(req.body.filter.ageRange){
+		filterObj.ageRange = req.body.filter.ageRange;
+	}
+	// locationISDN
+	if(req.body.filter.locationISDN){
+		filterObj.locationISDN = req.body.filter.locationISDN;
+	}
+	// locationISDN
+	if(req.body.filter.typeCasts){
+		filterObj.typeCasts = req.body.filter.typeCasts;
+	}
+
+	return filterObj;
+};
+// retrieve talents count
+exports.getTalentsCnt = function(req, res){
+
+	// set filter vars
+	var filterObj = getTalentsFilters(req);
+
+	Talent.find(filterObj).count({}, function(err, count){
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			res.jsonp(count);
+		}
+	});
+
+};
+
+exports.findLimitWithFilter = function(req, res) {
+
+	// set filter vars
+	var filterObj = getTalentsFilters(req);
+	// set and store limits
+	var startVal, limitVal;
+	if(req.body.startVal){
+		startVal = req.body.startVal;
+	} else {
+		startVal = 0;
+	}
+	if(req.body.limitVal){
+		limitVal = req.body.limitVal;
+	} else {
+		limitVal = 100;
+	}
+
+	console.log(filterObj);
+
+	Talent.find(filterObj).sort({'locationISDN': 1,'lastName': 1,'-created': -1}).skip(startVal).limit(limitVal).populate('user', 'displayName').exec(function(err, talents) {
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			res.jsonp(talents);
+		}
+	});
 };
 
 /**
