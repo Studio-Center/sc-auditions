@@ -41,7 +41,24 @@
                     <a class="btn btn-primary" ng-click="createClient('client')">Create Client</a>
                 </div>
                 <div ng-controller="UsersController" data-ng-init="findFilter('client')">
-                    <label>Search:</label> <input ng-model="filterClient" class="form-control">
+                  <div class="row">
+                    <div class="col-lg-3 col-md-3 col-sm-3">
+                      <label>Search by First Name:</label>
+                      <input ng-model="filter.fName" class="form-control" ng-change="findLimitWithFilter()">
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3">
+                      <label>Search by Last Name:</label>
+                      <input ng-model="filter.lName" class="form-control" ng-change="findLimitWithFilter()">
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3">
+                      <label>Search by Email:</label>
+                      <input ng-model="filter.email" class="form-control" ng-change="findLimitWithFilter()">
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3">
+                      <label>Search by Company:</label>
+                      <input ng-model="filter.company" class="form-control" ng-change="findLimitWithFilter()">
+                    </div>
+                  </div>
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <select ng-init="limit = 20" ng-model="limit" class="form-control">
@@ -57,24 +74,29 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-lg-12 col-md-12 col-sm-12">
-                            <div class="text-center">
-                            <ul class="pagination">
-                                <li ng-class="{disabled: currentPage == 0}">
-                                    <a href ng-click="changePage(currentPage-1)">« Prev</a>
-                                </li>
-                                <li ng-repeat="n in range(0, Math.floor(filtered.length/limit))" ng-class="{active: n == currentPage}" ng-click="setPage()">
-                                    <a href ng-bind="n + 1">1</a>
-                                </li>
-                                <li ng-class="{disabled: currentPage == Math.floor(filtered.length/limit)}">
-                                    <a href ng-click="changePage(currentPage+1)">Next »</a>
-                                </li>
-                            </ul>
-                            </div>
-                        </div>
+                      <div class="col-lg-2 col-md-2 col-sm-2">
+                          <p style="margin-top:27px">
+                            {{(limit*currentPage)+1}}-{{limit*(currentPage+1)}} User(s) of {{usersTotalCnt}}
+                          </p>
+                      </div>
+                      <div class="col-lg-10 col-md-10 col-sm-10">
+                          <div class="text-center">
+                          <ul class="pagination">
+                              <li ng-class="{disabled: currentPage == 0}">
+                                  <a href ng-click="changePage(currentPage-1)">« Prev</a>
+                              </li>
+                              <li ng-repeat="n in range(0, Math.floor(usersTotalCnt/limit))" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                                  <a href ng-bind="n + 1">1</a>
+                              </li>
+                              <li ng-class="{disabled: currentPage == Math.floor(usersTotalCnt/limit)}">
+                                  <a href ng-click="changePage(currentPage+1)">Next »</a>
+                              </li>
+                          </ul>
+                          </div>
+                      </div>
                     </div>
                     <ul class="list-group">
-                        <li class="list-group-item" ng-repeat="(key, user) in filtered = (users | filter:filterClient) | startFrom:currentPage*limit | limitTo: limit">
+                        <li class="list-group-item" ng-repeat="(key, user) in users">
                             <input type="checkbox" value="{{::user._id}}" ng-click="updateCreateClient(user._id, user.displayName, user.email)" ng-checked="checkClientUsersCreate(user._id)">
                             <a target="_blank" href="/#!/usersedit/{{::user._id}}">
                                 <span ng-bind="::user.firstName"></span> <span ng-bind="::user.lastName"></span>
@@ -84,21 +106,26 @@
                     </ul>
 
                     <div class="row">
-                        <div class="col-lg-12 col-md-12 col-sm-12">
-                            <div class="text-center">
-                            <ul class="pagination">
-                                <li ng-class="{disabled: currentPage == 0}">
-                                    <a href ng-click="changePage(currentPage-1)">« Prev</a>
-                                </li>
-                                <li ng-repeat="n in range(0, Math.floor(filtered.length/limit))" ng-class="{active: n == currentPage}" ng-click="setPage()">
-                                    <a href ng-bind="n + 1">1</a>
-                                </li>
-                                <li ng-class="{disabled: currentPage == Math.floor(filtered.length/limit)}">
-                                    <a href ng-click="changePage(currentPage+1)">Next »</a>
-                                </li>
-                            </ul>
-                            </div>
-                        </div>
+                      <div class="col-lg-2 col-md-2 col-sm-2">
+                          <p style="margin-top:27px">
+                            {{(limit*currentPage)+1}}-{{limit*(currentPage+1)}} User(s) of {{usersTotalCnt}}
+                          </p>
+                      </div>
+                      <div class="col-lg-10 col-md-10 col-sm-10">
+                          <div class="text-center">
+                          <ul class="pagination">
+                              <li ng-class="{disabled: currentPage == 0}">
+                                  <a href ng-click="changePage(currentPage-1)">« Prev</a>
+                              </li>
+                              <li ng-repeat="n in range(0, Math.floor(usersTotalCnt/limit))" ng-class="{active: n == currentPage}" ng-click="setPage()">
+                                  <a href ng-bind="n + 1">1</a>
+                              </li>
+                              <li ng-class="{disabled: currentPage == Math.floor(usersTotalCnt/limit)}">
+                                  <a href ng-click="changePage(currentPage+1)">Next »</a>
+                              </li>
+                          </ul>
+                          </div>
+                      </div>
                     </div>
                 </div>
             </div>
