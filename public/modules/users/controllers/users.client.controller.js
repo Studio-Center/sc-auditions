@@ -183,6 +183,11 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
 
 			// gen filter object
 			var filterObj = $scope.getFilterVars();
+			
+			// roles filter override
+			if($scope.filterOverride){
+					filterObj.roles = $scope.filterOverride;
+			}
 
 			$http.post('/users/recCount', {
 				filter: filterObj
