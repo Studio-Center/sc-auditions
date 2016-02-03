@@ -120,10 +120,11 @@
                                 </div>
                                 <div class="col-lg-4 col-md-4 col-sm-4">
                                     <input type="text" class="form-control" ng-model="parts[talent._id]" ng-if="showCreatePartFld(talent._id)">
-                                    {{parts[talent._id]}}
+                                    <span ng-bind="parts[talent._id]"></span>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-6">
-                                    <a target="_blank" href="/#!/talents/{{::talent._id}}">{{::talent.name}} {{::talent.lastName}}</a> - {{::talent.locationISDN}} - Outage <span ng-show="!talent.outageTimes">None</span><span ng-show="talent.outageTimes != ''">{{::talent.outageTimes}}</span>
+                                    <a target="_blank" href="/#!/talents/{{::talent._id}}">
+                                      <span ng-bind="::talent.name"></span> <span ng-bind="::talent.lastName"></span></a> - <span ng-bind="::talent.locationISDN"></span> - Outage <span ng-if="::!talent.outageTimes">None</span><span ng-if="::talent.outageTimes != ''" ng-bind="::talent.outageTimes"></span>
                                 </div>
                             </div>
                         </li>
@@ -150,7 +151,7 @@
         </div>
 
       <div class="panel-heading">
-          <strong>Selected Talent ({{newProject.talent.length}})</strong>
+          <strong>Selected Talent (<span ng-bind="newProject.talent.length"></span>)</strong>
       </div>
       <div class="table-responsive">
       <table class="table table-striped">
@@ -172,14 +173,17 @@
       </tr>
       <tr ng-repeat="(key, member) in newProject.talent | orderBy:predicate:reverse" ng-module="talents" ng-controller="TalentsController" data-ng-init="getOne(member.talentId)">
         <td>
-          <a target="_blank" ng-href="/#!/talents/{{::member.talentId}}" ng-bind="talent.name + ' ' + talent.lastNameCode"></a><br>
+          <a target="_blank" ng-href="/#!/talents/{{::member.talentId}}">
+            <span ng-bind="::talent.name"></span>
+            <span ng-bind="::talent.lastNameCode"></span>
+          </a><br>
           <span ng-bind="::member.added | amDateFormat:'M/DD/YY h:mm:ss a'"></span>
         </td>
         <td>
           <span ng-bind="::talent.locationISDN"></span>
         </td>
         <td>
-          <span ng-if="member.requested == true">R</span>
+          <span ng-if="::member.requested == true">R</span>
         </td>
         <td>
           <span ng-bind="::member.part"></span>
