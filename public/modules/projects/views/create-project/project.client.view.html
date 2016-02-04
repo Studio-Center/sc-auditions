@@ -97,7 +97,7 @@
                     </div>
                     <ul class="list-group">
                         <li class="list-group-item" ng-repeat="(key, user) in users">
-                            <input type="checkbox" value="{{::user._id}}" ng-click="updateCreateClient(user._id, user.displayName, user.email)" ng-checked="checkClientUsersCreate(user._id)">
+                            <input style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin:10px" type="checkbox" value="{{::user._id}}" ng-click="updateCreateClient(user._id, user.displayName, user.email)" ng-checked="checkClientUsersCreate(user._id)">
                             <a target="_blank" href="/#!/usersedit/{{::user._id}}">
                                 <span ng-bind="::user.firstName"></span> <span ng-bind="::user.lastName"></span>
                             </a>
