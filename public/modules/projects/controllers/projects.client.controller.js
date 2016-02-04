@@ -1239,8 +1239,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			    $scope.email.message += 'Project: ' + $scope.project.title + '<br>';
 			    $scope.email.message += 'Phase: ' + $scope.project.phases[key].name + '<br>';
 			    $scope.email.message += 'Status: ' + $scope.project.phases[key].status + '<br>';
-			    $scope.email.message += 'Start Date: ' + $scope.project.phases[key].startDate + '<br>';
-			    $scope.email.message += 'Change Date: ' + $scope.project.phases[key].changeDate + '<br>' + '<br>';
+			    $scope.email.message += 'Start Date: ' + ($scope.project.phases[key].startDate || '') + '<br>';
+			    $scope.email.message += 'Change Date: ' + ($scope.project.phases[key].changeDate || '') + '<br>' + '<br>';
 			    $scope.email.message += 'Added by: ' + Authentication.user.displayName + '<br>';
 			    $scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '<br>';
 
@@ -1266,8 +1266,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					    $scope.email.message += 'Project: ' + $scope.project.title + '<br>';
 					    $scope.email.message += 'Phase: ' + $scope.project.phases[key].name + '<br>';
 					    $scope.email.message += 'Status: ' + $scope.project.phases[key].status + '<br>';
-					    $scope.email.message += 'Start Date: ' + $scope.project.phases[key].startDate + '<br>';
-					    $scope.email.message += 'Change Date: ' + $scope.project.phases[key].changeDate + '<br>' + '<br>';
+					    $scope.email.message += 'Start Date: ' + ($scope.project.phases[key].startDate || '') + '<br>';
+					    $scope.email.message += 'Change Date: ' + ($scope.project.phases[key].changeDate || '') + '<br>' + '<br>';
 					    $scope.email.message += 'Added by: ' + Authentication.user.displayName + '<br>';
 					    $scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + $scope.project._id + '<br>';
 
