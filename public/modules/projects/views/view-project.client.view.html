@@ -286,46 +286,62 @@
 											FILE NOT FOUND ON SERVER! <br>PLEASE UPLOAD AGAIN!
 										</div>
 
-										<a ng-href="/res/auditions/{{::project._id}}/{{audition.file.name | encodeUri}}" target="_blank" data-ng-bind="::audition.file.name" class="inline-playable" download="{{::audition.file.name}}">ngAudio</a>
-										<p ng-module="users" ng-controller="UsersController" data-ng-init="getOne(audition.approved.by.userId)">
-											<strong>Posted by:</strong> <a ng-href="/#!/usersedit/{{::useredit._id}}" target="_blank">
-												<span ng-bind="::useredit.displayName"></span>
+										<a ng-href="/res/auditions/{{::project._id}}/{{audition.file.name | encodeUri}}" target="_blank" data-ng-bind="::audition.file.name" class="inline-playable" download="{{::audition.file.name}}">
+											ngAudio
+										</a>
+										<p>
+											<strong>
+												Posted by:
+											</strong>
+											<a ng-href="/#!/usersedit/{{::audition.approved.by.userId}}" target="_blank">
+												<span ng-bind="::audition.approved.by.name"></span>
 											</a><br>
-											<strong>On:</strong> <span ng-bind="::project.auditions[key].approved.by.date | amDateFormat:'M/DD/YY h:mm:ss a'"></span>
+											<strong>
+												On:
+											</strong>
+											<span ng-bind="::project.auditions[key].approved.by.date | amDateFormat:'M/DD/YY h:mm:ss a'"></span>
 										</p>
-										<p ng-if="audition.hidden == true" style="font-size:18px;color:red;font-weight:700">HIDDEN BY CLIENT</p>
-										<button ng-click="toggleShowRename()" class="btn btn-primary">Rename</button>
+										<p ng-if="audition.hidden == true" style="font-size:18px;color:red;font-weight:700">
+											HIDDEN BY CLIENT
+										</p>
+										<button ng-click="toggleShowRename()" class="btn btn-primary">
+											Rename
+										</button>
 
 										<div ng-if="showRename">
 											<input type="text" ng-model="project.auditions[key].rename" ng-init="project.auditions[key].rename = project.auditions[key].file.name" placeholder="Enter new filename" class="form-control">
-											<button ng-click="update(false);toggleShowRename();" class="btn btn-primary">Update</button>
-											<button ng-click="toggleShowRename()" class="btn btn-primary">Cancel</button>
+											<button ng-click="update(false);toggleShowRename();" class="btn btn-primary">
+												Update
+											</button>
+											<button ng-click="toggleShowRename()" class="btn btn-primary">
+												Cancel
+											</button>
 										</div>
-										<button data-ng-if="::permitAdminDirector()" ng-click="delAudition(key)" class="btn btn-danger">Delete</button>
+										<button data-ng-if="::permitAdminDirector()" ng-click="delAudition(key)" class="btn btn-danger">
+											Delete
+										</button>
 									</td>
 									<td>
-										<span ng-if="verifyAudio(key)">
-											<button ng-click="playAudioNoTrack(key, audition.file.name)" class="btn btn-primary">
-												<span ng-if="lastAudioID == key && audioStatus == 1">
-													<img src="/img/Aqua-Pause-icon.png" style="width:35px;height:auto" alt="pause icon">
-													<div>
-						                <input class="form-control" type="range" min="0" max="1" step="0.01" ng-model="audio.progress">
-								        	</div>
-												</span>
-												<span ng-if="lastAudioID != key || audioStatus != 1">
-													<img src="/img/aqua-play-icon.png" style="width:35px;height:auto" alt="play icon">
-												</span>
-											</button>
-											<button ng-click="stopAudio()" class="btn btn-primary" ng-if="lastAudioID == key && audioStatus == 1">
-												<img src="/img/Aqua-Stop-icon.png" style="width:35px;height:auto" alt="stop icon">
-											</button>
-										</span>
+										<button ng-click="playAudioNoTrack(key, audition.file.name)" class="btn btn-primary">
+											<span ng-if="lastAudioID == key && audioStatus == 1">
+												<img src="/img/Aqua-Pause-icon.png" style="width:35px;height:auto" alt="pause icon">
+												<div>
+					                <input class="form-control" type="range" min="0" max="1" step="0.01" ng-model="audio.progress">
+							        	</div>
+											</span>
+											<span ng-if="lastAudioID != key || audioStatus != 1">
+												<img src="/img/aqua-play-icon.png" style="width:35px;height:auto" alt="play icon">
+											</span>
+										</button>
+										<button ng-click="stopAudio()" class="btn btn-primary" ng-if="lastAudioID == key && audioStatus == 1">
+											<img src="/img/Aqua-Stop-icon.png" style="width:35px;height:auto" alt="stop icon">
+										</button>
 									</td>
 									<td>
-										<p ng-if="project.auditions[key].playCnt" ng-bind="project.auditions[key].playCnt"></p>
+										<p ng-bind="project.auditions[key].playCnt"></p>
 									</td>
 									<td>
-										<div ng-if="project.auditions[key].talent == ''">
+										<div ng-if="!project.auditions[key].talent">
 											<img src="img/warning.jpg" alt="talent warning icon" style="width:20px;height:auto">
 											Talent Not Assigned
 										</div>
