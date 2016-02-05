@@ -38,7 +38,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.priorityOpts = ['None', 'Very low', 'Low', 'Medium', 'High', 'Very high'];
 		$scope.phaseStatusOpts = ['in progress','open','complete','suspended'];
 		$scope.soundersOpts = ['Sounders', 'No Sounders - Approved By William'];
-		//$scope.talentStatus = ['Cast', 'Emailed', 'Scheduled', 'Message left', 'Out', 'Received needs to be posted', 'Posted', 'Not Posted (Bad Read)', 'Missed', 'Canceled'];
+		$scope.talentStatus = ['Cast', 'Emailed', 'Scheduled', 'Message left', 'Out', 'Received needs to be posted', 'Posted', 'Not Posted (Bad Read)', 'Missed', 'Canceled'];
 		//$scope.loadAudio = 0;
 		$scope.audio = '';
 		$scope.lastAudioID = 0;
@@ -60,7 +60,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.toggleRefs = false;
 		$scope.selectedMainClients = [];
 		$scope.rejFiles = [];
-		$scope.talentStatus = [];
+		//$scope.talentStatus = [];
 		$scope.talentBooked = [];
 		$scope.talentNote = [];
 		$scope.verifyFilesList = {};
