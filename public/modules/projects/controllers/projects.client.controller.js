@@ -71,7 +71,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		$scope.buildTalentsLst = function(talentID){
 			if(talentID && typeof $scope.foundTalents[talentID] === 'undefined'){
-				$scope.foundTalents[talentID] = Talents.findOne(talentID);
+				$scope.foundTalents[talentID] = Talents.get({
+					talentId: talentID
+				});
 			}
 		};
 
