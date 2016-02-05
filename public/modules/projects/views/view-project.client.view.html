@@ -411,11 +411,11 @@
 								<th>Note</th>
 								<th></th>
 							</tr>
-							<tr ng-repeat="(key, member) in project.talent | orderBy:predicate:reverse" ng-module="talents" ng-controller="TalentsController" data-ng-init="getOne(member.talentId)">
+							<tr ng-repeat="(key, member) in project.talent | orderBy:predicate:reverse" data-ng-init="buildTalentsLst(member.talentId)">
 								<td>
 									<a target="_blank" ng-href="/#!/talents/{{::member.talentId}}">
-										<span ng-bind="::talent.name"></span>
-										<span ng-bind="::talent.lastNameCode"></span>
+										<span ng-bind="::foundTalents[member.talentId].name"></span>
+										<span ng-bind="::foundTalents[member.talentId].lastNameCode"></span>
 									</a><br>
 									<span ng-bind="::member.added | amDateFormat:'M/DD/YY h:mm:ss a'"></span>
 								</td>
@@ -423,7 +423,7 @@
 									<a target="_blank" ng-href="/#!/projects/talent-upload/{{::project._id}}/{{::member.talentId}}" title="talent auditions upload link">^</a>
 								</td>
 								<td>
-									<span ng-bind="::talent.locationISDN"></span>
+									<span ng-bind="::foundTalents[member.talentId].locationISDN"></span>
 								</td>
 								<td>
 									<span ng-if="::member.requested == true">R</span>

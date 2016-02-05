@@ -1,14 +1,15 @@
 'use strict';
 
 // Projects controller
-angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$upload', 'ngAudio', '$http', '$modal', '$rootScope', 'Socket', '$cookies', 'moment', '$window',
-	function($scope, $stateParams, $location, Authentication, Projects, $upload, ngAudio, $http, $modal, $rootScope, Socket, $cookies, moment, $window ) {
+angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$upload', 'ngAudio', '$http', '$modal', '$rootScope', 'Socket', '$cookies', 'moment', '$window', 'Talents',
+	function($scope, $stateParams, $location, Authentication, Projects, $upload, ngAudio, $http, $modal, $rootScope, Socket, $cookies, moment, $window, Talents ) {
 		$scope.authentication = Authentication;
 
 		$scope.projectsTotalCnt = 0;
 		$scope.project = {};
 		$scope.discussion = '';
 		$scope.watchersObj = {};
+		$scope.foundTalents = {};
 		// rating
 		$scope.hide = 0;
 		$scope.max = 5;
@@ -67,6 +68,12 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.predicate = '';
 		$scope.reverse = '';
 		$scope.searchText = {};
+
+		$scope.buildTalentsLst = function(talentID){
+			if(talentID && typeof $scope.foundTalents[talentID] === 'undefined'){
+				$scope.foundTalents[talentID] = Talents.findOne(talentID);
+			}
+		};
 
 		// // on close check
 		// $scope.$on('$locationChangeStart', function( event ) {
