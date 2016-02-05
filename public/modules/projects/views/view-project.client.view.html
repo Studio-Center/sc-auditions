@@ -429,7 +429,9 @@
 									<span ng-if="::member.requested == true">R</span>
 								</td>
 								<td>
-									<select class="form-control" ng-model="talentStatus[member.talentId]" ng-init="talentStatus[member.talentId] = $parent.getTalentStatus(member.talentId) || talentStatus[0]" style="width:100px" ng-change="$parent.updateTalentStatus(member.talentId, talentStatus[member.talentId])" ng-options="item for item in talentStatus"></select>
+									<select class="form-control" ng-model="talentStatus[member.talentId]"
+									ng-init="talentStatus[member.talentId] = $parent.getTalentStatus(member.talentId) || talentStatus[0]" style="width:100px"
+									ng-change="$parent.updateTalentStatus(member.talentId, talentStatus[member.talentId])" ng-options="item for item in talentStatus"></select>
 								</td>
 								<td>
 									<span ng-bind="::member.part"></span>
@@ -440,7 +442,8 @@
 									</button>
 								</td>
 								<td>
-									<input style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin:10px" type="checkbox" data-ng-model="talentBooked[key]" ng-checked="$parent.getBooked(member.talentId)" ng-click="$parent.toggleBooked(member.talentId)">
+									<input style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin:10px"
+									type="checkbox" data-ng-model="talentBooked[key]" ng-checked="$parent.getBooked(member.talentId)" ng-click="$parent.toggleBooked(member.talentId)">
 								</td>
 								<td>
 									<textarea ng-model="talentNote[member.talentId]" name="talentNote[member.talentId]" ng-init="talentNote[member.talentId] = $parent.getTalentNote(member.talentId)" class="form-control">
