@@ -286,7 +286,7 @@
 											FILE NOT FOUND ON SERVER! <br>PLEASE UPLOAD AGAIN!
 										</div>
 
-										<a ng-href="/res/auditions/{{::project._id}}/{{audition.file.name | encodeUri}}" target="_blank" data-ng-bind="::audition.file.name" class="inline-playable" download="{{::audition.file.name}}">
+										<a ng-href="/res/auditions/{{::project._id}}/{{audition.file.name | encodeUri}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable" download="{{audition.file.name}}">
 											ngAudio
 										</a>
 										<p>

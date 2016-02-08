@@ -1516,7 +1516,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				projectId: $stateParams.projectId
 			// file found
 			}).success(function(data, status, headers, config) {
-				$scope.project = data;
+				$scope.project = new Projects();
+				$scope.project = angular.extend($scope.project, data);
 			// file not found
 			}).error(function(data, status, headers, config) {
 				console.log('Problem loading project.');
