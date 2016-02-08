@@ -1570,8 +1570,10 @@ exports.loadProject = function(req, res){
 			async.eachSeries(project.talent, function (curTalent, talentCallback) {
 					// gather updated talent info
 					Talent.findById(curTalent.talentId).populate('user', 'displayName').exec(function(err, talent) {
-						curTalent.nameLnmCode = talent.name + ' ' + talent.lastNameCode;
-						curTalent.locationISDN = talent.locationISDN;
+						if(talent){
+							curTalent.nameLnmCode = talent.name + ' ' + talent.lastNameCode;
+							curTalent.locationISDN = talent.locationISDN;
+						}
 						talentCallback();
 					});
 				}, function (err) {
