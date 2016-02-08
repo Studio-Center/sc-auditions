@@ -411,11 +411,10 @@
 								<th>Note</th>
 								<th></th>
 							</tr>
-							<tr ng-repeat="(key, member) in project.talent | orderBy:predicate:reverse" data-ng-init="buildTalentsLst(member.talentId)">
+							<tr ng-repeat="(key, member) in project.talent | orderBy:predicate:reverse">
 								<td>
 									<a target="_blank" ng-href="/#!/talents/{{::member.talentId}}">
-										<span ng-bind="::foundTalents[member.talentId].name"></span>
-										<span ng-bind="::foundTalents[member.talentId].lastNameCode"></span>
+										<span ng-bind="::member.nameLnmCode"></span>
 									</a><br>
 									<span ng-bind="::member.added | amDateFormat:'M/DD/YY h:mm:ss a'"></span>
 								</td>
@@ -423,7 +422,7 @@
 									<a target="_blank" ng-href="/#!/projects/talent-upload/{{::project._id}}/{{::member.talentId}}" title="talent auditions upload link">^</a>
 								</td>
 								<td>
-									<span ng-bind="::foundTalents[member.talentId].locationISDN"></span>
+									<span ng-bind="::member.locationISDN"></span>
 								</td>
 								<td>
 									<span ng-if="::member.requested == true">R</span>
@@ -575,10 +574,10 @@
 											</tr>
 											<tr ng-repeat="(key, talent) in talents">
 												<td>
-													<input style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin:10px" ng-if="addTalent" type="checkbox" value="{{::talent._id}}" ng-click="updateTalent(talent._id, talent.name + ' ' + talent.lastName, talent.email)" ng-checked="checkTalent(talent._id)">
+													<input style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin:10px" ng-if="addTalent" type="checkbox" value="{{::talent._id}}" ng-click="updateTalent(talent._id, talent.name + ' ' + talent.lastName, talent.email, talent.locationISDN, talent.name + ' ' + talent.lastNameCode)" ng-checked="checkTalent(talent._id)">
 												</td>
 												<td>
-													<input style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin:10px" ng-if="addTalent" type="checkbox" value="{{::talent._id}}" ng-click="updateRequestTalent(talent._id, talent.name + ' ' + talent.lastName, talent.email)" ng-checked="checkRequestedTalent(talent._id)">
+													<input style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin:10px" ng-if="addTalent" type="checkbox" value="{{::talent._id}}" ng-click="updateRequestTalent(talent._id, talent.name + ' ' + talent.lastName, talent.email, talent.locationISDN, talent.name + ' ' + talent.lastNameCode)" ng-checked="checkRequestedTalent(talent._id)">
 												</td>
 												<td>
 													<input type="text" class="form-control" ng-model="parts[talent._id]" ng-if="showPartFld(talent._id)">

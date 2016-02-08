@@ -9,7 +9,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.project = {};
 		$scope.discussion = '';
 		$scope.watchersObj = {};
-		$scope.foundTalents = {};
 		// rating
 		$scope.hide = 0;
 		$scope.max = 5;
@@ -68,14 +67,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.predicate = '';
 		$scope.reverse = '';
 		$scope.searchText = {};
-
-		$scope.buildTalentsLst = function(talentID){
-			if(talentID && typeof $scope.foundTalents[talentID] === 'undefined'){
-				$scope.foundTalents[talentID] = Talents.get({
-					talentId: talentID
-				});
-			}
-		};
 
 		// // on close check
 		// $scope.$on('$locationChangeStart', function( event ) {
@@ -656,19 +647,21 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}
 		};
 
-		$scope.updateTalent = function(talentId, talentName, email){
+		$scope.updateTalent = function(talentId, talentName, email, locationISDN, nameLnmCode){
 
 			// gen talent object
 			var log, talent = {
 							'talentId': talentId,
 							'name': talentName,
+							'nameLnmCode': talentName,
+							'locationISDN': locationISDN,
 							'email': email,
 							'booked': false,
 							'status': 'Cast',
-							part: $scope.parts[talentId] || '',
-							regular: true,
-							requested: false,
-							added: moment().tz('America/New_York').format()
+							'part': $scope.parts[talentId] || '',
+							'regular': true,
+							'requested': false,
+							'added': moment().tz('America/New_York').format()
 						};
 
 			$scope.addTalent = false;
@@ -734,18 +727,20 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			// update project store
 			//$scope.update();
 		};
-		$scope.updateRequestTalent = function(talentId, talentName, email){
+		$scope.updateRequestTalent = function(talentId, talentName, email, locationISDN, nameLnmCode){
 			// gen talent object
 			var log, found = 0, talent = {
 							'talentId': talentId,
 							'name': talentName,
+							'nameLnmCode': talentName,
+							'locationISDN': locationISDN,
 							'email': email,
 							'booked': false,
 							'status': 'Cast',
-							part: $scope.parts[talentId] || '',
-							regular: false,
-							requested: true,
-							added: moment().tz('America/New_York').format()
+							'part': $scope.parts[talentId] || '',
+							'regular': false,
+							'requested': true,
+							'added': moment().tz('America/New_York').format()
 						};
 
 			$scope.addTalent = false;
@@ -1511,10 +1506,21 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.loadProject = function(){
 
 			// set vars
-			var file;
+			// var file;
 
 			// load project document
-			this.findOne();
+			//this.findOne();
+
+			// check for new file
+			$http.post('/projects/loadProject', {
+				projectId: $stateParams.projectId
+			// file found
+			}).success(function(data, status, headers, config) {
+				$scope.project = data;
+			// file not found
+			}).error(function(data, status, headers, config) {
+				console.log('Problem loading project.');
+			});
 
 		};
 
@@ -1628,7 +1634,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 					if(typeof $scope.watchersObj.project.auditions !== 'object'){
 						$scope.watchersObj.project.auditions = $scope.$watchCollection('project.auditions',function(){
-							var file;
+							// var file;
 
 							// audition file check
 							if($scope.fileCheck === false){

@@ -1558,6 +1558,37 @@ exports.create = function(req, res) {
 	}
 };
 
+// load single project for projects admin page
+exports.loadProject = function(req, res){
+
+	// set vars
+	var projId = req.body.projectId;
+	// load project
+	Project.findById(projId).populate('user', 'displayName').exec(function(err, project) {
+		if(project){
+			// walk through assigned talent
+			async.eachSeries(project.talent, function (curTalent, talentCallback) {
+					// gather updated talent info
+					Talent.findById(curTalent.talentId).populate('user', 'displayName').exec(function(err, talent) {
+						curTalent.nameLnmCode = talent.name + ' ' + talent.lastNameCode;
+						curTalent.locationISDN = talent.locationISDN;
+						talentCallback();
+					});
+				}, function (err) {
+					project.save(function(err) {
+						if (err) {
+							return res.status(400).send(err);
+						} else {
+							return res.jsonp(project);
+						}
+					});
+			});
+		} else {
+			return res.status(400).send();
+		}
+	});
+
+};
 
 /**
  * Show the current Project
@@ -1565,7 +1596,6 @@ exports.create = function(req, res) {
 exports.read = function(req, res) {
 	res.jsonp(req.project);
 };
-
 
 // remove file from local file system
 var deleteFiles = function(project, req, user){

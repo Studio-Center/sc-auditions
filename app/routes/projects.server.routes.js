@@ -12,6 +12,10 @@ module.exports = function(app) {
 		.post(users.requiresLogin, projects.create);
 
 	// load projects using a set collection count limit
+	app.route('/projects/loadProject')
+		.post(users.requiresLogin, projects.loadProject);
+
+	// load projects using a set collection count limit
 	app.route('/projects/findLimit')
 		.post(users.requiresLogin, projects.findLimit);
 
