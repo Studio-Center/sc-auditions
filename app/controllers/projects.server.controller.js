@@ -2012,6 +2012,9 @@ var getProjectsFilters = function(req){
 	if(req.body.filter.title){
 		filterObj.title = new RegExp(req.body.filter.title, 'i');
 	}
+	if(req.body.filter.description){
+		filterObj.description = new RegExp(req.body.filter.description, 'i');
+	}
 	// filter my Projects
 	if(req.body.filter.myProjects === true){
 		filterObj.user = req.user._id;

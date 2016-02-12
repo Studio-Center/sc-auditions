@@ -1373,6 +1373,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			if($scope.searchText.title){
 				filterObj.title = $scope.searchText.title;
 			}
+			if($scope.searchText.description){
+				filterObj.description = $scope.searchText.description;
+			}description
 			// filter sort options
 			if($scope.sortText){
 				filterObj.sortOrder = $scope.sortText;
