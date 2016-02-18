@@ -191,9 +191,9 @@ var emailTalent = function(selTalent, talentInfo, email, project, req, res, subj
 				emailSubject = nameArr[0] + ' has an Audition - ' + project.title + ' - Due ' + dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
 			}
 			if(typeof subjectAd !== 'undefined'){
-				emailSubject = subjectAd + ' change ' + emailSubject;
+				emailSubject = 'NEW ' + subjectAd + ' FILE ' + emailSubject;
 			}
-
+			console.log(emailSubject);
 			var mailOptions = {
 				to: talentInfo.email,
 				from: owner.email || config.mailer.from,
