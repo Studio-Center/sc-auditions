@@ -193,7 +193,7 @@ var emailTalent = function(selTalent, talentInfo, email, project, req, res, subj
 			if(typeof subjectAd !== 'undefined'){
 				emailSubject = 'NEW ' + subjectAd + ' FILE ' + emailSubject;
 			}
-			console.log(emailSubject);
+
 			var mailOptions = {
 				to: talentInfo.email,
 				from: owner.email || config.mailer.from,
