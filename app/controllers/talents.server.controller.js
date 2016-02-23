@@ -384,6 +384,7 @@ var getTalentsFilters = function(req){
 	if(req.body.filter.typeCasts){
 		filterObj.typeCasts = req.body.filter.typeCasts;
 		if(filterObj.typeCasts === 'Spanish'){
+			delete filterObj.typeCasts;
 			//filterObj.typeCasts = ['Spanish-Dialect','Spanish-Showcase'];
 			filterObj.prefLanguage = 'Spanish';
 		}
