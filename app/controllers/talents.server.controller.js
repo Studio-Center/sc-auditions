@@ -383,6 +383,10 @@ var getTalentsFilters = function(req){
 	// locationISDN
 	if(req.body.filter.typeCasts){
 		filterObj.typeCasts = req.body.filter.typeCasts;
+		if(filterObj.typeCasts === 'Spanish'){
+			//filterObj.typeCasts = ['Spanish-Dialect','Spanish-Showcase'];
+			filterObj.prefLanguage = 'Spanish';
+		}
 	}
 
 	return filterObj;
