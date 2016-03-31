@@ -41,6 +41,44 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
         Socket.removeAllListeners();
     });
 
+		// gathers to field addresses for emails
+		$scope.gatherToAddresses = function(type){
+
+			// create mail object
+			var emailObj = {
+				email: {
+					projectId: $scope.project._id,
+					to: [],
+					bcc: [],
+					subject: '',
+					message: ''
+				}
+			};
+			angular.extend($scope, emailObj);
+
+			// send update email
+			var toEmails = [];
+			var emailCnt = 0;
+			// regex validate email
+			var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+			// attach current user to email chain
+			toEmails[emailCnt] = Authentication.user.email;
+
+			// attach talents to email chain
+			if(type !== 'updateTalent' && type !== 'updateTeam' && type !== 'updateClientClient' && type !== 'updateClient' && type !== 'saveAudtionNote' && type !== 'saveScriptNote' && type !== 'saveDiscussion' && type !== 'updateStatus'){
+				for(var l = 0; l < $scope.project.talent.length; ++l){
+					if($scope.project.talent[l].email !== '' && re.test($scope.project.talent[l].email)){
+						emailCnt += 1;
+						toEmails[emailCnt] = $scope.project.talent[l].email;
+					}
+				}
+			}
+
+			// check for accounts associated
+			$scope.email.to = toEmails;
+		};
+
     $scope.updateNoRefresh = function(){
 
 			// merge existing open project with updated project
@@ -169,20 +207,32 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
       $scope.selCheckVal = value;
   	};
 		$scope.curRatings = function(){
-			if(typeof $scope.project !== 'undefined' && typeof $scope.project.auditions !== 'undefined'){
-				for(var j = 0; j < $scope.project.auditions.length; ++j){
-					for(var i = 0; i < $scope.project.auditions[j].rating.length; ++i){
-						if($scope.project.auditions[j].rating[i].userId === Authentication.user._id){
-							$scope.project.auditions[j].curRating = $scope.project.auditions[j].rating[i].value;
+
+			var auditions = $scope.project.auditions;
+			if(typeof $scope.project !== 'undefined' && auditions){
+					var limit = auditions.length,
+							i = 0,
+							j = 0;
+
+
+				for(j = 0; j < limit; ++j){
+					for(i = 0; i < auditions[j].rating.length; ++i){
+						if(auditions[j].rating[i].userId === Authentication.user._id){
+							auditions[j].curRating = auditions[j].rating[i].value;
 						}
 					}
 				}
 			}
 		};
 		$scope.lookUpRating = function(key){
-			for(var i = 0; i < $scope.project.auditions[key].rating.length; ++i){
-				if($scope.project.auditions[key].rating[i].userId === Authentication.user._id){
-					return $scope.project.auditions[key].rating[i].value;
+
+			var ratings = $scope.project.auditions[key].rating,
+					limit = ratings.length,
+					i = 0;
+
+			for(i = 0; i < limit; ++i){
+				if(ratings[i].userId === Authentication.user._id){
+					return ratings[i].value;
 				}
 			}
 		};
@@ -191,28 +241,37 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 			redirect = typeof redirect === 'undefined' ? true : redirect;
 
 			// console.log($scope.rate[key]);
-			var key, ratingCnt = 0, avgRating = 0;
+			var key,
+					ratingCnt = 0,
+					avgRating = 0,
+					auditions = $scope.project.auditions,
+					limit = auditions.length,
+					j = 0,
+					i = 0;
 
 			// get key for selected audition
-			for(var j = 0; j < $scope.project.auditions.length; ++j){
-				if($scope.project.auditions[j].file.path === path){
+			for(j = 0; j < limit; ++j){
+				if(auditions[j].file.path === path){
 					key = j;
 				}
 			}
 
 			// walk through existing ratings
-			if(typeof $scope.project.auditions[key] !== 'undefined' && typeof $scope.project.auditions[key].rating !== 'undefined'){
-				for(var i = 0; i < $scope.project.auditions[key].rating.length; ++i){
+			if(typeof auditions[key] !== 'undefined' && typeof auditions[key].rating !== 'undefined'){
+
+				var ratingLimit = auditions[key].rating.length;
+
+				for(i = 0; i < ratingLimit; ++i){
 					// toggle existing rating if found
-					if($scope.project.auditions[key].rating[i].userId === Authentication.user._id){
-						$scope.project.auditions[key].rating.splice(i,1);
-						$scope.project.auditions[key].curRating = $scope.selCheckVal;
+					if(auditions[key].rating[i].userId === Authentication.user._id){
+						auditions[key].rating.splice(i,1);
+						auditions[key].curRating = $scope.selCheckVal;
 					} else {
 						// gather average rating
-						avgRating += $scope.project.auditions[key].rating[i].value;
+						avgRating += auditions[key].rating[i].value;
 					}
 				}
-				ratingCnt += $scope.project.auditions[key].rating.length;
+				ratingCnt += auditions[key].rating.length;
 			}
 
 			avgRating += $scope.selCheckVal;
@@ -227,10 +286,10 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 			};
 
 			// push new rating
-			$scope.project.auditions[key].rating.push(rating);
+			auditions[key].rating.push(rating);
 
 			// merge average rating
-			$scope.project.auditions[key].avgRating = avgRating;
+			auditions[key].avgRating = avgRating;
 
 			// update project store
 			$scope.updateNoRefresh();
@@ -239,33 +298,37 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 		// update audition rating
 		$scope.updateFavorite = function(path){
 			// console.log($scope.rate[key]);
-			var key, favoriteVal = 1;
+			var key,
+					favoriteVal = 1,
+					j = 0,
+					auditions = $scope.project.auditions,
+					limit = auditions.length;
 
 			// get key for selected audition
-			for(var j = 0; j < $scope.project.auditions.length; ++j){
-				if($scope.project.auditions[j].file.path === path){
+			for(j = 0; j < limit; ++j){
+				if(auditions[j].file.path === path){
 					key = j;
 				}
 			}
 
 			// determine existing favorite setting
-			if(typeof $scope.project.auditions[key].favorite !== 'undefined'){
-				if($scope.project.auditions[key].favorite === 1){
+			if(typeof auditions[key].favorite !== 'undefined'){
+				if(auditions[key].favorite === 1){
 					favoriteVal = 0;
 				}
 			}
 
 			// merge average rating
-			$scope.project.auditions[key].favorite = favoriteVal;
+			auditions[key].favorite = favoriteVal;
 
 			// automatically check favorited
-			if($scope.project.auditions[key].favorite === 1){
-				if ($scope.project.auditions[key].selected === false){
-				    $scope.project.auditions[key].selected = true;
+			if(auditions[key].favorite === 1){
+				if (auditions[key].selected === false){
+				    auditions[key].selected = true;
 				}
 			} else {
-				if ($scope.project.auditions[key].selected === true){
-				    $scope.project.auditions[key].selected = false;
+				if (auditions[key].selected === true){
+				    auditions[key].selected = false;
 				}
 			}
 
@@ -278,17 +341,20 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 		$scope.updateSelected = function(path){
 
 			// console.log($scope.rate[key]);
-			var key;
+			var key,
+					auditions = $scope.project.auditions,
+					limit = auditions.length,
+					j = 0;
 
 			// get key for selected audition
-			for(var j = 0; j < $scope.project.auditions.length; ++j){
-				if($scope.project.auditions[j].file.path === path){
+			for(j = 0; j < limit; ++j){
+				if(auditions[j].file.path === path){
 					key = j;
 				}
 			}
 
 			// update selected value
-			$scope.project.auditions[key].selected = !$scope.project.auditions[key].selected;
+			auditions[key].selected = !auditions[key].selected;
 
 			// update project store
 			$scope.updateNoRefresh();
@@ -298,9 +364,13 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 		// update selected status
 		$scope.checkSelected = function(path){
 
+			var auditions = $scope.project.auditions,
+					limit = auditions.length,
+					j = 0;
+
 			// get key for selected audition
-			for(var j = 0; j < $scope.project.auditions.length; ++j){
-				if($scope.project.auditions[j].file.path === path && $scope.project.auditions[j].selected === true){
+			for(j = 0; j < limit; ++j){
+				if(auditions[j].file.path === path && auditions[j].selected === true){
 					return true;
 				}
 			}
@@ -309,8 +379,8 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 
     // compare dates check for within hour
     $scope.compareDates = function(projDate){
-      var now = new Date();
-      projDate = new Date(projDate);
+      var now = new Date(),
+					projDate = new Date(projDate);
 
       var hours = Math.abs(projDate - now) / 36e5;
 
@@ -348,8 +418,12 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 
     $scope.isHidden = function(filename){
 
-  		for(var i = 0; i < $scope.project.auditions.length; ++i){
-  			if($scope.project.auditions[i].file.path === filename){
+			var auditions = $scope.project.auditions,
+					limit = auditions.length,
+					i = 0;
+
+  		for(i = 0; i < limit; ++i){
+  			if(auditions[i].file.path === filename){
   				return true;
   			}
   		}
@@ -357,9 +431,14 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
   		return false;
   	};
   	$scope.isDisplayed = function(filename){
-  		for(var i = 0; i < $scope.project.auditions.length; ++i){
-  			if($scope.project.auditions[i].file.path === filename){
-  				if($scope.project.auditions[i].hidden === true && $scope.hideSelected === true){
+
+			var auditions = $scope.project.auditions,
+					limit = auditions.length,
+					i = 0;
+
+  		for(i = 0; i < limit; ++i){
+  			if(auditions[i].file.path === filename){
+  				if(auditions[i].hidden === true && $scope.hideSelected === true){
   					return false;
   				} else {
   					return true;
@@ -370,10 +449,13 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
   		return false;
   	};
   	$scope.hiddenAudsCnt = function(){
-  		var hidCnt = 0;
+  		var hidCnt = 0,
+					auditions = $scope.project.auditions,
+					limit = auditions.length,
+					i = 0;
 
-  		for(var i = 0; i < $scope.project.auditions.length; ++i){
-  			if($scope.project.auditions[i].hidden === true){
+  		for(i = 0; i < limit; ++i){
+  			if(auditions[i].hidden === true){
   				hidCnt += 1;
   			}
   		}
@@ -400,14 +482,18 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
   	// download all auditions from project
   	$scope.downloadBookedAuditions = function(){
 
-  		var bookedAuds = [];
-  		for(var i = 0; i < $scope.project.auditions.length; ++i){
-  			if($scope.project.auditions[i].booked === true){
-  				bookedAuds.push($scope.project.auditions[i].file.name);
+  		var bookedAuds = [],
+					auditions = $scope.project.auditions,
+					limit = auditions.length,
+					i = 0;
+
+  		for(i = 0; i < limit; ++i){
+  			if(auditions[i].booked === true){
+  				bookedAuds.push(auditions[i].file.name);
   			}
 
 				// download all booked auditions on final booked audition walk
-				if((i+1) === $scope.project.auditions.length){
+				if((i+1) === limit){
 
 					$http.post('/projects/downloadBookedAuditions', {
 						projectId: $scope.project._id,
@@ -432,14 +518,18 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
   	// download all auditions from project
   	$scope.downloadSelectedAuditions = function(){
 
-  		var selectedAuds = [];
-  		for(var i = 0; i < $scope.project.auditions.length; ++i){
-  			if($scope.project.auditions[i].selected === true){
-  				selectedAuds.push($scope.project.auditions[i].file.name);
+  		var selectedAuds = [],
+					auditions = $scope.project.auditions,
+					limit = auditions.length,
+					i = 0;
+
+  		for(i = 0; i < limit; ++i){
+  			if(auditions[i].selected === true){
+  				selectedAuds.push(auditions[i].file.name);
   			}
 
 				// download all auditions on final audition file walk
-				if((i+1) === $scope.project.auditions.length){
+				if((i+1) === limit){
 
 					$http.post('/projects/downloadSelectedAuditions', {
 				        projectId: $scope.project._id,
@@ -464,8 +554,12 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
   	// show booked option for selected auditions
   	$scope.bookSelectedShow = function(){
 
-			for(var i = 0; i < $scope.project.auditions.length; ++i){
-  			if($scope.project.auditions[i].selected === true){
+			var auditions = $scope.project.auditions,
+					limit = auditions.length,
+					i = 0;
+
+			for(i = 0; i < limit; ++i){
+  			if(auditions[i].selected === true){
   				return true;
   			}
   		}
@@ -475,8 +569,12 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
   	};
 		$scope.bookShow = function(){
 
-  		for(var i = 0; i < $scope.project.auditions.length; ++i){
-  			if($scope.project.auditions[i].selected === true && (typeof $scope.project.auditions[i].booked === 'undefined' || $scope.project.auditions[i].booked === false)){
+			var auditions = $scope.project.auditions,
+					limit = auditions.length,
+					i = 0;
+
+  		for(i = 0; i < limit; ++i){
+  			if(auditions[i].selected === true && (typeof auditions[i].booked === 'undefined' || auditions[i].booked === false)){
   				return true;
   			}
   		}
@@ -489,8 +587,12 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
   	// check for booked auditions
   	$scope.bookedShow = function(){
 
-  		for(var i = 0; i < $scope.project.auditions.length; ++i){
-  			if($scope.project.auditions[i].booked === true){
+			var auditions = $scope.project.auditions,
+					limit = auditions.length,
+					i = 0;
+
+  		for(i = 0; i < limit; ++i){
+  			if(auditions[i].booked === true){
   				return true;
   			}
   		}
@@ -501,7 +603,7 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 
     $scope.hideSelected = true;
     $scope.hideSelectedAuditions = function(){
-          $scope.hideSelected = !$scope.hideSelected;
+      $scope.hideSelected = !$scope.hideSelected;
     };
 
     // save client note
@@ -561,8 +663,11 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
   	};
 
     $scope.verifyAudio = function(key){
-			if(typeof $scope.project.auditions[key] === 'object'){
-				if(typeof $scope.project.auditions[key].file === 'object'){
+
+			var auditions = $scope.project.auditions;
+
+			if(typeof auditions[key] === 'object'){
+				if(typeof auditions[key].file === 'object'){
 					return true;
 				}
 			}
@@ -570,37 +675,52 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 		};
 
     $scope.hideAudition = function(filename){
+
+			var auditions = $scope.project.auditions,
+					limit = auditions.length,
+					i = 0;
+
   		// $scope.hideList.push(filename);
   		// get audition id
-  		for(var i = 0; i < $scope.project.auditions.length; ++i){
-  			if($scope.project.auditions[i].file.path === filename){
-  				$scope.project.auditions[i].hidden = true;
+  		for(i = 0; i < limit; ++i){
+  			if(auditions[i].file.path === filename){
+  				auditions[i].hidden = true;
   				$scope.updateNoRefresh();
   			}
   		}
   	};
   	$scope.showAudition = function(filename){
+
+			var auditions = $scope.project.auditions,
+					limit = auditions.length,
+					i = 0;
+
 			// var idx = $scope.hideList.indexOf(filename);
 			// if (idx > -1){
 			//     $scope.hideList.splice(idx, 1);
 			// }
 			// get audition id
-			for(var i = 0; i < $scope.project.auditions.length; ++i){
-  			if($scope.project.auditions[i].file.path === filename){
-  				$scope.project.auditions[i].hidden = false;
+			for(i = 0; i < limit; ++i){
+  			if(auditions[i].file.path === filename){
+  				auditions[i].hidden = false;
   				$scope.updateNoRefresh();
   			}
   		}
   	};
 
 		$scope.updatePlayCnt = function(filename){
+
+			var auditions = $scope.project.auditions,
+					limit = auditions.length,
+					i = 0;
+
 			// set play count
-			for(var i = 0; i < $scope.project.auditions.length; ++i){
+			for(i = 0; i < limit; ++i){
 				if($scope.project.auditions[i].file.name === filename){
-					if(typeof $scope.project.auditions[i].playCnt === 'undefined'){
-						$scope.project.auditions[i].playCnt = 1;
+					if(typeof auditions[i].playCnt === 'undefined'){
+						auditions[i].playCnt = 1;
 					} else {
-						$scope.project.auditions[i].playCnt += 1;
+						auditions[i].playCnt += 1;
 					}
 				}
 			}
