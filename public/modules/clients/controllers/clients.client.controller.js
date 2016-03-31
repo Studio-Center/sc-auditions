@@ -46,14 +46,18 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 
 			// create mail object
 			var emailObj = {
-				email: {
-					projectId: $scope.project._id,
-					to: [],
-					bcc: [],
-					subject: '',
-					message: ''
-				}
-			};
+					email: {
+						projectId: $scope.project._id,
+						to: [],
+						bcc: [],
+						subject: '',
+						message: ''
+					}
+				},
+				project = $scope.project,
+				l = 0,
+				limit = project.talent.length;
+
 			angular.extend($scope, emailObj);
 
 			// send update email
@@ -67,10 +71,10 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 
 			// attach talents to email chain
 			if(type !== 'updateTalent' && type !== 'updateTeam' && type !== 'updateClientClient' && type !== 'updateClient' && type !== 'saveAudtionNote' && type !== 'saveScriptNote' && type !== 'saveDiscussion' && type !== 'updateStatus'){
-				for(var l = 0; l < $scope.project.talent.length; ++l){
-					if($scope.project.talent[l].email !== '' && re.test($scope.project.talent[l].email)){
+				for(l = 0; l < limit; ++l){
+					if(project.talent[l].email !== '' && re.test(project.talent[l].email)){
 						emailCnt += 1;
-						toEmails[emailCnt] = $scope.project.talent[l].email;
+						toEmails[emailCnt] = project.talent[l].email;
 					}
 				}
 			}
