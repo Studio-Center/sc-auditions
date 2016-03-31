@@ -304,16 +304,16 @@
 										<p ng-if="audition.hidden == true" style="font-size:18px;color:red;font-weight:700">
 											HIDDEN BY CLIENT
 										</p>
-										<button ng-click="toggleShowRename()" class="btn btn-primary">
+										<button ng-click="toggleShowRename(key)" class="btn btn-primary">
 											Rename
 										</button>
 
-										<div ng-if="showRename">
+										<div ng-if="showRename[key]">
 											<input type="text" ng-model="project.auditions[key].rename" ng-init="project.auditions[key].rename = project.auditions[key].file.name" placeholder="Enter new filename" class="form-control">
-											<button ng-click="update(false);toggleShowRename();" class="btn btn-primary">
+											<button ng-click="update(false);toggleShowRename(key);" class="btn btn-primary">
 												Update
 											</button>
-											<button ng-click="toggleShowRename()" class="btn btn-primary">
+											<button ng-click="toggleShowRename(key)" class="btn btn-primary">
 												Cancel
 											</button>
 										</div>
