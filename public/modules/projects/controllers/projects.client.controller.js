@@ -623,7 +623,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					}
 				},
 				project = $scope.project,
-				i = 0,
+				l = 0,
 				limit = project.talent.length;
 
 			angular.extend($scope, emailObj);
