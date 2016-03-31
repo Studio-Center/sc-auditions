@@ -70,11 +70,15 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 
 		// user access rules
 		$scope.permitAdminDirector = function(){
-			var allowRoles = ['admin','talent director'];
+			var allowRoles = ['admin','talent director'],
+					i = 0,
+					j = 0,
+					authRoles = Authentication.user.roles,
+					limit = authRoles.length;
 
-			for(var i = 0; i < Authentication.user.roles.length; ++i){
-				for(var j = 0; j < allowRoles.length; ++j){
-					if(Authentication.user.roles[i] === allowRoles[j]) {
+			for(i = 0; i < limit; ++i){
+				for(j = 0; j < allowRoles.length; ++j){
+					if(authRoles[i] === allowRoles[j]) {
 						return true;
 					}
 				}
@@ -243,10 +247,14 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 					// store projects data
 					$scope.projects = data;
 
+					var i = 0,
+							j = 0,
+							limit = data.length;
+
 					// gather project talent indexs
-					for(var i = 0; i < data.length; ++i){
+					for(i = 0; i < limit; ++i){
 						// walk through projects assigned talents looking for current selected talent
-						for(var j = 0; j < data[i].talent.length; ++j){
+						for(j = 0; j < data[i].talent.length; ++j){
 							if(data[i].talent[j].talentId === $scope.talent._id){
 								$scope.projectTalentIdx[i] = j;
 							}

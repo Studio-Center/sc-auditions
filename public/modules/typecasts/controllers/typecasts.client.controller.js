@@ -29,11 +29,16 @@ angular.module('typecasts').controller('TypecastsController', ['$scope', '$state
 	    };
 
 		$scope.permitAdminDirector = function(){
-			var allowRoles = ['admin', 'producer/auditions director','talent director'];
 
-			for(var i = 0; i < Authentication.user.roles.length; ++i){
-				for(var j = 0; j < allowRoles.length; ++j){
-					if(Authentication.user.roles[i] === allowRoles[j]) {
+			var allowRoles = ['admin', 'producer/auditions director','talent director'],
+					i = 0,
+					j = 0,
+					authRoles = Authentication.user.roles,
+					limit = authRoles.length;
+
+			for(i = 0; i < limit; ++i){
+				for(j = 0; j < allowRoles.length; ++j){
+					if(authRoles[i] === allowRoles[j]) {
 						return true;
 					}
 				}
