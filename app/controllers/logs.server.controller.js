@@ -72,29 +72,27 @@ exports.delete = function(req, res) {
 // get logs record cound
 exports.recCount = function(req, res){
 
-	var filter = req.body.filter;
+	var filter = req.body.filter,
+			searchTxt = req.body.searchTxt,
+			filterObj = {};
 
 	if(filter){
-		Log.find({'type': filter}).count({}, function(err, count){
-			if (err) {
-				return res.status(400).send({
-					message: errorHandler.getErrorMessage(err)
-				});
-			} else {
-				res.jsonp(count);
-			}
-		});
-	} else {
-		Log.count({}, function(err, count){
-			if (err) {
-				return res.status(400).send({
-					message: errorHandler.getErrorMessage(err)
-				});
-			} else {
-				res.jsonp(count);
-			}
-		});
+		filterObj.type = filter;
 	}
+	if(searchTxt){
+		filterObj.description = new RegExp(searchTxt, "i");
+	}
+
+	Log.find(filterObj).count({}, function(err, count){
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			res.jsonp(count);
+		}
+	});
+
 };
 
 /**
@@ -172,29 +170,26 @@ exports.listTypeFilter = function(req, res){
 		limitVal = 100;
 	}
 
-	var filter = req.body.filter;
+	var filter = req.body.filter,
+			searchTxt = req.body.searchTxt,
+			filterObj = {};
 
 	if(filter){
-		Log.find({'type': filter}).sort('-created').skip(startVal).limit(limitVal).populate('user', 'displayName').exec(function(err, logs) {
-			if (err) {
-				return res.status(400).send({
-					message: errorHandler.getErrorMessage(err)
-				});
-			} else {
-				res.jsonp(logs);
-			}
-		});
-	} else {
-		Log.find().sort('-created').skip(startVal).limit(limitVal).populate('user', 'displayName').exec(function(err, logs) {
-			if (err) {
-				return res.status(400).send({
-					message: errorHandler.getErrorMessage(err)
-				});
-			} else {
-				res.jsonp(logs);
-			}
-		});
+		filterObj.type = filter;
 	}
+	if(searchTxt){
+		filterObj.description = new RegExp(searchTxt, "i");
+	}
+
+	Log.find(filterObj).sort('-created').skip(startVal).limit(limitVal).populate('user', 'displayName').exec(function(err, logs) {
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			res.jsonp(logs);
+		}
+	});
 
 };
 

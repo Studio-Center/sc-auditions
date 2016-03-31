@@ -4,7 +4,7 @@
     </div>
     <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-6">
-            <label>Search:</label> <input ng-model="searchString" class="form-control">
+            <label>Search:</label> <input ng-model="searchString" class="form-control" ng-change="listTypeFilter()">
         </div>
         <div class="col-lg-6 col-md-6 col-sm-6">
             <label>Filter logs by type:</label><br>
@@ -52,7 +52,7 @@
         </div>
     </div>
     <div class="list-group">
-        <div data-ng-repeat="log in filtered = (logs | filter:searchString | filter:searchText:startsWith)" class="list-group-item">
+        <div data-ng-repeat="log in filtered = (logs)" class="list-group-item">
 			<small class="list-group-item-text">
 				Posted on
 				<span data-ng-bind="log.created | amDateFormat:'MM/DD/YY h:mm:ss a'"></span>

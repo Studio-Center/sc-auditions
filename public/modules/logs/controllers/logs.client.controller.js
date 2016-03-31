@@ -6,7 +6,7 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
 		$scope.authentication = Authentication;
 
 		// used for paginator
-		$scope.logCnt = '';
+		$scope.logCnt = 0;
 		$scope.page = 0;
 		$scope.searchText = {
 			type: ''
@@ -15,6 +15,7 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
 		$scope.currentPage = 0;
 		$scope.filtered = [];
 		$scope.limit = 200;
+		$scope.searchString = '';
 		$scope.range = function(min, max, step){
 		    step = step || 1;
 		    var input = [];
@@ -86,7 +87,8 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
 		$scope.getLogsCount = function(){
 
 			$http.post('/logs/recCount', {
-				filter: $scope.searchText.type
+				filter: $scope.searchText.type,
+				searchTxt: $scope.searchString
 			}).
 			success(function(data, status, headers, config) {
 				$scope.logCnt = Number(data);
@@ -131,7 +133,8 @@ angular.module('logs').controller('LogsController', ['$scope', '$stateParams', '
 			$http.post('/logs/listTypeFilter', {
 				startVal: startVal,
 				limitVal: $scope.limit,
-        filter: filter
+        filter: filter,
+				searchTxt: $scope.searchString
 		  }).
 			success(function(data, status, headers, config) {
 				$scope.logs = [];
