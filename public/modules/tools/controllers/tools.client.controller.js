@@ -90,9 +90,14 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 			$scope.talents = Talents.query();
 		};
 		$scope.talentLookup = function(id){
-			for(var i = 0; i < $scope.talents.length; ++i){
-				if($scope.talents[i]._id === id){
-					return $scope.talents[i].name + ' ' + $scope.talents[i].lastName;
+
+			var talents = $scope.talents,
+					limit = talents.length,
+					i = 0;
+
+			for(i = 0; i < limit; ++i){
+				if(talents[i]._id === id){
+					return talents[i].name + ' ' + talents[i].lastName;
 				}
 			}
 		};
@@ -114,10 +119,12 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 		};
 
 		$scope.removeSelectedTalents = function(){
-			var idx;
+			var idx,
+					i = 0,
+					j = 0;
 
-			for(var i = 0; i < $scope.verifySelected.length; ++i){
-				for(var j = 0; j < $scope.emailClients.length; ++j){
+			for(i = 0; i < $scope.verifySelected.length; ++i){
+				for(j = 0; j < $scope.emailClients.length; ++j){
 					if(String($scope.verifySelected[i]) === String($scope.emailClients[j])){
 						idx = $scope.emailClients.indexOf($scope.emailClients[j]);
 						if (idx > -1){
@@ -181,9 +188,14 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 		});
 		// gather list of talents to call
 		$scope.talentLookupData = function(id){
-			for(var i = 0; i < $scope.talents.length; ++i){
-				if(String($scope.talents[i]._id) === String(id)){
-					return $scope.talents[i];
+
+			var talents = $scope.talents,
+					limit = talents.length,
+					i = 0;
+
+			for(i = 0; i < limit; ++i){
+				if(String(talents[i]._id) === String(id)){
+					return talents[i];
 				}
 			}
 		};
@@ -285,13 +297,14 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 
 		};
 		$scope.deleteProjects = function(){
-			var i;
-			if($scope.projectsList.length > 0){
+			var i = 0,
+					limit = $scope.projectsList.length;
+			if(limit > 0){
 				var con = confirm('Are you sure?');
 				if(con === true){
 					var concon = confirm('Are you sure you\'re sure?');
 					if(concon === true){
-						for(i = 0; i < $scope.projectsList.length; ++i){
+						for(i = 0; i < limit; ++i){
 							performDeleteProject(i);
 						}
 					}
@@ -338,8 +351,10 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 		};
 		$scope.uploadBackupFile = function($files){
 			//$files: an array of files selected, each file has name, size, and type.
+			var limit = $files.length,
+					i = 0;
 
-			for (var i = 0; i < $files.length; i++) {
+			for (i = 0; i < limit; i++) {
 				var file = $files[i];
 
 				performUploadBackupFile(file, i, $files);
@@ -362,8 +377,10 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 
 		$scope.uploadTalentFile = function($files){
 			//$files: an array of files selected, each file has name, size, and type.
+			var limit = $files.length,
+					i = 0;
 
-			for (var i = 0; i < $files.length; i++) {
+			for (i = 0; i < limit; i++) {
 				var file = $files[i];
 
 				performUploadTalentFile(file, i, $files);

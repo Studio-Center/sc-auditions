@@ -251,9 +251,14 @@ var gatherTalentsSearch = function(req, res, filter){
 										callTalents[talentId].project.scripts = project.scripts;
 										callTalents[talentId].project.note = '';
 										if(talentInfo !== null){
-											for(var i = 0; i < project.talent.length; ++i){
-												if(project.talent[i].talentId === String(talentInfo._id)){
-													callTalents[talentId].project.note = project.talent[i].note;
+
+											var talents = project.talent,
+													limit = project.talent.length,
+													i = 0;
+
+											for(i = 0; i < limit; ++i){
+												if(talents[i].talentId === String(talentInfo._id)){
+													callTalents[talentId].project.note = talents[i].note;
 												}
 											}
 										}
