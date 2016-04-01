@@ -766,7 +766,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					limit = project.talent.length,
 					i = 0;
 
-			for(var i = 0; i < limit; ++i){
+			for(i = 0; i < limit; ++i){
 				if(project.talent[i].talentId === talentId && project.talent[i].requested === true){
 					return true;
 				}
@@ -1839,7 +1839,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					i = 0;
 
 			// reset file check status for all files
-			for(var i = 0; i < limit; ++i){
+			for(i = 0; i < limit; ++i){
 				auditions[i].filecheck = 0;
 
 				// init file check walk on reset finish

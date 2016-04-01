@@ -383,8 +383,8 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 
     // compare dates check for within hour
     $scope.compareDates = function(projDate){
-      var now = new Date(),
-					projDate = new Date(projDate);
+      var now = new Date();
+			projDate = new Date(projDate);
 
       var hours = Math.abs(projDate - now) / 36e5;
 

@@ -80,7 +80,7 @@ exports.recCount = function(req, res){
 		filterObj.type = filter;
 	}
 	if(searchTxt){
-		filterObj.description = new RegExp(searchTxt, "i");
+		filterObj.description = new RegExp(searchTxt, 'i');
 	}
 
 	Log.find(filterObj).count({}, function(err, count){
@@ -178,7 +178,7 @@ exports.listTypeFilter = function(req, res){
 		filterObj.type = filter;
 	}
 	if(searchTxt){
-		filterObj.description = new RegExp(searchTxt, "i");
+		filterObj.description = new RegExp(searchTxt, 'i');
 	}
 
 	Log.find(filterObj).sort('-created').skip(startVal).limit(limitVal).populate('user', 'displayName').exec(function(err, logs) {
