@@ -674,7 +674,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		// update group checkbox selectors
 		$scope.checkClientClientUsers = function(userId){
 			var project = $scope.project,
-					limit = project.length,
+					limit = project.clientClient.length,
 					i = 0;
 
 			if(typeof project === 'object' && typeof project.clientClient === 'object'){
@@ -687,7 +687,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		};
 		$scope.checkClientUsers = function(userId){
 			var project = $scope.project,
-					limit = project.length,
+					limit = project.client.length,
 					i = 0;
 
 			if(typeof project === 'object' && typeof project.client === 'object'){
@@ -700,10 +700,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		};
 		$scope.checkClientUsersCreate = function(userId){
 			var project = $scope.newProject,
-					limit = project.length,
+					limit = project.client.length,
 					i = 0;
 
-			if(typeof project.client === 'object'){
+			if(typeof project === 'object' && typeof project.client === 'object'){
 				for(i = 0; i < limit; ++i){
 					if(project.client[i].userId === userId){
 						return true;
