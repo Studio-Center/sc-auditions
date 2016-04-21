@@ -36,7 +36,7 @@
 					<select class="form-control" style="display:block;margin:0 auto" ng-show="::permitRoles(['admin', 'producer/auditions director','production coordinator'])" ng-model="project.status" ng-change="updateProjectStatus()" ng-class="{redBG: project.status == 'In Progress' && checkPassed(project.estimatedCompletionDate), greenBg: project.status == 'Booked', lgreenBG: project.status == 'Closed - Pending Client Decision', orangeBG: project.status == 'On Hold', lgray: project.status == 'Cancelled', mgray: project.status == 'ReAuditioned', gray: project.status == 'Dead', blueBg: project.status == 'In Progress' && compareDates(project.estimatedCompletionDate),lblueBG: project.status == 'In Progress' && compareDatesDay(project.estimatedCompletionDate) == false && compareDates(project.estimatedCompletionDate) == false, defClr: project.status == 'In Progress' && compareDatesDay(project.estimatedCompletionDate), yellowBg: project.sounders == 'No Sounders - Approved By William' && compareDates(project.estimatedCompletionDate), lyellowBg: project.sounders == 'No Sounders - Approved By William' && compareDates(project.estimatedCompletionDate) == false}">
               <option ng-repeat="item in statusOpts" value="{{::item}}">{{::item}}</option>
           </select>
-          <div ng-if="::permitAdmin()" ng-controller="UsersController" data-ng-init="findFilter('production coordinator')">
+          <div ng-if="::permitRoles(['admin'])" ng-controller="UsersController" data-ng-init="findFilter('production coordinator')">
           	<label>Owner</label>
           	<select class="form-control" style="display:block;margin:0 auto" ng-model="project.owner" ng-change="$parent.update(false)">
                 <option ng-repeat="user in users" ng-selected="project.owner == user._id" value="{{::user._id}}">{{::user.firstName}} {{::user.lastName}}</option>
@@ -55,15 +55,15 @@
 			</div>
 
 			<div class="col-lg-6 col-md-6 col-sm-6">
-				<div class="panel panel-default" data-ng-if="::permitAdminProductionCoordinatorDirector()">
+				<div class="panel panel-default" data-ng-if="::permitRoles(['admin', 'producer/auditions director','production coordinator'])">
 					<div class="panel-heading">
             	<strong>Notes ({{project.discussion.length}})</strong>
         	</div>
         	<fieldset>
-						<select class="form-control" style="display:block;margin:0 auto" ng-if="::permitAdmin() || isOwner()" ng-class="{blueBg: project.sounders == 'Sounders', yellowBg: project.sounders == 'No Sounders - Approved By William'}" ng-model="project.sounders" ng-change="updateSoundersStatus()">
+						<select class="form-control" style="display:block;margin:0 auto" ng-if="::permitRoles(['admin']) || isOwner()" ng-class="{blueBg: project.sounders == 'Sounders', yellowBg: project.sounders == 'No Sounders - Approved By William'}" ng-model="project.sounders" ng-change="updateSoundersStatus()">
                 <option ng-repeat="item in soundersOpts" value="{{::item}}">{{::item}}</option>
               </select>
-              <div ng-if="::!permitAdmin() && !isOwner()" style="padding:10px;font-weight:700" ng-class="{blueBg: project.sounders == 'Sounders', yellowBg: project.sounders == 'No Sounders - Approved By William'}">
+              <div ng-if="::!permitRoles(['admin']) && !isOwner()" style="padding:10px;font-weight:700" ng-class="{blueBg: project.sounders == 'Sounders', yellowBg: project.sounders == 'No Sounders - Approved By William'}">
               	{{project.sounders[0]}}
               </div>
         	</fieldset>
@@ -95,7 +95,7 @@
 		</div>
 
 		<div class="col-lg-offset-6 col-lg-6 col-md-offset-6 col-md-6 col-sm-6 col-sm-offset-6">
-			<div class="panel panel-default" data-ng-if="::permitAdminProductionCoordinatorDirector()">
+			<div class="panel panel-default" data-ng-if="::permitRoles(['admin', 'producer/auditions director','production coordinator'])">
 				<div class="panel-heading">
 					<h4>Client Notes</h4>
 				</div>
@@ -119,7 +119,7 @@
             	Scripts (<span ng-bind="project.scripts.length"></span>) <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
             </h4>
         	</accordion-heading>
-					<div data-ng-if="::permitAdminProductionCoordinatorDirector() || isOwner()" class="clearfix" style="padding-bottom:5px">
+					<div data-ng-if="::permitRoles(['admin', 'producer/auditions director','production coordinator']) || isOwner()" class="clearfix" style="padding-bottom:5px">
 
         	<fieldset>
 						<h4>Upload Script: </h4>
@@ -165,7 +165,7 @@
           	</h4>
         	</accordion-heading>
 
-						<div data-ng-if="::permitAdminProductionCoordinatorDirector() || isOwner()" class="clearfix" style="padding-bottom:5px">
+						<div data-ng-if="::permitRoles(['admin', 'producer/auditions director','production coordinator']) || isOwner()" class="clearfix" style="padding-bottom:5px">
 							<h4>Upload Reference: </h4>
 
 							<div ng-file-drop ng-file-select="uploadReferenceFile($files)" ng-model="files" ng-model-rejected="rejFiles"
@@ -207,7 +207,7 @@
 
 									</div>
 									<div class="col-lg-1 col-md-1 col-sm-1">
-										<button data-ng-if="::permitAdminProductionCoordinatorDirector() || isOwner()" ng-click="delReferenceFile(key)" target="_blank" class="btn btn-danger">Delete</button>
+										<button data-ng-if="::permitRoles(['admin', 'producer/auditions director','production coordinator']) || isOwner()" ng-click="delReferenceFile(key)" target="_blank" class="btn btn-danger">Delete</button>
 									</div>
 								</div>
 							</li>
@@ -229,7 +229,7 @@
 			            	Auditions (<span ng-bind="project.auditions.length"></span>)<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
 			            </h4>
 		        	</accordion-heading>
-				 		<div data-ng-if="::permitAdminProductionCoordinatorDirector() || isOwner()" class="clearfix" style="padding-bottom:5px">
+				 		<div data-ng-if="::permitRoles(['admin', 'producer/auditions director','production coordinator']) || isOwner()" class="clearfix" style="padding-bottom:5px">
 							<h4>Upload Audition Files: (*.mp3 only!)</h4>
 
 							<div ng-file-drop ng-file-select="uploadAudition($files)" ng-model="files" ng-model-rejected="rejFiles"
