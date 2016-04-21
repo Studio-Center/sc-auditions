@@ -25,7 +25,7 @@
                                         <input type="text" class="form-control" data-ng-model="project.estimatedCompletionDate" readonly>
                                     </div>
                                     <datetimepicker data-ng-model="project.estimatedCompletionDate" data-datetimepicker-config="{ minuteStep: 30, dropdownSelector: '#dropdown2' }"/>
-                                    
+
                                 </div>
                                  <div style="color:red;font-weight:700">{{dateNotice}}</div>
                            </div>
@@ -49,10 +49,10 @@
                 <ul ng-show="files.length > 0" class="response">
                     <li class="sel-file" ng-repeat="f in files">
                         <img ng-show="f.dataUrl" ng-src="{{f.dataUrl}}" class="thumb">
-                        <span class="progress" ng-show="f.progress >= 0">                       
+                        <span class="progress" ng-show="f.progress >= 0">
                             <div style="width:{{f.progress}}%">{{f.progress}}%</div>
-                        </span>             
-                        <button class="button" ng-click="f.upload.abort();f.upload.aborted=true" 
+                        </span>
+                        <button class="button" ng-click="f.upload.abort();f.upload.aborted=true"
                                 ng-show="f.upload != null && f.progress < 100 && !f.upload.aborted">Abort</button>
                         {{f.name}} - size: {{f.size}}B - type: {{f.type}}
                         <a ng-show="f.result" href="javascript:void(0)" ng-click="f.showDetail = !f.showDetail">details</a>
@@ -71,7 +71,7 @@
                         </div>
                     </li>
                 </ul>
-                
+
                 <div class="form-group">
                     <label class="control-label" for="name">Script (PDF only!)</label>
                     <div class="controls">
@@ -95,12 +95,12 @@
                 <div class="form-group">
                     <input type="submit" value="Update" class="btn btn-default">
                 </div>
-				
+
             </fieldset>
         </form>
     </div>
     <div class="container" style="position:fixed;bottom:0;background:#fff;z-index:999;padding-top:5px">
-        <div class="row" data-ng-show="permitAdminDirector()">
+        <div class="row" data-ng-show="permitRoles(['admin', 'producer/auditions director'])">
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <ul style="clear:both" ng-show="rejFiles.length > 0" class="response">
                     <li class="sel-file" ng-repeat="f in rejFiles">

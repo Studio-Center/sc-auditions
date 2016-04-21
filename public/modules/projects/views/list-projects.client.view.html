@@ -1,8 +1,7 @@
 <section data-ng-controller="ProjectsController" data-ng-init="findLimitWithFilter();defaults();">
     <div class="page-header">
         <h1>Projects</h1>
-        <a data-ng-show="permitAdminProductionCoordinator()" class="btn  btn-primary" href="#!/projects/create">Create New Project</a>
-        <a ng-show="permitClient() === true" class="btn btn-default" href="#!/projects/new-audition-form">Start A New Audition Project</a>
+        <a data-ng-show="::permitRoles(['admin','production coordinator'])" class="btn  btn-primary" href="#!/projects/create">Create New Project</a>
     </div>
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
@@ -54,7 +53,7 @@
       </div>
         <div class="col-lg-3 col-md-3 col-sm-3">
             <label>Display Only Projects In Progress:</label>
-            <input type="checkbox" name="userProjFilter" id="userProjFilter" ng-model="searchText.status" ng-false-value="''" ng-true-value="'In Progress'" ng-checked="permitProducers()" class="form-control" ng-click="findLimitWithFilter()">
+            <input type="checkbox" name="userProjFilter" id="userProjFilter" ng-model="searchText.status" ng-false-value="''" ng-true-value="'In Progress'" ng-checked="::permitRoles(['producer/auditions director'])" class="form-control" ng-click="findLimitWithFilter()">
         </div>
     </div>
     <div class="row">
