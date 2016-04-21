@@ -360,6 +360,21 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				}
 			}
 		};
+		$scope.permitRoles = function(selRoles){
+			var allowLimit = selRoles.length,
+					roles = Authentication.user.roles,
+					limit = roles.length,
+					i = 0,
+					j = 0;
+
+			for(i = 0; i < limit; ++i){
+				for(j = 0; j < allowLimit; ++j){
+					if(roles[i] === selRoles[j]) {
+						return true;
+					}
+				}
+			}
+		};
 		$scope.permitAdmin = function(){
 			var allowRoles = ['admin'],
 					allowLimit = allowRoles.length,

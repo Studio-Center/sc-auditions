@@ -27,13 +27,13 @@
 	      	</div>
 				<h4>Created by <a ng-href="/#!/usersedit/{{::project.user._id}}" target="_blank" ng-bind="::project.user.displayName"></a> <span ng-bind="project.created | amDateFormat:'M/DD/YY h:mm:ss a'"></span> EST</h4>
 				<a class="btn btn-primary" href="/#!/clients/projects/{{::project._id}}" target="_blank">View in Client Portal</a>
-				<a data-ng-if="::permitAdminProductionCoordinator() || isOwner()" class="btn btn-success" ng-click="toggleShowEdit()">Extend Audition</a>
-				<a data-ng-if="::permitAdminProductionCoordinator() || isOwner()" class="btn btn-danger" href="/#!/projects/create/{{::project._id}}">ReAudition</a>
+				<a data-ng-if="::permitRoles(['admin','production coordinator']) || isOwner()" class="btn btn-success" ng-click="toggleShowEdit()">Extend Audition</a>
+				<a data-ng-if="::permitRoles(['admin','production coordinator']) || isOwner()" class="btn btn-danger" href="/#!/projects/create/{{::project._id}}">ReAudition</a>
 			</div>
 			<div class="col-lg-4 col-md-4 col-sm-4">
 					<progressbar value="dynamic" type="success" ng-model="progress"><b>{{dynamic}}%</b></progressbar>
-					<div ng-if="::permitAdminDirector() === false" class="panel-body" ng-bind="::project.status" style="text-align:center"></div>
-					<select class="form-control" style="display:block;margin:0 auto" ng-show="::permitAdminDirector() || permitAdminProductionCoordinator()" ng-model="project.status" ng-change="updateProjectStatus()" ng-class="{redBG: project.status == 'In Progress' && checkPassed(project.estimatedCompletionDate), greenBg: project.status == 'Booked', lgreenBG: project.status == 'Closed - Pending Client Decision', orangeBG: project.status == 'On Hold', lgray: project.status == 'Cancelled', mgray: project.status == 'ReAuditioned', gray: project.status == 'Dead', blueBg: project.status == 'In Progress' && compareDates(project.estimatedCompletionDate),lblueBG: project.status == 'In Progress' && compareDatesDay(project.estimatedCompletionDate) == false && compareDates(project.estimatedCompletionDate) == false, defClr: project.status == 'In Progress' && compareDatesDay(project.estimatedCompletionDate), yellowBg: project.sounders == 'No Sounders - Approved By William' && compareDates(project.estimatedCompletionDate), lyellowBg: project.sounders == 'No Sounders - Approved By William' && compareDates(project.estimatedCompletionDate) == false}">
+					<div ng-if="::permitRoles(['admin', 'producer/auditions director']) === false" class="panel-body" ng-bind="::project.status" style="text-align:center"></div>
+					<select class="form-control" style="display:block;margin:0 auto" ng-show="::permitRoles(['admin', 'producer/auditions director','production coordinator'])" ng-model="project.status" ng-change="updateProjectStatus()" ng-class="{redBG: project.status == 'In Progress' && checkPassed(project.estimatedCompletionDate), greenBg: project.status == 'Booked', lgreenBG: project.status == 'Closed - Pending Client Decision', orangeBG: project.status == 'On Hold', lgray: project.status == 'Cancelled', mgray: project.status == 'ReAuditioned', gray: project.status == 'Dead', blueBg: project.status == 'In Progress' && compareDates(project.estimatedCompletionDate),lblueBG: project.status == 'In Progress' && compareDatesDay(project.estimatedCompletionDate) == false && compareDates(project.estimatedCompletionDate) == false, defClr: project.status == 'In Progress' && compareDatesDay(project.estimatedCompletionDate), yellowBg: project.sounders == 'No Sounders - Approved By William' && compareDates(project.estimatedCompletionDate), lyellowBg: project.sounders == 'No Sounders - Approved By William' && compareDates(project.estimatedCompletionDate) == false}">
               <option ng-repeat="item in statusOpts" value="{{::item}}">{{::item}}</option>
           </select>
           <div ng-if="::permitAdmin()" ng-controller="UsersController" data-ng-init="findFilter('production coordinator')">
@@ -317,7 +317,7 @@
 												Cancel
 											</button>
 										</div>
-										<button data-ng-if="::permitAdminDirector()" ng-click="delAudition(key)" class="btn btn-danger">
+										<button data-ng-if="::permitRoles(['admin', 'producer/auditions director'])" ng-click="delAudition(key)" class="btn btn-danger">
 											Delete
 										</button>
 									</td>
@@ -455,7 +455,7 @@
 							</tr>
 						</table>
 						</div>
-						<accordion close-others="oneAtATime" data-ng-if="::permitAdminTalentDirectorProdCoord()">
+						<accordion close-others="oneAtATime" data-ng-if="::permitRoles(['admin', 'producer/auditions director','production coordinator'])">
 							<accordion-group is-open="statusInt.open">
 							<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
 								<h4 class="panel-title accordion-toggle">
@@ -623,7 +623,7 @@
 
 		<div class="row">
 			<div class="col-lg-6 col-md-6 col-sm-6">
-				<accordion close-others="oneAtATime" data-ng-if="::permitAdminProductionCoordinatorDirector()">
+				<accordion close-others="oneAtATime" data-ng-if="::permitRoles(['admin', 'producer/auditions director','production coordinator'])">
 					<accordion-group is-open="status.open">
 					<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
 						<h4 class="panel-title accordion-toggle">
@@ -643,7 +643,7 @@
 							</li>
 						</ul>
 
-						<accordion close-others="oneAtATime" ng-if="::permitAdminProductionCoordinator()">
+						<accordion close-others="oneAtATime" ng-if="::permitRoles(['admin','production coordinator'])">
 							<accordion-group is-open="statusInt.open">
 							<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
 								<h4 class="panel-title accordion-toggle">
@@ -759,7 +759,7 @@
 								</a> - <span ng-bind="::useredit.company"></span>
 							</li>
 						</ul>
-						<accordion close-others="oneAtATime" ng-if="::permitAdminProductionCoordinator()">
+						<accordion close-others="oneAtATime" ng-if="::permitRoles(['admin','production coordinator'])">
 							<accordion-group is-open="statusInt.open">
 							<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
 								<h4 class="panel-title accordion-toggle">
@@ -863,7 +863,7 @@
 			</div>
 
 			<div class="col-lg-6 col-md-6 col-sm-6">
-				<accordion close-others="oneAtATime" data-ng-if="::permitAdminProductionCoordinatorDirector()">
+				<accordion close-others="oneAtATime" data-ng-if="::permitRoles(['admin', 'producer/auditions director','production coordinator'])">
 					<accordion-group is-open="status.open">
 					<accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
 						<h4 class="panel-title accordion-toggle">
@@ -909,7 +909,7 @@
 
 		</div>
 	</div>
-	<div class="pull-right" data-ng-if="::permitAdminProductionCoordinator()" style="padding-bottom:75px">
+	<div class="pull-right" data-ng-if="::permitRoles(['admin','production coordinator'])" style="padding-bottom:75px">
 		<a class="btn btn-primary" ng-href="/#!/projects/{{::project._id}}/edit">
 			<i class="glyphicon glyphicon-edit"></i>
 		</a>
@@ -919,7 +919,7 @@
 	</div>
 
 	<div class="container" style="position:fixed;bottom:0;background:#fff;z-index:999;padding-top:5px">
-		<div class="row" data-ng-if="::permitAdminProductionCoordinatorDirector() || isOwner()">
+		<div class="row" data-ng-if="::permitRoles(['admin', 'producer/auditions director','production coordinator']) || isOwner()">
 			<div class="col-lg-12 col-md-12 col-sm-12">
 				<ul style="clear:both" ng-if="rejFiles.length > 0" class="response">
 					<li class="sel-file" ng-repeat="f in rejFiles">
