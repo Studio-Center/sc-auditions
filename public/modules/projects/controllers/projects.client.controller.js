@@ -352,7 +352,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			var project = $scope.project,
 					authUsr = Authentication.user;
 
-			if(String(project.owner) === String(authUsr._id) || String(project.user._id) === String(authUsr._id)){
+			if((String(project.owner) === String(authUsr._id) && typeof project.user === 'object') || String(project.user._id) === String(authUsr._id)){
 				return true;
 			} else {
 				return false;
