@@ -1339,7 +1339,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			    $scope.email.message += 'Start Date: ' + (project.phases[key].startDate || '') + '<br>';
 			    $scope.email.message += 'Change Date: ' + (project.phases[key].changeDate || '') + '<br>' + '<br>';
 			    $scope.email.message += 'Added by: ' + Authentication.user.displayName + '<br>';
-			    $scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + project._id + '<br>';
+			    $scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 || $location.port() !== 443 ? ':' + $location.port() : '') + '/#!/projects/' + project._id + '<br>';
 
 			    $http.post('/projects/sendemail', {
 					email: $scope.email
@@ -1366,7 +1366,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					    $scope.email.message += 'Start Date: ' + (project.phases[key].startDate || '') + '<br>';
 					    $scope.email.message += 'Change Date: ' + (project.phases[key].changeDate || '') + '<br>' + '<br>';
 					    $scope.email.message += 'Added by: ' + Authentication.user.displayName + '<br>';
-					    $scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + project._id + '<br>';
+					    $scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 || $location.port() !== 443 ? ':' + $location.port() : '') + '/#!/projects/' + project._id + '<br>';
 
 					    $http.post('/projects/sendemail', {
 							email: $scope.email
@@ -1943,7 +1943,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		    $scope.email.message = 'Discussion Item: ' + discussion + '<br>';
 		    $scope.email.message += 'Project: ' + project.title + '<br>';
 		    $scope.email.message += 'Added by: System<br>';
-		    $scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + project._id + '<br>';
+		    $scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 || $location.port() !== 443 ? ':' + $location.port() : '') + '/#!/projects/' + project._id + '<br>';
 
 		    $http.post('/projects/sendemail', {
 				email: $scope.email
@@ -1999,7 +1999,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		    $scope.email.message = 'Discussion Item: ' + this.discussion + '<br>';
 		    $scope.email.message += 'Project: ' + project.title + '<br>';
 		    $scope.email.message += 'Added by: ' + authUser.displayName + '<br>';
-		    $scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + project._id + '<br>';
+		    $scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 || $location.port() !== 443 ? ':' + $location.port() : '') + '/#!/projects/' + project._id + '<br>';
 
 				$scope.discussion = '';
 				this.discussion = '';
@@ -2135,7 +2135,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			    $scope.email.message = 'Discussion Item: ' + note + '<br>';
 			    $scope.email.message += 'Project: ' + project.title + '<br>';
 			    $scope.email.message += 'Added by: System<br>';
-			    $scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + project._id + '<br>';
+			    $scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 || $location.port() !== 443 ? ':' + $location.port() : '') + '/#!/projects/' + project._id + '<br>';
 
 			    $http.post('/projects/sendemail', {
 						email: $scope.email
@@ -2230,7 +2230,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			    $scope.email.message = 'Discussion Item: ' + note + '<br>';
 			    $scope.email.message += 'Project: ' + project.title + '<br>';
 			    $scope.email.message += 'Added by: System<br>';
-			    $scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 ? ':' + $location.port() : '') + '/#!/projects/' + project._id + '<br>';
+			    $scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 || $location.port() !== 443 ? ':' + $location.port() : '') + '/#!/projects/' + project._id + '<br>';
 
 			    $http.post('/projects/sendemail', {
 						email: $scope.email
