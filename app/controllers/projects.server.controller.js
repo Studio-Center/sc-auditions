@@ -2707,7 +2707,7 @@ exports.downloadAllAuditions = function(req, res, next){
 	var relativePath =  'res' + '/' + 'auditions' + '/' + req.body.project._id + '/';
     var newPath = appDir + '/public/' + relativePath;
     var savePath = appDir + '/public/' + 'res' + '/' + 'archives' + '/';
-    var zipName = req.body.project.title + '.zip';
+    var zipName = req.body.project.title.replace('/','-') + '.zip';
     var newZip = savePath + zipName;
 
 		// check for existing parent directory, create if needed
