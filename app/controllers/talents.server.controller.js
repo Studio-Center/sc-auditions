@@ -50,13 +50,27 @@ exports.create = function(req, res) {
 					//generate talent report
 					var talentData = '<p><strong>First Name</strong> ' + talent.name + '</p>';
 					talentData += '<p><strong>Last Name</strong> ' + talent.lastName + '</p>';
-					talentData += '<p><strong>Parent Name</strong> ' + talent.parentName + '</p>';
-					talentData += '<p><strong>Gender</strong> ' + talent.gender + ' ' + talent.ageRange + '</p>';
-					talentData += '<p><strong>Email</strong> ' + talent.email + '</p>';
-					talentData += '<p><strong>Email Alt</strong> ' + talent.email2 + '</p>';
-					talentData += '<p><strong>Phone Number</strong> ' + talent.phone + '</p>';
-					talentData += '<p><strong>Phone Number Alt</strong> ' + talent.phone2 + '</p>';
-					talentData += '<p><strong>Type</strong>' + talent.type + '</p>';
+					if(talent.parentName){
+						talentData += '<p><strong>Parent Name</strong> ' + talent.parentName + '</p>';
+					}
+					if(talent.gender || talent.ageRange){
+						talentData += '<p><strong>Gender</strong> ' + talent.gender + ' ' + (talent.ageRange || '') + '</p>';
+					}
+					if(talent.email){
+						talentData += '<p><strong>Email</strong> ' + talent.email + '</p>';
+					}
+					if(talent.email2){
+						talentData += '<p><strong>Email Alt</strong> ' + talent.email2 + '</p>';
+					}
+					if(talent.phone){
+						talentData += '<p><strong>Phone Number</strong> ' + talent.phone + '</p>';
+					}
+					if(talent.phone2){
+						talentData += '<p><strong>Phone Number Alt</strong> ' + talent.phone2 + '</p>';
+					}
+					if(talent.type){
+						talentData += '<p><strong>Type</strong>' + talent.type + '</p>';
+					}
 					talentData += '<p><strong>Union Status</strong> ';
 					for(i = 0; i < talent.unionStatus.length; ++i){
 						talentData += talent.unionStatus[i] + ' ';
@@ -66,14 +80,30 @@ exports.create = function(req, res) {
 						talentData += talent.unionJoined[i] + ' ';
 					}
 					talentData += '</p>';
-					talentData += '<p><strong>Last Name Code</strong> ' + talent.lastNameCode + '</p>';
-					talentData += '<p><strong>Outage Times</strong> ' + talent.outageTimes + '</p>';
-					talentData += '<p><strong>Location/ISDN</strong> ' + talent.locationISDN + '</p>';
-					talentData += '<p><strong>Exclusivity</strong> ' + talent.exclusivity + '</p>';
-					talentData += '<p><strong>ISDN Line 1</strong> ' + talent.ISDNLine1 + '</p>';
-					talentData += '<p><strong>ISDN Line 2</strong> ' + talent.ISDNLine2 + '</p>';
-					talentData += '<p><strong>Source Connect Username</strong> ' + talent.sourceConnectUsername + '</p>';
-					talentData += '<p><strong>Producer</strong> ' + talent.producerOptional + '</p>';
+					if(talent.lastNameCode){
+						talentData += '<p><strong>Last Name Code</strong> ' + talent.lastNameCode + '</p>';
+					}
+					if(talent.outageTimes){
+						talentData += '<p><strong>Outage Times</strong> ' + talent.outageTimes + '</p>';
+					}
+					if(talent.locationISDN){
+						talentData += '<p><strong>Location/ISDN</strong> ' + talent.locationISDN + '</p>';
+					}
+					if(talent.exclusivity){
+						talentData += '<p><strong>Exclusivity</strong> ' + talent.exclusivity + '</p>';
+					}
+					if(talent.ISDNLine1){
+						talentData += '<p><strong>ISDN Line 1</strong> ' + talent.ISDNLine1 + '</p>';
+					}
+					if(talent.ISDNLine2){
+						talentData += '<p><strong>ISDN Line 2</strong> ' + talent.ISDNLine2 + '</p>';
+					}
+					if(talent.sourceConnectUsername){
+						talentData += '<p><strong>Source Connect Username</strong> ' + talent.sourceConnectUsername + '</p>';
+					}
+					if(talent.producerOptional){
+						talentData += '<p><strong>Producer</strong> ' + talent.producerOptional + '</p>';
+					}
 					talentData += '<p><strong>Typecasts</strong>';
 					for(i = 0; i < talent.typeCasts.length; ++i){
 						talentData += talent.typeCasts[i] + ' ';
