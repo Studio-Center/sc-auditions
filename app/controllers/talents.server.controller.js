@@ -69,7 +69,7 @@ exports.create = function(req, res) {
 						talentData += '<p><strong>Phone Number Alt</strong> ' + talent.phone2 + '</p>';
 					}
 					if(talent.type){
-						talentData += '<p><strong>Type</strong>' + talent.type + '</p>';
+						talentData += '<p><strong>Type</strong> ' + talent.type + '</p>';
 					}
 					talentData += '<p><strong>Union Status</strong> ';
 					for(i = 0; i < talent.unionStatus.length; ++i){
