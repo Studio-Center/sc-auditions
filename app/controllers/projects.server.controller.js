@@ -176,13 +176,19 @@ var emailTalent = function(selTalent, talentInfo, email, project, req, res, subj
 		// send out talent project creation email
 		function(talentEmailHTML, owner, done) {
 			// send email
-			var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
-			var emailSubject = '';
-			var newDate = new Date(project.estimatedCompletionDate);
-			newDate = newDate.setHours(newDate.getHours() - 1);
-			var nameArr = [];
+			var transporter = nodemailer.createTransport(sgTransport(config.mailer.options)),
+					emailSubject = '',
+					newDate = new Date(project.estimatedCompletionDate),
+					nameArr = [];
+					talentEmails = [talentInfo.email];
 
+			// set vars
+			newDate = newDate.setHours(newDate.getHours() - 1);
 			nameArr = talentInfo.name.split(' ');
+			// add second email contact is available
+			if(typeof talentInfo.email2 !== 'undefined'){
+				talentEmails.push(talentInfo.email2);
+			}
 
 			// assign email subject line
 			if(selTalent.requested === true){
@@ -195,7 +201,7 @@ var emailTalent = function(selTalent, talentInfo, email, project, req, res, subj
 			}
 
 			var mailOptions = {
-				to: talentInfo.email,
+				to: talentEmails,
 				from: owner.email || config.mailer.from,
 				replyTo: owner.email || config.mailer.from,
 				subject: emailSubject,
