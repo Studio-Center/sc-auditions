@@ -179,7 +179,7 @@ var emailTalent = function(selTalent, talentInfo, email, project, req, res, subj
 			var transporter = nodemailer.createTransport(sgTransport(config.mailer.options)),
 					emailSubject = '',
 					newDate = new Date(project.estimatedCompletionDate),
-					nameArr = [];
+					nameArr = [],
 					talentEmails = [talentInfo.email];
 
 			// set vars
