@@ -1914,9 +1914,10 @@ exports.deleteById = function(req, res) {
 exports.getTalentFilteredProjects = function(req, res){
 
 	var dayAgo = new Date();
-	dayAgo.setDate(dayAgo.getDay() - 3);
+	dayAgo.setDate(dayAgo.getDay() - 14);
 
-	var searchCriteria = {'talent': {
+	var searchCriteria = {
+						'talent': {
 									$elemMatch: {
 										'talentId': req.body.talentId
 									}
