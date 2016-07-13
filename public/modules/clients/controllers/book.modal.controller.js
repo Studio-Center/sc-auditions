@@ -170,7 +170,7 @@ angular.module('clients').controller('BookModalController', ['$scope', '$statePa
 
 
 			//if($scope.audio = ngAudio.load(fileName)){
-				$scope.audio = ngAudio.load(fileName).play()
+				$scope.audio = ngAudio.load(fileName).play();
 				$scope.loop = 0;
 				$scope.audioStatus = 1;
 

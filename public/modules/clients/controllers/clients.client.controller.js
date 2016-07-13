@@ -506,13 +506,8 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 			    }).
 					success(function(data, status, headers, config) {
 						// send data to users browser
-						// wait one second for archive processing on server
-						setTimeout(
-							function(){
-								window.location.href = 'res/archives/' + encodeURIComponent(data.zip);
-							},
-						    1000
-						);
+						window.location.href = 'res/archives/' + encodeURIComponent(data.zip);
+
 					});
 
 				}
@@ -782,7 +777,7 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 			}
 
 			//if($scope.audio = ngAudio.load(fileName)){
-				$scope.audio = ngAudio.load(fileName).play()
+				$scope.audio = ngAudio.load(fileName).play();
 				$scope.loop = 0;
 				$scope.audioStatus = 1;
 
