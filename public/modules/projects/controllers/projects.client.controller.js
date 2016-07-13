@@ -1897,7 +1897,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				fileName = fileDir + '/' + filename;
 			}
 
-			if($scope.audio = ngAudio.load(fileName)){
+			//if($scope.audio = ngAudio.load(fileName)){
+				$scope.audio = ngAudio.load(fileName).play();
 				$scope.loop = 0;
 				//$scope.audio.unbind();
 				$scope.audioStatus = 1;
@@ -1905,8 +1906,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				// store current audio key
 				$scope.lastAudioID = key;
 
-				$scope.audio.play();
-			}
+				//$scope.audio.play();
+			//}
 
 		};
 

@@ -781,7 +781,8 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 				fileName = fileDir + '/' + filename;
 			}
 
-			if($scope.audio = ngAudio.load(fileName)){
+			//if($scope.audio = ngAudio.load(fileName)){
+				$scope.audio = ngAudio.load(fileName).play()
 				$scope.loop = 0;
 				$scope.audioStatus = 1;
 
@@ -792,8 +793,8 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 
 				//alert($scope.lastAudioID);
 
-				$scope.audio.play();
-			}
+				//$scope.audio.play();
+			//}
 
 		};
 
