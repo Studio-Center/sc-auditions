@@ -483,6 +483,19 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 				);
 			});
   	};
+		// send download booked auds request
+		var bookedAudsDL = function(bookedAuds){
+			$http.post('/projects/downloadBookedAuditions', {
+				projectId: $scope.project._id,
+				projectTitle: $scope.project.title,
+				bookedAuds: bookedAuds
+			}).
+			success(function(data, status, headers, config) {
+				// send data to users browser
+				window.location.href = 'res/archives/' + encodeURIComponent(data.zip);
+
+			});
+		};
   	// download all auditions from project
   	$scope.downloadBookedAuditions = function(){
 
@@ -499,21 +512,27 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 				// download all booked auditions on final booked audition walk
 				if((i+1) === limit){
 
-					$http.post('/projects/downloadBookedAuditions', {
-						projectId: $scope.project._id,
-						projectTitle: $scope.project.title,
-		        bookedAuds: bookedAuds
-			    }).
-					success(function(data, status, headers, config) {
-						// send data to users browser
-						window.location.href = 'res/archives/' + encodeURIComponent(data.zip);
-
-					});
+					bookedAudsDL(bookedAuds);
 
 				}
   		}
 
   	};
+		// send download selected auds request
+		var audsSelDL = function(selectedAuds){
+			$http.post('/projects/downloadSelectedAuditions', {
+						projectId: $scope.project._id,
+						projectTitle: $scope.project.title,
+						selectedAuds: selectedAuds
+			}).
+			success(function(data, status, headers, config) {
+				// send data to users browser
+				// wait one second for archive processing on server
+				window.location.href = 'res/archives/' + encodeURIComponent(data.zip);
+
+			});
+		};
+
   	// download all auditions from project
   	$scope.downloadSelectedAuditions = function(){
 
@@ -530,17 +549,7 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 				// download all auditions on final audition file walk
 				if((i+1) === limit){
 
-					$http.post('/projects/downloadSelectedAuditions', {
-				        projectId: $scope.project._id,
-				        projectTitle: $scope.project.title,
-				        selectedAuds: selectedAuds
-			    }).
-					success(function(data, status, headers, config) {
-						// send data to users browser
-						// wait one second for archive processing on server
-						window.location.href = 'res/archives/' + encodeURIComponent(data.zip);
-
-					});
+					audsSelDL(selectedAuds);
 
 				}
   		}
