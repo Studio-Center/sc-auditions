@@ -802,7 +802,20 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 
 			// download file only on mobile user agents
 			} else {
-				window.location.href = fileName;
+				if ((typeof $scope.audio.paused === 'undefined' || typeof $scope.audio.filename === 'undefined') || ($scope.audio.paused && $scope.audio.currentTime > 0 && !$scope.audio.ended)) {
+					$scope.audio = new Audio(fileName);
+					$scope.audio.play();
+					$scope.audio.filename = fileName;
+				} else {
+					if($scope.audio.filename !== fileName){
+						$scope.audio.pause();
+						$scope.audio = new Audio(fileName);
+						$scope.audio.play();
+						$scope.audio.filename = fileName;
+					} else {
+						$scope.audio.pause();
+					}
+			 }
 			}
 
 		};

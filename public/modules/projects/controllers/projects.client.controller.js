@@ -1911,8 +1911,22 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					//$scope.audio.play();
 				//}
 
+			// mobile and tablet playback
 			} else {
-				window.location.href = fileName;
+				if ((typeof $scope.audio.paused === 'undefined' || typeof $scope.audio.filename === 'undefined') || ($scope.audio.paused && $scope.audio.currentTime > 0 && !$scope.audio.ended)) {
+					$scope.audio = new Audio(fileName);
+					$scope.audio.play();
+					$scope.audio.filename = fileName;
+				} else {
+					if($scope.audio.filename !== fileName){
+						$scope.audio.pause();
+						$scope.audio = new Audio(fileName);
+						$scope.audio.play();
+						$scope.audio.filename = fileName;
+					} else {
+						$scope.audio.pause();
+					}
+			 }
 			}
 
 		};
