@@ -806,14 +806,20 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 					$scope.audio = new Audio(fileName);
 					$scope.audio.play();
 					$scope.audio.filename = fileName;
+					$scope.audioStatus = 1;
+					$scope.lastAudioID = key;
+					$scope.audio.mobile = true;
 				} else {
 					if($scope.audio.filename !== fileName){
 						$scope.audio.pause();
 						$scope.audio = new Audio(fileName);
 						$scope.audio.play();
 						$scope.audio.filename = fileName;
+						$scope.audioStatus = 1;
+						$scope.lastAudioID = key;
 					} else {
 						$scope.audio.pause();
+						$scope.audioStatus = 0;
 					}
 			 }
 			}
