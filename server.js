@@ -55,7 +55,7 @@ var cluster = require('cluster'),
 	// Start the app by listening on <port>
 	var server = app.listen(config.port);
 
-	var io = sio(server);
+	var io = sio(server, {'transports': ['websocket', 'polling']});
 
 	// config / init socket io with redis
 	io.adapter(sio_redis({ host: 'localhost', port: 6379 }));

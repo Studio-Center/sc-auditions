@@ -6,7 +6,7 @@ angular.module('core').factory('Socket', ['socketFactory',
     function(socketFactory) {
         return socketFactory({
             prefix: '',
-            ioSocket: io.connect(location.host)
+            ioSocket: io(location.host, {'transports': ['websocket', 'polling']})
         });
     }
 ]);
