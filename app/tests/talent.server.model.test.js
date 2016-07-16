@@ -27,9 +27,13 @@ describe('Talent Model Unit Tests:', function() {
 			password: 'password'
 		});
 
-		user.save(function() { 
+		user.save(function() {
 			talent = new Talent({
 				name: 'Talent Name',
+				lastName: 'namer',
+				type: 'type',
+				unionStatus: ['union'],
+				locationISDN: 'ISDN',
 				user: user
 			});
 
@@ -45,7 +49,7 @@ describe('Talent Model Unit Tests:', function() {
 			});
 		});
 
-		it('should be able to show an error when try to save without name', function(done) { 
+		it('should be able to show an error when try to save without name', function(done) {
 			talent.name = '';
 
 			return talent.save(function(err) {
@@ -55,7 +59,7 @@ describe('Talent Model Unit Tests:', function() {
 		});
 	});
 
-	afterEach(function(done) { 
+	afterEach(function(done) {
 		Talent.remove().exec();
 		User.remove().exec();
 

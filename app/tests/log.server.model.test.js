@@ -27,9 +27,11 @@ describe('Log Model Unit Tests:', function() {
 			password: 'password'
 		});
 
-		user.save(function() { 
+		user.save(function() {
 			log = new Log({
-				name: 'Log Name',
+				type: 'Full',
+				sharedKey: 'Name',
+				description: 'Full Name',
 				user: user
 			});
 
@@ -45,8 +47,8 @@ describe('Log Model Unit Tests:', function() {
 			});
 		});
 
-		it('should be able to show an error when try to save without name', function(done) { 
-			log.name = '';
+		it('should be able to show an error when try to save without type', function(done) {
+			log.type = '';
 
 			return log.save(function(err) {
 				should.exist(err);
@@ -55,7 +57,7 @@ describe('Log Model Unit Tests:', function() {
 		});
 	});
 
-	afterEach(function(done) { 
+	afterEach(function(done) {
 		Log.remove().exec();
 		User.remove().exec();
 

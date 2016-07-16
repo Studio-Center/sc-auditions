@@ -27,9 +27,11 @@ describe('Project Model Unit Tests:', function() {
 			password: 'password'
 		});
 
-		user.save(function() { 
+		user.save(function() {
 			project = new Project({
-				name: 'Project Name',
+				title: 'Project Name',
+				estimatedCompletionDate: Date(),
+				talent: ['talent'],
 				user: user
 			});
 
@@ -45,7 +47,7 @@ describe('Project Model Unit Tests:', function() {
 			});
 		});
 
-		it('should be able to show an error when try to save without name', function(done) { 
+		it('should be able to show an error when try to save without name', function(done) {
 			project.name = '';
 
 			return project.save(function(err) {
@@ -55,7 +57,7 @@ describe('Project Model Unit Tests:', function() {
 		});
 	});
 
-	afterEach(function(done) { 
+	afterEach(function(done) {
 		Project.remove().exec();
 		User.remove().exec();
 
