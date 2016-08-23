@@ -2452,18 +2452,22 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		};
 		$scope.uploadAudition = function($files) {
 
-			$scope.uploadedAuds = [];
-			$scope.audFiles = $files;
+			if(typeof $files !== 'undefined' && $files.length > 0){
 
-			// prevent any other action
-			$scope.processing = true;
+				$scope.uploadedAuds = [];
+				$scope.audFiles = $files;
 
-	    //$files: an array of files selected, each file has name, size, and type.
-			angular.forEach($files, function(file, key) {
+				// prevent any other action
+				$scope.processing = true;
 
-	    	performUploadAudition(file, key, $files);
+		    //$files: an array of files selected, each file has name, size, and type.
+				angular.forEach($files, function(file, key) {
 
-			});
+		    	performUploadAudition(file, key, $files);
+
+				});
+
+			}
 
 		};
 
