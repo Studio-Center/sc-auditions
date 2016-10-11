@@ -43,4 +43,3 @@ angular.module('talents').filter('tel', function () {
         return ((country !== '' ? country + '-' : '') + city + '-' + number).trim();
     };
 });
-
