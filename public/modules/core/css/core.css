@@ -59,6 +59,10 @@
 .defClr{
 	background:#fff !important;
 }
+.brownBg{
+	background: #7F4D00 !important;
+	color:#fff !important;
+}
 .blueBg{
 	background:#4580ed !important;
 	color:#fff !important;

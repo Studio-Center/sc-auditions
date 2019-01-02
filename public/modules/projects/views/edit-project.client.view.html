@@ -40,7 +40,7 @@
                     </div>
                 </div>
 
-                <ul ng-show="rejFiles.length > 0" class="response" data-ng-show="authentication.user.roles === 'admin' || authentication.user.roles === 'producer/auditions director'">
+                <ul ng-show="rejFiles.length > 0" class="response" data-ng-show="authentication.user.roles === 'admin' || authentication.user.roles === 'producer/auditions director' || authentication.user.roles === 'audio intern'">
                     <li class="sel-file" ng-repeat="f in rejFiles">
                         Rejected file: {{f.name}} - size: {{f.size}}B - type: {{f.type}}
                     </li>
@@ -100,7 +100,7 @@
         </form>
     </div>
     <div class="container" style="position:fixed;bottom:0;background:#fff;z-index:999;padding-top:5px">
-        <div class="row" data-ng-show="permitRoles(['admin', 'producer/auditions director'])">
+        <div class="row" data-ng-show="permitRoles(['admin', 'producer/auditions director', 'audio intern'])">
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <ul style="clear:both" ng-show="rejFiles.length > 0" class="response">
                     <li class="sel-file" ng-repeat="f in rejFiles">

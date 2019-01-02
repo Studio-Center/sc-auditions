@@ -5,7 +5,7 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
 	function($scope, $stateParams, $location, Authentication, UsersEdit, UsersFind, $http, $rootScope, $base64) {
 		$scope.authentication = Authentication;
 
-		$scope.roleOpts = ['user', 'admin', 'producer/auditions director', 'production coordinator', 'talent director', 'client', 'client-client'];
+		$scope.roleOpts = ['user', 'admin', 'producer/auditions director', 'audio intern', 'production coordinator', 'talent director', 'client', 'client-client'];
 		$scope.filter = {};
 		$scope.filterOverride = '';
 		$scope.usersTotalCnt = 0;

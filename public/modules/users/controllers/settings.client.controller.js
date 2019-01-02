@@ -5,10 +5,10 @@ angular.module('users').controller('SettingsController', ['$scope', '$http', '$l
 		$scope.user = Authentication.user;
 
 		// custom arrays
-		$scope.roleOpts = ['user', 'admin', 'producer/auditions director', 'talent', 'talent director', 'client', 'agency'];
+		$scope.roleOpts = ['user', 'admin', 'producer/auditions director', 'audio intern', 'talent', 'talent director', 'client', 'agency'];
 
 		$scope.permitEveryOneButClients = function(){
-			var allowRoles = ['admin', 'producer/auditions director', 'production coordinator', 'talent director'];
+			var allowRoles = ['admin', 'producer/auditions director', 'audio intern', 'production coordinator', 'talent director'];
 
 			for(var i = 0; i < Authentication.user.roles.length; ++i){
 				for(var j = 0; j < allowRoles.length; ++j){

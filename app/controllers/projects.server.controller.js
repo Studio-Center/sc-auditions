@@ -5,7 +5,8 @@
  */
 var mongoose = require('mongoose'),
 	errorHandler = require('./errors'),
-	Project = mongoose.model('Project'),
+	Project = mongoose.model('Project'),	
+	Audition = mongoose.model('Audition'),
 	User = mongoose.model('User'),
 	Talent = mongoose.model('Talent'),
 	Typecast = mongoose.model('Typecast'),
@@ -39,7 +40,7 @@ exports.sendEmail = function(req, res){
 				});
 			},
 			function(admins, done) {
-				User.find({'roles':'producer/auditions director'}).sort('-created').exec(function(err, directors) {
+				User.find({'roles':{ $in: ['producer/auditions director', 'audio intern']}}).sort('-created').exec(function(err, directors) {
 					done(err, admins, directors);
 				});
 			},
@@ -102,7 +103,11 @@ exports.sendEmail = function(req, res){
 				});
 			},
 			], function(err) {
-				//if (err) return console.log(err);
+				if (err) {
+					return res.status(400).json(err);
+				} else {
+					res.status(200).jsonp();
+				}
 		});
 
 	}
@@ -503,6 +508,9 @@ exports.sendTalentCanceledEmail = function(req, res){
 
 // send project assigned talent new emails if projects gets new scripts
 exports.sendTalentScriptUpdateEmail = function(req, res){
+	
+	// pause execution for project save
+	setTimeout(function() {
 
 	var project, i;
 	var projectId = req.body.projectId;
@@ -580,12 +588,15 @@ exports.sendTalentScriptUpdateEmail = function(req, res){
 				return res.status(400).send({
 					message: errorHandler.getErrorMessage(err)
 				});
+			} else {
+				res.status(200).jsonp();
 			}
 
    	});
 
 	});
-
+	
+	}, 3500);
 };
 
 // gather project data
@@ -609,6 +620,101 @@ exports.sendTalentEmail = function(req, res){
 	var override = req.body.override || false;
 
 	sendTalentEmail(req, res, project, talent, override);
+
+};
+
+// send talent director talent add email
+exports.sendTalentDirectorsEmail = function(req, res){
+	
+	var project, i;
+	var projectId = req.body.projectId;
+	var talent = req.body.talent;
+	var chgMade = req.body.chgMade;
+
+	// reload project
+	Project.findOne({'_id':projectId}).sort('-created').exec(function(err, project) {
+
+		// walk through and email all selected clients
+		async.waterfall([
+		function(done) {
+			var ownerId = project.owner || project.user._id;
+			User.findOne({'_id':ownerId}).sort('-created').exec(function(err, owner) {
+				if(err){
+					done(err, req.user);
+				} else {
+					owner = owner || req.user;
+					done(err, owner);
+				}
+			});
+		},
+		function(owner, done) {
+			User.find({'roles':'talent director'}).sort('-created').exec(function(err, talentdirectors) {
+				done(err, owner, talentdirectors);
+			});
+		},
+		function(owner, talentdirectors, done) {
+
+			var i = 0,
+				to = [];
+
+			for(i = 0; i < talentdirectors.length; ++i){
+				to.push(talentdirectors[i].email);
+			}
+
+			res.render('templates/added-talent-email', {
+				project: project
+			}, function(err, talentEmailHTML) {
+				done(err, owner, to, talentEmailHTML);
+			});
+
+		},
+		// send out talent project creation email
+		function(owner, to, talentEmailHTML, done) {
+			// send email
+			var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
+			var emailSubject = '';
+			var newDate = new Date(project.estimatedCompletionDate);
+			newDate = newDate.setHours(newDate.getHours() - 1);
+
+			// assign email subject line
+			emailSubject = project.title + ' - Additional Talent Added';
+
+//			var mailOptions = {
+//				to: to,
+//				from: owner.email || config.mailer.from,
+//				replyTo: owner.email || config.mailer.from,
+//				cc: config.mailer.notifications,
+//				subject: emailSubject,
+//				html: talentEmailHTML
+//			};
+//
+//			transporter.sendMail(mailOptions, function(err){
+
+				// write change to log
+				var log = {
+					type: 'project',
+					sharedKey: project._id,
+					description: 'sent talent added email for ' + project.title,
+					user: req.user
+				};
+				log = new Log(log);
+				log.save();
+
+				done(err);
+			//});
+
+		}
+		], function(err) {
+			if (err) {
+				if (err) {
+					return res.status(400).json(err);
+				} else {
+					return res.status(200);
+				}
+			}
+		});
+
+	});
 
 };
 
@@ -711,7 +817,7 @@ exports.updateSingleTalentStatus = function (req, res){
 // update talent status
 exports.updateTalentStatus = function(req, res){
 
-	var allowedRoles = ['admin','producer/auditions director', 'production coordinator','client','client-client'];
+	var allowedRoles = ['admin','producer/auditions director', 'audio intern', 'production coordinator','client','client-client'];
 
 	// validate user interaction
 	if (_.intersection(req.user.roles, allowedRoles).length) {
@@ -804,20 +910,22 @@ exports.updateTalentNote = function (req, res){
 // update talent status
 exports.updateNoRefresh = function(req, res){
 
-	var allowedRoles = ['admin','producer/auditions director', 'production coordinator','client','client-client'];
+	var allowedRoles = ['admin','producer/auditions director', 'audio intern', 'production coordinator','client','client-client'],
+      	log = '',
+		project = '';
 
 	// validate user interaction
 	if (_.intersection(req.user.roles, allowedRoles).length) {
 
 		// write change to log
 		if(typeof req.body.project.log !== 'undefined'){
-			var log = req.body.project.log;
+			log = req.body.project.log;
 			log.user = req.user;
 
 			log = new Log(log);
 			log.save();
 
-			// also senf log for prohect if talent log attribute
+			// also send log for project if talent log attribute
 			if(log.type === 'talent'){
 				log = log.toObject();
 
@@ -829,9 +937,13 @@ exports.updateNoRefresh = function(req, res){
 			}
 		}
 
-		var project = req.body.project;
+		//project = req.body.project;
 
-		Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
+		Project.findById(req.body.project._id).populate('user', 'displayName').exec(function(err, project) {
+
+			// if(typeof req.body.project.__v !== 'undefined'){
+			// 	delete req.body.project.__v;
+			// }
 
 			project = _.extend(project, req.body.project);
 
@@ -839,6 +951,16 @@ exports.updateNoRefresh = function(req, res){
 
 			project.save(function(err) {
 				if (err) {
+
+					log = {
+						type: 'error',
+						sharedKey: String(req.body.project._id),
+						description: String(err) + ' Project ID: ' + String(req.body.project._id),
+						user: req.user
+					};
+					log = new Log(log);
+					log.save();
+
 					return res.status(400).json(err);
 				} else {
 					var socketio = req.app.get('socketio');
@@ -923,7 +1045,7 @@ exports.sendClientEmail = function(req, res){
 					});
 				},
 				function(owner, done) {
-					User.find({'roles':'producer/auditions director'}).sort('-created').exec(function(err, directors) {
+					User.find({'roles':{ $in: ['producer/auditions director', 'audio intern']}}).sort('-created').exec(function(err, directors) {
 						done(err, owner, directors);
 					});
 				},
@@ -1033,7 +1155,8 @@ exports.lead = function(req, res){
 	emailBody += 'Description: ' + req.body.describe + '\n';
 
 	//var file = req.files.file;
-  var appDir = path.dirname(require.main.filename);
+  var appDir = global.appRoot;
+
   var relativePath =  'res' + '/' + 'scripts' + '/temp/';
   var newPath = appDir + '/public/' + relativePath;
 
@@ -1150,7 +1273,11 @@ var emailClients = function(client, email, project, req, res){
 
 			}
 		], function(err) {
-			//if (err) return console.log(err);
+			if (err) {
+				return res.status(400).json(err);
+			} else {
+				res.status(200).jsonp();
+			}
 		});
 };
 
@@ -1180,7 +1307,7 @@ exports.create = function(req, res) {
   var relativePath =  '';
   var newPath = '';
 
-	var allowedRoles = ['admin','producer/auditions director','production coordinator'];
+	var allowedRoles = ['admin','producer/auditions director', 'audio intern','production coordinator'];
 
 	if (_.intersection(req.user.roles, allowedRoles).length) {
 
@@ -1199,7 +1326,7 @@ exports.create = function(req, res) {
 		if(typeof project.scripts !== 'undefined'){
 			for(i = 0; i < project.scripts.length; ++i){
 				if(typeof project.scripts[i] !== 'undefined'){
-					appDir = path.dirname(require.main.filename);
+					appDir = global.appRoot;
 				    tempPath = appDir + '/public/res/scripts/temp/' + project.scripts[i].file.name;
 				    relativePath =  'res/scripts/' + project._id + '/';
 				    newPath = appDir + '/public/' + relativePath;
@@ -1219,7 +1346,7 @@ exports.create = function(req, res) {
 		if(typeof project.referenceFiles !== 'undefined'){
 			for(j = 0; j < project.referenceFiles.length; ++j){
 				if(typeof project.referenceFiles[j] !== 'undefined'){
-					appDir = path.dirname(require.main.filename);
+					appDir = global.appRoot;
 			    tempPath = appDir + '/public/res/referenceFiles/temp/' + project.referenceFiles[j].file.name;
 			    relativePath =  'res/referenceFiles/' + project._id + '/';
 			    newPath = appDir + '/public/' + relativePath;
@@ -1242,7 +1369,7 @@ exports.create = function(req, res) {
 			if(typeof req.body.copiedScripts !== 'undefined'){
 				for(i = 0; i < req.body.copiedScripts.length; ++i){
 					if(typeof req.body.copiedScripts[i] !== 'undefined'){
-						appDir = path.dirname(require.main.filename);
+						appDir = global.appRoot;
 				    tempPath = appDir + '/public/res/scripts/' + req.body.id + '/' + req.body.copiedScripts[i].file.name;
 				    relativePath =  'res/scripts/' + project._id + '/';
 				    newPath = appDir + '/public/' + relativePath;
@@ -1265,7 +1392,7 @@ exports.create = function(req, res) {
 			if(typeof req.body.copiedReferenceFiles !== 'undefined'){
 				for(j = 0; j < req.body.copiedReferenceFiles.length; ++j){
 					if(typeof req.body.copiedReferenceFiles[j] !== 'undefined'){
-						appDir = path.dirname(require.main.filename);
+						appDir = global.appRoot;
 				    tempPath = appDir + '/public/res/referenceFiles/' + req.body.id + '/' + req.body.copiedReferenceFiles[j].file.name;
 				    relativePath =  'res/referenceFiles/' + project._id + '/';
 				    newPath = appDir + '/public/' + relativePath;
@@ -1317,7 +1444,7 @@ exports.create = function(req, res) {
 				});
 			},
 			function(admins, done) {
-				User.find({'roles':'producer/auditions director'}).sort('-created').exec(function(err, directors) {
+				User.find({'roles': { $in: ['producer/auditions director', 'audio intern']}}).sort('-created').exec(function(err, directors) {
 					done(err, admins, directors);
 				});
 			},
@@ -1564,6 +1691,96 @@ exports.create = function(req, res) {
 	}
 };
 
+// load project audition files
+exports.loadAuditions = function(req, res){
+	
+	// set vars
+	var projId = req.body.projectId;
+
+	Audition.find({'project': Object(projId)}).sort('-created').exec(function(err, auditions) {
+		if (err) {
+			return res.status(400).send(err);
+		} else {
+			return res.jsonp(auditions);
+		}
+	});
+	
+};
+
+// save project audition files
+exports.deleteAudition = function(req, res){
+	
+	var aud = req.body.audition;
+	
+	Audition.findById(aud._id).sort('-created').exec(function(err, audition) {
+		if (err) {
+			return res.status(400).send(err);
+		} else {
+			audition.remove(function(err) {
+				if (err) {
+					return res.status(400).send({
+						message: errorHandler.getErrorMessage(err)
+					});
+				} else {
+//					// emit an event for all connected clients
+					var socketio = req.app.get('socketio');
+//					socketio.sockets.emit('projectsListUpdate');
+//					return res.jsonp(project);
+					socketio.sockets.emit('auditionUpdate', {id: aud.project});
+					return res.status(200).send();
+				}
+			});
+		}
+	});
+
+};
+
+// save project audition files
+exports.saveAudition = function(req, res){
+	
+	// set vars
+	var aud = req.body.audition,
+		appDir = global.appRoot;
+	
+	Audition.findById(aud._id).sort('-created').exec(function(err, audition) {
+		if (err) {
+			return res.status(400).send(err);
+		} else {
+			
+			// check for aud rename
+			if (aud.rename !== '') {
+				
+				var file = appDir + '/public/res/auditions/' + String(aud.project) + '/' + aud.file.name;
+				var newFile = appDir + '/public/res/auditions/' + String(aud.project) + '/' + aud.rename;
+
+				// move file if exists
+				if (fs.existsSync(file)){
+
+					moveFile(file, newFile);
+
+					// change stored file name
+					aud.file.name = aud.rename;
+					aud.rename = '';
+
+				}
+			}
+			
+			audition = _.extend(audition, aud);
+			
+			audition.save(function(err) {
+				if (err) {
+					return res.status(400).send(err);
+				} else {
+					var socketio = req.app.get('socketio');
+					socketio.sockets.emit('auditionUpdate', {id: aud.project});
+					return res.jsonp(audition);
+				}
+			});
+		}
+	});
+	
+};
+
 // load single project for projects admin page
 exports.loadProject = function(req, res){
 
@@ -1608,7 +1825,7 @@ exports.read = function(req, res) {
 // remove file from local file system
 var deleteFiles = function(project, req, user){
 
-	var appDir = path.dirname(require.main.filename);
+	var appDir = global.appRoot;
 
 	for(var i = 0; i < project.deleteFiles.length; ++i){
 		var file = appDir + '/public' + project.deleteFiles[i];
@@ -1638,7 +1855,7 @@ var deleteFiles = function(project, req, user){
 exports.fileExists = function(req, res){
 
 	// method vars
-	var appDir = path.dirname(require.main.filename);
+	var appDir = global.appRoot;
 	var file = appDir + '/public' + req.body.file;
 
 	// check if file exists
@@ -1653,22 +1870,40 @@ exports.fileExists = function(req, res){
 // handle remote file delete requests
 exports.deleteFileByName = function(req, res){
 
-	var appDir = path.dirname(require.main.filename);
+	var appDir = global.appRoot;
 	var file = appDir + '/public' + req.body.fileLocation;
 
 	// remove file is exists
 	if (fs.existsSync(file)) {
 		fs.unlinkSync(file);
-		return res.status(200).send();
-	} else {
-		return res.status(200).send();
+
+		// log instance if project info included
+		if(typeof req.body.projectId !== 'undefined'){
+
+			Project.findOne({'_id':req.body.projectId}).sort('-created').exec(function(err, project) {
+
+				// write change to log
+				var log = {
+					type: 'project',
+					sharedKey: String(project._id),
+					description: 'file ' + req.body.fileLocation + ' removed from ' + project.title,
+					user: req.user
+				};
+				log = new Log(log);
+				log.save();
+
+			});
+		}
+
 	}
+
+	return res.status(200).send();
 };
 
 // handle remote file delete requests
 exports.deleteTempScript = function(req, res){
 
-	var appDir = path.dirname(require.main.filename);
+	var appDir = global.appRoot;
 	var file = appDir + '/public/res/scripts/temp/' + req.body.fileLocation;
 
 	// remove file is exists
@@ -1683,7 +1918,7 @@ exports.deleteTempScript = function(req, res){
 // rename file from local file system
 var renameFiles = function(project, res, req){
 
-	var appDir = path.dirname(require.main.filename);
+	var appDir = global.appRoot;
 
 	for(var i = 0; i < project.auditions.length; ++i){
 		var file = appDir + '/public/res/auditions/' + project._id + '/' + project.auditions[i].file.name;
@@ -1718,7 +1953,7 @@ var renameFiles = function(project, res, req){
 exports.update = function(req, res) {
 	var project = req.project ;
 
-	var allowedRoles = ['admin','producer/auditions director', 'production coordinator','client','client-client'];
+	var allowedRoles = ['admin','producer/auditions director', 'audio intern', 'production coordinator','client','client-client'];
 
 	// validate user interaction
 	if (_.intersection(req.user.roles, allowedRoles).length) {
@@ -1729,7 +1964,7 @@ exports.update = function(req, res) {
 			// rename files as requested
 			function(done) {
 
-				var appDir = path.dirname(require.main.filename);
+				var appDir = global.appRoot;
 
 				for(var i = 0; i < project.auditions.length; ++i){
 					if(typeof project.auditions[i] !== 'undefined' && typeof project.auditions[i].file !== 'undefined'){
@@ -1756,7 +1991,7 @@ exports.update = function(req, res) {
 			// delete any files no longer in use
 			function(done) {
 
-				var appDir = path.dirname(require.main.filename);
+				var appDir = global.appRoot;
 
 				for(var i = 0; i < project.deleteFiles.length; ++i){
 					var file = appDir + '/public' + project.deleteFiles[i];
@@ -1833,10 +2068,11 @@ var removeFolder = function(location) {
  * Delete an Project
  */
 exports.delete = function(req, res) {
-	var project = req.project;
+	var project = req.project,
+		prodId = Object.create(project._id);
 
 	// generate delete files list
-	var appDir = path.dirname(require.main.filename) + '/public';
+	var appDir = global.appRoot + '/public';
 	var auditionsDir = appDir + '/res/auditions/' + project._id + '/';
 	var scriptsDir = appDir + '/res/scripts/' + project._id + '/';
 	var referenceFilesDir = appDir + '/res/referenceFiles/' + project._id + '/';
@@ -1846,12 +2082,25 @@ exports.delete = function(req, res) {
 	rimraf.sync(scriptsDir);
 	rimraf.sync(referenceFilesDir);
 
+		// write change to log
+	var log = {
+		type: 'project',
+		sharedKey: String(project._id),
+		description: 'project deleted ' + project.title,
+		user: req.user
+	};
+	log = new Log(log);
+	log.save();
+
 	project.remove(function(err) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
+			// remove all assocaited auditions
+			Audition.remove({project: prodId});
+			
 			// emit an event for all connected clients
 			var socketio = req.app.get('socketio');
 			socketio.sockets.emit('projectsListUpdate');
@@ -1867,7 +2116,7 @@ exports.deleteById = function(req, res) {
 		if(project){
 
 			// generate delete files list
-			var appDir = path.dirname(require.main.filename) + '/public';
+			var appDir = global.appRoot + '/public';
 			var auditionsDir = appDir + '/res/auditions/' + project._id + '/';
 			var scriptsDir = appDir + '/res/scripts/' + project._id + '/';
 			var referenceFilesDir = appDir + '/res/referenceFiles/' + project._id + '/';
@@ -2030,6 +2279,10 @@ var getProjectsFilters = function(req){
 	if(req.body.filter.status){
 		filterObj.status = req.body.filter.status;
 	}
+	// set in progress bit
+	if(req.body.filter.clientEmail){
+		filterObj.client = { $elemMatch: {  email : new RegExp(req.body.filter.clientEmail, 'i') } };
+	}
 
 	return filterObj;
 };
@@ -2062,7 +2315,7 @@ exports.findLimit = function(req, res) {
 	}
 
 	// permit certain user roles full access
-	var allowedRoles = ['admin','producer/auditions director', 'production coordinator','talent director'];
+	var allowedRoles = ['admin','producer/auditions director', 'audio intern', 'production coordinator','talent director'];
 
 	if (_.intersection(req.user.roles, allowedRoles).length) {
 
@@ -2107,6 +2360,7 @@ exports.findLimitWithFilter = function(req, res) {
 		} else {
 			sortOrder[selSort] = 1;
 		}
+		//sortOrder = sortOrder[selSort];
 	}
 	// set and store limits
 	var startVal, limitVal;
@@ -2122,16 +2376,21 @@ exports.findLimitWithFilter = function(req, res) {
 	}
 
 	// permit certain user roles full access
-	var allowedRoles = ['admin','producer/auditions director', 'production coordinator','talent director'];
+	var allowedRoles = ['admin','producer/auditions director', 'audio intern', 'production coordinator','talent director'];
 
 	if (_.intersection(req.user.roles, allowedRoles).length) {
 
-		Project.find(filterObj).sort(sortOrder).skip(startVal).limit(limitVal).populate('user', 'displayName').exec(function(err, projects) {
+		Project.find(filterObj).sort(sortOrder).skip(Number(startVal)).limit(Number(limitVal)).populate('user', 'displayName').exec(function(err, projects) {
 			if (err) {
 				//console.log(err);
 				return res.status(400).send({
-					message: errorHandler.getErrorMessage(err)
+					message: errorHandler.getErrorMessage(err),
+					obj: filterObj,
+					sort: sortOrder,
+					skip: startVal,
+					limit: limitVal
 				});
+				//return res.jsonp(projects);
 			} else {
 				return res.jsonp(projects);
 			}
@@ -2154,7 +2413,7 @@ exports.findLimitWithFilter = function(req, res) {
 exports.list = function(req, res) {
 
 	// permit certain user roles full access
-	var allowedRoles = ['admin','producer/auditions director', 'production coordinator','talent director'];
+	var allowedRoles = ['admin','producer/auditions director', 'audio intern', 'production coordinator','talent director'];
 
 	if (_.intersection(req.user.roles, allowedRoles).length) {
 
@@ -2199,7 +2458,7 @@ exports.projectByID = function(req, res, next, id) { Project.findById(id).popula
  */
 exports.hasAuthorization = function(req, res, next) {
 	// recon 2/17/2015 to allow admin and producer level users to edit all projects
-	var allowedRoles = ['admin','producer/auditions director', 'production coordinator'];
+	var allowedRoles = ['admin','producer/auditions director', 'audio intern', 'production coordinator'];
 
 	if (!_.intersection(req.user.roles, allowedRoles).length) {
 		return res.status(403).send('User is not authorized');
@@ -2217,8 +2476,13 @@ exports.uploadFile = function(req, res, next){
     var project = JSON.parse(req.body.data);
 
     //var file = req.files.file;
-    var appDir = path.dirname(require.main.filename);
+    var appDir = global.appRoot;
     var tempPath = file.path;
+    // check for passenger buffer file location
+    var passDir = '/usr/share/passenger/helper-scripts/public/res/' + project.project._id + '/' + file.name;
+    if(fs.existsSync(passDir)){
+      tempPath = passDir;
+    }
 
     var relativePath =  'res' + '/' + project.project._id + '/';
     var newPath = appDir + '/public/' + relativePath;
@@ -2264,20 +2528,25 @@ exports.uploadScript = function(req, res, next){
 
     // var project = JSON.parse(req.body.data);
     // project = project.project;
-		var recBody = JSON.parse(req.body.data);
-		var projectId = recBody.projectId;
+	var recBody = JSON.parse(req.body.data);
+	var projectId = recBody.projectId;
 
     //var file = req.files.file;
-    var appDir = path.dirname(require.main.filename);
+    var appDir = global.appRoot;
     var tempPath = file.path;
-		var scriptPath =  'res' + '/' + 'scripts/';
+    // check for passenger buffer file location
+    var passDir = '/usr/share/passenger/helper-scripts/public/res/' + 'scripts/' + projectId + '/' + file.name;
+    if(fs.existsSync(passDir)){
+      tempPath = passDir;
+    }
+	var scriptPath =  'res' + '/' + 'scripts/';
     var relativePath =  scriptPath + projectId + '/';
     var newPath = appDir + '/public/' + relativePath;
 
-		// check for existing parent directory, create if needed
-		if (!fs.existsSync(appDir + '/public/' + scriptPath)) {
-			fs.mkdirSync(appDir + '/public/' + scriptPath);
-		}
+	// check for existing parent directory, create if needed
+	if (!fs.existsSync(appDir + '/public/' + scriptPath)) {
+		fs.mkdirSync(appDir + '/public/' + scriptPath);
+	}
 
     // create project directory if not found
     if (!fs.existsSync(newPath)) {
@@ -2287,41 +2556,49 @@ exports.uploadScript = function(req, res, next){
     // add file path
     //console.log(file.name);
     newPath += file.name;
-
+	
+	if(file.name.indexOf('#') > -1){
+		
+		return res.status(500).end();
+		
+	} else {
+		
 		Project.findById(projectId).populate('user', 'displayName').exec(function(err, project) {
 
-	    mv(tempPath, newPath, function(err) {
+			mv(tempPath, newPath, function(err) {
 
-	        if (err){
-	            return res.status(500).end();
-	        }else{
+				if (err){
+					return res.status(500).end();
+				}else{
 
-						// generate new script object
-						var script = {
-										file: req.files.file,
-										by: {
-											userId: req.user._id,
-											date: moment().tz('America/New_York').format(),
-											name: req.user.displayName
-										}
-									};
+					// generate new script object
+					var script = {
+									file: req.files.file,
+									by: {
+										userId: req.user._id,
+										date: moment().tz('America/New_York').format(),
+										name: req.user.displayName
+									}
+								};
 
-						// write change to log
-						var log = {
-							type: 'project',
-							sharedKey: String(projectId),
-							description: project.title + ' script uploaded ' + file.name,
-							user: req.user
-						};
-						log = new Log(log);
-						log.save();
+					// write change to log
+					var log = {
+						type: 'project',
+						sharedKey: String(projectId),
+						description: project.title + ' script uploaded ' + file.name,
+						user: req.user
+					};
+					log = new Log(log);
+					log.save();
 
-						return res.jsonp(script);
+					return res.jsonp(script);
 
-	        }
-	    });
+				}
+			});
 
 		});
+		
+	}
 
 };
 
@@ -2340,8 +2617,13 @@ exports.uploadReferenceFile = function(req, res, next){
 		var projectId = recBody.projectId;
 
     //var file = req.files.file;
-    var appDir = path.dirname(require.main.filename);
+    var appDir = global.appRoot;
     var tempPath = file.path;
+    // check for passenger buffer file location
+    var passDir = '/usr/share/passenger/helper-scripts/public/res/' + 'referenceFiles/' + projectId + '/' + file.name;
+    if(fs.existsSync(passDir)){
+      tempPath = passDir;
+    }
 		var refsPath =  'res' + '/' + 'referenceFiles/';
     var relativePath =  refsPath + projectId + '/';
     var newPath = appDir + '/public/' + relativePath;
@@ -2410,8 +2692,13 @@ exports.uploadTempReferenceFile = function(req, res, next){
     var referenceFiles = [];
 
     //var file = req.files.file;
-    var appDir = path.dirname(require.main.filename);
+    var appDir = global.appRoot;
     var tempPath = file.path;
+    // check for passenger buffer file location
+    var passDir = '/usr/share/passenger/helper-scripts/public/res/' + 'referenceFiles/' + 'temp/' + file.name;
+    if(fs.existsSync(passDir)){
+      tempPath = passDir;
+    }
 		var refsPath =  'res' + '/' + 'referenceFiles/';
     var relativePath =  refsPath + 'temp/';
     var newPath = appDir + '/public/' + relativePath;
@@ -2453,32 +2740,42 @@ exports.uploadTempReferenceFile = function(req, res, next){
 // file upload
 exports.uploadTempScript = function(req, res, next){
 	// We are able to access req.files.file thanks to
-    // the multiparty middleware
-    var file = req.files.file;
-    //console.log(file.name);
-    //console.log(file.type);
+	// the multiparty middleware
+	var file = req.files.file;
+	//console.log(file.name);
+	//console.log(file.type);
 
-    var scripts = [];
+	var scripts = [];
 
-    //var file = req.files.file;
-    var appDir = path.dirname(require.main.filename);
-    var tempPath = file.path;
-		var scriptPath =  'res' + '/' + 'scripts/';
-		var relativePath =  scriptPath + 'temp/';
-    var newPath = appDir + '/public/' + relativePath;
+	//var file = req.files.file;
+	var appDir = global.appRoot;
+	var tempPath = file.path;
+	// check for passenger buffer file location
+	var passDir = '/usr/share/passenger/helper-scripts/public/res/' + 'scripts/' + 'temp/' + file.name;
+	if(fs.existsSync(passDir)){
+	  tempPath = passDir;
+	}
+	var scriptPath =  'res' + '/' + 'scripts/';
+	var relativePath =  scriptPath + 'temp/';
+	var newPath = appDir + '/public/' + relativePath;
 
-		// check for existing parent directory, create if needed
-		if (!fs.existsSync(appDir + '/public/' + scriptPath)) {
-			fs.mkdirSync(appDir + '/public/' + scriptPath);
-		}
+	// check for existing parent directory, create if needed
+	if (!fs.existsSync(appDir + '/public/' + scriptPath)) {
+		fs.mkdirSync(appDir + '/public/' + scriptPath);
+	}
 
-		// check for existing temp directory, create if needed
-		if (!fs.existsSync(newPath)) {
-			fs.mkdirSync(newPath);
-		}
+	// check for existing temp directory, create if needed
+	if (!fs.existsSync(newPath)) {
+		fs.mkdirSync(newPath);
+	}
 
-    // add file path
-    newPath += file.name;
+	// add file path
+	newPath += file.name;
+	if(file.name.indexOf('#') > -1){
+		
+		return res.status(500).end();
+		
+	} else {
 
 		// assign user data
 		var uid = '', uname = '';
@@ -2487,73 +2784,81 @@ exports.uploadTempScript = function(req, res, next){
 			uname = req.user.displayName;
 		}
 
-    //console.log(newPath);
-    var script = {
-					file: req.files.file,
-					by: {
-						userId: req.user._id,
-						date: moment().tz('America/New_York').format(),
-						name: req.user.displayName
-					},
-					filecheck: 0,
-					filecheckdate: ''
-				};
+		//console.log(newPath);
+		var script = {
+						file: req.files.file,
+						by: {
+							userId: req.user._id,
+							date: moment().tz('America/New_York').format(),
+							name: req.user.displayName
+						},
+						filecheck: 0,
+						filecheckdate: ''
+					};
 
-	scripts.push(script);
+		scripts.push(script);
 
-  mv(tempPath, newPath, function(err) {
-      if (err){
-          return res.status(500).end();
-      }else{
-          return res.jsonp(scripts);
-      }
-  });
+		mv(tempPath, newPath, function(err) {
+		  if (err){
+			  return res.status(500).end();
+		  }else{
+			  return res.jsonp(scripts);
+		  }
+		});
+		
+	}
 };
 
 // file upload
 exports.uploadAudition = function(req, res, next){
 
 	// method vars
-	var audTalent = '';
-	var firstName = '';
-	var lastNameCode = '';
+	var audTalent = '',
+		firstName = '',
+		lastNameCode = '',
+		curUser = Object.create(req.user);
 
 	// We are able to access req.files.file thanks to
-  // the multiparty middleware
-  var file = req.files.file;
+	// the multiparty middleware
+	var file = req.files.file;
 
 	// read in project document
-  //var project = JSON.parse(req.body.data);
-	var recBody = JSON.parse(req.body.data);
-	var projectId = recBody.projectId;
+	//var project = JSON.parse(req.body.data);
+	var recBody = JSON.parse(req.body.data),
+		projectId = recBody.projectId;
 
-  //var file = req.files.file;
-  var appDir = path.dirname(require.main.filename);
-  var tempPath = file.path;
-	var audPath =  'res' + '/' + 'auditions/';
-  var relativePath =  audPath + projectId + '/';
-  var newPath = appDir + '/public/' + relativePath;
+	//var file = req.files.file;
+	var appDir = global.appRoot,
+		tempPath = file.path;
+	// check for passenger buffer file location
+	var passDir = '/usr/share/passenger/helper-scripts/public/res/auditions/' + projectId + '/' + file.name;
+	if(fs.existsSync(passDir)){
+		tempPath = passDir;
+	}
+	var audPath =  'res' + '/' + 'auditions/',
+		relativePath =  audPath + projectId + '/',
+		newPath = appDir + '/public/' + relativePath;
 
 	// check for existing parent directory, create if needed
 	if (!fs.existsSync(appDir + '/public/' + audPath)) {
 		fs.mkdirSync(appDir + '/public/' + audPath);
 	}
 
-  // create project directory if not found
-  if (!fs.existsSync(newPath)) {
-  	fs.mkdirSync(newPath);
-  }
+	// create project directory if not found
+	if (!fs.existsSync(newPath)) {
+		fs.mkdirSync(newPath);
+	}
 
-  // add file path
-  newPath += file.name;
-  //console.log(newPath);
+	// add file path
+	newPath += file.name;
+	//console.log(newPath);
 
-  // strip talent name and last name code from audition
-  var regStr = /([a-zA-Z]+)\.\w{3}$/i.exec(file.name);
-  if(regStr !== null){
-		var regStrOP = regStr[1];
+	// strip talent name and last name code from audition
+	var regStr = /([a-zA-Z]+)\.\w{3}$/i.exec(file.name);
+	if(regStr !== null){
+		var regStrOP = regStr[1],
+			lastNm = /([A-Z])[a-z]*$/.exec(regStrOP);
 
-		var lastNm = /([A-Z])[a-z]*$/.exec(regStrOP);
 		if(lastNm !== null){
 			var lastNmPos = lastNm.index;
 
@@ -2562,83 +2867,88 @@ exports.uploadAudition = function(req, res, next){
 		}
 	}
 
-		async.waterfall([
-			// gather info for selected project
-			function(done) {
-				mv(tempPath, newPath, function(err) {
-					done(err);
-				});
-			},
-			function(done) {
-				Talent.findOne({'name': new RegExp('^'+firstName+'$', 'i'), 'lastNameCode': new RegExp('^'+lastNameCode+'$', 'i')}).sort('-created').exec(function(err, talent) {
-					done(err, talent);
-				});
-			},
-			function(talent, done) {
-				Project.findById(projectId).populate('user', 'displayName').exec(function(err, project) {
-					done(err, talent, project);
-				});
-			},
-			function(talent, project, done) {
+	async.waterfall([
+		// gather info for selected project
+		function(done) {
+			mv(tempPath, newPath, function(err) {
+				done(err);
+			});
+		},
+		function(done) {
+			Talent.findOne({'name': new RegExp('^'+firstName+'$', 'i'), 'lastNameCode': new RegExp('^'+lastNameCode+'$', 'i')}).sort('-created').exec(function(err, talent) {
+				done(err, talent);
+			});
+		},
+		function(talent, done) {
+			Project.findById(projectId).populate('user', 'displayName').exec(function(err, project) {
+				done(err, talent, project);
+			});
+		},
+		function(talent, project, done) {
 
-				// walk through project talent, look for existing assignment
-				async.eachSeries(project.talent, function (curTalent, talentCallback) {
+			// walk through project talent, look for existing assignment
+			async.eachSeries(project.talent, function (curTalent, talentCallback) {
 
-					if(talent !== null){
-						if(String(talent._id) === curTalent.talentId){
-							audTalent = curTalent.talentId;
-							talentCallback();
-						} else {
-							talentCallback();
-						}
-					} else {
-						talentCallback();
+				if(talent !== null){
+					if(String(talent._id) === curTalent.talentId){
+						audTalent = curTalent.talentId;
 					}
+				}
+				talentCallback();
 
-				}, function (err) {
+			}, function (err) {
 
-					var audition = {
-							file: req.files.file,
-							discussion: [],
-							description: '',
-							rating: [],
-							published: true,
-							rename: '',
-							avgRating: 0,
-							favorite: 0,
-							talent: audTalent,
-							selected: false,
-							booked: false,
-							approved:
-								{
-									by:
-									{
-										userId: req.user._id,
-										date: moment().tz('America/New_York').format(),
-										name: req.user.displayName
-									}
-								}
-							};
-
-					// write change to log
-					var log = {
-						type: 'project',
-						sharedKey: String(project._id),
-						description: project.title + ' audition uploaded ' + file.name,
-						user: req.user
+				var audition = {
+					project: project._id,
+					file: req.files.file,
+					discussion: [],
+					description: '',
+					rating: [],
+					published: true,
+					rename: '',
+					avgRating: 0,
+					favorite: 0,
+					talent: audTalent,
+					selected: false,
+					booked: false,
+					approved:
+						{
+							by:
+							{
+								userId: curUser._id,
+								date: moment().tz('America/New_York').format(),
+								name: curUser.displayName
+							}
+						}
 					};
-					log = new Log(log);
-					log.save();
+				
+				// save audition to auditions collection
+				var aud = new Audition(audition);
+				aud.save();
 
-					// send audition data to client
-					return res.jsonp(audition);
-				});
-			}
-			], function(err) {
-			if (err) {
-				return res.status(400).json(err);
-			}
-		});
+				// write change to log
+				var log = {
+					type: 'project',
+					sharedKey: String(project._id),
+					description: project.title + ' audition uploaded ' + file.name,
+					user: curUser
+				};
+				log = new Log(log);
+				log.save();
+
+				// update everyone else
+				var socketio = req.app.get('socketio');
+				socketio.sockets.emit('auditionUpdate', {id: aud.project});
+				
+				// send audition data to client
+				return res.jsonp(audition);
+			});
+		}
+		], function(err) {
+		if (err) {
+			return res.status(400).json(err);
+		}
+	});
 
 };
 
@@ -2654,8 +2964,13 @@ exports.uploadTempAudition = function(req, res, next){
     project = project.project;
 
     //var file = req.files.file;
-    var appDir = path.dirname(require.main.filename);
+    var appDir = global.appRoot;
     var tempPath = file.path;
+    // check for passenger buffer file location
+    var passDir = '/usr/share/passenger/helper-scripts/public/res/' + 'auditions/' + 'temp/' + file.name;
+    if(fs.existsSync(passDir)){
+      tempPath = passDir;
+    }
 		var audPath =  'res' + '/' + 'auditions/';
 		var relativePath =  audPath + 'temp/';
     var newPath = appDir + '/public/' + relativePath;
@@ -2710,7 +3025,7 @@ exports.uploadTempAudition = function(req, res, next){
 
 exports.downloadAllAuditions = function(req, res, next){
 	// get app dir
-	var appDir = path.dirname(require.main.filename);
+  var appDir = global.appRoot;
 	var relativePath =  'res' + '/' + 'auditions' + '/' + req.body.project._id + '/';
     var newPath = appDir + '/public/' + relativePath;
     var savePath = appDir + '/public/' + 'res' + '/' + 'archives' + '/';
@@ -2751,35 +3066,37 @@ exports.downloadBookedAuditions = function(req, res, next){
 	var bookedAuds = req.body.bookedAuds;
 
 	// get app dir
-	var appDir = path.dirname(require.main.filename);
+	var appDir = global.appRoot;
 	var relativePath =  'res' + '/' + 'auditions' + '/' + projectId + '/';
-  var newPath = appDir + '/public/' + relativePath;
-  var savePath = appDir + '/public/' + 'res' + '/' + 'archives' + '/';
-  var zipName = projectTitle + '.zip';
-  var newZip = savePath + zipName;
+	var newPath = appDir + '/public/' + relativePath;
+	var savePath = appDir + '/public/' + 'res' + '/' + 'archives' + '/';
+	var zipName = projectTitle + '.zip';
+	var newZip = savePath + zipName;
 
 	// check for existing parent directory, create if needed
 	if (!fs.existsSync(savePath)) {
 		fs.mkdirSync(savePath);
 	}
 
-  //console.log(newPath);
+	//console.log(newPath);
 
-  var output = fs.createWriteStream(newZip);
+	var output = fs.createWriteStream(newZip);
 	var archive = archiver('zip');
 
 	output.on('close', function() {
 	  res.jsonp({zip:zipName});
 	});
 
-  // add all booked auditions
-  for(var i = 0; i < bookedAuds.length; ++i){
-  	archive.file(newPath + bookedAuds[i], { name:bookedAuds[i] });
-  }
+	// add all booked auditions
+	for(var i = 0; i < bookedAuds.length; ++i){
+		if (fs.existsSync(newPath + bookedAuds[i])) {
+			archive.file(newPath + bookedAuds[i], { name:bookedAuds[i] });
+		}
+	}
 
-  archive.pipe(output);
+	archive.pipe(output);
 
-  archive.finalize();
+	archive.finalize();
 
 };
 
@@ -2792,21 +3109,19 @@ exports.downloadSelectedAuditions = function(req, res, next){
 	var selAuds = req.body.selectedAuds;
 
 	// get app dir
-	var appDir = path.dirname(require.main.filename);
+	var appDir = global.appRoot;
 	var relativePath =  'res' + '/' + 'auditions' + '/' + projectId + '/';
-  var newPath = appDir + '/public/' + relativePath;
-  var savePath = appDir + '/public/' + 'res' + '/' + 'archives' + '/';
-  var zipName = projectTitle + '.zip';
-  var newZip = savePath + zipName;
+	var newPath = appDir + '/public/' + relativePath;
+	var savePath = appDir + '/public/' + 'res' + '/' + 'archives' + '/';
+	var zipName = projectTitle + '.zip';
+	var newZip = savePath + zipName;
 
 	// check for existing parent directory, create if needed
 	if (!fs.existsSync(savePath)) {
 		fs.mkdirSync(savePath);
 	}
 
-  //console.log(newPath);
-
-  var output = fs.createWriteStream(newZip);
+	var output = fs.createWriteStream(newZip);
 	var archive = archiver('zip');
 
 	output.on('close', function() {
@@ -2815,7 +3130,9 @@ exports.downloadSelectedAuditions = function(req, res, next){
 
     // add all booked auditions
     for(var i = 0; i < selAuds.length; ++i){
-    	archive.file(newPath + selAuds[i], { name:selAuds[i] });
+		if (fs.existsSync(newPath + selAuds[i])) {
+			archive.file(newPath + selAuds[i], { name:selAuds[i] });
+		}
     }
 
     archive.pipe(output);
@@ -2840,15 +3157,34 @@ exports.bookAuditions = function(req, res, next){
 
 			var selAuds = [];
 
-			async.eachSeries(project.auditions, function (audition, auditionCallback) {
+			async.eachSeries(project.auditions, function (audition, next) {
 				if(audition.selected === true && (typeof audition.booked === 'undefined' || audition.booked === false)){
 					audition.booked = true;
 					selAuds.push(audition);
 				}
-				auditionCallback();
+				next();
 			}, function (err) {
 				done(err, selAuds, project);
-	   	});
+			});
+		},
+		// update status for new selected booked auditions
+		function(selAuds, project, done) {
+			
+			// gather audition data from auditions collection
+			Audition.find({'project': project._id}).sort('-created').exec(function(err, auditions) {
+				if (!err) {
+					async.eachSeries(auditions, function (audition, next) {
+						if(audition.selected === true && (typeof audition.booked === 'undefined' || audition.booked === false)){
+							audition.booked = true;							
+							selAuds.push(audition);
+							audition.save();
+						}
+						next();
+					}, function (err) {
+						done(err, selAuds, project);
+					});
+				}
+			});
 		},
 		// update project
 		function(selAuds, project, done) {
@@ -2864,6 +3200,7 @@ exports.bookAuditions = function(req, res, next){
 				project.save(function(err) {
 					var socketio = req.app.get('socketio');
 						socketio.sockets.emit('projectUpdate', {id: project._id});
+						socketio.sockets.emit('auditionUpdate', {id: project._id});
 						socketio.sockets.emit('callListUpdate', {filter: ''});
 						done(err, selAuds, project);
 				});
@@ -2884,7 +3221,7 @@ exports.bookAuditions = function(req, res, next){
 
 			}, function (err) {
 				done(err, clients, selAuds, project);
-	   	});
+		   	});
 		},
 		function(clients, selAuds, project, done){
 
@@ -2981,7 +3318,7 @@ exports.bookAuditions = function(req, res, next){
 exports.backupProjectsById = function(req, res, next){
 
 	// get app dir
-	var appDir = path.dirname(require.main.filename);
+  var appDir = global.appRoot;
   var archivesPath = appDir + '/public/' + 'res' + '/' + 'archives' + '/';
 	var curDate = moment().format('MMM Do YY');
 	var zippedFilename = 'Auditions Project Backup Bundle - ' + curDate + '.zip';
@@ -3128,8 +3465,13 @@ exports.uploadBackup = function(req, res, next){
     var auditionsBackupDir, scriptsBackupDir, referenceFilesBackupDir;
 
     //var file = req.files.file;
-    var appDir = path.dirname(require.main.filename);
+    var appDir = global.appRoot;
     var tempPath = file.path;
+    // check for passenger buffer file location
+    var passDir = '/usr/share/passenger/helper-scripts/public/res/' + 'archives/' + 'backups/' + file.name;
+    if(fs.existsSync(passDir)){
+      tempPath = passDir;
+    }
 	var archivesPath = appDir + '/public/' + 'res' + '/' + 'archives' + '/';
 	var backupPath = archivesPath + 'backups/';
 	var savePath = archivesPath + file.name;
@@ -3299,7 +3641,9 @@ exports.uploadTalentAudition = function(req, res, next){
 	var talentId = req.body.talent;
 
 	// get app dir
-	var appDir = path.dirname(require.main.filename);
+  var appDir = global.appRoot;
+  // check for passenger buffer file location
+  var auditionsTempPath = '/usr/share/passenger/helper-scripts/public/res' + '/' + 'auditions' + '/' + 'temp' + '/';
   var auditionsPath = appDir + '/public/' + 'res' + '/' + 'auditions' + '/' + 'temp' + '/';
 	var talentUploadParent = appDir + '/public/' + 'res' + '/' + 'talentUploads' + '/';
 	var talentUploadPath = talentUploadParent + project._id + '/';
@@ -3325,7 +3669,7 @@ exports.uploadTalentAudition = function(req, res, next){
 			async.eachSeries(auditions, function (audition, auditionCallback) {
 
 				// move submitted auditions to new location
-				tempPath = auditionsPath + audition.file.name;
+				tempPath = auditionsTempPath + audition.file.name;
 				savePath = talentUploadTalentPath + audition.file.name;
 
 				mv(tempPath, savePath, function(err) {

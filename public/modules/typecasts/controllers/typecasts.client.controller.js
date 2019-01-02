@@ -30,7 +30,7 @@ angular.module('typecasts').controller('TypecastsController', ['$scope', '$state
 
 		$scope.permitAdminDirector = function(){
 
-			var allowRoles = ['admin', 'producer/auditions director','talent director'],
+			var allowRoles = ['admin', 'producer/auditions director', 'audio intern','talent director'],
 					i = 0,
 					j = 0,
 					authRoles = Authentication.user.roles,

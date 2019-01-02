@@ -6,6 +6,7 @@
 var mongoose = require('mongoose'),
 	errorHandler = require('./errors'),
 	Project = mongoose.model('Project'),
+    Audition = mongoose.model('Audition'),
 	User = mongoose.model('User'),
 	Talent = mongoose.model('Talent'),
 	Typecast = mongoose.model('Typecast'),
@@ -52,7 +53,7 @@ exports.emailMissingAuds = function(req, res){
 					});
 				},
 				function(admins, done) {
-					User.find({'roles':'producer/auditions director'}).sort('-created').exec(function(err, directors) {
+					User.find({'roles':{ $in: ['producer/auditions director', 'audio intern']}}).sort('-created').exec(function(err, directors) {
 						done(err, admins, directors);
 					});
 				},
@@ -446,11 +447,17 @@ var pCStatsData = {
 };
 
 // generate start dates
+//var yesterday = new Date(req.body.dateFilterStart);
+//	yesterday.setDate(yesterday.getDate() - 1);
+//	var tomorrow = new Date(req.body.dateFilterEnd);
+//	tomorrow.setDate(tomorrow.getDate() + 1);
 var yesterday = new Date(req.body.dateFilterStart);
-	yesterday.setDate(yesterday.getDate() - 1);
+	yesterday.setDate(yesterday.getDate());
+    yesterday.setHours(0, 0, 0);
 	var tomorrow = new Date(req.body.dateFilterEnd);
-	tomorrow.setDate(tomorrow.getDate() + 1);
-
+	tomorrow.setDate(tomorrow.getDate());
+    tomorrow.setHours(23, 59, 59);
+    
 	// assign filter criteria
 	var searchCriteria = {'estimatedCompletionDate': {$gte: yesterday, $lt: tomorrow}};
 
@@ -621,5 +628,104 @@ exports.systemStats = function(req, res, next){
 					);
 			}
 	);
+
+};
+
+exports.findAudsPerProducer = function(req, res, next){
+    
+//    // generate start dates
+//	var yesterday = new Date(req.body.dateFilter);
+//	//yesterday.setDate(yesterday.getDate() - 1);
+//	var tomorrow = new Date(req.body.dateFilter);
+//	tomorrow.setDate(tomorrow.getDate() + 1);
+// generate start dates
+var yesterday = new Date(req.body.dateFilterStart);
+	yesterday.setDate(yesterday.getDate());
+    yesterday.setHours(0, 0, 0);
+	var tomorrow = new Date(req.body.dateFilterEnd);
+	tomorrow.setDate(tomorrow.getDate());
+    tomorrow.setHours(23, 59, 59);
+    
+    var audsResult = {};
+
+	// assign filter criteria
+	var searchCriteria = {'created': {$gte: yesterday, $lt: tomorrow}};
+
+    // walk found auditions
+	Audition.find(searchCriteria).sort('-created').exec(function(err, auditions) {
+        if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			// walk through found projects
+			async.eachSeries(auditions, function (audition, callback) {
+                
+                // load project auditions
+                if(typeof audition.approved.by.userId !== 'undefined'){
+                    User.findOne({'_id':audition.approved.by.userId}).sort('-created').exec(function(err, user) {
+                        if (err) {
+                        } else if(typeof user !== 'undefined'){
+                            if(typeof audsResult[audition.approved.by.userId] == 'undefined'){
+                                //console.log(audition.approved);
+                                audsResult[audition.approved.by.userId] = {};
+                                audsResult[audition.approved.by.userId].name = user.firstName + ' ' + user.lastName;
+                                audsResult[audition.approved.by.userId].email = user.email;
+                                audsResult[audition.approved.by.userId].username = user.username;
+                                audsResult[audition.approved.by.userId].projects = {};
+                                audsResult[audition.approved.by.userId].projects[audition.project] = {};
+                                audsResult[audition.approved.by.userId].projects[audition.project].title = audition.project;
+                                Project.findOne({'_id':audition.project}).sort('-created').exec(function(err, project) {
+                                    if (err) {
+                                        audsResult[audition.approved.by.userId].projects[audition.project].title = audition.project;
+                                    } else if(typeof project != 'undefined'){
+                                        audsResult[audition.approved.by.userId].projects[audition.project].title = project.title;
+                                    }
+                                });
+                                
+                                audsResult[audition.approved.by.userId].projects[audition.project].count = 1;
+
+                                audsResult[audition.approved.by.userId].count = 1;
+                            } else {
+                                
+                                if(typeof audsResult[audition.approved.by.userId].projects[audition.project] == 'undefined'){
+                                    audsResult[audition.approved.by.userId].projects[audition.project] = {};
+                                    
+                                    audsResult[audition.approved.by.userId].projects[audition.project].title = audition.project;
+                                    Project.findOne({'_id':audition.project}).sort('-created').exec(function(err, project) {
+                                        if (err) {
+                                            audsResult[audition.approved.by.userId].projects[audition.project].title = audition.project;
+                                        } else if(typeof project != 'undefined'){
+                                            audsResult[audition.approved.by.userId].projects[audition.project].title = project.title;
+                                        }
+                                    });
+                                    
+                                    audsResult[audition.approved.by.userId].projects[audition.project].count = 1;
+                                } else {
+                                    audsResult[audition.approved.by.userId].projects[audition.project].count += 1;
+                                }
+                                
+                                audsResult[audition.approved.by.userId].count += 1;
+
+                            }
+                        }
+                        
+                        callback();
+                    });
+                } else {
+                    callback();
+                }
+                
+            }, function (err) {
+                if( err ) {
+                    return res.status(400).send({
+                        message: errorHandler.getErrorMessage(err)
+                    });
+                } else {
+                    return res.jsonp(audsResult);
+                }
+            });
+        }
+    });
 
 };

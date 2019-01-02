@@ -78,6 +78,20 @@ angular.module('reports').controller('ReportsController', ['$scope', '$statePara
 
 			//$scope.intervalID = window.setInterval($scope.systemInfo, 1000);
 		};
+        
+        
+		// find auditions uploaded per producer
+		$scope.findAudsPerProducer = function(){
+
+			$http.post('/reports/findAudsPerProducer',{
+                dateFilterStart: $scope.dateFilterStart,
+                dateFilterEnd: $scope.dateFilterEnd
+            }).
+			success(function(data, status, headers, config) {
+				$scope.audsPerProducer = data;
+			});
+
+		};
 
 	}
 ]);

@@ -1,8 +1,8 @@
 'use strict';
 
 // Talents controller
-angular.module('talents').controller('TalentsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Talents', '$http', '$rootScope', 'Socket',
-	function($scope, $stateParams, $location, Authentication, Talents, $http, $rootScope, Socket) {
+angular.module('talents').controller('TalentsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Talents', 'UsersFind', '$http', '$rootScope', 'Socket',
+	function($scope, $stateParams, $location, Authentication, Talents, UsersFind, $http, $rootScope, Socket) {
 		$scope.authentication = Authentication;
 
 		// talent static options
@@ -24,16 +24,30 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 		$scope.projectTalentIdx = [];
 		$scope.talentStatus = ['Cast', 'Emailed', 'Scheduled', 'Message left', 'Out', 'Received needs to be posted', 'Posted', 'Not Posted (Bad Read)', 'Missed', 'Canceled'];
 		$scope.archived = false;
+        $scope.producers = [];
+        //$scope.producers = UsersFind.query.where('userLevel').in(["producer/auditions director", 'audio intern', "admin"]);
+        UsersFind.query({userLevel: "producer/auditions director"}, function(users){
+            angular.forEach(users, function(user, key) {
+                $scope.producers.push(user);
+            });
+        });
+        UsersFind.query({userLevel: "admin"}, function(users){
+            angular.forEach(users, function(user, key) {
+                $scope.producers.push(user);
+            });
+            
+        });
+        //$scope.producers += UsersFind.query({userLevel: "admin"});
 
 		// clear mem leaks on controller destroy
 		$scope.$on('$destroy', function (event) {
-      Socket.removeAllListeners();
+          Socket.removeAllListeners();
 
-			// angular.forEach($scope.watchersObj, function(watcherObj, key) {
-			// 	watcherObj();
-			// 	delete $scope.watchersObj[key];
-			// });
-    });
+                // angular.forEach($scope.watchersObj, function(watcherObj, key) {
+                // 	watcherObj();
+                // 	delete $scope.watchersObj[key];
+                // });
+        });
 
 		// listing filter
 		$scope.startsWith = function (actual, expected) {

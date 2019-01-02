@@ -20,6 +20,10 @@ angular.module('reports').config(['$stateProvider',
 		state('serverStats', {
 			url: '/reports/server-stats',
 			templateUrl: 'modules/reports/views/server-stats.client.view.html'
+		}).
+		state('audsPerProducer', {
+			url: '/reports/auds-per-producer',
+			templateUrl: 'modules/reports/views/auds-per-producer.client.view.html'
 		});
 		// state('createReport', {
 		// 	url: '/reports/create',

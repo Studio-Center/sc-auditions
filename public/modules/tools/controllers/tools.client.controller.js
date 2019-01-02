@@ -6,6 +6,8 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 		$scope.authentication = Authentication;
 
 		// scope variables
+		$scope.projectsTotalCnt = 0;
+		$scope.project = {};
 		$scope.failed = [];
 		$scope.alerts = [];
 		$scope.verifySelected = [];
@@ -30,6 +32,10 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 		$scope.selectAll = '';
 		$scope.projects = [];
 		$scope.projectsList = [];
+		// filter vars
+		$scope.predicate = '';
+		$scope.reverse = '';
+		$scope.searchText = {};
 
 		// spreadsheet processing
 		$scope.google = {
@@ -59,6 +65,9 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 		// used for paginator
 		$scope.Math = window.Math;
 		$scope.currentPage = 0;
+		$scope.filtered = [];
+		$scope.limit = 20;
+		$scope.queryLimit = 50;
 		$scope.range = function(min, max, step){
 		    step = step || 1;
 		    var input = [];
@@ -67,7 +76,20 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 		};
 	    $scope.setPage = function () {
 	        $scope.currentPage = this.n;
+			
+			// reload list of projects
+			$scope.findLimitWithFilter();
 	    };
+		$scope.changePage = function(page){
+			var curSel = page * $scope.limit;
+
+			if(curSel < $scope.projectsTotalCnt && curSel >= 0){
+				$scope.currentPage = page;
+
+					$scope.findLimitWithFilter();
+			}
+		};
+
 
 		// toggle checkbox options
 		$scope.toggleEmailer = function(id,talent){
@@ -149,7 +171,11 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 				    }).
 					success(function(data, status, headers, config) {
 						alert('Talent has been emailed!');
+					}).
+					error(function(data, status, headers, config){
+						alert('An error occured while attempting to email selected clients. ' + String(data.message));
 					});
+
 				} else {
 					alert('Email subject and message cannot be empty!');
 				}
@@ -264,11 +290,85 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 			});
 
 		};
+		
+		// get count of all projects in db
+		$scope.getProjectsCnt = function(){
+
+			// gen filter object
+			var filterObj = $scope.getFilterVars();
+
+			$http.post('/projects/getProjectsCnt', {
+				filter: filterObj
+			}).
+			success(function(data, status, headers, config) {
+				$scope.projectsTotalCnt = data;
+			});
+
+		};
+		
+		// gather filter values
+		$scope.getFilterVars = function(){
+			// det start val
+			var filterObj = {};
+			// filter by title
+			if($scope.searchText.title){
+				filterObj.title = $scope.searchText.title;
+			}
+			if($scope.searchText.description){
+				filterObj.description = $scope.searchText.description;
+			}
+			// filter sort options
+			if($scope.sortText){
+				filterObj.sortOrder = $scope.sortText;
+			} else {
+				filterObj.sortOrder = 'created';
+			}
+			// filter data order
+			if($scope.sortTextOrder){
+				filterObj.ascDesc = $scope.sortTextOrder;
+			} else {
+				filterObj.ascDesc = 'desc';
+			}
+			// filter out users projects
+			if($scope.searchText.user){
+				filterObj.myProjects = true;
+			} else {
+				filterObj.myProjects = false;
+			}
+			// filter in Progress
+			if($scope.searchText.status){
+				filterObj.status = 'In Progress';
+			}
+
+			return filterObj;
+		};
 
 		// delete projects methods
 		$scope.findProjects = function(){
 			$scope.projects = Projects.query();
 		};
+		
+		// retrieve set number of projects with server side filtration
+		$scope.findLimitWithFilter = function(){
+
+			// det start val
+			var startVal = $scope.currentPage * $scope.limit;
+			// gather filter objects
+			var filterObj = $scope.getFilterVars();
+
+			$http.post('/projects/findLimitWithFilter', {
+				startVal: startVal,
+				limitVal: $scope.limit,
+				filter: filterObj
+			}).
+			success(function(data, status, headers, config) {
+				$scope.projects = [];
+				$scope.projects = data;
+				$scope.getProjectsCnt();
+			});
+
+		};
+
 		$scope.toggleProject = function(id){
 			  var idx = $scope.projectsList.indexOf(id);
 			  if (idx > -1){
@@ -305,7 +405,7 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 					var concon = confirm('Are you sure you\'re sure?');
 					if(concon === true){
 						for(i = 0; i < limit; ++i){
-							performDeleteProject(i);
+							$scope.performDeleteProject(i);
 						}
 					}
 				}
@@ -314,7 +414,7 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 			}
 		};
 
-		var performDeleteProject = function(i){
+		$scope.performDeleteProject = function(i){
 			$http.post('/projects/deleteProjectById', {
 		        projectId: $scope.projectsList[i]
 		    }).
@@ -357,11 +457,11 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 			for (i = 0; i < limit; i++) {
 				var file = $files[i];
 
-				performUploadBackupFile(file, i, $files);
+				$scope.performUploadBackupFile(file, i, $files);
 			}
 		};
 
-		var performUploadBackupFile = function(file, i, $files){
+		$scope.performUploadBackupFile = function(file, i, $files){
 			$scope.upload = $upload.upload({
 			    url: 'projects/uploadBackup', //upload.php script, node.js route, or servlet url
 			    data: {},
@@ -383,11 +483,11 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 			for (i = 0; i < limit; i++) {
 				var file = $files[i];
 
-				performUploadTalentFile(file, i, $files);
+				$scope.performUploadTalentFile(file, i, $files);
 			}
 		};
 
-		var performUploadTalentFile = function(file, i, $files){
+		$scope.performUploadTalentFile = function(file, i, $files){
 			$scope.upload = $upload.upload({
 			    url: 'tools/uploadTalentCSV', //upload.php script, node.js route, or servlet url
 			    data: {},

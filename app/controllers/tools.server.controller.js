@@ -27,8 +27,9 @@ var mongoose = require('mongoose'),
 
 /* custom tools methods */
 exports.sendTalentEmails = function(req, res){
-	var email = req.body.email;
-	var emailClients = req.body.emailClients;
+	var email = req.body.email,
+		emailClients = req.body.emailClients,
+		log = {};
 
 	// email all talents if email all is set to true
 	if(email.all === true){
@@ -111,6 +112,15 @@ exports.sendTalentEmails = function(req, res){
 				}
 				], function(err) {
 					if(err){
+						log = {
+							type: 'error',
+							sharedKey: 'na',
+							description: 'Talent Emailer ' + String(errorHandler.getErrorMessage(err)),
+							user: req.user
+						};
+						log = new Log(log);
+						log.save();
+
 						return res.status(400).send({
 							message: errorHandler.getErrorMessage(err)
 						});
@@ -374,6 +384,7 @@ exports.sendPreCloseSummary = function(req, res){
 					var searchGroups = [
 										'admin',
 										'producer/auditions director',
+                                        'audio intern',
 										'production coordinator',
 										'talent director'
 										];

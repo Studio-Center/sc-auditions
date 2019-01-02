@@ -22,7 +22,7 @@ exports.create = function(req, res) {
 	var talent = new Talent(req.body);
 	talent.user = req.user;
 
-	var allowedRoles = ['admin', 'production coordinator', 'producer/auditions director', 'talent director'];
+	var allowedRoles = ['admin', 'production coordinator', 'producer/auditions director', 'audio intern', 'talent director'];
 
 	if (_.intersection(req.user.roles, allowedRoles).length) {
 		//console.log(talent);
@@ -170,7 +170,7 @@ exports.create = function(req, res) {
 					var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
 
 					var mailOptions = {
-										to: 'Ken@studiocenter.com',
+										to: ['Ken@studiocenter.com', 'edwin@studiocenter.com'],
 										from: req.user.email || config.mailer.from,
 										replyTo: req.user.email || config.mailer.from,
 										cc: config.mailer.notifications,
@@ -497,7 +497,7 @@ exports.talentByID = function(req, res, next, id) { Talent.findById(id).populate
  * Talent authorization middleware
  */
 exports.hasAuthorization = function(req, res, next) {
-	var allowedRoles = ['admin','producer/auditions director', 'production coordinator', 'talent director'];
+	var allowedRoles = ['admin','producer/auditions director', 'audio intern', 'production coordinator', 'talent director'];
 
 	if (!_.intersection(req.user.roles, allowedRoles).length) {
 		return res.status(403).send('User is not authorized');

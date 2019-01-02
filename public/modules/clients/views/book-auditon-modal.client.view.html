@@ -9,6 +9,36 @@
 				<th>Name</th>
 				<th>Playback</th>
 			</tr>
+			
+			<!-- new aud listing print -->
+			<tr  ng-repeat="(key, audition) in selectedAudsNew">
+				<td>
+					<strong>{{key+1}}.</strong>
+				</td>
+				<td>
+					<a href="/res/auditions/{{project._id}}/{{audition.file.name | encodeUri}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable">ngAudio</a>
+				</td>
+				<td>
+					<span ng-show="verifyAudioSingle(audition)">
+						<button ng-click="playAudioSingle(key, audition)" class="btn btn-primary">
+							<span ng-if="lastAudioID == key && audioStatus == 1">
+								<img src="/img/Aqua-Pause-icon.png" style="width:35px;height:auto" alt="pause icon">
+								<div ng-if="!audio.mobile">
+									<input class="form-control" type="range" min="0" max="1" step="0.01" ng-model="audio.progress">
+								</div>
+							</span>
+							<span ng-if="lastAudioID != key || audioStatus != 1">
+								<img src="/img/aqua-play-icon.png" style="width:35px;height:auto" alt="play icon">
+							</span>
+						</button>
+						<button ng-click="stopAudio()" class="btn btn-primary" ng-if="lastAudioID == key && audioStatus == 1" ng-show="!audio.mobile">
+							<img src="/img/Aqua-Stop-icon.png" style="width:35px;height:auto" alt="stop icon">
+						</button>
+					</span>
+				</td>
+			</tr>
+			
+			<!-- old aud listing print -->
 			<tr  ng-repeat="(key, audition) in selectedAuds">
 				<td>
 					<strong>{{key+1}}.</strong>
@@ -35,6 +65,7 @@
 					</span>
 				</td>
 			</tr>
+			
 		</table>
 	</div>
 	<div class="modal-footer">

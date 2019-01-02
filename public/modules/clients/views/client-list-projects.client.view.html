@@ -38,11 +38,11 @@
 
 		</div>
 
-		<div class="row audition" ng-if="project.auditions.length == 0">
+		<div class="row audition" ng-if="project.auditions.length == 0 && projAuditions.length == 0">
 			<p style="text-align:center"><strong>We are working hard on your auditions, please check back soon as we will be posting them throughout the day.</strong></p>
 		</div>
 
-		<div class="row audition" ng-if="project.auditions.length > 0">
+		<div class="row audition" ng-if="project.auditions.length > 0 || projAuditions.length > 0">
 
 			<div class="panel panel-default">
 
@@ -71,6 +71,54 @@
 									</th>
 									<th>Hide</th>
 								</tr>
+								
+							<!-- new client auditions display method -->
+							<tr ng-repeat="(key, audition) in projAuditions | filter:{published:true} | orderBy:predicate:reverse" ng-if="isDisplayedSingle(audition) && (audition.filecheck === 1 || (audition.filecheckdate === undefined || audition.filecheckdate === ''))">
+								<td>
+									<input style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin:10px" ng-if="!audition.booked" type="checkbox" ng-click="updateSelectedSingle(audition)" ng-checked="checkSelectedSingle(audition)">
+
+									<img ng-if="audition.booked" src="/img/green-check.png" style="width:30px;height:auto">
+								</td>
+								<td>
+									<a href="/res/auditions/{{::project._id}}/{{::audition.file.name | encodeUri}}" target="_blank" data-ng-bind="audition.file.name" class="inline-playable" download="{{::audition.file.name}}">ngAudio</a>
+								</td>
+								<td>
+									<rating ng-model="audition.curRating" readonly="false" ng-click="updateRatingSingle(audition)" max="max" on-leave="overStar = lookUpRatingSingle(audition)" on-hover="hoveringOver(value,key)"></rating>
+								</td>
+								<td>
+									<span ng-show="verifyAudioSingle(audition)">
+										<button ng-click="playAudioSingle(key, audition)" class="btn btn-primary">
+                      						<span ng-if="lastAudioID == key && audioStatus == 1">
+												<img src="/img/Aqua-Pause-icon.png" style="width:35px;height:auto" alt="pause icon">
+												<div ng-if="!audio.mobile">
+													<input class="form-control" type="range" min="0" max="1" step="0.01" ng-model="audio.progress">
+												</div>
+											</span>
+											<span ng-if="lastAudioID != key || audioStatus != 1">
+												<img src="/img/aqua-play-icon.png" style="width:35px;height:auto" alt="play icon">
+											</span>
+										</button>
+										<button ng-click="stopAudio()" class="btn btn-primary" ng-if="lastAudioID == key && audioStatus == 1" ng-show="!audio.mobile">
+											<img src="/img/Aqua-Stop-icon.png" style="width:35px;height:auto" alt="stop icon">
+										</button>
+									</span>
+								</td>
+								<td style="text-align:center">
+									<span ng-if="audition.favorite == 1">
+										<a href="" ng-click="updateFavoriteSingle(audition)"><img style="width:35px;height:auto" src="/img/gold-trophy.png" alt="favorited audition"></a>
+									</span>
+									<span ng-if="audition.favorite != 1">
+										<a href="" ng-click="updateFavoriteSingle(audition)"><img style="width:35px;height:auto" src="/img/gray-trophy.png" alt="favorited audition"></a>
+									</span>
+								</td>
+								<td>
+									<button ng-click="hideAuditionSingle(audition)" ng-show="audition.hidden == false || audition.hidden == undefined" class="btn btn-primary">Hide</button>
+									<button ng-click="showAuditionSingle(audition)" ng-show="audition.hidden == true" class="btn btn-danger">Show</button>
+								</td>
+
+							</tr>
+
+							<!-- old client auditions display method -->
 							<tr ng-repeat="(key, audition) in project.auditions | filter:{published:true} | orderBy:predicate:reverse" ng-if="isDisplayed(audition.file.path) && (audition.filecheck === 1 || (audition.filecheckdate === undefined || audition.filecheckdate === ''))">
 								<td>
 									<input style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin:10px" ng-if="!audition.booked" type="checkbox" ng-click="updateSelected(audition.file.path)" ng-checked="checkSelected(audition.file.path)">

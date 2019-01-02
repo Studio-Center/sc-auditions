@@ -15,7 +15,8 @@ var ProjectSchema = new Schema({
 		default: Date.now
 	},
 	modified: {
-		type: Date
+		type: Date,
+		default: Date.now
 	},
 	owner: {
 		type: String
@@ -158,9 +159,9 @@ var ProjectSchema = new Schema({
 /**
  * Hook append default project phases
  */
-ProjectSchema.pre('save', function(next) {
-
-	next();
-});
+//ProjectSchema.pre('save', function(next) {
+//
+//	next();
+//});
 
 mongoose.model('Project', ProjectSchema);

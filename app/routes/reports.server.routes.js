@@ -27,6 +27,8 @@ module.exports = function(app) {
 
 	app.route('/reports/systemStats')
 		.post(users.requiresLogin, reports.systemStats);
-
+    
+	app.route('/reports/findAudsPerProducer')
+		.post(users.requiresLogin, reports.findAudsPerProducer);
 
 };

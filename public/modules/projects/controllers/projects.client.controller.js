@@ -28,6 +28,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		//ngAudioGlobals.unlock = false;
 		$scope.clientNotes = '';
 		$scope.auditions = [];
+		$scope.projAuditions = [];
 		$scope.projProgress = [];
 		$scope.selCheckVal = 0;
 		$scope.client = [];
@@ -86,6 +87,21 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			// 	delete $scope.watchersObj[key];
 			// });
     });
+		
+		var loadAuditions = function(){
+		
+			// load project audition files
+			$http.post('/projects/loadAuditions', {
+				projectId: $stateParams.projectId
+			// file found
+			}).success(function(data, status, headers, config) {
+				$scope.projAuditions = data;
+			// file not found
+			}).error(function(data, status, headers, config) {
+				console.log('Problem loading project auditions.');
+			});
+	
+		};
 
 		$scope.toggleShowRename = function(idx){
 			if($scope.showRename[idx]) {
@@ -228,19 +244,19 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
   	// download all auditions from project
   	$scope.downloadAllAuditions = function(){
 
-			$http.post('/projects/downloadallauditions', {
-		        project: $scope.project
-		    }).
-			success(function(data, status, headers, config) {
-				// send data to users browser
-				// wait one second for archive processing on server
-				setTimeout(
-					function(){
-						window.location.href = 'res/archives/' + encodeURIComponent(data.zip);
-					},
-				    1000
-				);
-			});
+		$http.post('/projects/downloadallauditions', {
+			project: $scope.project
+		}).
+		success(function(data, status, headers, config) {
+			// send data to users browser
+			// wait one second for archive processing on server
+			setTimeout(
+				function(){
+					window.location.href = 'res/archives/' + encodeURIComponent(data.zip);
+				},
+				1000
+			);
+		});
   	};
 
   	// compare dates check for within hour
@@ -332,7 +348,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
  			return true;
    	};
    	$scope.defaults = function(){
-   		var allowRoles = ['producer/auditions director'],
+   		var allowRoles = ['producer/auditions director', 'audio intern'],
 					limitAllow = allowRoles.length,
 					roles = Authentication.user.roles,
 					limit = roles.length,
@@ -379,7 +395,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.userCheck = function(){
 			var authRoles = Authentication.user.roles;
 
-			if(authRoles[0] !== 'admin' && authRoles[0] !== 'producer/auditions director' && authRoles[0] !== 'production coordinator'){
+			if(authRoles[0] !== 'admin' && authRoles[0] !== 'producer/auditions director' && authRoles[0] !== 'audio intern' && authRoles[0] !== 'production coordinator'){
 				$location.path('/projects');
 			}
 		};
@@ -414,8 +430,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		// send various client emails
 		$scope.sendClientEmail = function(type){
 			var selectedMainClients = $scope.selectedMainClients,
-					project = $scope.project,
-					authUser = Authentication.user;
+				project = $scope.project,
+				authUser = Authentication.user;
 
 			if(selectedMainClients.length > 0){
 
@@ -428,7 +444,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
     		}
     		project.counts[type] += 1;
 
-				$http.post('/projects/sendclientemail', {
+			$http.post('/projects/sendclientemail', {
 		        type: type,
 		        project: project,
 		        clients: selectedMainClients,
@@ -467,8 +483,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       		project.discussion.push(item);
 
       		// update project store
-					//$scope.update();
-					$scope.updateNoRefresh();
+			//$scope.update();
+			$scope.updateNoRefresh();
       	}).
 				error(function(data, status, headers, config) {
 					alert('An error occured while sending client emails. Please contact your administrator.');
@@ -725,18 +741,25 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				talents.push(talent);
 
 				log = {
-							type: 'talent',
-							sharedKey: talent.talentId,
-							description: 'talent ' + talent.name + ' added to project  ' + $scope.project.title
-						};
+						type: 'talent',
+						sharedKey: talent.talentId,
+						description: 'talent ' + talent.name + ' added to project  ' + $scope.project.title
+					};
 
 				$scope.project.log = log;
+				
+				// send talent director email
+				$http.post('/projects/sendTalentDirectorsEmail', {
+					talent: talent,
+					projectId: $scope.project._id
+				});
+
 			}
 
 			$http.post('/projects/sendTalentEmail', {
-	        talent: talent,
-	        project: $scope.project
-	    }).
+				talent: talent,
+				project: $scope.project
+			}).
 			success(function(data, status, headers, config) {
 				$scope.project = angular.extend($scope.project, data);
 				$scope.addTalent = true;
@@ -971,11 +994,12 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					i = 0;
 
 			// gen user object
-			var found = 0,user = {
-									'userId': userId,
-									'name': displayName,
-									'email': email
-								};
+			var found = 0,
+				user = {
+							'userId': userId,
+							'name': displayName,
+							'email': email
+						};
 
 			// check for existing item
 			for(i = 0; i < limit; ++i){
@@ -1215,7 +1239,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}).success(function(data, status, headers, config) {
 
 				// update local project document
-				$scope.project = angular.extend($scope.project, data);
+				if(data){
+					$scope.project = angular.extend($scope.project, data);
+				}
 
 				// remove update overlay
 				$scope.processing = false;
@@ -1494,6 +1520,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			if($scope.searchText.status){
 				filterObj.status = 'In Progress';
 			}
+			// filter in Progress
+			if($scope.searchText.clientEmail){
+				filterObj.clientEmail = $scope.searchText.clientEmail;
+			}
 
 			return filterObj;
 		};
@@ -1539,11 +1569,14 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				startVal: startVal,
 				limitVal: $scope.limit,
 				filter: filterObj
-	    }).
+			}).
 			success(function(data, status, headers, config) {
 				$scope.projects = [];
 				$scope.projects = data;
 				$scope.getProjectsCnt();
+			}).error(function (data, status, headers, config) {
+                console.log(status);
+				console.log(data);
 			});
 
 		};
@@ -1590,6 +1623,19 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		});
 
+		// reload auditions if single aud updated
+		Socket.on('auditionUpdate', function(pojectID) {
+
+			var project = $scope.project;
+
+			if(String(pojectID.id) === String(project._id)){
+				
+				loadAuditions();
+				
+			}
+
+		});
+
 		// Find existing Project
 		$scope.findOne = function() {
 			$scope.project = Projects.get({
@@ -1620,6 +1666,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}).error(function(data, status, headers, config) {
 				console.log('Problem loading project.');
 			});
+			
+			loadAuditions();
 
 		};
 
@@ -1673,14 +1721,14 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		};
 
 		// check files
-		$scope.checkFileWalk = function(){
+		$scope.checkFileWalk = function(emitStatus){
 			var auditions = $scope.project.auditions;
 
 			if(auditions){
 				var fn,
-						file,
-						limit = auditions.length,
-						project = $scope.project;
+					file,
+					limit = auditions.length,
+					project = $scope.project;
 
 				angular.forEach(auditions, function(value, key){
 
@@ -1710,8 +1758,12 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 					}
 
-					if(key === (limit.length-1)) {
+					if(key === (limit-1)) {
 						$scope.fileCheck = true;
+
+						if(typeof emitStatus !== 'undefined' || emitStatus === 1){
+							alert('File check complete.');
+						}
 					}
 
 				});
@@ -1732,7 +1784,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 				// init file check walk on reset finish
 				if((i+1) === limit){
-					$scope.checkFileWalk();
+					$scope.checkFileWalk(1);
 				}
 			}
 
@@ -2058,8 +2110,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.updateTalentAssignedStatus = function(selTalent){
 
 			var talents = $scope.project.talent,
-					limit = talents.length,
-					i = 0;
+				limit = talents.length,
+				i = 0;
 
 			// update talents with posted status for uploaded talent
 			for(i = 0;i < limit; ++i){
@@ -2084,8 +2136,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				var file = '/res/scripts/' + project._id + '/' + project.scripts[idx].file.name;
 
 				$http.put('/projects/deletefile', {
-	        fileLocation: file
-			  });
+					fileLocation: file,
+					projectId: project._id
+				  });
 
 				project.scripts.splice(idx, 1);
 
@@ -2114,34 +2167,27 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		    $scope.newProject.copiedScripts.splice(idx, 1);
 		};
 
-		var performScriptUpload = function(file, i, $files){
+	var performScriptUpload = function(file, i, $files){
 
-			var project = $scope.project;
+		var project = $scope.project;
 
-  		$scope.upload = $upload.upload({
-        url: 'projects/uploads/script', //upload.php script, node.js route, or servlet url
-        //method: 'POST' or 'PUT',
-        data: {projectId: project._id},
-        file: file, // or list of files ($files) for html5 only
-      }).progress(function(evt) {
-        $scope.uploadStatus = (i + 1) + ' of ' + $files.length + ' files uploaded';
-      	$scope.uploadfile = evt.config.file.name;
-        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
-        }).success(function(data, status, headers, config) {
-        // file is uploaded successfully
-				//$scope.project = angular.extend($scope.project, data);
+		$scope.upload = $upload.upload({
+			url: 'projects/uploads/script', //upload.php script, node.js route, or servlet url
+			//method: 'POST' or 'PUT',
+			data: {projectId: project._id},
+			file: file, // or list of files ($files) for html5 only
+		  }).progress(function(evt) {
+			$scope.uploadStatus = (i + 1) + ' of ' + $files.length + ' files uploaded';
+			$scope.uploadfile = evt.config.file.name;
+			$scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
+			}).success(function(data, status, headers, config) {
+			// file is uploaded successfully
+			//$scope.project = angular.extend($scope.project, data);
 
 				project.scripts.push(data);
 
 				// save project on finish
 				if((i+1) === $files.length){
-
-					// send out update emails to assigned project talentIds
-					$http.post('/projects/sendTalentScriptUpdateEmail', {
-						projectId: project._id,
-						talents: project.talent,
-						chgMade: 'Script'
-					});
 
 					// generate new system note
 					var now = Date.now();
@@ -2153,23 +2199,31 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 						item: note,
 						deleted: false
 					};
-      		// add to project discussion
-      		$scope.project.discussion.push(item);
+					
+					// add to project discussion
+					$scope.project.discussion.push(item);
 
 					// send note email
 					$scope.gatherToAddresses('saveDiscussion');
-			    $scope.email.subject = project.title + ' - ' + note;
-			    $scope.email.message = 'Project: ' + project.title + '<br>';
-			    $scope.email.message += 'Added by: System<br>';
-					$scope.email.message += 'Discussion Item: ' + note + '<br>';
-			    $scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 || $location.port() !== 443 ? ':' + $location.port() : '') + '/#!/projects/' + project._id + '<br>';
+					$scope.email.subject = project.title + ' - ' + note;
+					$scope.email.message = 'Project: ' + project.title + '<br>';
+					$scope.email.message += 'Added by: System<br>';
+						$scope.email.message += 'Discussion Item: ' + note + '<br>';
+					$scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 || $location.port() !== 443 ? ':' + $location.port() : '') + '/#!/projects/' + project._id + '<br>';
 
-			    $http.post('/projects/sendemail', {
+					$http.post('/projects/sendemail', {
 						email: $scope.email
 					});
 
 					// update project store
 					$scope.updateNoRefresh();
+
+					// send out update emails to assigned project talentIds
+					$http.post('/projects/sendTalentScriptUpdateEmail', {
+						projectId: project._id,
+						talents: project.talent,
+						chgMade: 'Script'
+					});
 
 				}
 
@@ -2177,13 +2231,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
   	};
 
   	// upload script file
-		$scope.uploadScript = function($files) {
+	$scope.uploadScript = function($files) {
 	    angular.forEach($files, function(file, key) {
 	      performScriptUpload(file, key, $files);
-			});
+		});
   	};
 
-		var performUploadTempScript = function(file, i, $files){
+	var performUploadTempScript = function(file, i, $files){
 		  $scope.upload = $upload.upload({
         url: 'projects/uploads/script/temp', //upload.php script, node.js route, or servlet url
         data: {
@@ -2211,6 +2265,126 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
   		// update project store
 			$scope.updateNoRefresh();
   	};
+	
+	// save modified audition
+	var saveAudition = function(audition){
+		
+		$http.post('/projects/saveAudition', {
+			audition: audition
+		// file found
+		}).success(function(data, status, headers, config) {
+			// reload auditions
+			loadAuditions();
+		// file not saved
+		}).error(function(data, status, headers, config) {
+			console.log('Problem saving audition.');
+		});
+	
+	};
+
+	// update project when audition talent assignment is adjusted
+	$scope.updateTalentAssignedStatusSingle = function(audition){
+
+		var selTalent = audition.talent,
+			talents = $scope.project.talent,
+			limit = talents.length,
+			i = 0;
+
+		// update talents with posted status for uploaded talent
+		for(i = 0;i < limit; ++i){
+			if(talents[i].talentId === selTalent && talents[i].status !== 'Posted'){
+				talents[i].status = 'Posted';
+			}
+			if(limit === (i+1)){
+				// update project store
+				saveAudition(audition);
+				$scope.updateNoRefresh();
+			}
+		}
+
+	};
+
+  	// set published status
+  	$scope.renameSingle = function(audition){
+		saveAudition(audition);
+  	};
+
+  	// set published status
+  	$scope.updatePublishedSingle = function(audition){
+		saveAudition(audition);
+  	};
+		
+	$scope.delAuditionSingle = function(audition){
+
+		// verify user wants to delete file
+		if (confirm('Are you sure?')) {
+
+			// delete selected file
+			$http.post('/projects/deleteAudition', {
+				audition: audition
+			}).success(function(data, status, headers, config) {
+
+				loadAuditions();
+
+			}).error(function(data, status, headers, config) {
+				console.log('Problem deleting audition.');
+			});
+	
+
+		}
+	};
+
+	// update audition rating
+	$scope.updateRatingSingle = function(audition, redirect){
+
+		var auditions = $scope.project.auditions,
+			j = 0,
+			i = 0,
+			rateLimit = 0;
+
+		// determine if update should result in user redirect
+		redirect = typeof redirect === 'undefined' ? true : redirect;
+
+		// console.log($scope.rate[key]);
+		var key, ratingCnt = 0, avgRating = 0;
+
+		// walk through existing ratings
+		if(typeof audition.rating !== 'undefined'){
+			rateLimit = audition.rating.length;
+			for(i = 0; i < rateLimit; ++i){
+				// toggle existing rating if found
+				if(audition.rating[i].userId === Authentication.user._id){
+					audition.rating.splice(i,1);
+					audition.curRating = $scope.selCheckVal;
+				} else {
+					// gather average rating
+					avgRating += audition.rating[i].value;
+				}
+			}
+			ratingCnt += audition.rating.length;
+		}
+
+		avgRating += $scope.selCheckVal;
+
+		// average rating values
+		avgRating /= ratingCnt + 1;
+
+		// generate new rating object
+		var rating = {
+			userId: Authentication.user._id,
+			value: $scope.selCheckVal
+		};
+
+		// push new rating
+		audition.rating.push(rating);
+
+		// merge average rating
+		audition.avgRating = avgRating;
+
+		// update audition store
+		saveAudition(audition);
+	};
+
 
   	var performUploadReferenceFile = function(file, i, $files){
 
@@ -2307,10 +2481,12 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	  	// delete temp reference file
   	$scope.delTempReferenceFile = function(idx){
 
-			var file = '/res/referenceFiles/temp/' + $scope.newProject.referenceFiles[idx].file.name;
+			var file = '/res/referenceFiles/temp/' + $scope.newProject.referenceFiles[idx].file.name,
+				project = $scope.project;
 
 			$http.post('/projects/deletefile', {
-        fileLocation: file
+		        fileLocation: file,
+				projectId: project._id
 			}).success(function(data, status, headers, config) {
 			});
 
@@ -2336,7 +2512,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				var file = '/res/referenceFiles/' + project._id + '/' + project.referenceFiles[idx].file.name;
 
 				$http.post('/projects/deletefile', {
-	        fileLocation: file
+			        fileLocation: file,
+					projectId: project._id
 				}).success(function(data, status, headers, config) {
 
 					// delete selected file
@@ -2364,7 +2541,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 				    // delete selected file
 					$http.post('/projects/deletefile', {
-		        fileLocation: file
+						fileLocation: file,
+						projectId: project._id
 					}).success(function(data, status, headers, config) {
 
 						project.auditions.splice(idx, 1);
@@ -2390,10 +2568,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.newAudUpload = '';
 		$scope.audFiles = [];
 		$scope.uploadedAuds = [];
+		$scope.uploadAudsCnt = 0;
+		$scope.audUpComp = 0;
 		if(typeof $scope.watchersObj.newAudUpload !== 'object'){
 			$scope.$watchCollection('newAudUpload', function(){
-
-				var project = $scope.project;
 
 				// get curent index
 				var i = $scope.uploadedAuds.length;
@@ -2402,76 +2580,112 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				$scope.uploadedAuds[i] = $scope.newAudUpload;
 
 				// update talents with posted status for uploaded talent
-				angular.forEach(project.talent, function(talent, key) {
+				if(typeof $scope.project.talent !== 'undefined' && $scope.project.talent.length > 0){
+					angular.forEach($scope.project.talent, function(talent, key) {
 
-					if(talent.talentId === $scope.newAudUpload.talent){
-						project.talent[key].status = 'Posted';
-					}
-
-					// save on finish loop
-					if(project.talent.length === (key+1)){
-
-						// save project on finish
-						if($scope.audFiles.length === (i+1)){
-
-							project.auditions = project.auditions.concat($scope.uploadedAuds);
-
-							// save with pause, ensure loop finished
-							setTimeout(function(){
-
-									$scope.verifyFilesList = [];
-
-									// update project store
-									$scope.updateNoRefresh();
-									// trigger new file check walk
-									$scope.fileCheck = false;
-
-							}, 1000);
-
+						if(talent.talentId === $scope.newAudUpload.talent){
+							$scope.project.talent[key].status = 'Posted';
 						}
-					}
 
-				});
+						// save on finish loop
+						if($scope.project.talent.length === (key+1)){
+
+							// save project on finish
+							if($scope.uploadAudsCnt === $scope.uploadedAuds.length){
+
+								//$scope.project.auditions = $scope.project.auditions.concat($scope.uploadedAuds);
+
+								// save with pause, ensure loop finished
+								//setTimeout(function(){
+
+								// save project on last file upload
+								$scope.verifyFilesList = [];
+
+								// update project store
+								$scope.updateNoRefresh();
+								loadAuditions();
+								
+								// trigger new file check walk
+								$scope.fileCheck = false;
+
+								//}, 1500);
+
+							}
+						}
+
+					});
+				} else {
+					// save project on finish
+					if($scope.uploadAudsCnt === $scope.uploadedAuds.length){
+
+						//$scope.project.auditions = $scope.project.auditions.concat($scope.uploadedAuds);
+
+						// save with pause, ensure loop finished
+						//setTimeout(function(){
+
+						// save project on last file upload
+						$scope.verifyFilesList = [];
+
+						// update project store
+						$scope.updateNoRefresh();
+						loadAuditions();
+						
+						// trigger new file check walk
+						$scope.fileCheck = false;
+
+						//}, 1500);
+
+					}
+				}
 
 			});
 		}
-		var performUploadAudition = function(file, i, $files){
+		
+	var performUploadAudition = function(file, i, $files){
 
-			$scope.upload = $upload.upload({
-	        url: 'projects/uploads/audition', //upload.php script, node.js route, or servlet url
-	        data: {projectId: $scope.project._id},
-	        file: file // or list of files ($files) for html5 only
-	    }).progress(function(evt) {
-	      	$scope.uploadStatus = (i + 1) + ' of ' + $files.length + ' files uploaded';
-	      	$scope.uploadfile = evt.config.file.name;
-	        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
-	    }).success(function(data, status, headers, config) {
-					$scope.newAudUpload = data;
-	    });
+		$scope.upload = $upload.upload({
+			url: 'projects/uploads/audition', //upload.php script, node.js route, or servlet url
+			data: {projectId: $scope.project._id},
+			file: file // or list of files ($files) for html5 only
+		}).progress(function(evt) {
+			$scope.uploadStatus = (i + 1) + ' of ' + $files.length + ' files uploaded';
+			$scope.uploadfile = evt.config.file.name;
+			//$scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
+		}).success(function(data, status, headers, config) {
+			$scope.newAudUpload = data;
+			$scope.audUpComp += 1;
+			$scope.uploadprogress = parseInt(100.0 / ($files.length - ($scope.audUpComp - 1)));
+		});
 
-		};
-		$scope.uploadAudition = function($files) {
+	};
+	$scope.uploadAudition = function($files) {
+		
+		$scope.uploadAudsCnt = 0;
 
-			if(typeof $files !== 'undefined' && $files.length > 0){
+		if(typeof $files !== 'undefined' && $files.length > 0){
 
-				$scope.uploadedAuds = [];
-				$scope.audFiles = $files;
+			// reset upload counter
+			$scope.audUpComp = 0;
+			$scope.uploadAudsCnt = $files.length;
 
-				// prevent any other action
-				$scope.processing = true;
+			$scope.uploadedAuds = [];
+			$scope.audFiles = $files;
 
-		    //$files: an array of files selected, each file has name, size, and type.
-				angular.forEach($files, function(file, key) {
+			// prevent any other action
+			$scope.processing = true;
 
-		    	performUploadAudition(file, key, $files);
+			//$files: an array of files selected, each file has name, size, and type.
+			angular.forEach($files, function(file, key) {
 
-				});
+				performUploadAudition(file, key, $files);
 
-			}
+			});
 
-		};
+		}
 
-		var performUploadTempAuditionFile = function(file, i, $files){
+	};
+
+	var performUploadTempAuditionFile = function(file, i, $files){
   		$scope.upload = $upload.upload({
 	        url: 'projects/uploads/audition/temp', //upload.php script, node.js route, or servlet url
 	        data: {project: $scope.project},
@@ -2498,41 +2712,43 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
   	// delete uploaded temp audition
   	$scope.delTempAudition = function(key){
 
-			var auditions = $scope.auditions;
+			var auditions = $scope.auditions,
+				project = $scope.project;
 
   		var file = '/res/auditions/temp/' + auditions[key].file.name;
 
 			$http.post('/projects/deletefile', {
-	        fileLocation: file
+	        fileLocation: file,
+			projectId: project._id
 	    });
 
 	    auditions.splice(key, 1);
 
   	};
 
-		// perform talent audition uploads
-		$scope.submitTalentAuditions = function(){
-			//console.log($stateParams.talentId);
+	// perform talent audition uploads
+	$scope.submitTalentAuditions = function(){
+		//console.log($stateParams.talentId);
 
-			if(confirm('Are you sure?') === true){
+		if(confirm('Are you sure?') === true){
 
-				$http.post('/projects/uploads/talentAuditions', {
-		       		auditions: $scope.auditions,
-		       		project: $scope.project,
-		       		talent: $stateParams.talentId
-		    	}).success(function(data, status, headers, config) {
-			        // file is uploaded successfully
-			        //console.log(data);
-			        $scope.auditions = [];
+			$http.post('/projects/uploads/talentAuditions', {
+				auditions: $scope.auditions,
+				project: $scope.project,
+				talent: $stateParams.talentId
+			}).success(function(data, status, headers, config) {
+				// file is uploaded successfully
+				//console.log(data);
+				$scope.auditions = [];
 
-			        alert('Auditions have been submitted. Thank you!');
-			    });
+				alert('Auditions have been submitted. Thank you!');
+			});
 
-			}
+		}
 
-		};
+	};
 
-		// talent uploads modal
+	// talent uploads modal
   	$scope.talentSubmissionsModal = function(talent){
   		var modalInstance = $modal.open({
       animation: true,
@@ -2544,7 +2760,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	        	talent: talent,
 	        	projectId: $scope.project._id
 	        };
-				}
+		}
       }
     });
 

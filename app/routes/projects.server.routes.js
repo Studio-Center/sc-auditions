@@ -15,6 +15,18 @@ module.exports = function(app) {
 	app.route('/projects/loadProject')
 		.post(users.requiresLogin, projects.loadProject);
 
+	// load projects audition files
+	app.route('/projects/loadAuditions')
+		.post(users.requiresLogin, projects.loadAuditions);
+
+	// save projects audition files
+	app.route('/projects/saveAudition')
+		.post(users.requiresLogin, projects.saveAudition);
+
+	// delete projects audition files
+	app.route('/projects/deleteAudition')
+		.post(users.requiresLogin, projects.deleteAudition);
+
 	// load projects using a set collection count limit
 	app.route('/projects/findLimit')
 		.post(users.requiresLogin, projects.findLimit);
@@ -92,6 +104,8 @@ module.exports = function(app) {
 	// update project talent status
 	app.route('/projects/sendtalentemail')
 		.post(users.requiresLogin, projects.sendTalentEmail);
+	app.route('/projects/sendTalentDirectorsEmail')
+		.post(users.requiresLogin, projects.sendTalentDirectorsEmail);
 	app.route('/projects/sendTalentEmailById')
 		.post(users.requiresLogin, projects.sendTalentEmailById);
 	app.route('/projects/updateSingleTalentStatus')
@@ -127,9 +141,9 @@ module.exports = function(app) {
 	app.route('/projects/uploads/script/temp')
 		.post(multipartyMiddleware, projects.uploadTempScript);
 
-		// remove selected file from file system
-		app.route('/projects/deleteTempScript')
-			.post(multipartyMiddleware, projects.deleteTempScript);
+	// remove selected file from file system
+	app.route('/projects/deleteTempScript')
+		.post(multipartyMiddleware, projects.deleteTempScript);
 
 	// upload audition file
 	app.route('/projects/uploads/audition')

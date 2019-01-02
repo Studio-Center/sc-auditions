@@ -24,6 +24,8 @@
                 <option value="user._id">Project Creator</option>
                 <option value="status">Project Status</option>
             </select>
+		  <label>Search by Client Email:</label>
+          <input ng-model="searchText.clientEmail" class="form-control" ng-change="findLimitWithFilter()">
         </div>
         <div class="col-lg-3 col-md-3 col-sm-3">
             <label>Order By:</label>
@@ -40,20 +42,24 @@
     <div class="row">
       <div class="col-lg-9 col-md-9 col-sm-9">
           <label></label><br>
-          <select ng-init="limit = 20" ng-model="limit" class="form-control" ng-change="findLimitWithFilter()">
+          <select ng-init="limit = 50" ng-model="limit" class="form-control" ng-change="findLimitWithFilter()">
               <option value="5" selected>Show 5 Projects Per Page</option>
               <option value="10">Show 10 Projects Per Page</option>
               <option value="15">Show 15 Projects Per Page</option>
               <option value="20">Show 20 Projects Per Page</option>
               <option value="30">Show 30 Projects Per Page</option>
+              <option value="40">Show 40 Projects Per Page</option>
               <option value="50">Show 50 Projects Per Page</option>
               <option value="100">Show 100 Projects Per Page</option>
               <option value="200">Show 200 Projects Per Page</option>
+              <option value="300">Show 300 Projects Per Page</option>
+              <option value="400">Show 400 Projects Per Page</option>
+              <option value="500">Show 500 Projects Per Page</option>
           </select>
       </div>
         <div class="col-lg-3 col-md-3 col-sm-3">
             <label>Display Only Projects In Progress:</label>
-            <input type="checkbox" name="userProjFilter" id="userProjFilter" ng-model="searchText.status" ng-false-value="''" ng-true-value="'In Progress'" ng-checked="::permitRoles(['producer/auditions director'])" class="form-control" ng-click="findLimitWithFilter()">
+            <input type="checkbox" name="userProjFilter" id="userProjFilter" ng-model="searchText.status" ng-false-value="''" ng-true-value="'In Progress'" ng-checked="::permitRoles(['producer/auditions director', 'audio intern'])" class="form-control" ng-click="findLimitWithFilter()">
         </div>
     </div>
     <div class="row">
@@ -74,7 +80,7 @@
     <div class="row">
         <div class="col-lg-2 col-md-2 col-sm-2">
             <p style="margin-top:27px">
-              {{(limit*currentPage)+1}}-{{limit*(currentPage+1)}} Project(s) of {{projectsTotalCnt}}
+              {{(limit*currentPage)+1}}-{{limit*(currentPage+1)}} Project(s) of {{projectsTotalCnt.toLocaleString()}}
             </p>
         </div>
         <div class="col-lg-10 col-md-10 col-sm-10">
@@ -96,7 +102,7 @@
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="list-group item-list">
-                <a data-ng-repeat="project in filtered = (projects)" data-ng-href="#!/projects/{{::project._id}}" class="list-group-item"  ng-class="::{redBG: project.status == 'In Progress' && checkPassed(project.estimatedCompletionDate), greenBg: project.status == 'Booked', lgreenBG: project.status == 'Closed - Pending Client Decision', orangeBG: project.status == 'On Hold', lgray: project.status == 'Cancelled', mgray: project.status == 'ReAuditioned', gray: project.status == 'Dead', blueBg: project.status == 'In Progress' && compareDates(project.estimatedCompletionDate),lblueBG: project.status == 'In Progress' && compareDatesDay(project.estimatedCompletionDate) == false && compareDates(project.estimatedCompletionDate) == false, defClr: project.status == 'In Progress' && compareDatesDay(project.estimatedCompletionDate), yellowBg: project.sounders == 'No Sounders - Approved By William' && compareDates(project.estimatedCompletionDate), lyellowBg: project.sounders == 'No Sounders - Approved By William' && compareDates(project.estimatedCompletionDate) == false}">
+                <a data-ng-repeat="project in filtered = (projects)" data-ng-href="#!/projects/{{::project._id}}" class="list-group-item"  ng-class="::{redBG: project.status == 'In Progress' && checkPassed(project.estimatedCompletionDate), greenBg: project.status == 'Booked', lgreenBG: project.status == 'Closed - Pending Client Decision', orangeBG: project.status == 'On Hold', brownBg: project.status == 'Canceled', mgray: project.status == 'ReAuditioned', gray: project.status == 'Dead', blueBg: project.status == 'In Progress' && compareDates(project.estimatedCompletionDate),lblueBG: project.status == 'In Progress' && compareDatesDay(project.estimatedCompletionDate) == false && compareDates(project.estimatedCompletionDate) == false, defClr: project.status == 'In Progress' && compareDatesDay(project.estimatedCompletionDate), yellowBg: project.sounders == 'No Sounders - Approved By William' && compareDates(project.estimatedCompletionDate), lyellowBg: project.sounders == 'No Sounders - Approved By William' && compareDates(project.estimatedCompletionDate) == false}">
                     <div class="row">
                         <div class="col-lg-8 col-md-8 col-sm-8">
                             <div class="row">
@@ -110,7 +116,8 @@
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-4 col-sm-4">
-                            <small>Created <span ng-bind="::project.created | amDateFormat:'M/DD/YY h:mm:ss a'"></span> EST by <span ng-bind="::project.user.displayName"></span></small>
+                            <p><small>Created <span ng-bind="::project.created | amDateFormat:'M/DD/YY h:mm:ss a'"></span> EST by <span ng-bind="::project.user.displayName"></span></small><br/>
+                            <!--<small>Last modified <span ng-bind="::project.modified | amDateFormat:'M/DD/YY h:mm:ss a'"></span> EST</small>--></p>
                         </div>
                     </div>
                 </a>
@@ -118,7 +125,7 @@
             <div class="row">
                 <div class="col-lg-2 col-md-2 col-sm-2">
                     <p style="margin-top:27px">
-                      {{(limit*currentPage)+1}}-{{limit*(currentPage+1)}} Project(s) of {{projectsTotalCnt}}
+                      {{(limit*currentPage)+1}}-{{limit*(currentPage+1)}} Project(s) of {{projectsTotalCnt.toLocaleString()}}
                     </p>
                 </div>
                 <div class="col-lg-10 col-md-10 col-sm-10">
