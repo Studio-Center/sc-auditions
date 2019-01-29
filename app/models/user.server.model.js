@@ -5,7 +5,8 @@
  */
 var mongoose = require('mongoose'),
 	Schema = mongoose.Schema,
-	crypto = require('crypto');
+	crypto = require('crypto'),
+    uniqueValidator = require('mongoose-unique-validator');
 
 /**
  * A Validation function for local strategy properties
@@ -29,12 +30,14 @@ var UserSchema = new Schema({
 		type: String,
 		trim: true,
 		default: '',
+        required: 'Please fill in a first name',
 		validate: [validateLocalStrategyProperty, 'Please fill in your first name']
 	},
 	lastName: {
 		type: String,
 		trim: true,
 		default: '',
+        required: 'Please fill in a last name',
 		validate: [validateLocalStrategyProperty, 'Please fill in your last name']
 	},
 	displayName: {
@@ -54,7 +57,8 @@ var UserSchema = new Schema({
 	},
 	username: {
 		type: String,
-		unique: 'testing error message',
+        index: true,
+		unique: true,
 		required: 'Please fill in a username',
 		trim: true
 	},
@@ -109,6 +113,8 @@ var UserSchema = new Schema({
 		type: Object
 	}
 });
+
+UserSchema.plugin(uniqueValidator);
 
 /**
  * Hook a pre save method to hash the password

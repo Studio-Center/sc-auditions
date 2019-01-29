@@ -16,6 +16,9 @@ module.exports = function(app) {
 	app.route('/tools/sendPreCloseSummary')
 		.get(tools.sendPreCloseSummary);
 
+	app.route('/tools/mainClientsCheck')
+		.get(tools.mainClientsCheck);
+
 	// call list routes
 	app.route('/tools/gatherTalentsToCall')
 		.post(users.requiresLogin, tools.gatherTalentsToCall);
@@ -38,6 +41,7 @@ module.exports = function(app) {
 	// added to display new project form submissions
 	app.route('/tools/listNewprojects')
 		.post(users.requiresLogin, tools.listNewprojects);
+    
 	app.route('/tools/newprojectByID')
 		.post(users.requiresLogin, tools.newprojectByID);
 

@@ -337,6 +337,176 @@ exports.gatherEmailedTalent = function(req, res){
 };
 
 // gather and send list of pre close summary emails
+exports.mainClientsCheck = function(req, res){
+
+	// method vars
+	var emailCnt = 0;
+
+	var currentTime = new Date();
+	//currentTime.setDate(currentTime.getHours() - 1);
+	var inHalfHour = new Date();
+	// modified 12/17/2015 for two hour intervals
+	inHalfHour.setHours(inHalfHour.getHours() + 0.6);
+
+	var searchCriteria = {
+							'estimatedCompletionDate':
+                                {
+                                    $gte: currentTime,
+                                    $lte: inHalfHour
+                                },
+							'preClose': false,
+                            'client': {$size: 0}
+						};
+
+	// gather projects ending in the next hour
+	Project.find(searchCriteria).sort('-estimatedCompletionDate').populate('project', 'displayName').exec(function(err, projects) {
+        
+        // walk through all associated projects
+		async.eachSeries(projects, function (project, callback) {
+
+			// gather associated emails per project
+			async.waterfall([
+				// gather owner data
+				function(done) {
+					var ownerId;
+					if(!project.owner){
+						ownerId = project.user;
+					} else{
+						ownerId = project.owner;
+					}
+
+					User.findOne({'_id':ownerId}).sort('-created').exec(function(err, owner) {
+						done(err, owner);
+					});
+				},
+				// gather all producers and the talent directors
+				function(owner, done){
+
+					var searchGroups = [
+										'admin',
+										'producer/auditions director',
+                                        'audio intern',
+										'production coordinator',
+										'talent director'
+										];
+
+					User.where('roles').in(searchGroups).sort('-created').exec(function(err, producers) {
+						done(err, owner, producers);
+					});
+				},
+				// gather producers emails
+				function(owner, producers, done){
+
+					var producersEmails = [];
+
+					async.eachSeries(producers, function (producer, producerCallback) {
+
+						producersEmails.push(producer.email);
+
+						producerCallback();
+
+					}, function (err) {
+						if( err ) {
+							return res.status(400).send({
+								message: errorHandler.getErrorMessage(err)
+							});
+						} else {
+							done(err, owner, producersEmails);
+						}
+			       	});
+				},
+				function(owner, producers, done){
+
+					// generate email signature
+					var newDate = new Date(project.estimatedCompletionDate);
+					newDate = newDate.setHours(newDate.getHours() - 1);
+					newDate = dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT');
+
+					var emailSig = '';
+					if(owner.emailSignature){
+						emailSig = owner.emailSignature;
+					} else {
+						emailSig = '';
+					}
+
+					// convert project id from object to string for email
+					project.id = String(project._id);
+
+					res.render('templates/projects/main-clients-email', {
+						project: project,
+						dueDate: newDate,
+						emailSignature: emailSig,
+					}, function(err, summaryEmailHTML) {
+						done(err, owner, producers, summaryEmailHTML);
+					});
+
+				},
+				// send out project email
+				function(owner, producers, summaryEmailHTML, done) {
+					var log;
+					// send email
+					var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
+
+					var emailSubject = project.title + ' is due in 30 minutes and still needs a client added';
+
+					var mailOptions = {
+						to: owner.email,
+						cc: [producers, config.mailer.notifications],
+						from: owner.email || config.mailer.from,
+						replyTo: owner.email || config.mailer.from,
+						subject: emailSubject,
+						html: summaryEmailHTML
+					};
+
+					transporter.sendMail(mailOptions, function(err){
+
+						// log event
+						log = {
+							type: 'system',
+							sharedKey: 'N/A',
+							description: ' project ' + project.title + ' is due in 30 minutes and still needs a client added',
+							user: owner
+						};
+						log = new Log(log);
+						log.save();
+
+						// log event
+						log = {
+							type: 'project',
+							sharedKey: String(project._id),
+							description: ' project ' + project.title + ' is due in 30 minutes and still needs a client added.',
+							user: owner
+						};
+						log = new Log(log);
+						log.save();
+
+						++emailCnt;
+						done(err);
+					});
+				}
+				], function(err) {
+				if (err) {
+					return res.status(400).json(err);
+				} else {
+					callback();
+				}
+			});
+
+		}, function (err) {
+			if( err ) {
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
+			} else {
+				res.jsonp({status: 'success', sendCount: emailCnt});
+			}
+       	});
+        
+    });
+    
+}
+
+// gather and send list of pre close summary emails
 exports.sendPreCloseSummary = function(req, res){
 
 	// method vars
