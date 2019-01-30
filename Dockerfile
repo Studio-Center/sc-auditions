@@ -1,8 +1,10 @@
-FROM dockerfile/nodejs
-
-MAINTAINER Matthias Luebken, matthias@catalyst-zero.com
+#Alan Changed this
+FROM node:0.10
 
 WORKDIR /home/mean
+
+#Alan Added this, star for future proofing updates
+COPY package*.json ./
 
 # Install Mean.JS Prerequisites
 RUN npm install -g grunt-cli
@@ -11,6 +13,9 @@ RUN npm install -g bower
 # Install Mean.JS packages
 ADD package.json /home/mean/package.json
 RUN npm install
+
+#Alan Added this
+COPY . .
 
 # Manually trigger bower. Why doesnt this work via npm install?
 ADD .bowerrc /home/mean/.bowerrc
