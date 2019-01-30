@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-	db: 'mongodb://localhost/studio-center-auditions-dev',
+	db: 'mongodb://db:27017/studio-center-auditions-dev',
 	app: {
 		title: 'Studio Center Auditions - Development Environment'
 	},
