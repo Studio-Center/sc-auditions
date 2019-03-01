@@ -13,7 +13,8 @@ services:
      - '80:3000'
      - '35729:35729'
     environment:
-     NODE_ENV: development
+      NODE_ENV: development
+
   db:
     container_name: mongo
     image: mongo
@@ -30,3 +31,5 @@ services:
   redis:
     container_name: studio-center-auditions-redis
     image: 'redis:4.0.11'
+    expose:
+      - 6379
