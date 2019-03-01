@@ -203,7 +203,7 @@ angular.module('clients').controller('BookModalController', ['$scope', '$statePa
 
 			// retrieve selected project
 			$scope.findOne();
-			
+
 			loadAuditions();
 
 		};
@@ -281,7 +281,7 @@ angular.module('clients').controller('BookModalController', ['$scope', '$statePa
 			}
 			$modalInstance.dismiss('cancel');
 		};
-		
+
 		$scope.verifyAudioSingle = function(audition){
 
 			if(typeof audition.file === 'object'){
@@ -417,7 +417,7 @@ angular.module('clients').controller('BookModalController', ['$scope', '$statePa
 			}
 
 		};
-		
+
 		$scope.playAudioSingle = function(key, audition, fileDir){
 
 		var fileName = '';
@@ -702,7 +702,7 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 			$scope.findOneById(args);
 		}
 	);
-	
+
 
     // find single project by id
 	$scope.findOneById = function(id) {
@@ -812,7 +812,7 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 			limit = 0,
 			i = 0,
 			j = 0;
-		
+
 		// update old auds list
 		if(typeof $scope.project !== 'undefined' && auditions){
 			limit = auditions.length;
@@ -828,7 +828,7 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 				}
 			}
 		}
-		
+
 		// update new auds list
 		if(typeof $scope.projAuditions !== 'undefined'){
 			limit = $scope.projAuditions.length;
@@ -981,10 +981,10 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 		$scope.updateNoRefresh();
 
 	};
-		
+
 	// save modified audition
 	var saveAudition = function(audition){
-		
+
 		$http.post('/projects/saveAudition', {
 			audition: audition
 		// file found
@@ -995,24 +995,24 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 		}).error(function(data, status, headers, config) {
 			console.log('Problem saving audition.');
 		});
-	
+
 	};
 
 	// update selected status
 	$scope.updateSelectedSingle = function(audition){
-		
+
 		// get key for selected audition
 		if(audition.selected === true){
 			audition.selected = false;
 		} else {
 			audition.selected = true;
 		}
-		
+
 		saveAudition(audition);
 
 	};
-		
-	
+
+
 	// update selected status
 	$scope.checkSelectedSingle = function(audition){
 
@@ -1022,7 +1022,7 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 		}
 
 	};
-		
+
 	$scope.lookUpRatingSingle = function(audition){
 
 		var ratings = audition.rating,
@@ -1034,24 +1034,24 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 				return ratings[i].value;
 			}
 		}
-		
+
 	};
 
-		
+
 	$scope.hideAuditionSingle = function(audition){
 
 		audition.hidden = true;
 		saveAudition(audition);
-		
+
   	};
-	
+
 	$scope.showAuditionSingle = function(audition){
 
 		audition.hidden = false;
 		saveAudition(audition);
 
   	};
-		
+
 	$scope.isDisplayedSingle = function(audition){
 
 		if(audition.hidden === true && $scope.hideSelected === true){
@@ -1093,7 +1093,7 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 		saveAudition(audition);
 
 	};
-	
+
 	// update audition rating
 	$scope.updateRatingSingle = function(audition, redirect){
 
@@ -1238,14 +1238,14 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 			limit = auditions.length,
 			limitNew = auditionsNew.length,
 			i = 0;
-		
+
 		// iterate over old listing
   		for(i = 0; i < limit; ++i){
   			if(auditions[i].hidden === true){
   				hidCnt += 1;
   			}
   		}
-		
+
 		// iterate over new listing
   		for(i = 0; i < limitNew; ++i){
   			if(auditionsNew[i].hidden === true){
@@ -1272,7 +1272,7 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 			);
 		});
   	};
-		
+
 	// send download booked auds request
 	var bookedAudsDL = function(bookedAuds){
 		$http.post('/projects/downloadBookedAuditions', {
@@ -1286,7 +1286,7 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 
 		});
 	};
-		
+
   	// download all auditions from project
   	$scope.downloadBookedAuditions = function(){
 
@@ -1307,18 +1307,18 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 			if((i+1) === limit){
 
 				for(i = 0; i < limitNew; ++i){
-					
+
 					// add auds from new system
 					if(auditionsNew[i].booked === true){
 						bookedAuds.push(auditionsNew[i].file.name);
 					}
-					
+
 					if((i+1) === limitNew){
-						
+
 						bookedAudsDL(bookedAuds);
-						
+
 					}
-					
+
 				}
 
 			}
@@ -1387,14 +1387,14 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 			limit = auditions.length,
 			limitNew = auditionsNew.length,
 			i = 0;
-		
+
 		// check old aud lists
 		for(i = 0; i < limit; ++i){
   			if(auditions[i].selected === true){
   				return true;
   			}
   		}
-		
+
 		// check new aud lists
 		for(i = 0; i < limitNew; ++i){
   			if(auditionsNew[i].selected === true){
@@ -1412,14 +1412,14 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 			limit = auditions.length,
 			limitNew = auditionsNew.length,
 			i = 0;
-		
+
 		// check old list auds
   		for(i = 0; i < limit; ++i){
   			if(auditions[i].selected === true && (typeof auditions[i].booked === 'undefined' || auditions[i].booked === false)){
   				return true;
   			}
   		}
-		
+
 		// check new list auds
   		for(i = 0; i < limitNew; ++i){
   			if(auditionsNew[i].selected === true && (typeof auditionsNew[i].booked === 'undefined' || auditionsNew[i].booked === false)){
@@ -1514,7 +1514,7 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 		if(typeof audition.file === 'object'){
 			return true;
 		}
-		
+
 		return false;
 	};
 
@@ -1864,7 +1864,7 @@ angular.module('core').service('Menus', [
 		// Define the menus object
 		this.menus = {};
 
-		// A private function for rendering decision 
+		// A private function for rendering decision
 		var shouldRender = function(user) {
 			if (user) {
 				if (!!~this.roles.indexOf('*')) {
@@ -2396,9 +2396,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			// 	delete $scope.watchersObj[key];
 			// });
     });
-		
+
 		var loadAuditions = function(){
-		
+
 			// load project audition files
 			$http.post('/projects/loadAuditions', {
 				projectId: $stateParams.projectId
@@ -2409,7 +2409,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}).error(function(data, status, headers, config) {
 				console.log('Problem loading project auditions.');
 			});
-	
+
 		};
 
 		$scope.toggleShowRename = function(idx){
@@ -3056,7 +3056,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					};
 
 				$scope.project.log = log;
-				
+
 				// send talent director email
 				$http.post('/projects/sendTalentDirectorsEmail', {
 					talent: talent,
@@ -3569,7 +3569,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					$scope.newProject = data;
 
 					// reset some defaults
-					$scope.newProject.title = $scope.newProject.title + ' ReAudtion';
+					$scope.newProject.title = $scope.newProject.title + ' ReAudition';
 					$scope.newProject.talent = [];
 
 					// copy existing scripts and ref files
@@ -3938,9 +3938,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			var project = $scope.project;
 
 			if(String(pojectID.id) === String(project._id)){
-				
+
 				loadAuditions();
-				
+
 			}
 
 		});
@@ -3975,7 +3975,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}).error(function(data, status, headers, config) {
 				console.log('Problem loading project.');
 			});
-			
+
 			loadAuditions();
 
 		};
@@ -4508,7 +4508,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 						item: note,
 						deleted: false
 					};
-					
+
 					// add to project discussion
 					$scope.project.discussion.push(item);
 
@@ -4574,10 +4574,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
   		// update project store
 			$scope.updateNoRefresh();
   	};
-	
+
 	// save modified audition
 	var saveAudition = function(audition){
-		
+
 		$http.post('/projects/saveAudition', {
 			audition: audition
 		// file found
@@ -4588,7 +4588,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		}).error(function(data, status, headers, config) {
 			console.log('Problem saving audition.');
 		});
-	
+
 	};
 
 	// update project when audition talent assignment is adjusted
@@ -4622,7 +4622,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
   	$scope.updatePublishedSingle = function(audition){
 		saveAudition(audition);
   	};
-		
+
 	$scope.delAuditionSingle = function(audition){
 
 		// verify user wants to delete file
@@ -4638,7 +4638,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}).error(function(data, status, headers, config) {
 				console.log('Problem deleting audition.');
 			});
-	
+
 
 		}
 	};
@@ -4913,7 +4913,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 								// update project store
 								$scope.updateNoRefresh();
 								loadAuditions();
-								
+
 								// trigger new file check walk
 								$scope.fileCheck = false;
 
@@ -4938,7 +4938,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 						// update project store
 						$scope.updateNoRefresh();
 						loadAuditions();
-						
+
 						// trigger new file check walk
 						$scope.fileCheck = false;
 
@@ -4949,7 +4949,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 			});
 		}
-		
+
 	var performUploadAudition = function(file, i, $files){
 
 		$scope.upload = $upload.upload({
@@ -4968,7 +4968,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 	};
 	$scope.uploadAudition = function($files) {
-		
+
 		$scope.uploadAudsCnt = 0;
 
 		if(typeof $files !== 'undefined' && $files.length > 0){
@@ -5235,8 +5235,8 @@ angular.module('reports').controller('ReportsController', ['$scope', '$statePara
 
 			//$scope.intervalID = window.setInterval($scope.systemInfo, 1000);
 		};
-        
-        
+
+
 		// find auditions uploaded per producer
 		$scope.findAudsPerProducer = function(){
 
@@ -5485,7 +5485,7 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
             angular.forEach(users, function(user, key) {
                 $scope.producers.push(user);
             });
-            
+
         });
         //$scope.producers += UsersFind.query({userLevel: "admin"});
 
@@ -6109,7 +6109,7 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 		};
 	    $scope.setPage = function () {
 	        $scope.currentPage = this.n;
-			
+
 			// reload list of projects
 			$scope.findLimitWithFilter();
 	    };
@@ -6323,7 +6323,7 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 			});
 
 		};
-		
+
 		// get count of all projects in db
 		$scope.getProjectsCnt = function(){
 
@@ -6338,7 +6338,7 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 			});
 
 		};
-		
+
 		// gather filter values
 		$scope.getFilterVars = function(){
 			// det start val
@@ -6380,7 +6380,7 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 		$scope.findProjects = function(){
 			$scope.projects = Projects.query();
 		};
-		
+
 		// retrieve set number of projects with server side filtration
 		$scope.findLimitWithFilter = function(){
 
@@ -6826,7 +6826,7 @@ angular.module('users').config(['$httpProvider',
 								$location.path('signin');
 								break;
 							case 403:
-								// Add unauthorized behaviour 
+								// Add unauthorized behaviour
 								break;
 						}
 
@@ -7025,7 +7025,7 @@ angular.module('users').controller('SettingsController', ['$scope', '$http', '$l
 			return convertedPass;
 		};
 
-		// Check if there are additional accounts 
+		// Check if there are additional accounts
 		$scope.hasConnectedAdditionalSocialAccounts = function(provider) {
 			for (var i in $scope.user.additionalProvidersData) {
 				return true;
@@ -7061,7 +7061,7 @@ angular.module('users').controller('SettingsController', ['$scope', '$http', '$l
 			if (isValid){
 				$scope.success = $scope.error = null;
 				var user = new Users($scope.user);
-	
+
 				user.$update(function(response) {
 					$scope.success = true;
 					Authentication.user = response;
@@ -7120,15 +7120,15 @@ angular.module('users').controller('UsersListController', ['$scope', '$statePara
 
 		// refresh list of users on refresh emit
 		$rootScope.$on('refresh', $scope.find());
-		$rootScope.$on('refreshListFilter', 
-			function(event, args) { 
+		$rootScope.$on('refreshListFilter',
+			function(event, args) {
 				$scope.findFilter(args);
-			} 
+			}
 		);
 
 		// Find existing Users
 		$scope.findOne = function() {
-			$scope.useredit = UsersEdit.get({ 
+			$scope.useredit = UsersEdit.get({
 				userIdEdit: $stateParams.userIdEdit
 			});
 		};
@@ -7365,7 +7365,7 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
 
 			// gen filter object
 			var filterObj = $scope.getFilterVars();
-			
+
 			// roles filter override
 			if($scope.filterOverride){
 					filterObj.roles = $scope.filterOverride;
