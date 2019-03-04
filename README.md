@@ -6,9 +6,17 @@ Studio Center Auditions Web Application developed using the MEAN.JS stack.
 
 ## Overview
 
-System allows for audio engineers to create projects, upload scripts and reference files talents, along with posting any related text, links, etc. Once projects are created audio engineers or project managers can add clients or clients of clients to the project. Talent can upload auditions through a custom link or audio engineers or project managers can upload mp3 files by dropping files into a drop box or using the find file dialogue. If talent is already assigned to the project and the audition audio file names are properly formed the talent whose audition was uploaded will automatically be assigned to the audition file. Once an audition file has been uploaded it can then be played back within the browser by clicking the play button for that audio file.
+System allows for audio engineers to create projects, upload scripts and reference files, select talent, along with posting any related specs, links, etc. Projects are created by Project Managets. Once projects are created, audio engineers or project managers can add clients or clients of clients to the project. Audio engineers or project managers can upload mp3 files by dropping files into a drop box or using the find file dialogue. If talent is already assigned to the project and the audition audio file names are properly formed the talent whose audition was uploaded will automatically be assigned to the audition file.
 
-Clients are given a client portal which allows them to playback and rank auditions. Within this interface clients can also hide and download audio files they would like to store on their machine. Clients are also given the option to rank and book auditions within the client portal. All admin and client interfaces are built using the twitter bootstrap front-end library to be responsive and provide support for any device.
+**Example**
+
+AuditionProject-ScriptName-PartName-FirstnameLastInitial
+
+*Apple-Commerical1-Man-JohnD*
+
+Once an audition file has been uploaded it can then be played back within the browser by clicking the play button for that audio file.
+
+Clients access via client portal which allows them to playback and rank auditions. Within this interface clients can also hide and download audio files they would like to store on their machine. Clients are also given the option to rank and book auditions within the client portal. All admin and client interfaces are built using the twitter bootstrap front-end library to be responsive and provide support for any device.
 
 ## Requirements
 
@@ -20,7 +28,7 @@ Clients are given a client portal which allows them to playback and rank auditio
 - **Socket.io**
 - More dependencies can be found within package.json and bower.json
 
-## Installation
+## Local Installation
 
 ```
 npm install
@@ -46,16 +54,33 @@ forever start server.js
 
 The app is threaded using cluster and should take advantage of however many CPU cores you have available without any special configuration.
 
+## Docker Installation
+
+```
+docker-compose build
+docker-compose up
+```
+
+View in browser at `localhost:3000`
+
+
+
+
+
 ## Create your admin user
 
 Simply load up the app then create a new user within the web interface. Once created open up mongo shell and replace the users default group with that of the admin group.
 
 Something like this:
 
+#### For Docker use:
+
+`docker exec -it <mycontainer> bash`
+
 ```
 mongo
 show dbs
-use my-selected-db
+use <my-selected-db>
 show collections
 db.users.update({},{$set:{'roles':["admin"]}})
 ```
