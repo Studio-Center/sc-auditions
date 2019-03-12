@@ -87,9 +87,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			// 	delete $scope.watchersObj[key];
 			// });
     });
-		
+
 		var loadAuditions = function(){
-		
+
 			// load project audition files
 			$http.post('/projects/loadAuditions', {
 				projectId: $stateParams.projectId
@@ -100,7 +100,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}).error(function(data, status, headers, config) {
 				console.log('Problem loading project auditions.');
 			});
-	
+
 		};
 
 		$scope.toggleShowRename = function(idx){
@@ -747,7 +747,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					};
 
 				$scope.project.log = log;
-				
+
 				// send talent director email
 				$http.post('/projects/sendTalentDirectorsEmail', {
 					talent: talent,
@@ -1260,7 +1260,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					$scope.newProject = data;
 
 					// reset some defaults
-					$scope.newProject.title = $scope.newProject.title + ' ReAudtion';
+					$scope.newProject.title = $scope.newProject.title + ' ReAudition';
 					$scope.newProject.talent = [];
 
 					// copy existing scripts and ref files
@@ -1629,9 +1629,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			var project = $scope.project;
 
 			if(String(pojectID.id) === String(project._id)){
-				
+
 				loadAuditions();
-				
+
 			}
 
 		});
@@ -1666,7 +1666,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}).error(function(data, status, headers, config) {
 				console.log('Problem loading project.');
 			});
-			
+
 			loadAuditions();
 
 		};
@@ -2199,7 +2199,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 						item: note,
 						deleted: false
 					};
-					
+
 					// add to project discussion
 					$scope.project.discussion.push(item);
 
@@ -2265,10 +2265,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
   		// update project store
 			$scope.updateNoRefresh();
   	};
-	
+
 	// save modified audition
 	var saveAudition = function(audition){
-		
+
 		$http.post('/projects/saveAudition', {
 			audition: audition
 		// file found
@@ -2279,7 +2279,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		}).error(function(data, status, headers, config) {
 			console.log('Problem saving audition.');
 		});
-	
+
 	};
 
 	// update project when audition talent assignment is adjusted
@@ -2313,7 +2313,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
   	$scope.updatePublishedSingle = function(audition){
 		saveAudition(audition);
   	};
-		
+
 	$scope.delAuditionSingle = function(audition){
 
 		// verify user wants to delete file
@@ -2329,7 +2329,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}).error(function(data, status, headers, config) {
 				console.log('Problem deleting audition.');
 			});
-	
+
 
 		}
 	};
@@ -2604,7 +2604,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 								// update project store
 								$scope.updateNoRefresh();
 								loadAuditions();
-								
+
 								// trigger new file check walk
 								$scope.fileCheck = false;
 
@@ -2629,7 +2629,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 						// update project store
 						$scope.updateNoRefresh();
 						loadAuditions();
-						
+
 						// trigger new file check walk
 						$scope.fileCheck = false;
 
@@ -2640,7 +2640,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 			});
 		}
-		
+
 	var performUploadAudition = function(file, i, $files){
 
 		$scope.upload = $upload.upload({
@@ -2659,7 +2659,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 	};
 	$scope.uploadAudition = function($files) {
-		
+
 		$scope.uploadAudsCnt = 0;
 
 		if(typeof $files !== 'undefined' && $files.length > 0){
