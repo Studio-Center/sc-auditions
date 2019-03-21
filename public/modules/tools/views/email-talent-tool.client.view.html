@@ -144,7 +144,7 @@
 	    </div>
     </div>
     <div class="col-md-4">
-    	<div class="row" ng-if="email.all != true">
+    	<div class="row" ng-if="email.all != true || email.producerAssigned != true">
     		<h3>Selected Talents</h3>
     		<div style="padding:10px">
     			<div data-ng-repeat="talent in emailClients track by $index">
@@ -160,7 +160,17 @@
 	    		</label>
     		</div>
     	</div>
-    	<div class="row" ng-show="emailClients.length > 0 || email.all">
+      <div class="row">
+    		<div class="checkbox">
+	    		<label>
+	    			<input  type="checkbox"
+                    name="email.producerAssigned"
+                    ng-click="toggleEmailAssigned()"
+                    > Email Assigned Talent
+	    		</label>
+    		</div>
+    	</div>
+    	<div class="row" ng-show="emailClients.length > 0 || email.all || email.producerAssigned">
 	    	<div class="row">
 	    		<h3>Send Email</h3>
 	    		<label for="email.subject">Email Subject</label>
