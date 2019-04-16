@@ -2555,6 +2555,7 @@ exports.uploadScript = function(req, res, next){
 
     // add file path
     //console.log(file.name);
+    file.name = file.name.replace(/[/\\?%*:|"<>=]/g, '-');
     newPath += file.name;
 	
 	if(file.name.indexOf('#') > -1){
@@ -2640,6 +2641,7 @@ exports.uploadReferenceFile = function(req, res, next){
 
     // add file path
     //console.log(file.name);
+    file.name = file.name.replace(/[/\\?%*:|"<>=]/g, '-');
     newPath += file.name;
 
 		Project.findById(projectId).populate('user', 'displayName').exec(function(err, project) {
@@ -2714,6 +2716,7 @@ exports.uploadTempReferenceFile = function(req, res, next){
 		}
 
     // add file path
+    file.name = file.name.replace(/[/\\?%*:|"<>=]/g, '-');
     newPath += file.name;
 
     //console.log(newPath);
@@ -2770,7 +2773,8 @@ exports.uploadTempScript = function(req, res, next){
 	}
 
 	// add file path
-	newPath += file.name;
+	file.name = file.name.replace(/[/\\?%*:|"<>=]/g, '-');
+    newPath += file.name;
 	if(file.name.indexOf('#') > -1){
 		
 		return res.status(500).end();
