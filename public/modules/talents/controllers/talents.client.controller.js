@@ -26,12 +26,12 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 		$scope.archived = false;
         $scope.producers = [];
         //$scope.producers = UsersFind.query.where('userLevel').in(["producer/auditions director", 'audio intern', "admin"]);
-        UsersFind.query({userLevel: "producer/auditions director"}, function(users){
+        UsersFind.query({userLevel: 'producer/auditions director'}, function(users){
             angular.forEach(users, function(user, key) {
                 $scope.producers.push(user);
             });
         });
-        UsersFind.query({userLevel: "admin"}, function(users){
+        UsersFind.query({userLevel: 'admin'}, function(users){
             angular.forEach(users, function(user, key) {
                 $scope.producers.push(user);
             });
