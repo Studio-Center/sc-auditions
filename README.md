@@ -1,4 +1,4 @@
-[![Studio Center Logo](https://studiocenter.com/sites/default/files/homepage-header.png)](https://studiocenter.com/)
+[![Studio Center Logo](https://studiocenterauditions.com/img/small-sc-logo-white.png)](https://studiocenter.com/)
 
 [![Build Status](https://travis-ci.org/Studio-Center/sc-auditions.svg?branch=master)](https://travis-ci.org/Studio-Center/sc-auditions)
 
