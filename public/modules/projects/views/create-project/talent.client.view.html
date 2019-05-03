@@ -28,6 +28,10 @@
                       <label>Search by Email:</label>
                       <input ng-model="filter.email" class="form-control" ng-change="findLimitWithFilter()">
                     </div>
+                      <div class="col-lg-3 col-md-3 col-sm-3">
+                        <label>Search by Typecast:</label>
+                        <input ng-model="filter.typeCasts" class="form-control" ng-change="findLimitWithFilter()">
+                      </div>
                   </div>
                   <div class="row">
                       <div class="col-lg-3 col-md-3 col-sm-3">
@@ -144,7 +148,9 @@
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-6">
                                     <a target="_blank" href="/#!/talents/{{::talent._id}}">
-                                      <span ng-bind="::talent.name"></span> <span ng-bind="::talent.lastName"></span></a> - <span ng-bind="::talent.locationISDN"></span> - Outage <span ng-if="::!talent.outageTimes">None</span><span ng-if="::talent.outageTimes != ''" ng-bind="::talent.outageTimes"></span>
+                                      <span ng-bind="::talent.name"></span> <span ng-bind="::talent.lastName"></span></a> - <span ng-bind="::talent.locationISDN"></span> - Outage <span ng-if="::!talent.outageTimes">None</span><span ng-if="::talent.outageTimes != ''" ng-bind="::talent.outageTimes"></span><br>
+                                        <strong>Typecasts</strong>
+                                        <span ng-repeat="(key, usval) in talent.typeCasts">{{usval}}, </span>
                                 </div>
                             </div>
                         </li>

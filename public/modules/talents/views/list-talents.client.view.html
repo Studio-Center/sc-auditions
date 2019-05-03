@@ -16,6 +16,10 @@
         <label>Search by Email:</label>
         <input ng-model="filter.email" class="form-control" ng-change="findLimitWithFilter()">
       </div>
+      <div class="col-lg-3 col-md-3 col-sm-3">
+        <label>Search by Typecast:</label>
+        <input ng-model="filter.typeCasts" class="form-control" ng-change="findLimitWithFilter()">
+      </div>
     </div>
     <div class="row">
         <div class="col-lg-3 col-md-3 col-sm-3">
@@ -111,7 +115,9 @@
             <strong>Email</strong> {{::talent.email}} <strong>Email Alt</strong> {{::talent.email2}} <br>
             <strong>Location:</strong> {{::talent.locationISDN}} <br>
             <strong>Union Status</strong>
-            <span ng-repeat="(key, usval) in talent.unionStatus">{{usval}} </span></p>
+            <span ng-repeat="(key, usval) in talent.unionStatus">{{usval}} </span><br>
+            <strong>Typecasts</strong>
+            <span ng-repeat="(key, usval) in talent.typeCasts">{{usval}}, </span></p>
         </a>
     </div>
     <div class="row">

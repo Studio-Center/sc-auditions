@@ -351,6 +351,10 @@
                       <label>Search by Email:</label>
                       <input ng-model="filter.email" class="form-control" ng-change="findLimitWithFilter()">
                     </div>
+                      <div class="col-lg-3 col-md-3 col-sm-3">
+                        <label>Search by Typecast:</label>
+                        <input ng-model="filter.typeCasts" class="form-control" ng-change="findLimitWithFilter()">
+                      </div>
                   </div>
                   <div class="row">
                     <div class="col-lg-3 col-md-3 col-sm-3">
@@ -415,7 +419,7 @@
                   </div>
                   <div class="row">
                     <div class="col-lg-2 col-md-2 col-sm-2">
-                      <p style="margin-top:27px"> {{(limit*currentPage)+1}}-{{limit*(currentPage+1)}} Talent(s) of {{talentsTotalCnt}} </p>
+                      <p style="margin-top:27px"> {{(limit*currentPage)+1}}-{{limit*(currentPage+1)}} Talent(s) of {{talentsTotalCnt}}</p>
                     </div>
                     <div class="col-lg-10 col-md-10 col-sm-10">
                       <div class="text-center">
@@ -440,7 +444,9 @@
                         <td><input style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin:10px" ng-if="addTalent" type="checkbox" value="{{::talent._id}}" ng-click="updateRequestTalent(talent._id, talent.name + ' ' + talent.lastName, talent.email, talent.locationISDN, talent.name + ' ' + talent.lastNameCode)" ng-checked="checkRequestedTalent(talent._id)"></td>
                         <td><input type="text" class="form-control" ng-model="parts[talent._id]" ng-if="showPartFld(talent._id)">
                           <div ng-if="showPartFld(talent._id) == false" ng-bind="::showPartString(talent._id)"></div></td>
-                        <td><a target="_blank" href="/#!/talents/{{::talent._id}}" ng-bind="::talent.name + ' ' + talent.lastName"></a> - <span ng-bind="::talent.locationISDN"></span> - Outage <span ng-if="!talent.outageTimes">None</span><span ng-if="::talent.outageTimes != ''" ng-bind="::talent.outageTimes"></span></td>
+                        <td><a target="_blank" href="/#!/talents/{{::talent._id}}" ng-bind="::talent.name + ' ' + talent.lastName"></a> - <span ng-bind="::talent.locationISDN"></span> - Outage <span ng-if="!talent.outageTimes">None</span><span ng-if="::talent.outageTimes != ''" ng-bind="::talent.outageTimes"></span><br>
+                        <strong>Typecasts</strong>
+                        <span ng-repeat="(key, usval) in talent.typeCasts">{{usval}}, </span></td>
                       </tr>
                     </table>
                   </div>

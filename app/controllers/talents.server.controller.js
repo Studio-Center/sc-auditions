@@ -412,7 +412,7 @@ var getTalentsFilters = function(req){
 	}
 	// locationISDN
 	if(req.body.filter.typeCasts){
-		filterObj.typeCasts = req.body.filter.typeCasts;
+		filterObj.typeCasts = new RegExp("^" + req.body.filter.typeCasts.toLowerCase(), "i");
 		if(filterObj.typeCasts === 'Spanish'){
 			delete filterObj.typeCasts;
 			//filterObj.typeCasts = ['Spanish-Dialect','Spanish-Showcase'];
