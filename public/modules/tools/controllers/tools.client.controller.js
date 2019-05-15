@@ -18,9 +18,12 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 		$scope.email = {
 						all: '',
 						subject: '',
-						body: ''
+						body: '',
+						producerAssigned: ''
 					};
 		$scope.locations = ['Offsite', 'Las Vegas', 'New York', 'Richmond', 'Santa Monica', 'Virginia Beach', 'Washington DC'];
+		$scope.emailAssignedSwitch = false;
+
 
 		// call list vals
 		$scope.talentStatus = ['Cast', 'Emailed', 'Scheduled', 'Message left', 'Out', 'Received needs to be posted', 'Posted', 'Not Posted (Bad Read)'];
@@ -76,7 +79,7 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 		};
 	    $scope.setPage = function () {
 	        $scope.currentPage = this.n;
-			
+
 			// reload list of projects
 			$scope.findLimitWithFilter();
 	    };
@@ -100,6 +103,29 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 			    $scope.emailClients.push(id);
 			}
 		};
+
+
+		// email all talent assigned to the logged in user
+		$scope.toggleEmailAssigned = function(){
+				if($scope.emailAssignedSwitch){
+						$scope.emailAssignedSwitch = false;
+						return;
+				};
+				var talents = $scope.talents,
+						limit = talents.length,
+						i = 0;
+				for(i = 0; i < limit; ++i){
+					if(talents[i].producerOptional === $scope.authentication.user.displayName){
+						//add to list to email to
+						$scope.toggleEmailer(talents[i]._id,talents[i]);
+					}
+				}
+
+		};
+
+
+
+
 		$scope.checkToggleEmail = function(talentId){
 			var idx = $scope.emailClients.indexOf(talentId);
 			if (idx > -1){
@@ -290,7 +316,7 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 			});
 
 		};
-		
+
 		// get count of all projects in db
 		$scope.getProjectsCnt = function(){
 
@@ -305,7 +331,7 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 			});
 
 		};
-		
+
 		// gather filter values
 		$scope.getFilterVars = function(){
 			// det start val
@@ -347,7 +373,7 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 		$scope.findProjects = function(){
 			$scope.projects = Projects.query();
 		};
-		
+
 		// retrieve set number of projects with server side filtration
 		$scope.findLimitWithFilter = function(){
 
