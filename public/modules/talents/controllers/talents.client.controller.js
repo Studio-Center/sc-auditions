@@ -435,6 +435,10 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 			var startVal = $scope.currentPage * $scope.limit;
 			// gather filter objects
 			var filterObj = $scope.getFilterVars();
+            
+            if(typeof listFilter !== 'undefined'){
+                filterObj = Object.assign(filterObj, listFilter);
+            }
 
 			$http.post('/talents/findLimitWithFilter', {
 				startVal: startVal,

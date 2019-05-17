@@ -24,6 +24,10 @@ angular.module('reports').config(['$stateProvider',
 		state('audsPerProducer', {
 			url: '/reports/auds-per-producer',
 			templateUrl: 'modules/reports/views/auds-per-producer.client.view.html'
+		}).
+		state('assignedProducer', {
+			url: '/reports/assigned-producer',
+			templateUrl: 'modules/reports/views/assigned-producer.client.view.html'
 		});
 		// state('createReport', {
 		// 	url: '/reports/create',

@@ -1,14 +1,16 @@
 'use strict';
 
 // Users controller
-angular.module('users').controller('UsersController', ['$scope', '$stateParams', '$location', 'Authentication', 'UsersEdit', 'UsersFind', '$http', '$rootScope', '$base64',
-	function($scope, $stateParams, $location, Authentication, UsersEdit, UsersFind, $http, $rootScope, $base64) {
+angular.module('users').controller('UsersController', ['$scope', '$stateParams', '$location', 'Authentication', 'UsersEdit', 'UsersFind', 'Talents', '$http', '$rootScope', '$base64',
+	function($scope, $stateParams, $location, Authentication, UsersEdit, UsersFind, Talents, $http, $rootScope, $base64) {
 		$scope.authentication = Authentication;
 
 		$scope.roleOpts = ['user', 'admin', 'producer/auditions director', 'audio intern', 'production coordinator', 'talent director', 'client', 'client-client'];
 		$scope.filter = {};
 		$scope.filterOverride = '';
 		$scope.usersTotalCnt = 0;
+        $scope.producerFilter = '';
+		$scope.foundTalent = [];
 
 		// various values
 
@@ -204,6 +206,10 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
 			var startVal = $scope.currentPage * $scope.limit;
 			// gather filter objects
 			var filterObj = $scope.getFilterVars();
+            
+            if(typeof listFilter !== 'undefined'){
+                filterObj = Object.assign(filterObj, listFilter);
+            }
 
 			// roles filter override
 			if($scope.filterOverride){
@@ -214,7 +220,7 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
 				startVal: startVal,
 				limitVal: $scope.limit,
 				filter: filterObj
-		  }).
+            }).
 			success(function(data, status, headers, config) {
 				$scope.users = [];
 				$scope.users = data;
@@ -222,6 +228,31 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
 			});
 
 		};
+		$scope.limitOverride = function(){
+			$scope.limit=5000;
+		};
+        
+        // find talent based on assigned producer
+        $scope.findTalent = function(){
+			
+			var filters = {};
+			
+			if($scope.producerFilter === ''){
+				filters = {'producerOptional': {'$in': [null, '']} };
+			} else {
+				filters = {'producerOptional':$scope.producerFilter};
+			}
+			
+			$http.post('/talents/findLimitWithFilter', {
+				startVal: 0,
+				limitVal: 50000,
+				filter: filters
+            }).
+			success(function(data, status, headers, config) {
+				$scope.foundTalent = data;
+			});
+			
+        };
 
 	}
 ]);

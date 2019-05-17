@@ -410,6 +410,10 @@ var getTalentsFilters = function(req){
 	if(req.body.filter.locationISDN){
 		filterObj.locationISDN = req.body.filter.locationISDN;
 	}
+	// producer
+	if(typeof req.body.filter.producerOptional != 'undefined'){
+		filterObj.producerOptional = req.body.filter.producerOptional;
+	}
 	// locationISDN
 	if(req.body.filter.typeCasts){
 		filterObj.typeCasts = new RegExp("^" + req.body.filter.typeCasts.toLowerCase(), "i");
@@ -427,6 +431,10 @@ exports.getTalentsCnt = function(req, res){
 
 	// set filter vars
 	var filterObj = getTalentsFilters(req);
+	
+//	if(typeof filterObj.producerOptional != 'undefined' && filterObj.producerOptional.length == ''){
+//		filterObj.$where = "this.producerOptional.length = 0";
+//	}
 
 	Talent.find(filterObj).count({}, function(err, count){
 		if (err) {

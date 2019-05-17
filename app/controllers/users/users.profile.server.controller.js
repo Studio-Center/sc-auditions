@@ -369,7 +369,7 @@ exports.findLimitWithFilter = function(req, res) {
 		limitVal = 100;
 	}
 
-	User.find(filterObj).sort({'lastName': 1,'-created': -1}).skip(startVal).limit(limitVal).populate('user', 'displayName').exec(function(err, users) {
+	User.find(filterObj).sort({'firstName': 1,'lastName': 1,'-created': -1}).skip(startVal).limit(limitVal).populate('user', 'displayName').exec(function(err, users) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
