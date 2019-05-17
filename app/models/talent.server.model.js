@@ -25,6 +25,9 @@ var TalentSchema = new Schema({
 	parentName: {
 		type: String
 	},
+	birthYear: {
+		type: String
+	},
 	type: {
 		type: String,
 		required: 'Please select a Talent type',

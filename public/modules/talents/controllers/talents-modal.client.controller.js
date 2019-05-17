@@ -110,6 +110,7 @@ angular.module('talents').controller('TalentsModalController', ['$scope', '$stat
 			var talent = new Talents ({
 				name: this.name,
 				lastName: this.lastName,
+				birthYear: this.birthYear,
 				email: this.email,
 				email2: this.email2,
 				phone: this.phone,
