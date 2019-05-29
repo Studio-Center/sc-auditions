@@ -348,7 +348,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
  			return true;
    	};
    	$scope.defaults = function(){
-   		var allowRoles = ['producer/auditions director', 'audio intern'],
+   		var allowRoles = ['producer/auditions director', 'auditions director', 'audio intern'],
 					limitAllow = allowRoles.length,
 					roles = Authentication.user.roles,
 					limit = roles.length,
@@ -395,11 +395,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.userCheck = function(){
 			var authRoles = Authentication.user.roles;
 
-			if(authRoles[0] !== 'admin' && authRoles[0] !== 'producer/auditions director' && authRoles[0] !== 'audio intern' && authRoles[0] !== 'production coordinator'){
+			if(authRoles[0] !== 'admin' && authRoles[0] !== 'producer/auditions director' && authRoles[0] !== 'auditions director' && authRoles[0] !== 'audio intern' && authRoles[0] !== 'production coordinator'){
 				$location.path('/projects');
 			}
 		};
-
+        
 		// send talent project welcome email
 		$scope.sendTalentEmail = function(talentId){
 			var talents = $scope.project.talent;

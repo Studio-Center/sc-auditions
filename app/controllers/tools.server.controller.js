@@ -385,6 +385,7 @@ exports.mainClientsCheck = function(req, res){
 					var searchGroups = [
 										'admin',
 										'producer/auditions director',
+                                        'auditions director',
                                         'audio intern',
 										'production coordinator',
 										'talent director'
@@ -554,6 +555,7 @@ exports.sendPreCloseSummary = function(req, res){
 					var searchGroups = [
 										'admin',
 										'producer/auditions director',
+                                        'auditions director',
                                         'audio intern',
 										'production coordinator',
 										'talent director'

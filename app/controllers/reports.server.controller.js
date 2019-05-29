@@ -53,7 +53,7 @@ exports.emailMissingAuds = function(req, res){
 					});
 				},
 				function(admins, done) {
-					User.find({'roles':{ $in: ['producer/auditions director', 'audio intern']}}).sort('-created').exec(function(err, directors) {
+					User.find({'roles':{ $in: ['producer/auditions director', 'auditions director', 'audio intern']}}).sort('-created').exec(function(err, directors) {
 						done(err, admins, directors);
 					});
 				},

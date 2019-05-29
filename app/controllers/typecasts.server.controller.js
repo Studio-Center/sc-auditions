@@ -15,7 +15,7 @@ exports.create = function(req, res) {
 	var typecast = new Typecast(req.body);
 	typecast.user = req.user;
 
-	var allowedRoles = ['admin','producer/auditions director', 'audio intern','talent director'];
+	var allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern','talent director'];
 
 	if (_.intersection(req.user.roles, allowedRoles).length) {
 		typecast.save(function(err) {
@@ -110,7 +110,7 @@ exports.typecastByID = function(req, res, next, id) { Typecast.findById(id).popu
  * Typecast authorization middleware
  */
 exports.hasAuthorization = function(req, res, next) {
-	var allowedRoles = ['admin','producer/auditions director', 'audio intern','talent director'];
+	var allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern','talent director'];
 
 	if (!_.intersection(req.user.roles, allowedRoles).length) {
 		return res.status(403).send('User is not authorized');

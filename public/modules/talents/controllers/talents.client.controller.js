@@ -25,7 +25,7 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 		$scope.talentStatus = ['Cast', 'Emailed', 'Scheduled', 'Message left', 'Out', 'Received needs to be posted', 'Posted', 'Not Posted (Bad Read)', 'Missed', 'Canceled'];
 		$scope.archived = false;
         $scope.producers = [];
-        //$scope.producers = UsersFind.query.where('userLevel').in(["producer/auditions director", 'audio intern', "admin"]);
+        //$scope.producers = UsersFind.query.where('userLevel').in(["producer/auditions director",'auditions director','audio intern', "admin"]);
         UsersFind.query({userLevel: 'producer/auditions director'}, function(users){
             angular.forEach(users, function(user, key) {
                 $scope.producers.push(user);

@@ -40,7 +40,7 @@ exports.sendEmail = function(req, res){
 				});
 			},
 			function(admins, done) {
-				User.find({'roles':{ $in: ['producer/auditions director', 'audio intern']}}).sort('-created').exec(function(err, directors) {
+				User.find({'roles':{ $in: ['producer/auditions director', 'auditions director', 'audio intern']}}).sort('-created').exec(function(err, directors) {
 					done(err, admins, directors);
 				});
 			},
@@ -817,7 +817,7 @@ exports.updateSingleTalentStatus = function (req, res){
 // update talent status
 exports.updateTalentStatus = function(req, res){
 
-	var allowedRoles = ['admin','producer/auditions director', 'audio intern', 'production coordinator','client','client-client'];
+	var allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern', 'production coordinator','client','client-client'];
 
 	// validate user interaction
 	if (_.intersection(req.user.roles, allowedRoles).length) {
@@ -910,7 +910,7 @@ exports.updateTalentNote = function (req, res){
 // update talent status
 exports.updateNoRefresh = function(req, res){
 
-	var allowedRoles = ['admin','producer/auditions director', 'audio intern', 'production coordinator','client','client-client'],
+	var allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern', 'production coordinator','client','client-client'],
       	log = '',
 		project = '';
 
@@ -1045,7 +1045,7 @@ exports.sendClientEmail = function(req, res){
 					});
 				},
 				function(owner, done) {
-					User.find({'roles':{ $in: ['producer/auditions director', 'audio intern']}}).sort('-created').exec(function(err, directors) {
+					User.find({'roles':{ $in: ['producer/auditions director', 'auditions director', 'audio intern']}}).sort('-created').exec(function(err, directors) {
 						done(err, owner, directors);
 					});
 				},
@@ -1307,7 +1307,7 @@ exports.create = function(req, res) {
   var relativePath =  '';
   var newPath = '';
 
-	var allowedRoles = ['admin','producer/auditions director', 'audio intern','production coordinator'];
+	var allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern','production coordinator'];
 
 	if (_.intersection(req.user.roles, allowedRoles).length) {
 
@@ -1444,7 +1444,7 @@ exports.create = function(req, res) {
 				});
 			},
 			function(admins, done) {
-				User.find({'roles': { $in: ['producer/auditions director', 'audio intern']}}).sort('-created').exec(function(err, directors) {
+				User.find({'roles': { $in: ['producer/auditions director', 'auditions director', 'audio intern']}}).sort('-created').exec(function(err, directors) {
 					done(err, admins, directors);
 				});
 			},
@@ -1953,7 +1953,7 @@ var renameFiles = function(project, res, req){
 exports.update = function(req, res) {
 	var project = req.project ;
 
-	var allowedRoles = ['admin','producer/auditions director', 'audio intern', 'production coordinator','client','client-client'];
+	var allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern', 'production coordinator','client','client-client'];
 
 	// validate user interaction
 	if (_.intersection(req.user.roles, allowedRoles).length) {
@@ -2315,7 +2315,7 @@ exports.findLimit = function(req, res) {
 	}
 
 	// permit certain user roles full access
-	var allowedRoles = ['admin','producer/auditions director', 'audio intern', 'production coordinator','talent director'];
+	var allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern', 'production coordinator','talent director'];
 
 	if (_.intersection(req.user.roles, allowedRoles).length) {
 
@@ -2376,7 +2376,7 @@ exports.findLimitWithFilter = function(req, res) {
 	}
 
 	// permit certain user roles full access
-	var allowedRoles = ['admin','producer/auditions director', 'audio intern', 'production coordinator','talent director'];
+	var allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern', 'production coordinator','talent director'];
 
 	if (_.intersection(req.user.roles, allowedRoles).length) {
 
@@ -2413,7 +2413,7 @@ exports.findLimitWithFilter = function(req, res) {
 exports.list = function(req, res) {
 
 	// permit certain user roles full access
-	var allowedRoles = ['admin','producer/auditions director', 'audio intern', 'production coordinator','talent director'];
+	var allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern', 'production coordinator','talent director'];
 
 	if (_.intersection(req.user.roles, allowedRoles).length) {
 
@@ -2458,7 +2458,7 @@ exports.projectByID = function(req, res, next, id) { Project.findById(id).popula
  */
 exports.hasAuthorization = function(req, res, next) {
 	// recon 2/17/2015 to allow admin and producer level users to edit all projects
-	var allowedRoles = ['admin','producer/auditions director', 'audio intern', 'production coordinator'];
+	var allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern', 'production coordinator'];
 
 	if (!_.intersection(req.user.roles, allowedRoles).length) {
 		return res.status(403).send('User is not authorized');

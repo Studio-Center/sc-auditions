@@ -23,8 +23,8 @@
         <a class="btn btn-primary" href="/#!/clients/projects/{{::project._id}}" target="_blank">View in Client Portal</a> <a data-ng-if="::permitRoles(['admin','production coordinator']) || isOwner()" class="btn btn-success" ng-click="toggleShowEdit()">Extend Audition</a> <a data-ng-if="::permitRoles(['admin','production coordinator']) || isOwner()" class="btn btn-danger" href="/#!/projects/create/{{::project._id}}">ReAudition</a> </div>
       <div class="col-lg-4 col-md-4 col-sm-4">
         <progressbar value="dynamic" type="success" ng-model="progress"><b>{{dynamic}}%</b></progressbar>
-        <div ng-if="::permitRoles(['admin', 'producer/auditions director', 'audio intern']) === false" class="panel-body" ng-bind="::project.status" style="text-align:center"></div>
-        <select class="form-control" style="display:block;margin:0 auto" ng-show="::permitRoles(['admin', 'producer/auditions director','production coordinator', 'audio intern'])" ng-model="project.status" ng-change="updateProjectStatus()" ng-class="{redBG: project.status == 'In Progress' && checkPassed(project.estimatedCompletionDate), greenBg: project.status == 'Booked', lgreenBG: project.status == 'Closed - Pending Client Decision', orangeBG: project.status == 'On Hold', lgray: project.status == 'Cancelled', mgray: project.status == 'ReAuditioned', gray: project.status == 'Dead', blueBg: project.status == 'In Progress' && compareDates(project.estimatedCompletionDate),lblueBG: project.status == 'In Progress' && compareDatesDay(project.estimatedCompletionDate) == false && compareDates(project.estimatedCompletionDate) == false, defClr: project.status == 'In Progress' && compareDatesDay(project.estimatedCompletionDate), yellowBg: project.sounders == 'No Sounders - Approved By William' && compareDates(project.estimatedCompletionDate), lyellowBg: project.sounders == 'No Sounders - Approved By William' && compareDates(project.estimatedCompletionDate) == false}">
+        <div ng-if="::permitRoles(['admin', 'producer/auditions director', 'auditions director', 'audio intern']) === false" class="panel-body" ng-bind="::project.status" style="text-align:center"></div>
+        <select class="form-control" style="display:block;margin:0 auto" ng-show="::permitRoles(['admin', 'producer/auditions director','auditions director', 'production coordinator', 'audio intern'])" ng-model="project.status" ng-change="updateProjectStatus()" ng-class="{redBG: project.status == 'In Progress' && checkPassed(project.estimatedCompletionDate), greenBg: project.status == 'Booked', lgreenBG: project.status == 'Closed - Pending Client Decision', orangeBG: project.status == 'On Hold', lgray: project.status == 'Cancelled', mgray: project.status == 'ReAuditioned', gray: project.status == 'Dead', blueBg: project.status == 'In Progress' && compareDates(project.estimatedCompletionDate),lblueBG: project.status == 'In Progress' && compareDatesDay(project.estimatedCompletionDate) == false && compareDates(project.estimatedCompletionDate) == false, defClr: project.status == 'In Progress' && compareDatesDay(project.estimatedCompletionDate), yellowBg: project.sounders == 'No Sounders - Approved By William' && compareDates(project.estimatedCompletionDate), lyellowBg: project.sounders == 'No Sounders - Approved By William' && compareDates(project.estimatedCompletionDate) == false}">
           <option ng-repeat="item in statusOpts" value="{{::item}}">{{::item}}</option>
         </select>
         <div ng-if="::permitRoles(['admin'])" ng-controller="UsersController" data-ng-init="findFilter('production coordinator')">
@@ -44,7 +44,7 @@
       </div>
     </div>
     <div class="col-lg-6 col-md-6 col-sm-6">
-      <div class="panel panel-default" data-ng-if="::permitRoles(['admin', 'producer/auditions director','production coordinator', 'audio intern'])">
+      <div class="panel panel-default" data-ng-if="::permitRoles(['admin', 'producer/auditions director','auditions director','production coordinator', 'audio intern'])">
         <div class="panel-heading"> <strong>Notes ({{project.discussion.length}})</strong> </div>
         <fieldset>
           <select class="form-control" style="display:block;margin:0 auto" ng-if="::permitRoles(['admin']) || isOwner()" ng-class="{blueBg: project.sounders == 'Sounders', yellowBg: project.sounders == 'No Sounders - Approved By William'}" ng-model="project.sounders" ng-change="updateSoundersStatus()">
@@ -71,7 +71,7 @@
     </div>
   </div>
   <div class="col-lg-offset-6 col-lg-6 col-md-offset-6 col-md-6 col-sm-6 col-sm-offset-6">
-    <div class="panel panel-default" data-ng-if="::permitRoles(['admin', 'producer/auditions director', 'audio intern','production coordinator'])">
+    <div class="panel panel-default" data-ng-if="::permitRoles(['admin', 'producer/auditions director','auditions director','audio intern','production coordinator'])">
       <div class="panel-heading">
         <h4>Client Notes</h4>
       </div>
@@ -92,7 +92,7 @@
           <accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
             <h4 class="panel-title accordion-toggle"> Scripts (<span ng-bind="project.scripts.length"></span>) <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i> </h4>
           </accordion-heading>
-          <div data-ng-if="::permitRoles(['admin', 'producer/auditions director', 'audio intern','production coordinator']) || isOwner()" class="clearfix" style="padding-bottom:5px">
+          <div data-ng-if="::permitRoles(['admin', 'producer/auditions director','auditions director','audio intern','production coordinator']) || isOwner()" class="clearfix" style="padding-bottom:5px">
             <fieldset>
               <h4>Upload Script: </h4>
               <div ng-file-drop ng-file-select="uploadScript($files)" ng-model="files" ng-model-rejected="rejFiles"
@@ -125,7 +125,7 @@
         <accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
           <h4 class="panel-title accordion-toggle"> Reference Files (<span ng-bind="project.referenceFiles.length"></span>)<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i> </h4>
         </accordion-heading>
-        <div data-ng-if="::permitRoles(['admin', 'producer/auditions director', 'audio intern','production coordinator']) || isOwner()" class="clearfix" style="padding-bottom:5px">
+        <div data-ng-if="::permitRoles(['admin', 'producer/auditions director','auditions director','audio intern','production coordinator']) || isOwner()" class="clearfix" style="padding-bottom:5px">
           <h4>Upload Reference: </h4>
           <div ng-file-drop ng-file-select="uploadReferenceFile($files)" ng-model="files" ng-model-rejected="rejFiles"
 	                         drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}" class="drop-box"
@@ -153,7 +153,7 @@
               </div>
             </div>
             <div class="col-lg-1 col-md-1 col-sm-1">
-              <button data-ng-if="::permitRoles(['admin', 'producer/auditions director', 'audio intern','production coordinator']) || isOwner()" ng-click="delReferenceFile(key)" target="_blank" class="btn btn-danger">Delete</button>
+              <button data-ng-if="::permitRoles(['admin', 'producer/auditions director','auditions director','audio intern','production coordinator']) || isOwner()" ng-click="delReferenceFile(key)" target="_blank" class="btn btn-danger">Delete</button>
             </div>
           </div>
           </li>
@@ -169,7 +169,7 @@
       <accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
         <h4 class="panel-title accordion-toggle"> Auditions (<span ng-bind="project.auditions.length + projAuditions.length"></span>)<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i> </h4>
       </accordion-heading>
-      <div data-ng-if="::permitRoles(['admin', 'producer/auditions director', 'audio intern','production coordinator']) || isOwner()" class="clearfix" style="padding-bottom:5px">
+      <div data-ng-if="::permitRoles(['admin', 'producer/auditions director','auditions director','audio intern','production coordinator']) || isOwner()" class="clearfix" style="padding-bottom:5px">
         <h4>Upload Audition Files: (*.mp3 only!)</h4>
         <div ng-file-drop ng-file-select="uploadAudition($files)" ng-model="files" ng-model-rejected="rejFiles"
 	                         drag-over-class="{accept:'dragover', reject:'dragover-err', delay:100}" class="drop-box"
@@ -211,7 +211,7 @@
               <button ng-click="renameSingle(audition);toggleShowRename(key);" class="btn btn-primary"> Update </button>
               <button ng-click="toggleShowRename(key)" class="btn btn-primary"> Cancel </button>
             </div>
-            <button data-ng-if="::permitRoles(['admin', 'producer/auditions director', 'audio intern'])" ng-click="delAuditionSingle(audition)" class="btn btn-danger"> Delete </button></td>
+            <button data-ng-if="::permitRoles(['admin', 'producer/auditions director','auditions director','audio intern'])" ng-click="delAuditionSingle(audition)" class="btn btn-danger"> Delete </button></td>
           <td><button ng-click="playAudioNoTrack(key, audition.file.name)" class="btn btn-primary">
             <span ng-if="lastAudioID == key && audioStatus == 1"> <img src="/img/Aqua-Pause-icon.png" style="width:35px;height:auto" alt="pause icon">
             <div ng-if="!audio.mobile">
@@ -253,7 +253,7 @@
               <button ng-click="update(false);toggleShowRename(key);" class="btn btn-primary"> Update </button>
               <button ng-click="toggleShowRename(key)" class="btn btn-primary"> Cancel </button>
             </div>
-            <button data-ng-if="::permitRoles(['admin', 'producer/auditions director', 'audio intern'])" ng-click="delAudition(key)" class="btn btn-danger"> Delete </button></td>
+            <button data-ng-if="::permitRoles(['admin', 'producer/auditions director','auditions director','audio intern'])" ng-click="delAudition(key)" class="btn btn-danger"> Delete </button></td>
           <td><button ng-click="playAudioNoTrack(key, audition.file.name)" class="btn btn-primary">
             <span ng-if="lastAudioID == key && audioStatus == 1"> <img src="/img/Aqua-Pause-icon.png" style="width:35px;height:auto" alt="pause icon">
             <div ng-if="!audio.mobile">
@@ -328,7 +328,7 @@
               </tr>
             </table>
           </div>
-          <accordion close-others="oneAtATime" data-ng-if="::permitRoles(['admin', 'producer/auditions director', 'audio intern','production coordinator'])">
+          <accordion close-others="oneAtATime" data-ng-if="::permitRoles(['admin', 'producer/auditions director','auditions director','audio intern','production coordinator'])">
             <accordion-group is-open="statusInt.open">
               <accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
                 <h4 class="panel-title accordion-toggle"> Edit Talent<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': statusInt.open, 'glyphicon-chevron-right': !statusInt.open}"></i> </h4>
@@ -474,7 +474,7 @@
   </div>
   <div class="row">
     <div class="col-lg-6 col-md-6 col-sm-6">
-      <accordion close-others="oneAtATime" data-ng-if="::permitRoles(['admin', 'producer/auditions director', 'audio intern','production coordinator'])">
+      <accordion close-others="oneAtATime" data-ng-if="::permitRoles(['admin', 'producer/auditions director','auditions director','audio intern','production coordinator'])">
         <accordion-group is-open="status.open">
           <accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
             <h4 class="panel-title accordion-toggle"> Main Clients (<span ng-bind="project.client.length"></span>)<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i> </h4>
@@ -661,7 +661,7 @@
       </accordion>
     </div>
     <div class="col-lg-6 col-md-6 col-sm-6">
-      <accordion close-others="oneAtATime" data-ng-if="::permitRoles(['admin', 'producer/auditions director', 'audio intern','production coordinator'])">
+      <accordion close-others="oneAtATime" data-ng-if="::permitRoles(['admin', 'producer/auditions director','auditions director','audio intern','production coordinator'])">
         <accordion-group is-open="status.open">
         <accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
           <h4 class="panel-title accordion-toggle"> Phases<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i> </h4>
@@ -704,7 +704,7 @@
   </div>
   <div class="pull-right" data-ng-if="::permitRoles(['admin','production coordinator'])" style="padding-bottom:75px"> <a class="btn btn-primary" ng-href="/#!/projects/{{::project._id}}/edit"> <i class="glyphicon glyphicon-edit"></i> </a> <a class="btn btn-primary" data-ng-click="remove();"> <i class="glyphicon glyphicon-trash"></i> </a> </div>
   <div class="container" style="position:fixed;bottom:0;background:#fff;z-index:999;padding-top:5px">
-    <div class="row" data-ng-if="::permitRoles(['admin', 'producer/auditions director', 'audio intern','production coordinator']) || isOwner()">
+    <div class="row" data-ng-if="::permitRoles(['admin', 'producer/auditions director','auditions director','audio intern','production coordinator']) || isOwner()">
       <div class="col-lg-12 col-md-12 col-sm-12">
         <ul style="clear:both" ng-if="rejFiles.length > 0" class="response">
           <li class="sel-file" ng-repeat="f in rejFiles"> Rejected file: {{f.name}} - size: {{f.size}}B - type: {{f.type}} </li>

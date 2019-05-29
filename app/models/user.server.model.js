@@ -85,7 +85,7 @@ var UserSchema = new Schema({
 	roles: {
 		type: [{
 			type: String,
-			enum: ['user', 'admin', 'producer/auditions director', 'production coordinator', 'talent director', 'client', 'client-client', 'audio intern']
+			enum: ['user', 'admin', 'producer/auditions director', 'auditions director', 'production coordinator', 'talent director', 'client', 'client-client', 'audio intern']
 		}],
 		default: ['user']
 	},

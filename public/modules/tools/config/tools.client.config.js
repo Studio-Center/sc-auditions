@@ -4,7 +4,7 @@
 angular.module('tools').run(['Menus',
 	function(Menus) {
 		// Set top bar menu items
-		Menus.addMenuItem('topbar', 'Tools', 'tools', 'dropdown', '/tools(/create)?', false, ['admin','producer/auditions director', 'audio intern', 'production coordinator'], 1);
+		Menus.addMenuItem('topbar', 'Tools', 'tools', 'dropdown', '/tools(/create)?', false, ['admin','producer/auditions director','auditions director','audio intern', 'production coordinator'], 1);
         Menus.addSubMenuItem('topbar', 'tools', 'ISDN Source Connect List', 'reports/isdn-source-connect-list');
 		Menus.addSubMenuItem('topbar', 'tools', 'Call List', 'tools/call-list');
 		Menus.addSubMenuItem('topbar', 'tools', 'Email Talent', 'tools/email-talent');
