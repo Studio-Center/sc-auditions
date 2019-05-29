@@ -28,6 +28,10 @@ angular.module('reports').config(['$stateProvider',
 		state('assignedProducer', {
 			url: '/reports/assigned-producer',
 			templateUrl: 'modules/reports/views/assigned-producer.client.view.html'
+		}).
+		state('isdnSourceConnectList', {
+			url: '/reports/isdn-source-connect-list',
+			templateUrl: 'modules/reports/views/isdn-source-connect-list.client.view.html'
 		});
 		// state('createReport', {
 		// 	url: '/reports/create',

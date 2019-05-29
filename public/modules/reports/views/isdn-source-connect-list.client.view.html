@@ -1,0 +1,34 @@
+<section data-ng-controller="TalentsController" data-ng-init="limitOverride();findLimitWithFilter({'ISDNLine1':{'$nin': [null, '']},'sourceConnectUsername':{'$nin': [null, '']}});">
+    <div class="page-header">
+        <h1>ISDN Source Connect List</h1>
+    </div>
+    Found {{talents.length}}
+    <div class="list-group">
+    	<div class="list-group item-list">
+            <div class="table-responsive">
+            <table class="table table-striped table-hover">
+            <thead class="thead-light">
+                <th>Name</th>
+                <th>ISDN Dialup 1</th>
+                <th>ISDN Dialup 2</th>
+                <th>Source Connect Username</th>
+                <th>Phone</th>
+                <th>Phone 2</th>
+                <th>Email</th>
+                <th>Email 2</th>
+            </thead>
+            <tr data-ng-repeat="talent in talents">
+                <td>{{talent.name}} {{talent.lastName}}</td>
+                <td>{{talent.ISDNLine1}}</td>
+                <td>{{talent.ISDNLine2}}</td>
+                <td>{{talent.sourceConnectUsername}}</td>
+                <td>{{talent.phone}}</td>
+                <td>{{talent.phone2}}</td>
+                <td>{{talent.email}}</td>
+                <td>{{talent.email2}}</td>
+            </tr>
+            </table>
+            </div>
+        </div>
+    </div>
+</section>

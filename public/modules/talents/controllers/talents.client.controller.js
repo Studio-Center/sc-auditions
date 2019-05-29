@@ -48,6 +48,10 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
                 // 	delete $scope.watchersObj[key];
                 // });
         });
+        
+        $scope.limitOverride = function(){
+			$scope.limit=5000;
+		};
 
 		// listing filter
 		$scope.startsWith = function (actual, expected) {
@@ -440,7 +444,7 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
                 filterObj = Object.assign(filterObj, listFilter);
             }
 
-			$http.post('/talents/findLimitWithFilter', {
+            $http.post('/talents/findLimitWithFilter', {
 				startVal: startVal,
 				limitVal: $scope.limit,
 				filter: filterObj

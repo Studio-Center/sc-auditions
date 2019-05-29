@@ -379,7 +379,9 @@ exports.delete = function(req, res) {
 var getTalentsFilters = function(req){
 
 	// gen filter object
-	var filterObj = {};
+	var filterObj = {},
+        orQry = [];
+    
 	// filter by project title
 	if(req.body.filter.fName){
 		filterObj.name = new RegExp(req.body.filter.fName, 'i');
@@ -414,6 +416,17 @@ var getTalentsFilters = function(req){
 	if(typeof req.body.filter.producerOptional != 'undefined'){
 		filterObj.producerOptional = req.body.filter.producerOptional;
 	}
+    // ISDNLine1
+	if(req.body.filter.ISDNLine1){
+		orQry.push({ISDNLine1: req.body.filter.ISDNLine1});
+	}
+    if(req.body.filter.sourceConnectUsername){
+        orQry.push({sourceConnectUsername: req.body.filter.sourceConnectUsername});
+    }
+    if(orQry.length > 0){
+        filterObj.$or = orQry;
+    }
+    
 	// locationISDN
 	if(req.body.filter.typeCasts){
 		filterObj.typeCasts = new RegExp("^" + req.body.filter.typeCasts.toLowerCase(), "i");
