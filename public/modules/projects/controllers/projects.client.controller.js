@@ -1242,6 +1242,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				if(data){
 					$scope.project = angular.extend($scope.project, data);
 				}
+                
+                jQuery('section.content').animate({backgroundColor:'#ddd'},{duration:500,complete: function() {
+                  jQuery('section.content').animate({backgroundColor:'transparent'},{duration:500});
+                }});
 
 				// remove update overlay
 				$scope.processing = false;
@@ -1618,6 +1622,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					id: project._id
 				}).success(function(data, status, headers, config) {
 					project = angular.extend(project, data);
+                    
+                    jQuery('section.content').animate({backgroundColor:'#ddd'},{duration:500,complete: function() {
+                      jQuery('section.content').animate({backgroundColor:'transparent'},{duration:500});
+                    }});
 				});
 			}
 
@@ -1662,6 +1670,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}).success(function(data, status, headers, config) {
 				$scope.project = new Projects();
 				$scope.project = angular.extend($scope.project, data);
+                
+                jQuery('section.content').animate({backgroundColor:'#ddd'},{duration:500,complete: function() {
+                  jQuery('section.content').animate({backgroundColor:'transparent'},{duration:500});
+                }});
+                
 			// file not found
 			}).error(function(data, status, headers, config) {
 				console.log('Problem loading project.');

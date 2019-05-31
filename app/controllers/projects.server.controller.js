@@ -915,7 +915,7 @@ exports.updateNoRefresh = function(req, res){
 		project = '';
 
 	// validate user interaction
-	if (_.intersection(req.user.roles, allowedRoles).length) {
+	if (_.intersection(req.user.roles, allowedRoles).length && typeof req.body.project != 'undefined' && typeof req.body.project._id != 'undefined') {
 
 		// write change to log
 		if(typeof req.body.project.log !== 'undefined'){
@@ -954,8 +954,8 @@ exports.updateNoRefresh = function(req, res){
 
 					log = {
 						type: 'error',
-						sharedKey: String(req.body.project._id),
-						description: String(err) + ' Project ID: ' + String(req.body.project._id),
+						sharedKey: String(project._id),
+						description: String(err) + ' Project ID: ' + String(project._id),
 						user: req.user
 					};
 					log = new Log(log);

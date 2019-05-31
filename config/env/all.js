@@ -35,6 +35,7 @@ module.exports = {
 				'public/lib/ng-file-upload/angular-file-upload.js',
 				'public/lib/jquery/dist/jquery.min.js',
                 'public/lib/jquery-migrate/jquery-migrate.min.js',
+                'public/lib/jquery-color/jquery.color.js',
 				'public/lib/angular-resource/angular-resource.min.js',
 				'public/lib/angular-cookies/angular-cookies.min.js',
 				'public/lib/angular-animate/angular-animate.min.js',
