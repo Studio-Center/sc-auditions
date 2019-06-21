@@ -40,7 +40,7 @@
     "jquery": ">=3.4.0",
     "jquery-migrate": ">=3.0.0",
     "json2csv": "^2.4.3",
-    "jwt-simple": "^0.3.0",
+    "jwt-simple": ">=0.5.3",
     "lodash": ">=4.17.5",
     "method-override": ">=2.3.10",
     "moment": "^2.10.3",
