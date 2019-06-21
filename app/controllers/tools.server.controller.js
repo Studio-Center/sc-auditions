@@ -34,7 +34,7 @@ exports.sendTalentEmails = function(req, res){
 	// email all talents if email all is set to true
 	if(email.all === true){
 
-		Talent.find().sort({'locationISDN': 1,'lastName': 1,'-created': -1}).populate('user', 'displayName').exec(function(err, talents) {
+		Talent.find({'type':'Email'}).sort({'locationISDN': 1,'lastName': 1,'-created': -1}).populate('user', 'displayName').exec(function(err, talents) {
 			if (err) {
 				return res.status(400).send({
 					message: errorHandler.getErrorMessage(err)

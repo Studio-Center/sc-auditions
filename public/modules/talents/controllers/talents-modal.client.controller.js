@@ -132,7 +132,8 @@ angular.module('talents').controller('TalentsModalController', ['$scope', '$stat
 				producerOptional: this.producerOptional,
 				unionJoined: this.unionJoinSelected,
 				demoLink: this.demoLink,
-				prefLanguage: this.prefLanguage
+				prefLanguage: this.prefLanguage,
+                note: this.note
 			});
 
 			// Redirect after save

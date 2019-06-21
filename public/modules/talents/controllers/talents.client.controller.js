@@ -320,26 +320,26 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 
 			// reload project to make sure other recent changes are not overwritten
 			$http.get('/projects/' + project._id,{}).
-			success(function(data, status, headers, config) {
+            success(function(data, status, headers, config) {
 
-				data.talent[talentId].status = project.talent[talentId].status;
+                data.talent[talentId].status = project.talent[talentId].status;
 
-				$http.post('/projects/updatetalentstatus', {
-			        project: data
-			    }).
-				success(function(data, status, headers, config) {
+                $http.post('/projects/updatetalentstatus', {
+                    project: data
+                }).
+                success(function(data, status, headers, config) {
 
-					// update projects listing
-					$http.post('/projects/filterByTalent', {
-				        talentId: $scope.talent._id,
-				        archived: $scope.archived
-				    }).
-					success(function(data, status, headers, config) {
-						// store projects data
-						$scope.projects = data;
-					});
+                    // update projects listing
+                    $http.post('/projects/filterByTalent', {
+                        talentId: $scope.talent._id,
+                        archived: $scope.archived
+                    }).
+                    success(function(data, status, headers, config) {
+                        // store projects data
+                        $scope.projects = data;
+                    });
 
-				});
+                });
 
 			});
 		};

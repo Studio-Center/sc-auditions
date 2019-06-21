@@ -714,16 +714,18 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 		
 	// send download booked auds request
 	var bookedAudsDL = function(bookedAuds){
+        
 		$http.post('/projects/downloadBookedAuditions', {
 			projectId: $scope.project._id,
 			projectTitle: $scope.project.title,
 			bookedAuds: bookedAuds
-		}).
-		success(function(data, status, headers, config) {
+		}).success(function(data, status, headers, config) {
 			// send data to users browser
 			window.location.href = 'res/archives/' + encodeURIComponent(data.zip);
+		}).error(function(data, status, headers, config) {
+            console.log('Problem gathering audition files. ' + JSON.stringify(data));
+        });
 
-		});
 	};
 		
   	// download all auditions from project
@@ -735,33 +737,45 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 			limit = auditions.length,
 			limitNew = auditionsNew.length,
 			i = 0;
-
-  		for(i = 0; i < limit; ++i){
-			// add auds from old system
-  			if(auditions[i].booked === true){
-  				bookedAuds.push(auditions[i].file.name);
+                
+        angular.forEach(auditionsNew, function(audition, key) {
+            
+            if(audition.booked === true){
+  				bookedAuds.push(audition.file.name);
   			}
-
-			// download all booked auditions on final booked audition walk
-			if((i+1) === limit){
-
-				for(i = 0; i < limitNew; ++i){
-					
-					// add auds from new system
-					if(auditionsNew[i].booked === true){
-						bookedAuds.push(auditionsNew[i].file.name);
-					}
-					
-					if((i+1) === limitNew){
-						
-						bookedAudsDL(bookedAuds);
-						
-					}
-					
-				}
-
-			}
-  		}
+            
+        });
+        
+        if(bookedAuds.length > 0){
+            bookedAudsDL(bookedAuds);
+        }
+        
+//  		for(i = 0; i < limit; ++i){
+//			// add auds from old system
+//  			if(auditions[i].booked === true){
+//  				bookedAuds.push(auditions[i].file.name);
+//  			}
+//
+//			// download all booked auditions on final booked audition walk
+//			if((i+1) === limit){
+//
+//				for(i = 0; i < limitNew; ++i){
+//					
+//					// add auds from new system
+//					if(auditionsNew[i].booked === true){
+//						bookedAuds.push(auditionsNew[i].file.name);
+//					}
+//					
+//					if((i+1) === limitNew){
+//						
+//						bookedAudsDL(bookedAuds);
+//						
+//					}
+//					
+//				}
+//
+//			}
+//  		}
 
   	};
 		// send download selected auds request
@@ -776,7 +790,10 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 				// wait one second for archive processing on server
 				window.location.href = 'res/archives/' + encodeURIComponent(data.zip);
 
-			});
+			}).error(function(data, status, headers, config) {
+                console.log('Problem gathering audition files. ' + JSON.stringify(data));
+            });
+            
 		};
 
   	// download all auditions from project
@@ -789,33 +806,50 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 			limitNew = auditionsNew.length,
 			i = 0;
 
-  		for(i = 0; i < limit; ++i){
-  			if(auditions[i].selected === true){
-  				selectedAuds.push(auditions[i].file.name);
+        angular.forEach(auditionsNew, function(audition, key) {
+            
+            if(audition.booked === true){
+  				selectedAuds.push(audition.file.name);
+  			}else if(audition.selected === true){
+  				selectedAuds.push(audition.file.name);
   			}
+            
+        });
+        
+        if(selectedAuds.length > 0){
+            audsSelDL(selectedAuds);
+        }
 
-			// download all auditions on final audition file walk
-			if((i+1) === limit){
-
-
-				for(i = 0; i < limitNew; ++i){
-
-					// add auds from new system
-					if(auditionsNew[i].selected === true){
-						console.log(auditionsNew[i].selected);
-						selectedAuds.push(auditionsNew[i].file.name);
-					}
-
-					if((i+1) === limitNew){
-
-						audsSelDL(selectedAuds);
-
-					}
-
-				}
-
-			}
-  		}
+//        for(i = 0; i < limit; ++i){
+//            
+//  			if(auditions[i].booked === true){
+//  				selectedAuds.push(auditions[i].file.name);
+//  			}else if(auditions[i].selected === true){
+//  				selectedAuds.push(auditions[i].file.name);
+//  			}
+//
+//			// download all auditions on final audition file walk
+//			if((i+1) === limit){
+//
+//
+//				for(i = 0; i < limitNew; ++i){
+//
+//					// add auds from new system
+//					if(auditionsNew[i].selected === true){
+//						console.log(auditionsNew[i].selected);
+//						selectedAuds.push(auditionsNew[i].file.name);
+//					}
+//
+//					if((i+1) === limitNew){
+//
+//						audsSelDL(selectedAuds);
+//
+//					}
+//
+//				}
+//
+//			}
+//  		}
 
   	};
   	// show booked option for selected auditions

@@ -102,6 +102,9 @@ var TalentSchema = new Schema({
 	prefLanguage: {
 		type: String
 	},
+	note: {
+		type: String
+	},
 	created: {
 		type: Date,
 		default: Date.now

@@ -182,10 +182,10 @@ var emailTalent = function(selTalent, talentInfo, email, project, req, res, subj
 		function(talentEmailHTML, owner, done) {
 			// send email
 			var transporter = nodemailer.createTransport(sgTransport(config.mailer.options)),
-					emailSubject = '',
-					newDate = new Date(project.estimatedCompletionDate),
-					nameArr = [],
-					talentEmails = [talentInfo.email];
+                emailSubject = '',
+                newDate = new Date(project.estimatedCompletionDate),
+                nameArr = [],
+                talentEmails = [talentInfo.email];
 
 			// set vars
 			newDate = newDate.setHours(newDate.getHours() - 1);
@@ -240,21 +240,21 @@ var sendTalentEmail = function(req, res, project, talent, override){
 		// gather info for selected talent
 		function(done) {
 			Talent.findOne({'_id':talent.talentId}).sort('-created').exec(function(err, talentInfo) {
-				done(err, talentInfo);
+                done(err, talentInfo);
 			});
 		},
 		// generate email body
 		function(talentInfo, done) {
 			var email =  {
-								projectId: '',
-								to: [],
-								bcc: [],
-								subject: '',
-								header: '',
-								footer: '',
-								scripts: '',
-								referenceFiles: ''
-							};
+                            projectId: '',
+                            to: [],
+                            bcc: [],
+                            subject: '',
+                            header: '',
+                            footer: '',
+                            scripts: '',
+                            referenceFiles: ''
+                        };
 			if(talentInfo.type.toLowerCase() === 'email' || override === true){
 				var i;
 
@@ -320,7 +320,7 @@ var sendTalentEmail = function(req, res, project, talent, override){
 				log = new Log(log);
 				log.save();
 
-				// also senf log for prohect if talent log attribute
+				// also senf log for project if talent log attribute
 				if(log.type === 'talent'){
 					log = log.toObject();
 
@@ -342,7 +342,6 @@ var sendTalentEmail = function(req, res, project, talent, override){
 					if (err) {
 						done(err);
 					} else {
-
 						var socketio = req.app.get('socketio');
 						socketio.sockets.emit('projectUpdate', {id: project._id});
 						socketio.sockets.emit('callListUpdate', {filter: ''});
@@ -823,25 +822,27 @@ exports.updateTalentStatus = function(req, res){
 	if (_.intersection(req.user.roles, allowedRoles).length) {
 
 		var project = req.body.project;
+        
+        if (project._id.match(/^[0-9a-fA-F]{24}$/)) {
+            Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
 
-		Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
+                project = _.extend(project, req.body.project);
 
-			project = _.extend(project, req.body.project);
+                req.project = project ;
 
-			req.project = project ;
+                project.save(function(err) {
+                    if (err) {
+                        return res.status(400).json(err);
+                    } else {
+                        var socketio = req.app.get('socketio');
+                            socketio.sockets.emit('projectUpdate', {id: project._id});
+                            socketio.sockets.emit('callListUpdate', {filter: ''});
+                        res.status(200);
+                    }
+                });
 
-			project.save(function(err) {
-				if (err) {
-					return res.status(400).json(err);
-				} else {
-					var socketio = req.app.get('socketio');
-						socketio.sockets.emit('projectUpdate', {id: project._id});
-						socketio.sockets.emit('callListUpdate', {filter: ''});
-					res.status(200);
-				}
-			});
-
-		});
+            });
+        }
 
 	}
 
@@ -913,67 +914,70 @@ exports.updateNoRefresh = function(req, res){
 	var allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern', 'production coordinator','client','client-client'],
       	log = '',
 		project = '';
-
+    
+    if(typeof req.body.project != 'undefined' && typeof req.body.project._id  != 'undefined'){
 	// validate user interaction
-	if (_.intersection(req.user.roles, allowedRoles).length && typeof req.body.project != 'undefined' && typeof req.body.project._id != 'undefined') {
+        if (_.intersection(req.user.roles, allowedRoles).length && typeof req.body.project != 'undefined' && typeof req.body.project._id != 'undefined') {
 
-		// write change to log
-		if(typeof req.body.project.log !== 'undefined'){
-			log = req.body.project.log;
-			log.user = req.user;
+            // write change to log
+            if (req.body.project._id.match(/^[0-9a-fA-F]{24}$/)) {
+                if(typeof req.body.project.log !== 'undefined'){
+                    log = req.body.project.log;
+                    log.user = req.user;
 
-			log = new Log(log);
-			log.save();
+                    log = new Log(log);
+                    log.save();
 
-			// also send log for project if talent log attribute
-			if(log.type === 'talent'){
-				log = log.toObject();
+                    // also send log for project if talent log attribute
+                    if(log.type === 'talent'){
+                        log = log.toObject();
 
-				log.type = 'project';
-				log.sharedKey = String(req.body.project._id);
+                        log.type = 'project';
+                        log.sharedKey = String(req.body.project._id);
 
-				log = new Log(log);
-				log.save();
-			}
-		}
+                        log = new Log(log);
+                        log.save();
+                    }
+                }
 
-		//project = req.body.project;
+                //project = req.body.project;
+            
+                Project.findById(req.body.project._id).populate('user', 'displayName').exec(function(err, project) {
 
-		Project.findById(req.body.project._id).populate('user', 'displayName').exec(function(err, project) {
+                    // if(typeof req.body.project.__v !== 'undefined'){
+                    // 	delete req.body.project.__v;
+                    // }
 
-			// if(typeof req.body.project.__v !== 'undefined'){
-			// 	delete req.body.project.__v;
-			// }
+                    project = _.extend(project, req.body.project);
 
-			project = _.extend(project, req.body.project);
+                    req.project = project;
 
-			req.project = project;
+                    project.save(function(err) {
+                        if (err) {
 
-			project.save(function(err) {
-				if (err) {
+                            log = {
+                                type: 'error',
+                                sharedKey: String(project._id),
+                                description: String(err) + ' Project ID: ' + String(project._id),
+                                user: req.user
+                            };
+                            log = new Log(log);
+                            log.save();
 
-					log = {
-						type: 'error',
-						sharedKey: String(project._id),
-						description: String(err) + ' Project ID: ' + String(project._id),
-						user: req.user
-					};
-					log = new Log(log);
-					log.save();
+                            return res.status(400).json(err);
+                        } else {
+                            var socketio = req.app.get('socketio');
+                                socketio.sockets.emit('projectUpdate', {id: project._id});
+                                socketio.sockets.emit('callListUpdate', {filter: ''});
 
-					return res.status(400).json(err);
-				} else {
-					var socketio = req.app.get('socketio');
-						socketio.sockets.emit('projectUpdate', {id: project._id});
-						socketio.sockets.emit('callListUpdate', {filter: ''});
+                            res.jsonp(project);
+                        }
+                    });
 
-					res.jsonp(project);
-				}
-			});
-
-		});
-
-	}
+                });
+            }
+        }
+    }
 
 };
 
@@ -2813,6 +2817,57 @@ exports.uploadTempScript = function(req, res, next){
 	}
 };
 
+exports.test = function(req, res, next){
+    // method vars
+	var audTalent = '',
+		firstName = '',
+		lastNameCode = '',
+		curUser = Object.create(req.user);
+    
+    var file = '120-AlanS.mp3';
+
+    var regStr = /([a-zA-Z]+)\.\w{3}$/i.exec(file);
+	if(regStr !== null){
+		var regStrOP = regStr[1],
+			   lastNm = /([A-Z])[a-z]*$/.exec(regStrOP);
+
+		if(lastNm !== null){
+			var lastNmPos = lastNm.index;
+
+			firstName = regStrOP.slice(0,lastNmPos);
+			lastNameCode = regStrOP.slice(lastNmPos, regStrOP.length);
+		}
+	}
+    
+    Talent.find({'name': new RegExp('^'+firstName+'$', 'i'), 'lastNameCode': new RegExp('^'+lastNameCode+'$', 'i')}).sort('-created').exec(function(err, talent) {
+        if (err) {
+			return res.status(400).json(err);
+		} else {
+            return res.jsonp(talent);
+            
+//            Project.findById('56fd5d370cd11652504b0cd4').populate('user', 'displayName').exec(function(err, project) {
+//				// walk through project talent, look for existing assignment
+//                var fndTalent = [];
+//                async.eachSeries(project.talent, function (curTalent, talentCallback) {
+//
+//                    if(talent !== null){
+//                        if(String(talent._id) == String(curTalent.talentId)){
+//                            audTalent = curTalent.talentId;
+//                        }
+//                        fndTalent.push(talent._id + ' ' + curTalent.talentId);
+//                    }
+//                    talentCallback();
+//
+//                }, function (err) {
+//                    return res.jsonp(fndTalent);
+//                });
+//			});
+            //return res.jsonp(talent);
+        }
+    });
+
+}
+
 // file upload
 exports.uploadAudition = function(req, res, next){
 
@@ -2879,7 +2934,7 @@ exports.uploadAudition = function(req, res, next){
 			});
 		},
 		function(done) {
-			Talent.findOne({'name': new RegExp('^'+firstName+'$', 'i'), 'lastNameCode': new RegExp('^'+lastNameCode+'$', 'i')}).sort('-created').exec(function(err, talent) {
+			Talent.find({'name': new RegExp('^'+firstName+'$', 'i'), 'lastNameCode': new RegExp('^'+lastNameCode+'$', 'i')}).sort('-created').exec(function(err, talent) {
 				done(err, talent);
 			});
 		},
@@ -2891,16 +2946,25 @@ exports.uploadAudition = function(req, res, next){
 		function(talent, project, done) {
 
 			// walk through project talent, look for existing assignment
-			async.eachSeries(project.talent, function (curTalent, talentCallback) {
-
-				if(talent !== null){
-					if(String(talent._id) === curTalent.talentId){
-						audTalent = curTalent.talentId;
-					}
-				}
-				talentCallback();
-
-			}, function (err) {
+			async.eachSeries(project.talent, function iteratee(curTalent, talentCallback) {
+                
+                async.eachSeries(talent, function iteratee(curAllTalent, talentAllCallback) {
+                    
+                    if(talent !== null){
+                        if(String(curAllTalent._id) === String(curTalent.talentId)){
+                            audTalent = curTalent.talentId;
+                        }
+                    }
+                    
+                    talentAllCallback();
+                    
+                }, function done(err) {
+                    
+                    talentCallback();
+                    
+                });               
+                
+			}, function done(err) {
 
 				var audition = {
 					project: project._id,
@@ -2940,9 +3004,9 @@ exports.uploadAudition = function(req, res, next){
 				log = new Log(log);
 				log.save();
 
-				// update everyone else
-				var socketio = req.app.get('socketio');
-				socketio.sockets.emit('auditionUpdate', {id: aud.project});
+//				// update everyone else
+//				var socketio = req.app.get('socketio');
+//				socketio.sockets.emit('auditionUpdate', {id: aud.project});
 				
 				// send audition data to client
 				return res.jsonp(audition);
@@ -3036,10 +3100,10 @@ exports.downloadAllAuditions = function(req, res, next){
     var zipName = req.body.project.title.replace('/','-') + '.zip';
     var newZip = savePath + zipName;
 
-		// check for existing parent directory, create if needed
-		if (!fs.existsSync(savePath)) {
-			fs.mkdirSync(savePath);
-		}
+    // check for existing parent directory, create if needed
+    if (!fs.existsSync(savePath)) {
+        fs.mkdirSync(savePath);
+    }
 
     //console.log(newPath);
 
@@ -3092,15 +3156,20 @@ exports.downloadBookedAuditions = function(req, res, next){
 	});
 
 	// add all booked auditions
-	for(var i = 0; i < bookedAuds.length; ++i){
-		if (fs.existsSync(newPath + bookedAuds[i])) {
-			archive.file(newPath + bookedAuds[i], { name:bookedAuds[i] });
+    async.eachSeries(bookedAuds, function (audition, next) {
+        
+        if (fs.existsSync(newPath + audition)) {
+			archive.file(newPath + audition, { name:audition });
 		}
-	}
-
-	archive.pipe(output);
-
-	archive.finalize();
+        
+        next();
+        
+    }, function done(err) {
+        
+        archive.pipe(output);
+        archive.finalize();
+        
+    });
 
 };
 
@@ -3133,15 +3202,19 @@ exports.downloadSelectedAuditions = function(req, res, next){
 	});
 
     // add all booked auditions
-    for(var i = 0; i < selAuds.length; ++i){
-		if (fs.existsSync(newPath + selAuds[i])) {
-			archive.file(newPath + selAuds[i], { name:selAuds[i] });
+    async.eachSeries(selAuds, function (audition, next) {
+        
+        if (fs.existsSync(newPath + audition)) {
+			archive.file(newPath + audition, { name:audition });
 		}
-    }
-
-    archive.pipe(output);
-
-    archive.finalize();
+        next();
+        
+    }, function (err) {
+        
+        archive.pipe(output);
+        archive.finalize();
+        
+    });
 
 };
 // send email and update project status for selected booked auditions

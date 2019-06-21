@@ -110,7 +110,7 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 				if($scope.emailAssignedSwitch){
 						$scope.emailAssignedSwitch = false;
 						return;
-				};
+				}
 				var talents = $scope.talents,
 						limit = talents.length,
 						i = 0;
@@ -135,7 +135,14 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 			}
 		};
 		$scope.gatherTalents = function(){
-			$scope.talents = Talents.query();
+            $http.post('/talents/findLimitWithFilter', {
+				startVal: 0,
+				limitVal: 7000,
+				filter: {'type':'Email'}
+		    }).
+			success(function(data, status, headers, config) {
+				$scope.talents = data;
+			});
 		};
 		$scope.talentLookup = function(id){
 

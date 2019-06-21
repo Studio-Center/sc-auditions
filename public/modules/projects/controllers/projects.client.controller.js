@@ -103,6 +103,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		};
 
+//        $http.post('/projects/test')
+//        .success(function(data, status, headers, config) {
+//            console.log(data);
+//        });
+        
 		$scope.toggleShowRename = function(idx){
 			if($scope.showRename[idx]) {
 				$scope.showRename[idx] = !$scope.showRename;
@@ -951,8 +956,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.updateTalentStatus = function(talentId, status){
 
 			var talents = $scope.project.talent,
-					limit = talents.length,
-					i = 0;
+                limit = talents.length,
+                i = 0;
 
 			for(i = 0; i < limit; ++i){
 				if(String(talents[i].talentId) === String(talentId)){
@@ -1250,6 +1255,17 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				// remove update overlay
 				$scope.processing = false;
 
+			}).error(function(data, status, headers, config) {
+                
+                // remove update overlay
+				$scope.processing = false;
+                
+                jQuery('section.content').animate({backgroundColor:'#ddd'},{duration:500,complete: function() {
+                  jQuery('section.content').animate({backgroundColor:'transparent'},{duration:500});
+                }});
+                
+				console.log('Problem loading project. ' + JSON.stringify(data));
+                
 			});
 
 		};

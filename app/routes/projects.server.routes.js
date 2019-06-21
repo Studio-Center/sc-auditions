@@ -155,6 +155,10 @@ module.exports = function(app) {
 	app.route('/projects/uploads/talentAuditions')
 		.post(multipartyMiddleware, projects.uploadTalentAudition);
 
+    app.route('/projects/test')
+		.post(users.requiresLogin, multipartyMiddleware, projects.test);
+
+    
 	// Finish by binding the Project middleware
 	app.param('projectId', projects.projectByID);
 };
