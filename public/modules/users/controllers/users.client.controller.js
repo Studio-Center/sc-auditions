@@ -33,6 +33,12 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
 				// reload list
 				$scope.findLimitWithFilter();
     };
+        
+    $scope.tinymceOptions = {
+        plugins: 'link image code',
+        toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code'
+      };
+        
     $scope.changePage = function(page){
     	var curSel = page * $scope.limit;
 

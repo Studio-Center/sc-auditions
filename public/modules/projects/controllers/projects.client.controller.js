@@ -108,6 +108,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 //            console.log(data);
 //        });
         
+        $scope.tinymceOptions = {
+            plugins: 'link image code',
+            toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code'
+          };
+        
 		$scope.toggleShowRename = function(idx){
 			if($scope.showRename[idx]) {
 				$scope.showRename[idx] = !$scope.showRename;

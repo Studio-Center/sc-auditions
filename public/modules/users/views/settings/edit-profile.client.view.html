@@ -33,7 +33,7 @@
 				</div>
 				<div class="form-group" ng-if="permitEveryOneButClients()">
 					<label for="notes">Email Signature</label>
-					<div text-angular ng-model="user.emailSignature"></div>
+					<textarea ui-tinymce="tinymceOptions" ng-model="user.emailSignature"></textarea>
 				</div>
 				<div data-ng-show="success" class="text-center text-success">
 					<strong>Profile Saved Successfully</strong>

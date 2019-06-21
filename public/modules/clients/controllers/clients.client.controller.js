@@ -43,6 +43,11 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 	$scope.$on('$destroy', function (event) {
 	Socket.removeAllListeners();
     });
+        
+    $scope.tinymceOptions = {
+        plugins: 'link image code',
+        toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code'
+    };
 
 	// gathers to field addresses for emails
 	$scope.gatherToAddresses = function(type){

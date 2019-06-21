@@ -178,7 +178,7 @@
 	    	</div>
 	    	<div class="row">
 	    		<label for="email.body">Email Body</label>
-	    		<div text-angular ng-model="email.body"></div>
+	    		<textarea ui-tinymce="tinymceOptions" ng-model="email.body"></textarea>
 	    	</div>
 	    	<div class="row" style="text-align:center">
 	    		<button type="button" class="btn btn-primary" ng-click="sendTalentEmails()">Send</button>

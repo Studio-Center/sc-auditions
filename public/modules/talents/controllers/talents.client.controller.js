@@ -37,6 +37,10 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
             });
             
         });
+        $scope.tinymceOptions = {
+            plugins: 'link image code',
+            toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code'
+        };
         //$scope.producers += UsersFind.query({userLevel: "admin"});
 
 		// clear mem leaks on controller destroy
