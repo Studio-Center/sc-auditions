@@ -947,10 +947,15 @@ exports.updateNoRefresh = function(req, res){
                     // if(typeof req.body.project.__v !== 'undefined'){
                     // 	delete req.body.project.__v;
                     // }
-
+                    
+                    //delete project.__v;
+                    delete req.body.project.__v;
+                    
                     project = _.extend(project, req.body.project);
 
                     req.project = project;
+                    
+                    delete project.__v;
 
                     project.save(function(err) {
                         if (err) {
@@ -2383,7 +2388,7 @@ exports.findLimitWithFilter = function(req, res) {
 	var allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern', 'production coordinator','talent director'];
 
 	if (_.intersection(req.user.roles, allowedRoles).length) {
-
+        
 		Project.find(filterObj).sort(sortOrder).skip(Number(startVal)).limit(Number(limitVal)).populate('user', 'displayName').exec(function(err, projects) {
 			if (err) {
 				//console.log(err);
