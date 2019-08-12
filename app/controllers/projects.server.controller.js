@@ -949,13 +949,13 @@ exports.updateNoRefresh = function(req, res){
                     // }
                     
                     //delete project.__v;
-                    delete req.body.project.__v;
+                    //delete req.body.project.__v;
                     
                     project = _.extend(project, req.body.project);
 
                     req.project = project;
                     
-                    delete project.__v;
+                    //delete project.__v;
 
                     project.save(function(err) {
                         if (err) {
@@ -2958,6 +2958,17 @@ exports.uploadAudition = function(req, res, next){
                     if(talent !== null){
                         if(String(curAllTalent._id) === String(curTalent.talentId)){
                             audTalent = curTalent.talentId;
+                            curTalent.status = 'Posted';
+                            
+                            // write change to log
+                            var log = {
+                                type: 'talent',
+                                sharedKey: curTalent.talentId,
+                                description: project.title + ' status updated to Posted',
+                                user: req.user
+                            };
+                            log = new Log(log);
+                            log.save();
                         }
                     }
                     
@@ -2970,7 +2981,9 @@ exports.uploadAudition = function(req, res, next){
                 });               
                 
 			}, function done(err) {
-
+                
+                project.save();
+                
 				var audition = {
 					project: project._id,
 					file: req.files.file,

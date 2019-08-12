@@ -786,7 +786,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					limit = talents.length;
 
 			// gen talent object
-			var log, talent = {
+			var log, 
+                talent = {
 							'talentId': talentId,
 							'name': talentName,
 							'nameLnmCode': talentName,
