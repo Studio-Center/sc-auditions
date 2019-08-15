@@ -2918,7 +2918,7 @@ exports.uploadAudition = function(req, res, next){
 	//console.log(newPath);
 
 	// strip talent name and last name code from audition
-	var regStr = /([a-zA-Z]+)\.\w{3}$/i.exec(file.name);
+	var regStr = /([a-zA-Z]+)\.\w{3}$/i.exec(file.name.trim());
 	if(regStr !== null){
 		var regStrOP = regStr[1],
 			lastNm = /([A-Z])[a-z]*$/.exec(regStrOP);
@@ -2956,19 +2956,24 @@ exports.uploadAudition = function(req, res, next){
                 async.eachSeries(talent, function iteratee(curAllTalent, talentAllCallback) {
                     
                     if(talent !== null){
-                        if(String(curAllTalent._id) === String(curTalent.talentId)){
+                        if(String(curAllTalent._id) == String(curTalent.talentId.trim())){
                             audTalent = curTalent.talentId;
                             curTalent.status = 'Posted';
+                            
+                            //delete project.__v;
+                            project.markModified('talent');
+                            project.save();
                             
                             // write change to log
                             var log = {
                                 type: 'talent',
                                 sharedKey: curTalent.talentId,
-                                description: project.title + ' status updated to Posted',
+                                description: project.title + ' status updated to ' + curTalent.status,
                                 user: req.user
                             };
                             log = new Log(log);
                             log.save();
+                            
                         }
                     }
                     
@@ -2981,8 +2986,6 @@ exports.uploadAudition = function(req, res, next){
                 });               
                 
 			}, function done(err) {
-                
-                project.save();
                 
 				var audition = {
 					project: project._id,

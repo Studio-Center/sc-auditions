@@ -1692,6 +1692,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}).success(function(data, status, headers, config) {
 				$scope.project = new Projects();
 				$scope.project = angular.extend($scope.project, data);
+                //console.log(data);
                 
                 jQuery('section.content').animate({backgroundColor:'#ddd'},{duration:500,complete: function() {
                   jQuery('section.content').animate({backgroundColor:'transparent'},{duration:500});
@@ -2618,9 +2619,9 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				if(typeof $scope.project.talent !== 'undefined' && $scope.project.talent.length > 0){
 					angular.forEach($scope.project.talent, function(talent, key) {
 
-						if(talent.talentId === $scope.newAudUpload.talent){
-							$scope.project.talent[key].status = 'Posted';
-						}
+//						if(talent.talentId === $scope.newAudUpload.talent){
+//							$scope.project.talent[key].status = 'Posted';
+//						}
 
 						// save on finish loop
 						if($scope.project.talent.length === (key+1)){
@@ -2637,7 +2638,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 								$scope.verifyFilesList = [];
 
 								// update project store
-								$scope.updateNoRefresh();
+								//$scope.updateNoRefresh();
+                                jQuery('section.content').animate({backgroundColor:'#ddd'},{duration:500,complete: function() {
+                                  jQuery('section.content').animate({backgroundColor:'transparent'},{duration:500});
+                                }});
+                                $scope.processing = false;
 								loadAuditions();
 
 								// trigger new file check walk
@@ -2687,6 +2692,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			$scope.uploadfile = evt.config.file.name;
 			//$scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
 		}).success(function(data, status, headers, config) {
+            $scope.loadProject();
 			$scope.newAudUpload = data;
 			$scope.audUpComp += 1;
 			$scope.uploadprogress = parseInt(100.0 / ($files.length - ($scope.audUpComp - 1)));
