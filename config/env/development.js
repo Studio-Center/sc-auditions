@@ -52,8 +52,15 @@ module.exports = {
                                 'public/lib/angular-socket-io/socket.min.js'
                         ]
                 },
-                css: 'public/dist/application.min.css',
-                js: 'public/dist/application.min.js'
+		css: [
+			'public/modules/**/css/*.css'
+		],
+		js: [
+			'public/config.js',
+			'public/application.js',
+			'public/modules/*/*.js',
+			'public/modules/*/*[!tests]*/*.js'
+		]
         },
   facebook: {
     clientID: process.env.FACEBOOK_ID || 'APP_ID',

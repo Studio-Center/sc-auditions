@@ -783,6 +783,9 @@ exports.updateSingleTalentStatus = function (req, res){
 		},
 		// email selected talent
 		function(project, done){
+            
+            project.markModified('talent');
+            project.markModified('modified');
 
 			var newProject = project.toObject();
 
@@ -829,6 +832,9 @@ exports.updateTalentStatus = function(req, res){
                 project = _.extend(project, req.body.project);
 
                 req.project = project ;
+                
+                project.markModified('talent');
+                project.markModified('modified');
 
                 project.save(function(err) {
                     if (err) {
@@ -882,6 +888,9 @@ exports.updateTalentNote = function (req, res){
 			Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
 
 				project = _.extend(project, newProject);
+                
+                project.markModified('talent');
+                project.markModified('modified');
 
 				req.project = project;
 
@@ -937,6 +946,7 @@ exports.updateNoRefresh = function(req, res){
 
                         log = new Log(log);
                         log.save();
+                        
                     }
                 }
 
@@ -952,6 +962,9 @@ exports.updateNoRefresh = function(req, res){
                     //delete req.body.project.__v;
                     
                     project = _.extend(project, req.body.project);
+                    
+                    project.markModified('talent');
+                    project.markModified('modified');
 
                     req.project = project;
                     
@@ -2881,163 +2894,205 @@ exports.uploadAudition = function(req, res, next){
 		firstName = '',
 		lastNameCode = '',
 		curUser = Object.create(req.user);
+    
+    var uploadedFiles = (Array.isArray(req.files.file) ? req.files.file : [req.files.file] );
 
-	// We are able to access req.files.file thanks to
-	// the multiparty middleware
-	var file = req.files.file;
+    //console.log(uploadedFiles);
+    //return res.jsonp(req.files);
+    //console.log(req.files);
+    // upload all files from files array
+    async.eachSeries(uploadedFiles, function iteratee(curFile, fileCallback) {
 
-	// read in project document
-	//var project = JSON.parse(req.body.data);
-	var recBody = JSON.parse(req.body.data),
-		projectId = recBody.projectId;
+        // We are able to access req.files.file thanks to
+        // the multiparty middleware
+        //console.log(curFile);
+        var file = curFile;
 
-	//var file = req.files.file;
-	var appDir = global.appRoot,
-		tempPath = file.path;
-	// check for passenger buffer file location
-	var passDir = '/usr/share/passenger/helper-scripts/public/res/auditions/' + projectId + '/' + file.name;
-	if(fs.existsSync(passDir)){
-		tempPath = passDir;
-	}
-	var audPath =  'res' + '/' + 'auditions/',
-		relativePath =  audPath + projectId + '/',
-		newPath = appDir + '/public/' + relativePath;
+        // read in project document
+        //var project = JSON.parse(req.body.data);
+        var recBody = JSON.parse(req.body.data),
+            projectId = recBody.projectId;
 
-	// check for existing parent directory, create if needed
-	if (!fs.existsSync(appDir + '/public/' + audPath)) {
-		fs.mkdirSync(appDir + '/public/' + audPath);
-	}
+        //var file = req.files.file;
+        var appDir = global.appRoot,
+            tempPath = file.path;
+        // check for passenger buffer file location
+        var passDir = '/usr/share/passenger/helper-scripts/public/res/auditions/' + projectId + '/' + file.name;
+        if(fs.existsSync(passDir)){
+            tempPath = passDir;
+        }
+        var audPath =  'res' + '/' + 'auditions/',
+            relativePath =  audPath + projectId + '/',
+            newPath = appDir + '/public/' + relativePath;
 
-	// create project directory if not found
-	if (!fs.existsSync(newPath)) {
-		fs.mkdirSync(newPath);
-	}
+        // check for existing parent directory, create if needed
+        if (!fs.existsSync(appDir + '/public/' + audPath)) {
+            fs.mkdirSync(appDir + '/public/' + audPath);
+        }
 
-	// add file path
-	newPath += file.name;
-	//console.log(newPath);
+        // create project directory if not found
+        if (!fs.existsSync(newPath)) {
+            fs.mkdirSync(newPath);
+        }
 
-	// strip talent name and last name code from audition
-	var regStr = /([a-zA-Z]+)\.\w{3}$/i.exec(file.name.trim());
-	if(regStr !== null){
-		var regStrOP = regStr[1],
-			lastNm = /([A-Z])[a-z]*$/.exec(regStrOP);
+        // add file path
+        newPath += file.name;
+        //console.log(newPath);
 
-		if(lastNm !== null){
-			var lastNmPos = lastNm.index;
+        // strip talent name and last name code from audition
+        var regStr = /([a-z_A-Z]+)\.\w{3}$/i.exec(file.name.trim());
+        if(regStr !== null){
+            var regStrOP = regStr[1],
+                lastNm = /([A-Z])[a-z]*$/.exec(regStrOP);
 
-			firstName = regStrOP.slice(0,lastNmPos);
-			lastNameCode = regStrOP.slice(lastNmPos, regStrOP.length);
-		}
-	}
+            if(lastNm !== null){
+                var lastNmPos = lastNm.index;
 
-	async.waterfall([
-		// gather info for selected project
-		function(done) {
-			mv(tempPath, newPath, function(err) {
-				done(err);
-			});
-		},
-		function(done) {
-			Talent.find({'name': new RegExp('^'+firstName+'$', 'i'), 'lastNameCode': new RegExp('^'+lastNameCode+'$', 'i')}).sort('-created').exec(function(err, talent) {
-				done(err, talent);
-			});
-		},
-		function(talent, done) {
-			Project.findById(projectId).populate('user', 'displayName').exec(function(err, project) {
-				done(err, talent, project);
-			});
-		},
-		function(talent, project, done) {
+                firstName = regStrOP.slice(0,lastNmPos).split('_').join(' ');
+                lastNameCode = regStrOP.slice(lastNmPos, regStrOP.length);
+            }
+        }
 
-			// walk through project talent, look for existing assignment
-			async.eachSeries(project.talent, function iteratee(curTalent, talentCallback) {
-                
-                async.eachSeries(talent, function iteratee(curAllTalent, talentAllCallback) {
-                    
-                    if(talent !== null){
-                        if(String(curAllTalent._id) == String(curTalent.talentId.trim())){
-                            audTalent = curTalent.talentId;
-                            curTalent.status = 'Posted';
-                            
-                            //delete project.__v;
-                            project.markModified('talent');
-                            project.save();
-                            
-                            // write change to log
-                            var log = {
-                                type: 'talent',
-                                sharedKey: curTalent.talentId,
-                                description: project.title + ' status updated to ' + curTalent.status,
-                                user: req.user
-                            };
-                            log = new Log(log);
-                            log.save();
-                            
+        async.waterfall([
+            // gather info for selected project
+            function(done) {
+                mv(tempPath, newPath, function(err) {
+                    done(err);
+                });
+            },
+            function(done) {
+                Talent.find({'name': { $regex: '^'+firstName+'$', $options: 'i' }, 'lastNameCode': { $regex: '^'+lastNameCode+'$',  $options: 'i'}}).sort('-created').exec(function(err, talent) {
+                    done(err, talent);
+                });
+            },
+            function(talent, done) {
+                Project.findById(projectId).populate('user', 'displayName').exec(function(err, project) {
+                    done(err, talent, project);
+                });
+            },
+            function(talent, project, done) {
+
+                // walk through project talent, look for existing assignment
+                async.eachSeries(project.talent, function iteratee(curTalent, talentCallback) {
+
+                    async.eachSeries(talent, function iteratee(curAllTalent, talentAllCallback) {
+
+                        if(talent !== null){
+                            if(String(curAllTalent._id).trim() == String(curTalent.talentId).trim()){
+                                audTalent = curTalent.talentId;
+                                curTalent.status = 'Posted';
+
+                                //delete project.__v;
+                                project.markModified('talent');
+                                project.markModified('modified');
+                                //curTalent.markModified('status');
+                                project.save(function (err) {
+                                  if (err) {
+                                    log = {
+                                        type: 'error',
+                                        sharedKey: String(project._id),
+                                        description: String(err) + ' Project ID: ' + String(project._id),
+                                        user: req.user
+                                    };
+                                    log = new Log(log);
+                                    log.save();
+                                  }
+                                });
+
+                                // write change to log
+                                var log = {
+                                    type: 'talent',
+                                    sharedKey: curTalent.talentId,
+                                    description: project.title + ' status updated to ' + curTalent.status,
+                                    user: req.user
+                                };
+                                log = new Log(log);
+                                log.save();
+
+                            }
                         }
-                    }
-                    
-                    talentAllCallback();
-                    
+
+                        talentAllCallback();
+
+                    }, function done(err) {
+
+                        talentCallback();
+
+                    });               
+
                 }, function done(err) {
-                    
-                    talentCallback();
-                    
-                });               
-                
-			}, function done(err) {
-                
-				var audition = {
-					project: project._id,
-					file: req.files.file,
-					discussion: [],
-					description: '',
-					rating: [],
-					published: true,
-					rename: '',
-					avgRating: 0,
-					favorite: 0,
-					talent: audTalent,
-					selected: false,
-					booked: false,
-					approved:
-						{
-							by:
-							{
-								userId: curUser._id,
-								date: moment().tz('America/New_York').format(),
-								name: curUser.displayName
-							}
-						}
-					};
-				
-				// save audition to auditions collection
-				var aud = new Audition(audition);
-				aud.save();
+console.log('worked');
+                    var audition = {
+                        project: project._id,
+                        file: curFile,
+                        discussion: [],
+                        description: '',
+                        rating: [],
+                        published: true,
+                        rename: '',
+                        avgRating: 0,
+                        favorite: 0,
+                        talent: audTalent,
+                        selected: false,
+                        booked: false,
+                        approved:
+                            {
+                                by:
+                                {
+                                    userId: curUser._id,
+                                    date: moment().tz('America/New_York').format(),
+                                    name: curUser.displayName
+                                }
+                            }
+                        };
 
-				// write change to log
-				var log = {
-					type: 'project',
-					sharedKey: String(project._id),
-					description: project.title + ' audition uploaded ' + file.name,
-					user: curUser
-				};
-				log = new Log(log);
-				log.save();
+                    // save audition to auditions collection
+                    var aud = new Audition(audition);
+                    aud.save();
+console.log('worked here as well');
+                    // write change to log
+                    var log = {
+                        type: 'project',
+                        sharedKey: String(project._id),
+                        description: project.title + ' audition uploaded ' + file.name,
+                        user: curUser
+                    };
+                    log = new Log(log);
+                    log.save();
+console.log('worked here too');
+    //				// update everyone else
+    //				var socketio = req.app.get('socketio');
+    //				socketio.sockets.emit('auditionUpdate', {id: aud.project});
 
-//				// update everyone else
-//				var socketio = req.app.get('socketio');
-//				socketio.sockets.emit('auditionUpdate', {id: aud.project});
-				
-				// send audition data to client
-				return res.jsonp(audition);
-			});
-		}
-		], function(err) {
-		if (err) {
-			return res.status(400).json(err);
-		}
-	});
+                    // send audition data to client
+                    
+                    //return res.jsonp(audition);
+                    
+                    fileCallback();
+                    
+                });
+            }
+            ], function(err) {
+            if (err) {
+                //return res.status(500).json(err);
+            }
+        });
+
+    }, function done(err) {
+        if (err) {
+            return res.status(500).json(err);
+        } else {
+            console.log('worked here too nearly end');
+            var socketio = req.app.get('socketio');
+                socketio.sockets.emit('projectUpdate', {id: req.body.projectId});
+                socketio.sockets.emit('auditionUpdate', {id: req.body.projectId});
+                socketio.sockets.emit('callListUpdate', {filter: ''});
+            return res.jsonp({'status':'success'});
+            console.log('worked here too at end');
+            
+        }
+
+    });   
 
 };
 
