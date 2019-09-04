@@ -2971,6 +2971,8 @@ exports.uploadAudition = function(req, res, next){
                 });
             },
             function(talent, project, done) {
+                
+                audTalent = '';
 
                 // walk through project talent, look for existing assignment
                 async.eachSeries(project.talent, function iteratee(curTalent, talentCallback) {
@@ -3021,7 +3023,7 @@ exports.uploadAudition = function(req, res, next){
                     });               
 
                 }, function done(err) {
-console.log('worked');
+
                     var audition = {
                         project: project._id,
                         file: curFile,
@@ -3049,7 +3051,7 @@ console.log('worked');
                     // save audition to auditions collection
                     var aud = new Audition(audition);
                     aud.save();
-console.log('worked here as well');
+
                     // write change to log
                     var log = {
                         type: 'project',
@@ -3059,8 +3061,8 @@ console.log('worked here as well');
                     };
                     log = new Log(log);
                     log.save();
-console.log('worked here too');
-    //				// update everyone else
+
+                    //				// update everyone else
     //				var socketio = req.app.get('socketio');
     //				socketio.sockets.emit('auditionUpdate', {id: aud.project});
 
