@@ -1,39 +1,30 @@
+<p>Tenemos {{requestedTxt}}una audición para usted que necesita entregar a mas tardar{{dueDate}} EST</p>
 
-	<p>Tenemos {{requestedTxt}}una audición para usted que necesita entregar a mas tardar{{dueDate}} EST</p>
- 
-	{% autoescape false %}{{part}}{% endautoescape %}
-	 
-	<p>{% autoescape false %}{{email.scripts}}{% endautoescape %}</p>
-	 
-	<p>{% autoescape false %}{{email.referenceFiles}}{% endautoescape %}</p>
-	<p>Favor de grabar el guión(los guiones) adjunto y enviarnos el archivo usando el link adjunto abajo. o si necesitan tiempo de estudio favor de llamar a Debbie al (1866-515-2111)</p>
-	<p><strong>**Como someter audiciones**</strong></p>
-	<p>Para someter audiciones favor de entrar al link abajo:<br>
-	http://remote.studiocenter.com:8000</p>
-	 
-	<p>Favor de ingresar el siguiente usuario: scauds</p>
-	 
-	<p>Después favor de dejar la contraseña sin llenar y haz click en Log In.</p>
-	 
-	<p>Después favor de arrastrar los archivos .mp3s al centro de la ventana. Ya que todos los archivos han aparecido en esa misma venta, haz click en begin upload, es así de fácil!!</p>
-	 
-	<p>Ya que termine el proceso va a aparecer una ventana de confirmación.<br>
-	Es sumamente importante que nombren los archivos .mp3 de la forma correcta. Favor de usar la siguiente formula para nombrar sus archivos:</p>
-	 
-	<p>TituloDeLaAudicion-Role-SuNombre</p>
-	 
-	<p>Ejemplo:</p>
-	 
-	<p>HomeDepot-Anncr-MateoGarcia</p>
-	 
-	<p>Si hay mas de un guión favor de crear archivos distintos.</p>
-	 
-	<p>HomeDepot-Guión1-Anncr-MateoGarcia<br>
+{% autoescape false %}{{part}}{% endautoescape %}
+
+<p>{% autoescape false %}{{email.scripts}}{% endautoescape %}</p>
+
+<p>{% autoescape false %}{{email.referenceFiles}}{% endautoescape %}</p>
+<p>Graba los guiones y envíalos como MP3 por correo electrónico a auds@studiocenter.com o llama al Departamento de
+	Talento para programar una audición en las oficinas de Studio Center más cercanas a ti. (Llamar al 866-515-2111)
+	Es extremadamente importante que nombres tus archivos MP3 con cuidado. Por favor, asegúrate de que cualquier
+	audición que nos envíes utiliza el siguiente sistema para nombrarlos:</p>
+
+
+<p>TituloDeLaAudicion-Role-SuNombre</p>
+
+<p>Ejemplo:</p>
+
+<p>HomeDepot-Anncr-MateoGarcia</p>
+
+<p>Si hay mas de un guión favor de crear archivos distintos.</p>
+
+<p>HomeDepot-Guión1-Anncr-MateoGarcia<br>
 	HomeDepot-Guión2-Anncr-MateoGarcia</p>
-	 
-	<p>Igualmente si tienen mas de un role.</p>
-	 
-	<p>HomeDepot-Anncr-MateoGarcia<br>
+
+<p>Igualmente si tienen mas de un role.</p>
+
+<p>HomeDepot-Anncr-MateoGarcia<br>
 	HomeDepot-Man1-MateoGarcia</p>
-	 
-	{% autoescape false %}{{emailSignature}}{% endautoescape%}
+
+{% autoescape false %}{{emailSignature}}{% endautoescape%}
