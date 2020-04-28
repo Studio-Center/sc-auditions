@@ -1732,12 +1732,19 @@ exports.loadAuditions = function(req, res){
 // save project audition files
 exports.deleteAudition = function(req, res){
 	
-	var aud = req.body.audition;
+	var aud = req.body.audition,
+        appDir = global.appRoot,
+        audFile = '';
 	
 	Audition.findById(aud._id).sort('-created').exec(function(err, audition) {
 		if (err) {
 			return res.status(400).send(err);
 		} else {
+            // set aud file path
+            audFile = appDir + '/public/res/auditions/' + String(audition.project) + '/' + audition.file.name;
+            // remove file from file system
+            fs.unlink(audFile);
+            // remove audition from adution collection
 			audition.remove(function(err) {
 				if (err) {
 					return res.status(400).send({

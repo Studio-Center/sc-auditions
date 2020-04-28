@@ -444,7 +444,7 @@
                         <td><input style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin:10px" ng-if="addTalent" type="checkbox" value="{{::talent._id}}" ng-click="updateRequestTalent(talent._id, talent.name + ' ' + talent.lastName, talent.email, talent.locationISDN, talent.name + ' ' + talent.lastNameCode)" ng-checked="checkRequestedTalent(talent._id)"></td>
                         <td><input type="text" class="form-control" ng-model="parts[talent._id]" ng-if="showPartFld(talent._id)">
                           <div ng-if="showPartFld(talent._id) == false" ng-bind="::showPartString(talent._id)"></div></td>
-                        <td><a target="_blank" href="/#!/talents/{{::talent._id}}" ng-bind="::talent.name + ' ' + talent.lastName"> {{::talent.birthYear}}</a> - <span ng-bind="::talent.locationISDN"></span> - Outage <span ng-if="!talent.outageTimes">None</span><span ng-if="::talent.outageTimes != ''" ng-bind="::talent.outageTimes"></span><br>
+                        <td><a target="_blank" href="/#!/talents/{{::talent._id}}" ng-bind="::talent.name + ' ' + talent.lastName"></a> {{::talent.birthYear}} - <span ng-bind="::talent.locationISDN"></span> - Outage <span ng-if="!talent.outageTimes">None</span><span ng-if="::talent.outageTimes != ''" ng-bind="::talent.outageTimes"></span><br>
                         <strong>Typecasts</strong>
                         <span ng-repeat="(key, usval) in talent.typeCasts">{{usval}}, </span></td>
                       </tr>

@@ -148,7 +148,7 @@
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-6">
                                     <a target="_blank" href="/#!/talents/{{::talent._id}}">
-                                      <span ng-bind="::talent.name"></span> <span ng-bind="::talent.lastName"> <span ng-bind="::talent.birthYear"></span></a> - <span ng-bind="::talent.locationISDN"></span> - Outage <span ng-if="::!talent.outageTimes">None</span><span ng-if="::talent.outageTimes != ''" ng-bind="::talent.outageTimes"></span><br>
+                                      <span ng-bind="::talent.name"></span> <span ng-bind="::talent.lastName"></a> {{::talent.birthYear}} - <span ng-bind="::talent.locationISDN"></span> - Outage <span ng-if="::!talent.outageTimes">None</span><span ng-if="::talent.outageTimes != ''" ng-bind="::talent.outageTimes"></span><br>
                                         <strong>Typecasts</strong>
                                         <span ng-repeat="(key, usval) in talent.typeCasts">{{usval}}, </span>
                                 </div>
