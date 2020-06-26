@@ -27,6 +27,10 @@ module.exports = function(app) {
 	app.route('/projects/deleteAudition')
 		.post(users.requiresLogin, projects.deleteAudition);
 
+	// delete all projects audition files
+	app.route('/projects/deleteAllAuditions')
+		.post(users.requiresLogin, projects.deleteAllAuditions);
+
 	// load projects using a set collection count limit
 	app.route('/projects/findLimit')
 		.post(users.requiresLogin, projects.findLimit);

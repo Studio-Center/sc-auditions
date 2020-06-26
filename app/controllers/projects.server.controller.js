@@ -1765,6 +1765,31 @@ exports.deleteAudition = function(req, res){
 };
 
 // save project audition files
+exports.deleteAllAuditions = function(req, res){
+
+    var prodId = req.body.project_ID,
+        appDir = global.appRoot + '/public',
+        auditionsDir = appDir + '/res/auditions/' + prodId + '/',
+        socketio = req.app.get('socketio');
+
+	// remove all file if exists
+	rimraf.sync(auditionsDir);
+
+    // remove all assocaited auditions
+    Audition.remove({project: Object(prodId)}).exec(function(err, audition) {
+        if (err) {
+			return res.status(400).send(err);
+		} else {
+            socketio.sockets.emit('auditionUpdate', {id: prodId});
+            return res.status(200).send();
+        }
+    }); 
+    
+    
+	
+};
+
+// save project audition files
 exports.saveAudition = function(req, res){
 	
 	// set vars
@@ -2128,12 +2153,18 @@ exports.delete = function(req, res) {
 			});
 		} else {
 			// remove all assocaited auditions
-			Audition.remove({project: prodId});
+			Audition.remove({project: prodId}).exec(function(err, audition) {
+                if (err) {
+                    return res.status(400).send(err);
+                } else {
+                    // emit an event for all connected clients
+                    var socketio = req.app.get('socketio');
+                    socketio.sockets.emit('projectsListUpdate');
+                    return res.jsonp(project);
+                }
+            }); 
 			
-			// emit an event for all connected clients
-			var socketio = req.app.get('socketio');
-			socketio.sockets.emit('projectsListUpdate');
-			return res.jsonp(project);
+			
 		}
 	});
 };

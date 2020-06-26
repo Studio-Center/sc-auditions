@@ -2379,6 +2379,28 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		}
 	};
 
+	$scope.deleteAllAuditions = function(audition){
+
+		// verify user wants to delete file
+		if (confirm('Are you sure?')) {
+            
+            var project_ID = $scope.project._id;
+
+			// delete selected file
+			$http.post('/projects/deleteAllAuditions', {
+				project_ID: project_ID
+			}).success(function(data, status, headers, config) {
+
+				loadAuditions();
+
+			}).error(function(data, status, headers, config) {
+				console.log('Problem deleting auditions.');
+			});
+
+
+		}
+	};
+
 	// update audition rating
 	$scope.updateRatingSingle = function(audition, redirect){
 
