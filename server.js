@@ -12,26 +12,26 @@ var path = require('path');
 global.appRoot = path.resolve(__dirname);
 
 // multithreading
-//var cluster = require('cluster'),
+var cluster = require('cluster');
 var sio = require('socket.io'),
-	sio_redis = require('socket.io-redis'),
-	numCPUs = require('os').cpus().length;
+    sio_redis = require('socket.io-redis'),
+    numCPUs = require('os').cpus().length;
 
 /**
  * Main application entry file.
  * Please note that the order of loading is important.
  */
 
-// if (cluster.isMaster) {
+if (cluster.isMaster) {
 //  // Fork workers.
-//  for (var i = 0; i < numCPUs; i++) {
-//    cluster.fork();
-//  }
+  for (var i = 0; i < numCPUs; i++) {
+    cluster.fork();
+  }
 //
-//  cluster.on('exit', function(worker, code, signal) {
-//    console.log('worker ' + worker.process.pid + ' died');
-//  });
-//} else {
+  cluster.on('exit', function(worker, code, signal) {
+   console.log('worker ' + worker.process.pid + ' died');
+  });
+} else {
   // Workers can share any TCP connection
   // In this case its a HTTP server
   // http.createServer(function(req, res) {
@@ -63,12 +63,12 @@ var sio = require('socket.io'),
 	// Start the app by listening on <port>
 	var server = app.get('server').listen(config.port);
 
-//	var io = sio(server, {reconnect: true, 'transports': ['websocket', 'polling']});
+	var io = sio(server, {reconnect: true, 'transports': ['websocket', 'polling']});
 //
 //	// config / init socket io with redis
-//	io.adapter(sio_redis({ host: 'localhost', port: 6379 }));
+	io.adapter(sio_redis({ host: 'localhost', port: 6379 }));
 //
-//	app.set('socketio', io);
+	app.set('socketio', io);
 	app.set('server', server);
 
 	// Listen to messages sent from the master. Ignore everything else.
@@ -87,7 +87,7 @@ var sio = require('socket.io'),
 	// Expose app
 	exports = module.exports = app;
 
-//}
+}
 
 
 // Logging initialization
