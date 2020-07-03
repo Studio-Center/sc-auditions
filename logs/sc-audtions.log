@@ -919,3 +919,114 @@ worked here too nearly end
 worked here too nearly end
 worked here too nearly end
 worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+SyntaxError: Invalid regular expression: /\/: \ at end of pattern
+    at new RegExp (native)
+    at getUsersFilters (/var/www/html/app/controllers/users/users.profile.server.controller.js:322:24)
+    at exports.findLimitWithFilter (/var/www/html/app/controllers/users/users.profile.server.controller.js:358:18)
+    at Layer.handle [as handle_request] (/var/www/html/node_modules/express/lib/router/layer.js:82:5)
+    at next (/var/www/html/node_modules/express/lib/router/route.js:100:13)
+    at exports.requiresLogin (/var/www/html/app/controllers/users/users.authorization.server.controller.js:42:2)
+    at Layer.handle [as handle_request] (/var/www/html/node_modules/express/lib/router/layer.js:82:5)
+    at next (/var/www/html/node_modules/express/lib/router/route.js:100:13)
+    at Route.dispatch (/var/www/html/node_modules/express/lib/router/route.js:81:3)
+    at Layer.handle [as handle_request] (/var/www/html/node_modules/express/lib/router/layer.js:82:5)
+    at /var/www/html/node_modules/express/lib/router/index.js:234:24
+    at Function.proto.process_params (/var/www/html/node_modules/express/lib/router/index.js:312:12)
+    at /var/www/html/node_modules/express/lib/router/index.js:228:12
+    at Function.match_layer (/var/www/html/node_modules/express/lib/router/index.js:295:3)
+    at next (/var/www/html/node_modules/express/lib/router/index.js:189:10)
+    at /var/www/html/node_modules/express/lib/router/index.js:191:16
+SyntaxError: Invalid regular expression: /\/: \ at end of pattern
+    at new RegExp (native)
+    at getUsersFilters (/var/www/html/app/controllers/users/users.profile.server.controller.js:319:25)
+    at exports.findLimitWithFilter (/var/www/html/app/controllers/users/users.profile.server.controller.js:358:18)
+    at Layer.handle [as handle_request] (/var/www/html/node_modules/express/lib/router/layer.js:82:5)
+    at next (/var/www/html/node_modules/express/lib/router/route.js:100:13)
+    at exports.requiresLogin (/var/www/html/app/controllers/users/users.authorization.server.controller.js:42:2)
+    at Layer.handle [as handle_request] (/var/www/html/node_modules/express/lib/router/layer.js:82:5)
+    at next (/var/www/html/node_modules/express/lib/router/route.js:100:13)
+    at Route.dispatch (/var/www/html/node_modules/express/lib/router/route.js:81:3)
+    at Layer.handle [as handle_request] (/var/www/html/node_modules/express/lib/router/layer.js:82:5)
+    at /var/www/html/node_modules/express/lib/router/index.js:234:24
+    at Function.proto.process_params (/var/www/html/node_modules/express/lib/router/index.js:312:12)
+    at /var/www/html/node_modules/express/lib/router/index.js:228:12
+    at Function.match_layer (/var/www/html/node_modules/express/lib/router/index.js:295:3)
+    at next (/var/www/html/node_modules/express/lib/router/index.js:189:10)
+    at /var/www/html/node_modules/express/lib/router/index.js:191:16
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+
+[7m Application loaded using the "production" environment configuration
+[0m
+{ [Error: Cannot find module '../build/Release/bson'] code: 'MODULE_NOT_FOUND' }
+js-bson: Failed to load c++ bson extension, using pure JS version
+MEAN.JS application started on port 3000
+
+[7m Application loaded using the "production" environment configuration
+[0m
+
+[7m Application loaded using the "production" environment configuration
+[0m
+{ [Error: Cannot find module '../build/Release/bson'] code: 'MODULE_NOT_FOUND' }
+js-bson: Failed to load c++ bson extension, using pure JS version
+{ [Error: Cannot find module '../build/Release/bson'] code: 'MODULE_NOT_FOUND' }
+js-bson: Failed to load c++ bson extension, using pure JS version
+{ [Error: Cannot find module '../build/Release/bson'] code: 'MODULE_NOT_FOUND' }
+{ [Error: Cannot find module '../build/Release/bson'] code: 'MODULE_NOT_FOUND' }
+js-bson: Failed to load c++ bson extension, using pure JS version
+js-bson: Failed to load c++ bson extension, using pure JS version
+MEAN.JS application started on port 3000
+MEAN.JS application started on port 3000

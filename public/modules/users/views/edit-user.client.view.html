@@ -13,7 +13,7 @@
 				</div>
 				<div class="form-group">
 					<label for="email">Company</label>
-					<input type="company" id="company" name="company" class="form-control" data-ng-model="useredit.company" placeholder="Company" required>
+					<input type="company" id="company" name="company" class="form-control" data-ng-model="useredit.company" placeholder="Company">
 				</div>
 				<div class="form-group">
 					<label for="email">Email</label>
@@ -42,7 +42,7 @@
 				<div class="form-group">
 					<label for="roles">User Role</label>
 					<select id="roles" name="roles" data-ng-model="useredit.roles" class="form-control">
-						<option value="{{item}}" ng-repeat="item in roleOpts">{{item}}</option>
+						<option value="{{item}}" ng-repeat="item in roleOpts" ng-selected="item == useredit.roles[0]">{{item}}</option>
 					</select>
 				</div>
 				<div class="text-center form-group">
