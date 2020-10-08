@@ -92,6 +92,10 @@ var UserSchema = new Schema({
 	notes: {
 		type: String
 	},
+	noemail: {
+		type: Boolean,
+		default: false
+	},
 	emailSignature: {
 		type: String
 	},

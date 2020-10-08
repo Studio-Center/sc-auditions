@@ -31,6 +31,10 @@
 					<label for="phone">Phone Number</label>
 					<input type="text" id="phone" name="phone" class="form-control" data-ng-model="user.phone" placeholder="Phone Number">
 				</div>
+				<div class="form-group">
+                                        <label for="username">Do Not Email</label>
+                                        <input type="checkbox" id="noemail" name="noemail" class="form-control" data-ng-model="user.noemail">
+                                </div>
 				<div class="form-group" ng-if="permitEveryOneButClients()">
 					<label for="notes">Email Signature</label>
 					<textarea ui-tinymce="tinymceOptions" ng-model="user.emailSignature"></textarea>
