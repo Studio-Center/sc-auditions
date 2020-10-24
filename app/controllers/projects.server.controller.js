@@ -1743,7 +1743,9 @@ exports.deleteAudition = function(req, res){
             // set aud file path
             audFile = appDir + '/public/res/auditions/' + String(audition.project) + '/' + audition.file.name;
             // remove file from file system
-            fs.unlink(audFile);
+            if (fs.existsSync(audFile)) {
+	    	fs.unlink(audFile);
+	    }
             // remove audition from adution collection
 			audition.remove(function(err) {
 				if (err) {
@@ -2106,12 +2108,14 @@ var removeFolder = function(location) {
                 if (stat.isDirectory()) {
                     removeFolder(file, cb);
                 } else {
-                    fs.unlink(file, function (err) {
+                    if (fs.existsSync(file)) {
+		    fs.unlink(file, function (err) {
                         if (err) {
                             return cb(err);
                         }
                         return cb();
                     });
+		    }
                 }
             });
         });
