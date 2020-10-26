@@ -6703,3 +6703,171 @@ worked here too nearly end
 worked here too nearly end
 worked here too nearly end
 worked here too nearly end
+
+[7m Application loaded using the "production" environment configuration
+[0m
+{ [Error: Cannot find module '../build/Release/bson'] code: 'MODULE_NOT_FOUND' }
+js-bson: Failed to load c++ bson extension, using pure JS version
+MEAN.JS application started on port 3000
+
+[7m Application loaded using the "production" environment configuration
+[0m
+
+[7m Application loaded using the "production" environment configuration
+[0m
+{ [Error: Cannot find module '../build/Release/bson'] code: 'MODULE_NOT_FOUND' }
+js-bson: Failed to load c++ bson extension, using pure JS version
+{ [Error: Cannot find module '../build/Release/bson'] code: 'MODULE_NOT_FOUND' }
+js-bson: Failed to load c++ bson extension, using pure JS version
+{ [Error: Cannot find module '../build/Release/bson'] code: 'MODULE_NOT_FOUND' }
+js-bson: Failed to load c++ bson extension, using pure JS version
+{ [Error: Cannot find module '../build/Release/bson'] code: 'MODULE_NOT_FOUND' }
+js-bson: Failed to load c++ bson extension, using pure JS version
+MEAN.JS application started on port 3000
+MEAN.JS application started on port 3000
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+TypeError: Cannot read property '_id' of undefined
+    at exports.uploadTempScript (/var/www/html/app/controllers/projects.server.controller.js:2859:24)
+    at Layer.handle [as handle_request] (/var/www/html/node_modules/express/lib/router/layer.js:82:5)
+    at next (/var/www/html/node_modules/express/lib/router/route.js:100:13)
+    at Form.<anonymous> (/var/www/html/node_modules/connect-multiparty/index.js:101:9)
+    at emitNone (events.js:72:20)
+    at Form.emit (events.js:166:7)
+    at maybeClose (/var/www/html/node_modules/connect-multiparty/node_modules/multiparty/index.js:557:10)
+    at endFlush (/var/www/html/node_modules/connect-multiparty/node_modules/multiparty/index.js:552:3)
+    at WriteStream.<anonymous> (/var/www/html/node_modules/connect-multiparty/node_modules/multiparty/index.js:617:5)
+    at emitNone (events.js:72:20)
+    at WriteStream.emit (events.js:166:7)
+    at fs.js:1772:14
+    at FSReqWrap.oncomplete (fs.js:82:15)
+TypeError: Cannot read property '_id' of undefined
+    at exports.uploadTempScript (/var/www/html/app/controllers/projects.server.controller.js:2859:24)
+    at Layer.handle [as handle_request] (/var/www/html/node_modules/express/lib/router/layer.js:82:5)
+    at next (/var/www/html/node_modules/express/lib/router/route.js:100:13)
+    at Form.<anonymous> (/var/www/html/node_modules/connect-multiparty/index.js:101:9)
+    at emitNone (events.js:72:20)
+    at Form.emit (events.js:166:7)
+    at maybeClose (/var/www/html/node_modules/connect-multiparty/node_modules/multiparty/index.js:557:10)
+    at endFlush (/var/www/html/node_modules/connect-multiparty/node_modules/multiparty/index.js:552:3)
+    at WriteStream.<anonymous> (/var/www/html/node_modules/connect-multiparty/node_modules/multiparty/index.js:617:5)
+    at emitNone (events.js:72:20)
+    at WriteStream.emit (events.js:166:7)
+    at fs.js:1772:14
+    at FSReqWrap.oncomplete (fs.js:82:15)
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+[Error: Missing destination email]
+SyntaxError: Invalid regular expression: /\/: \ at end of pattern
+    at new RegExp (native)
+    at getTalentsFilters (/var/www/html/app/controllers/talents.server.controller.js:387:20)
+    at exports.findLimitWithFilter (/var/www/html/app/controllers/talents.server.controller.js:467:18)
+    at Layer.handle [as handle_request] (/var/www/html/node_modules/express/lib/router/layer.js:82:5)
+    at next (/var/www/html/node_modules/express/lib/router/route.js:100:13)
+    at exports.requiresLogin (/var/www/html/app/controllers/users/users.authorization.server.controller.js:42:2)
+    at Layer.handle [as handle_request] (/var/www/html/node_modules/express/lib/router/layer.js:82:5)
+    at next (/var/www/html/node_modules/express/lib/router/route.js:100:13)
+    at Route.dispatch (/var/www/html/node_modules/express/lib/router/route.js:81:3)
+    at Layer.handle [as handle_request] (/var/www/html/node_modules/express/lib/router/layer.js:82:5)
+    at /var/www/html/node_modules/express/lib/router/index.js:234:24
+    at Function.proto.process_params (/var/www/html/node_modules/express/lib/router/index.js:312:12)
+    at /var/www/html/node_modules/express/lib/router/index.js:228:12
+    at Function.match_layer (/var/www/html/node_modules/express/lib/router/index.js:295:3)
+    at next (/var/www/html/node_modules/express/lib/router/index.js:189:10)
+    at /var/www/html/node_modules/express/lib/router/index.js:214:18
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+[Error: Missing destination email]
+[Error: Missing destination email]
+[Error: Missing destination email]
+[Error: Missing destination email]
+[Error: Missing destination email]
+
+[7m Application loaded using the "production" environment configuration
+[0m
+{ [Error: Cannot find module '../build/Release/bson'] code: 'MODULE_NOT_FOUND' }
+js-bson: Failed to load c++ bson extension, using pure JS version
+MEAN.JS application started on port 3000
+
+[7m Application loaded using the "production" environment configuration
+[0m
+
+[7m Application loaded using the "production" environment configuration
+[0m
+{ [Error: Cannot find module '../build/Release/bson'] code: 'MODULE_NOT_FOUND' }
+js-bson: Failed to load c++ bson extension, using pure JS version
+{ [Error: Cannot find module '../build/Release/bson'] code: 'MODULE_NOT_FOUND' }
+js-bson: Failed to load c++ bson extension, using pure JS version
+{ [Error: Cannot find module '../build/Release/bson'] code: 'MODULE_NOT_FOUND' }
+js-bson: Failed to load c++ bson extension, using pure JS version
+{ [Error: Cannot find module '../build/Release/bson'] code: 'MODULE_NOT_FOUND' }
+js-bson: Failed to load c++ bson extension, using pure JS version
+MEAN.JS application started on port 3000
+MEAN.JS application started on port 3000
+[Error: Missing destination email]
+[Error: Missing destination email]
+[Error: Missing destination email]
+[Error: Missing destination email]
+[Error: Missing destination email]
+
+[7m Application loaded using the "production" environment configuration
+[0m
+{ [Error: Cannot find module '../build/Release/bson'] code: 'MODULE_NOT_FOUND' }
+js-bson: Failed to load c++ bson extension, using pure JS version
+MEAN.JS application started on port 3000
+
+[7m Application loaded using the "production" environment configuration
+[0m
+
+[7m Application loaded using the "production" environment configuration
+[0m
+{ [Error: Cannot find module '../build/Release/bson'] code: 'MODULE_NOT_FOUND' }
+js-bson: Failed to load c++ bson extension, using pure JS version
+{ [Error: Cannot find module '../build/Release/bson'] code: 'MODULE_NOT_FOUND' }
+js-bson: Failed to load c++ bson extension, using pure JS version
+{ [Error: Cannot find module '../build/Release/bson'] code: 'MODULE_NOT_FOUND' }
+{ [Error: Cannot find module '../build/Release/bson'] code: 'MODULE_NOT_FOUND' }
+js-bson: Failed to load c++ bson extension, using pure JS version
+js-bson: Failed to load c++ bson extension, using pure JS version
+MEAN.JS application started on port 3000
+MEAN.JS application started on port 3000
+Error: Error getting collection: sessions
+    at /var/www/html/node_modules/connect-mongo/lib/connect-mongo.js:160:19
+    at Db.collection (/var/www/html/node_modules/mongoose/node_modules/mongodb/lib/mongodb/db.js:526:27)
+    at MongoStore._get_collection (/var/www/html/node_modules/connect-mongo/lib/connect-mongo.js:158:17)
+    at MongoStore.get (/var/www/html/node_modules/connect-mongo/lib/connect-mongo.js:222:10)
+    at session (/var/www/html/node_modules/express-session/index.js:348:11)
+    at Layer.handle [as handle_request] (/var/www/html/node_modules/express/lib/router/layer.js:82:5)
+    at trim_prefix (/var/www/html/node_modules/express/lib/router/index.js:270:13)
+    at /var/www/html/node_modules/express/lib/router/index.js:237:9
+    at Function.proto.process_params (/var/www/html/node_modules/express/lib/router/index.js:312:12)
+    at /var/www/html/node_modules/express/lib/router/index.js:228:12
+    at Function.match_layer (/var/www/html/node_modules/express/lib/router/index.js:295:3)
+    at next (/var/www/html/node_modules/express/lib/router/index.js:189:10)
+    at cookieParser (/var/www/html/node_modules/cookie-parser/index.js:48:5)
+    at Layer.handle [as handle_request] (/var/www/html/node_modules/express/lib/router/layer.js:82:5)
+    at trim_prefix (/var/www/html/node_modules/express/lib/router/index.js:270:13)
+    at /var/www/html/node_modules/express/lib/router/index.js:237:9
