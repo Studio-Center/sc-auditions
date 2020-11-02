@@ -695,7 +695,7 @@ var yesterday = new Date(req.body.dateFilterStart);
                                     Project.findOne({'_id':audition.project}).sort('-created').exec(function(err, project) {
                                         if (err) {
                                             audsResult[audition.approved.by.userId].projects[audition.project].title = audition.project;
-                                        } else if(typeof project != 'undefined'){
+                                        } else if(typeof project != 'undefined' && project != null){
                                             audsResult[audition.approved.by.userId].projects[audition.project].title = project.title;
                                         }
                                     });
