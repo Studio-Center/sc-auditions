@@ -48,22 +48,22 @@ exports.emailMissingAuds = function(req, res){
 
 			async.waterfall([
 				function(done) {
-					User.find({'roles':'admin'}).sort('-created').exec(function(err, admins) {
+					User.find({'roles':'admin','noemail':{ $in: [null, false] }}).sort('-created').exec(function(err, admins) {
 						done(err, admins);
 					});
 				},
 				function(admins, done) {
-					User.find({'roles':{ $in: ['producer/auditions director', 'auditions director', 'audio intern']}}).sort('-created').exec(function(err, directors) {
+					User.find({'roles':{ $in: ['producer/auditions director', 'auditions director', 'audio intern']},'noemail':{ $in: [null, false] }}).sort('-created').exec(function(err, directors) {
 						done(err, admins, directors);
 					});
 				},
 				function(admins, directors, done) {
-					User.find({'roles':'production coordinator'}).sort('-created').exec(function(err, coordinators) {
+					User.find({'roles':'production coordinator','noemail':{ $in: [null, false] }}).sort('-created').exec(function(err, coordinators) {
 						done(err, admins, directors, coordinators);
 					});
 				},
 				function(admins, directors, coordinators, done) {
-					User.find({'roles':'talent director'}).sort('-created').exec(function(err, talentdirectors) {
+					User.find({'roles':'talent director','noemail':{ $in: [null, false] }}).sort('-created').exec(function(err, talentdirectors) {
 						done(err, admins, directors, coordinators, talentdirectors);
 					});
 				},
