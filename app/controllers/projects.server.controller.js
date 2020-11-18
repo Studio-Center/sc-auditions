@@ -3251,7 +3251,7 @@ exports.downloadBookedAuditions = function(req, res, next){
 
 	// method vars
 	var projectId = req.body.projectId;
-	var projectTitle = req.body.projectTitle;
+	var projectTitle = req.body.projectTitle.replace('/','-');
 	var bookedAuds = req.body.bookedAuds;
 
 	// get app dir
@@ -3299,7 +3299,7 @@ exports.downloadSelectedAuditions = function(req, res, next){
 
 	// method vars
 	var projectId = req.body.projectId;
-	var projectTitle = req.body.projectTitle;
+	var projectTitle = req.body.projectTitle.replace('/','-');
 	var selAuds = req.body.selectedAuds;
 
 	// get app dir
