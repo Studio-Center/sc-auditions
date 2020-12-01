@@ -8225,3 +8225,390 @@ js-bson: Failed to load c++ bson extension, using pure JS version
 js-bson: Failed to load c++ bson extension, using pure JS version
 MEAN.JS application started on port 3000
 MEAN.JS application started on port 3000
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+
+[7m Application loaded using the "production" environment configuration
+[0m
+{ [Error: Cannot find module '../build/Release/bson'] code: 'MODULE_NOT_FOUND' }
+js-bson: Failed to load c++ bson extension, using pure JS version
+MEAN.JS application started on port 3000
+
+[7m Application loaded using the "production" environment configuration
+[0m
+
+[7m Application loaded using the "production" environment configuration
+[0m
+{ [Error: Cannot find module '../build/Release/bson'] code: 'MODULE_NOT_FOUND' }
+js-bson: Failed to load c++ bson extension, using pure JS version
+{ [Error: Cannot find module '../build/Release/bson'] code: 'MODULE_NOT_FOUND' }
+js-bson: Failed to load c++ bson extension, using pure JS version
+{ [Error: Cannot find module '../build/Release/bson'] code: 'MODULE_NOT_FOUND' }
+{ [Error: Cannot find module '../build/Release/bson'] code: 'MODULE_NOT_FOUND' }
+js-bson: Failed to load c++ bson extension, using pure JS version
+js-bson: Failed to load c++ bson extension, using pure JS version
+MEAN.JS application started on port 3000
+MEAN.JS application started on port 3000
+
+[7m Application loaded using the "production" environment configuration
+[0m
+{ [Error: Cannot find module '../build/Release/bson'] code: 'MODULE_NOT_FOUND' }
+js-bson: Failed to load c++ bson extension, using pure JS version
+MEAN.JS application started on port 3000
+
+[7m Application loaded using the "production" environment configuration
+[0m
+
+[7m Application loaded using the "production" environment configuration
+[0m
+{ [Error: Cannot find module '../build/Release/bson'] code: 'MODULE_NOT_FOUND' }
+js-bson: Failed to load c++ bson extension, using pure JS version
+{ [Error: Cannot find module '../build/Release/bson'] code: 'MODULE_NOT_FOUND' }
+js-bson: Failed to load c++ bson extension, using pure JS version
+{ [Error: Cannot find module '../build/Release/bson'] code: 'MODULE_NOT_FOUND' }
+js-bson: Failed to load c++ bson extension, using pure JS version
+{ [Error: Cannot find module '../build/Release/bson'] code: 'MODULE_NOT_FOUND' }
+js-bson: Failed to load c++ bson extension, using pure JS version
+MEAN.JS application started on port 3000
+MEAN.JS application started on port 3000
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+CastError: Cast to ObjectId failed for value "deletefile" at path "_id"
+    at ObjectId.cast (/var/www/html/node_modules/mongoose/lib/schema/objectid.js:117:13)
+    at ObjectId.castForQuery (/var/www/html/node_modules/mongoose/lib/schema/objectid.js:167:17)
+    at Query.cast (/var/www/html/node_modules/mongoose/lib/query.js:2361:32)
+    at Query.findOne (/var/www/html/node_modules/mongoose/lib/query.js:1125:10)
+    at Query.exec (/var/www/html/node_modules/mongoose/node_modules/mquery/lib/mquery.js:2413:18)
+    at Query.exec (/var/www/html/node_modules/mongoose/lib/query.js:1813:19)
+    at exports.projectByID (/var/www/html/app/controllers/projects.server.controller.js:2513:107)
+    at paramCallback (/var/www/html/node_modules/express/lib/router/index.js:385:7)
+    at param (/var/www/html/node_modules/express/lib/router/index.js:365:5)
+    at Function.proto.process_params (/var/www/html/node_modules/express/lib/router/index.js:391:3)
+    at /var/www/html/node_modules/express/lib/router/index.js:228:12
+    at Function.match_layer (/var/www/html/node_modules/express/lib/router/index.js:295:3)
+    at next (/var/www/html/node_modules/express/lib/router/index.js:189:10)
+    at /var/www/html/node_modules/express/lib/router/index.js:191:16
+    at Function.match_layer (/var/www/html/node_modules/express/lib/router/index.js:295:3)
+    at next (/var/www/html/node_modules/express/lib/router/index.js:189:10)
+worked here too nearly end
+worked here too nearly end
+InternalOAuthError: failed to obtain request token
+    at /var/www/html/node_modules/passport-linkedin/node_modules/passport-oauth/lib/passport-oauth/strategies/oauth.js:196:36
+    at /var/www/html/node_modules/passport-linkedin/lib/passport-linkedin/strategy.js:80:19
+    at passBackControl (/var/www/html/node_modules/passport-linkedin/node_modules/passport-oauth/node_modules/oauth/lib/oauth.js:397:13)
+    at IncomingMessage.<anonymous> (/var/www/html/node_modules/passport-linkedin/node_modules/passport-oauth/node_modules/oauth/lib/oauth.js:409:9)
+    at emitNone (events.js:72:20)
+    at IncomingMessage.emit (events.js:166:7)
+    at endReadableNT (_stream_readable.js:923:12)
+    at nextTickCallbackWith2Args (node.js:511:9)
+    at process._tickCallback (node.js:425:17)
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+Error: Failed to load User 5f7750b9915a993f07c1651d
+    at Promise.<anonymous> (/var/www/html/app/controllers/users/users.authorization.server.controller.js:26:27)
+    at Promise.<anonymous> (/var/www/html/node_modules/mongoose/node_modules/mpromise/lib/promise.js:177:8)
+    at emitOne (events.js:77:13)
+    at Promise.emit (events.js:169:7)
+    at Promise.emit (/var/www/html/node_modules/mongoose/node_modules/mpromise/lib/promise.js:84:38)
+    at Promise.fulfill (/var/www/html/node_modules/mongoose/node_modules/mpromise/lib/promise.js:97:20)
+    at Promise.resolve (/var/www/html/node_modules/mongoose/lib/promise.js:114:23)
+    at Promise.<anonymous> (/var/www/html/node_modules/mongoose/node_modules/mpromise/lib/promise.js:177:8)
+    at emitOne (events.js:77:13)
+    at Promise.emit (events.js:169:7)
+    at Promise.emit (/var/www/html/node_modules/mongoose/node_modules/mpromise/lib/promise.js:84:38)
+    at Promise.fulfill (/var/www/html/node_modules/mongoose/node_modules/mpromise/lib/promise.js:97:20)
+    at Immediate.cb (/var/www/html/node_modules/mongoose/lib/query.js:1153:30)
+    at Immediate._onImmediate (/var/www/html/node_modules/mongoose/node_modules/mquery/lib/utils.js:137:16)
+    at processImmediate [as _immediateCallback] (timers.js:396:17)
+Error: Failed to load User 5f7750b9915a993f07c1651d
+    at Promise.<anonymous> (/var/www/html/app/controllers/users/users.authorization.server.controller.js:26:27)
+    at Promise.<anonymous> (/var/www/html/node_modules/mongoose/node_modules/mpromise/lib/promise.js:177:8)
+    at emitOne (events.js:77:13)
+    at Promise.emit (events.js:169:7)
+    at Promise.emit (/var/www/html/node_modules/mongoose/node_modules/mpromise/lib/promise.js:84:38)
+    at Promise.fulfill (/var/www/html/node_modules/mongoose/node_modules/mpromise/lib/promise.js:97:20)
+    at Promise.resolve (/var/www/html/node_modules/mongoose/lib/promise.js:114:23)
+    at Promise.<anonymous> (/var/www/html/node_modules/mongoose/node_modules/mpromise/lib/promise.js:177:8)
+    at emitOne (events.js:77:13)
+    at Promise.emit (events.js:169:7)
+    at Promise.emit (/var/www/html/node_modules/mongoose/node_modules/mpromise/lib/promise.js:84:38)
+    at Promise.fulfill (/var/www/html/node_modules/mongoose/node_modules/mpromise/lib/promise.js:97:20)
+    at Immediate.cb (/var/www/html/node_modules/mongoose/lib/query.js:1153:30)
+    at Immediate._onImmediate (/var/www/html/node_modules/mongoose/node_modules/mquery/lib/utils.js:137:16)
+    at processImmediate [as _immediateCallback] (timers.js:396:17)
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+CastError: Cast to ObjectId failed for value "deletefile" at path "_id"
+    at ObjectId.cast (/var/www/html/node_modules/mongoose/lib/schema/objectid.js:117:13)
+    at ObjectId.castForQuery (/var/www/html/node_modules/mongoose/lib/schema/objectid.js:167:17)
+    at Query.cast (/var/www/html/node_modules/mongoose/lib/query.js:2361:32)
+    at Query.findOne (/var/www/html/node_modules/mongoose/lib/query.js:1125:10)
+    at Query.exec (/var/www/html/node_modules/mongoose/node_modules/mquery/lib/mquery.js:2413:18)
+    at Query.exec (/var/www/html/node_modules/mongoose/lib/query.js:1813:19)
+    at exports.projectByID (/var/www/html/app/controllers/projects.server.controller.js:2513:107)
+    at paramCallback (/var/www/html/node_modules/express/lib/router/index.js:385:7)
+    at param (/var/www/html/node_modules/express/lib/router/index.js:365:5)
+    at Function.proto.process_params (/var/www/html/node_modules/express/lib/router/index.js:391:3)
+    at /var/www/html/node_modules/express/lib/router/index.js:228:12
+    at Function.match_layer (/var/www/html/node_modules/express/lib/router/index.js:295:3)
+    at next (/var/www/html/node_modules/express/lib/router/index.js:189:10)
+    at /var/www/html/node_modules/express/lib/router/index.js:191:16
+    at Function.match_layer (/var/www/html/node_modules/express/lib/router/index.js:295:3)
+    at next (/var/www/html/node_modules/express/lib/router/index.js:189:10)
+CastError: Cast to ObjectId failed for value "deletefile" at path "_id"
+    at ObjectId.cast (/var/www/html/node_modules/mongoose/lib/schema/objectid.js:117:13)
+    at ObjectId.castForQuery (/var/www/html/node_modules/mongoose/lib/schema/objectid.js:167:17)
+    at Query.cast (/var/www/html/node_modules/mongoose/lib/query.js:2361:32)
+    at Query.findOne (/var/www/html/node_modules/mongoose/lib/query.js:1125:10)
+    at Query.exec (/var/www/html/node_modules/mongoose/node_modules/mquery/lib/mquery.js:2413:18)
+    at Query.exec (/var/www/html/node_modules/mongoose/lib/query.js:1813:19)
+    at exports.projectByID (/var/www/html/app/controllers/projects.server.controller.js:2513:107)
+    at paramCallback (/var/www/html/node_modules/express/lib/router/index.js:385:7)
+    at param (/var/www/html/node_modules/express/lib/router/index.js:365:5)
+    at Function.proto.process_params (/var/www/html/node_modules/express/lib/router/index.js:391:3)
+    at /var/www/html/node_modules/express/lib/router/index.js:228:12
+    at Function.match_layer (/var/www/html/node_modules/express/lib/router/index.js:295:3)
+    at next (/var/www/html/node_modules/express/lib/router/index.js:189:10)
+    at /var/www/html/node_modules/express/lib/router/index.js:191:16
+    at Function.match_layer (/var/www/html/node_modules/express/lib/router/index.js:295:3)
+    at next (/var/www/html/node_modules/express/lib/router/index.js:189:10)
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+InternalOAuthError: failed to obtain request token
+    at /var/www/html/node_modules/passport-linkedin/node_modules/passport-oauth/lib/passport-oauth/strategies/oauth.js:196:36
+    at /var/www/html/node_modules/passport-linkedin/lib/passport-linkedin/strategy.js:80:19
+    at passBackControl (/var/www/html/node_modules/passport-linkedin/node_modules/passport-oauth/node_modules/oauth/lib/oauth.js:397:13)
+    at IncomingMessage.<anonymous> (/var/www/html/node_modules/passport-linkedin/node_modules/passport-oauth/node_modules/oauth/lib/oauth.js:409:9)
+    at emitNone (events.js:72:20)
+    at IncomingMessage.emit (events.js:166:7)
+    at endReadableNT (_stream_readable.js:923:12)
+    at nextTickCallbackWith2Args (node.js:511:9)
+    at process._tickCallback (node.js:425:17)
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
+worked here too nearly end
