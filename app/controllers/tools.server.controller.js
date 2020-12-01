@@ -391,7 +391,10 @@ exports.mainClientsCheck = function(req, res){
 										'talent director'
 										];
 
-					User.where('roles').in(searchGroups).sort('-created').exec(function(err, producers) {
+//					User.where('roles').in(searchGroups).sort('-created').exec(function(err, producers) {
+//						done(err, owner, producers);
+//					});
+					User.find({'roles':{ $in: searchGroups },'noemail':{ $ne: true }}).sort('-created').exec(function(err, producers) {
 						done(err, owner, producers);
 					});
 				},
