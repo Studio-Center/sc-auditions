@@ -5,7 +5,7 @@
  */
 var mongoose = require('mongoose'),
 	errorHandler = require('./errors'),
-	Project = mongoose.model('Project'),	
+	Project = mongoose.model('Project'),
 	Audition = mongoose.model('Audition'),
 	User = mongoose.model('User'),
 	Talent = mongoose.model('Talent'),
@@ -508,7 +508,7 @@ exports.sendTalentCanceledEmail = function(req, res){
 
 // send project assigned talent new emails if projects gets new scripts
 exports.sendTalentScriptUpdateEmail = function(req, res){
-	
+
 	// pause execution for project save
 	setTimeout(function() {
 
@@ -595,7 +595,7 @@ exports.sendTalentScriptUpdateEmail = function(req, res){
    	});
 
 	});
-	
+
 	}, 3500);
 };
 
@@ -625,7 +625,7 @@ exports.sendTalentEmail = function(req, res){
 
 // send talent director talent add email
 exports.sendTalentDirectorsEmail = function(req, res){
-	
+
 	var project, i;
 	var projectId = req.body.projectId;
 	var talent = req.body.talent;
@@ -784,7 +784,7 @@ exports.updateSingleTalentStatus = function (req, res){
 		},
 		// email selected talent
 		function(project, done){
-            
+
             project.markModified('talent');
             project.markModified('modified');
 
@@ -826,14 +826,14 @@ exports.updateTalentStatus = function(req, res){
 	if (_.intersection(req.user.roles, allowedRoles).length) {
 
 		var project = req.body.project;
-        
+
         if (project._id.match(/^[0-9a-fA-F]{24}$/)) {
             Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
 
                 project = _.extend(project, req.body.project);
 
                 req.project = project ;
-                
+
                 project.markModified('talent');
                 project.markModified('modified');
 
@@ -889,7 +889,7 @@ exports.updateTalentNote = function (req, res){
 			Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
 
 				project = _.extend(project, newProject);
-                
+
                 project.markModified('talent');
                 project.markModified('modified');
 
@@ -924,7 +924,7 @@ exports.updateNoRefresh = function(req, res){
 	var allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern', 'production coordinator','client','client-client'],
       	log = '',
 		project = '';
-    
+
     if(typeof req.body.project != 'undefined' && typeof req.body.project._id  != 'undefined'){
 	// validate user interaction
         if (_.intersection(req.user.roles, allowedRoles).length && typeof req.body.project != 'undefined' && typeof req.body.project._id != 'undefined') {
@@ -947,28 +947,28 @@ exports.updateNoRefresh = function(req, res){
 
                         log = new Log(log);
                         log.save();
-                        
+
                     }
                 }
 
                 //project = req.body.project;
-            
+
                 Project.findById(req.body.project._id).populate('user', 'displayName').exec(function(err, project) {
 
                     // if(typeof req.body.project.__v !== 'undefined'){
                     // 	delete req.body.project.__v;
                     // }
-                    
+
                     //delete project.__v;
                     //delete req.body.project.__v;
-                    
+
                     project = _.extend(project, req.body.project);
-                    
+
                     project.markModified('talent');
                     project.markModified('modified');
 
                     req.project = project;
-                    
+
                     //delete project.__v;
 
                     project.save(function(err) {
@@ -1196,7 +1196,7 @@ exports.lead = function(req, res){
 	var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
 	transporter.sendMail({
 	    from: config.mailer.from,
-	    to: 'scripts@studiocenter.com',
+	    to: 'scripts@studiocenter.com, william@studiocenter.com ',
 	    cc: config.mailer.notifications,
 	    subject: 'Start a new Audition Project Form Submission',
 	    text: emailBody,
@@ -1716,7 +1716,7 @@ exports.create = function(req, res) {
 
 // load project audition files
 exports.loadAuditions = function(req, res){
-	
+
 	// set vars
 	var projId = req.body.projectId;
 
@@ -1727,16 +1727,16 @@ exports.loadAuditions = function(req, res){
 			return res.jsonp(auditions);
 		}
 	});
-	
+
 };
 
 // save project audition files
 exports.deleteAudition = function(req, res){
-	
+
 	var aud = req.body.audition,
         appDir = global.appRoot,
         audFile = '';
-	
+
 	Audition.findById(aud._id).sort('-created').exec(function(err, audition) {
 		if (err) {
 			return res.status(400).send(err);
@@ -1786,27 +1786,27 @@ exports.deleteAllAuditions = function(req, res){
             socketio.sockets.emit('auditionUpdate', {id: prodId});
             return res.status(200).send();
         }
-    }); 
-    
-    
-	
+    });
+
+
+
 };
 
 // save project audition files
 exports.saveAudition = function(req, res){
-	
+
 	// set vars
 	var aud = req.body.audition,
 		appDir = global.appRoot;
-	
+
 	Audition.findById(aud._id).sort('-created').exec(function(err, audition) {
 		if (err) {
 			return res.status(400).send(err);
 		} else {
-			
+
 			// check for aud rename
 			if (aud.rename !== '') {
-				
+
 				var file = appDir + '/public/res/auditions/' + String(aud.project) + '/' + aud.file.name;
 				var newFile = appDir + '/public/res/auditions/' + String(aud.project) + '/' + aud.rename;
 
@@ -1821,9 +1821,9 @@ exports.saveAudition = function(req, res){
 
 				}
 			}
-			
+
 			audition = _.extend(audition, aud);
-			
+
 			audition.save(function(err) {
 				if (err) {
 					return res.status(400).send(err);
@@ -1835,7 +1835,7 @@ exports.saveAudition = function(req, res){
 			});
 		}
 	});
-	
+
 };
 
 // load single project for projects admin page
@@ -2167,9 +2167,9 @@ exports.delete = function(req, res) {
                     socketio.sockets.emit('projectsListUpdate');
                     return res.jsonp(project);
                 }
-            }); 
-			
-			
+            });
+
+
 		}
 	});
 };
@@ -2444,7 +2444,7 @@ exports.findLimitWithFilter = function(req, res) {
 	var allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern', 'production coordinator','talent director'];
 
 	if (_.intersection(req.user.roles, allowedRoles).length) {
-        
+
 		Project.find(filterObj).sort(sortOrder).skip(Number(startVal)).limit(Number(limitVal)).populate('user', 'displayName').exec(function(err, projects) {
 			if (err) {
 				//console.log(err);
@@ -2622,13 +2622,13 @@ exports.uploadScript = function(req, res, next){
     //console.log(file.name);
     file.name = file.name.replace(/[/\\?%*:|"<>=]/g, '-');
     newPath += file.name;
-	
+
 	if(file.name.indexOf('#') > -1){
-		
+
 		return res.status(500).end();
-		
+
 	} else {
-		
+
 		Project.findById(projectId).populate('user', 'displayName').exec(function(err, project) {
 
 			mv(tempPath, newPath, function(err) {
@@ -2663,7 +2663,7 @@ exports.uploadScript = function(req, res, next){
 			});
 
 		});
-		
+
 	}
 
 };
@@ -2841,9 +2841,9 @@ exports.uploadTempScript = function(req, res, next){
 	file.name = file.name.replace(/[/\\?%*:|"<>=]/g, '-');
     newPath += file.name;
 	if(file.name.indexOf('#') > -1){
-		
+
 		return res.status(500).end();
-		
+
 	} else {
 
 		// assign user data
@@ -2874,7 +2874,7 @@ exports.uploadTempScript = function(req, res, next){
 			  return res.jsonp(scripts);
 		  }
 		});
-		
+
 	}
 };
 
@@ -2884,7 +2884,7 @@ exports.test = function(req, res, next){
 		firstName = '',
 		lastNameCode = '',
 		curUser = Object.create(req.user);
-    
+
     var file = '120-AlanS.mp3';
 
     var regStr = /([a-zA-Z]+)\.\w{3}$/i.exec(file);
@@ -2899,13 +2899,13 @@ exports.test = function(req, res, next){
 			lastNameCode = regStrOP.slice(lastNmPos, regStrOP.length);
 		}
 	}
-    
+
     Talent.find({'name': new RegExp('^'+firstName+'$', 'i'), 'lastNameCode': new RegExp('^'+lastNameCode+'$', 'i')}).sort('-created').exec(function(err, talent) {
         if (err) {
 			return res.status(400).json(err);
 		} else {
             return res.jsonp(talent);
-            
+
 //            Project.findById('56fd5d370cd11652504b0cd4').populate('user', 'displayName').exec(function(err, project) {
 //				// walk through project talent, look for existing assignment
 //                var fndTalent = [];
@@ -2937,7 +2937,7 @@ exports.uploadAudition = function(req, res, next){
 		firstName = '',
 		lastNameCode = '',
 		curUser = Object.create(req.user);
-    
+
     var uploadedFiles = (Array.isArray(req.files.file) ? req.files.file : [req.files.file] );
 
     //console.log(uploadedFiles);
@@ -3016,7 +3016,7 @@ exports.uploadAudition = function(req, res, next){
                 });
             },
             function(talent, project, done) {
-                
+
                 audTalent = '';
 
                 // walk through project talent, look for existing assignment
@@ -3065,7 +3065,7 @@ exports.uploadAudition = function(req, res, next){
 
                         talentCallback();
 
-                    });               
+                    });
 
                 }, function done(err) {
 
@@ -3112,11 +3112,11 @@ exports.uploadAudition = function(req, res, next){
     //				socketio.sockets.emit('auditionUpdate', {id: aud.project});
 
                     // send audition data to client
-                    
+
                     //return res.jsonp(audition);
-                    
+
                     fileCallback();
-                    
+
                 });
             }
             ], function(err) {
@@ -3136,10 +3136,10 @@ exports.uploadAudition = function(req, res, next){
                 socketio.sockets.emit('callListUpdate', {filter: ''});
             return res.jsonp({'status':'success'});
             console.log('worked here too at end');
-            
+
         }
 
-    });   
+    });
 
 };
 
@@ -3280,18 +3280,18 @@ exports.downloadBookedAuditions = function(req, res, next){
 
 	// add all booked auditions
     async.eachSeries(bookedAuds, function (audition, next) {
-        
+
         if (fs.existsSync(newPath + audition)) {
 			archive.file(newPath + audition, { name:audition });
 		}
-        
+
         next();
-        
+
     }, function done(err) {
-        
+
         archive.pipe(output);
         archive.finalize();
-        
+
     });
 
 };
@@ -3326,17 +3326,17 @@ exports.downloadSelectedAuditions = function(req, res, next){
 
     // add all booked auditions
     async.eachSeries(selAuds, function (audition, next) {
-        
+
         if (fs.existsSync(newPath + audition)) {
 			archive.file(newPath + audition, { name:audition });
 		}
         next();
-        
+
     }, function (err) {
-        
+
         archive.pipe(output);
         archive.finalize();
-        
+
     });
 
 };
@@ -3369,13 +3369,13 @@ exports.bookAuditions = function(req, res, next){
 		},
 		// update status for new selected booked auditions
 		function(selAuds, project, done) {
-			
+
 			// gather audition data from auditions collection
 			Audition.find({'project': project._id}).sort('-created').exec(function(err, auditions) {
 				if (!err) {
 					async.eachSeries(auditions, function (audition, next) {
 						if(audition.selected === true && (typeof audition.booked === 'undefined' || audition.booked === false)){
-							audition.booked = true;							
+							audition.booked = true;
 							selAuds.push(audition);
 							audition.save();
 						}
