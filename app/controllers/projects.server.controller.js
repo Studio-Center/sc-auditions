@@ -2984,6 +2984,8 @@ exports.uploadAudition = function(req, res, next){
 
         // strip talent name and last name code from audition
         var regStr = /([a-z_A-Z]+)\.\w{3}$/i.exec(file.name.trim());
+	firstName = '';
+	lastNameCode = '';
         if(regStr !== null){
             var regStrOP = regStr[1],
                 lastNm = /([A-Z])[a-z]*$/.exec(regStrOP);
