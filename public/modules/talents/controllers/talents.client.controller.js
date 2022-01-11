@@ -11,7 +11,7 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 		$scope.watchersObj = {};
 		$scope.typeOptions = ['Email','Phone'];
 		$scope.unionOptions = ['union','non-union'];
-		$scope.locations = ['Offsite', 'Las Vegas', 'New York', 'Richmond', 'Santa Monica', 'Virginia Beach', 'Washington DC'];
+		$scope.locations = ['Offsite', 'Las Vegas', 'New York', 'Richmond', 'Santa Monica', 'Virginia Beach', 'Washington DC','Voice Over Academy'];
 		$scope.exclusivityOpts = ['Non-Union Exclusive', 'Union', 'Non-Union Exclusive and Union', 'Foreign Language Agreement Non-Union', 'Foreign Language Agreement Union', 'Foreign Language Agreement Non-Union and Union', 'ISDN Non-Union', 'ISDN Union', 'ISDN Non-Union and Union', 'Independent Contractor Agreement Non-Union', 'Independent Contractor Agreement Union', 'Independent Contractor Agreement Non-Union and Union'];
 		$scope.unionJoinedOpts = ['SAG/AFTRA', 'OTHER'];
 		$scope.unionSelected = [];
@@ -35,7 +35,7 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
             angular.forEach(users, function(user, key) {
                 $scope.producers.push(user);
             });
-            
+
         });
         $scope.tinymceOptions = {
             plugins: 'link image code',
@@ -52,7 +52,7 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
                 // 	delete $scope.watchersObj[key];
                 // });
         });
-        
+
         $scope.limitOverride = function(){
 			$scope.limit=5000;
 		};
@@ -443,7 +443,7 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 			var startVal = $scope.currentPage * $scope.limit;
 			// gather filter objects
 			var filterObj = $scope.getFilterVars();
-            
+
             if(typeof listFilter !== 'undefined'){
                 filterObj = Object.assign(filterObj, listFilter);
             }
