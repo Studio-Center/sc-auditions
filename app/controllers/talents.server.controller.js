@@ -104,7 +104,7 @@ exports.create = function(req, res) {
 					if(talent.producerOptional){
 						talentData += '<p><strong>Producer</strong> ' + talent.producerOptional + '</p>';
 					}
-					if(talent.producerOptional){
+					if(talent.voa){
 						talentData += '<p><strong>VOA</strong> ' + talent.voa + '</p>';
 					}
 					talentData += '<p><strong>Typecasts</strong>';
