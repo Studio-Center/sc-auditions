@@ -197,7 +197,9 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 				producerOptional: this.producerOptional,
 				unionJoined: this.unionJoinSelected,
 				demoLink: this.demoLink,
-				prefLanguage: this.prefLanguage
+				prefLanguage: this.prefLanguage,
+				note: this.note,
+				voa: this.voa
 			});
 
 			// Redirect after save
@@ -418,6 +420,10 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 			// locationISDN
 			if($scope.filter.typeCasts){
 				filterObj.typeCasts = $scope.filter.typeCasts;
+			}
+			// locationISDN
+			if($scope.filter.voa){
+				filterObj.voa = $scope.filter.voa;
 			}
 
 			return filterObj;
