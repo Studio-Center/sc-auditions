@@ -104,6 +104,9 @@ exports.create = function(req, res) {
 					if(talent.producerOptional){
 						talentData += '<p><strong>Producer</strong> ' + talent.producerOptional + '</p>';
 					}
+					if(talent.producerOptional){
+						talentData += '<p><strong>VOA</strong> ' + talent.voa + '</p>';
+					}
 					talentData += '<p><strong>Typecasts</strong>';
 					for(i = 0; i < talent.typeCasts.length; ++i){
 						talentData += talent.typeCasts[i] + ' ';
@@ -381,7 +384,7 @@ var getTalentsFilters = function(req){
 	// gen filter object
 	var filterObj = {},
         orQry = [];
-    
+
 	// filter by project title
 	if(req.body.filter.fName){
 		filterObj.name = new RegExp(req.body.filter.fName, 'i');
@@ -412,21 +415,25 @@ var getTalentsFilters = function(req){
 	if(req.body.filter.locationISDN){
 		filterObj.locationISDN = req.body.filter.locationISDN;
 	}
+	// VOA
+	if(req.body.filter.voa){
+		filterObj.voa = req.body.filter.voa;
+	}
 	// producer
 	if(typeof req.body.filter.producerOptional != 'undefined'){
 		filterObj.producerOptional = req.body.filter.producerOptional;
 	}
-    // ISDNLine1
+  // ISDNLine1
 	if(req.body.filter.ISDNLine1){
 		orQry.push({ISDNLine1: req.body.filter.ISDNLine1});
 	}
-    if(req.body.filter.sourceConnectUsername){
-        orQry.push({sourceConnectUsername: req.body.filter.sourceConnectUsername});
-    }
-    if(orQry.length > 0){
-        filterObj.$or = orQry;
-    }
-    
+  if(req.body.filter.sourceConnectUsername){
+      orQry.push({sourceConnectUsername: req.body.filter.sourceConnectUsername});
+  }
+  if(orQry.length > 0){
+      filterObj.$or = orQry;
+  }
+
 	// locationISDN
 	if(req.body.filter.typeCasts){
 		filterObj.typeCasts = new RegExp("^" + req.body.filter.typeCasts.toLowerCase(), "i");
@@ -444,7 +451,7 @@ exports.getTalentsCnt = function(req, res){
 
 	// set filter vars
 	var filterObj = getTalentsFilters(req);
-	
+
 //	if(typeof filterObj.producerOptional != 'undefined' && filterObj.producerOptional.length == ''){
 //		filterObj.$where = "this.producerOptional.length = 0";
 //	}

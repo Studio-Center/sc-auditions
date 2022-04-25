@@ -105,6 +105,10 @@ var TalentSchema = new Schema({
 	note: {
 		type: String
 	},
+	voa: {
+		type: Boolean,
+		default: false
+	},
 	created: {
 		type: Date,
 		default: Date.now

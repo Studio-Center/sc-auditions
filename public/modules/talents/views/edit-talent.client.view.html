@@ -61,6 +61,12 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label class="control-label" for="type">Voice Over Academy</label>
+                        <div class="controls">
+                            <input type="checkbox" data-ng-model="voa" id="voa" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label class="control-label" for="prefLanguage">Preferred Contact Lanaguge</label><br>
                         <div class="btn-group">
                             <div class="btn-group">
@@ -180,7 +186,7 @@
                                         <ul class="list-group">
                                             <li class="list-group-item" ng-repeat="(key, attribute) in typecast.attributes">
                                                 <input type="checkbox" class="btn btn-primary" ng-model="talent.typeCasts[attribute]" btn-checkbox="'{{attribute}}'" ng-checked="talent.typeCasts.indexOf(attribute) > -1" ng-click="toggleTypecast(attribute)">
-                                                {{attribute}} 
+                                                {{attribute}}
                                             </li>
                                         </ul>
                                     </div>
@@ -189,7 +195,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div data-ng-show="error" class="text-danger">
                     <strong data-ng-bind="error"></strong>
                 </div>

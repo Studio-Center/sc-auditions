@@ -195,7 +195,7 @@
           <th> Booked </th>
           <th> Favorited </th>
         </tr>
-		  
+
 	  <!-- new audition file iteration -->
         <tr ng-repeat="(key, audition) in projAuditions track by $index">
           <td><span ng-bind="::key+1"></span></td>
@@ -217,14 +217,14 @@
             <div ng-if="!audio.mobile">
             <input class="form-control" type="range" min="0" max="1" step="0.01" ng-model="audio.progress">
         </div>
-        
+
         </span>
         <span ng-if="lastAudioID != key || audioStatus != 1"> <img src="/img/aqua-play-icon.png" style="width:35px;height:auto" alt="play icon"> </span>
         </button>
-        
+
         <button ng-click="stopAudio()" class="btn btn-primary" ng-if="lastAudioID == key && audioStatus == 1" ng-show="!audio.mobile"> <img src="/img/Aqua-Stop-icon.png" style="width:35px;height:auto" alt="stop icon"> </button>
         </td>
-        
+
         <td><p ng-bind="audition.playCnt"></p></td>
           <td><div ng-if="audition.talent == ''"> <img src="img/warning.jpg" alt="talent warning icon" style="width:20px;height:auto"> Talent Not Assigned </div>
             <select class="form-control" ng-model="audition.talent" ng-options="talent.talentId as talent.name for talent in project.talent | orderBy:'name'" ng-change="updateTalentAssignedStatusSingle(audition)">
@@ -259,14 +259,14 @@
             <div ng-if="!audio.mobile">
             <input class="form-control" type="range" min="0" max="1" step="0.01" ng-model="audio.progress">
         </div>
-        
+
         </span>
         <span ng-if="lastAudioID != key || audioStatus != 1"> <img src="/img/aqua-play-icon.png" style="width:35px;height:auto" alt="play icon"> </span>
         </button>
-        
+
         <button ng-click="stopAudio()" class="btn btn-primary" ng-if="lastAudioID == key && audioStatus == 1" ng-show="!audio.mobile"> <img src="/img/Aqua-Stop-icon.png" style="width:35px;height:auto" alt="stop icon"> </button>
         </td>
-        
+
         <td><p ng-bind="project.auditions[key].playCnt"></p></td>
           <td><div ng-if="!project.auditions[key].talent"> <img src="img/warning.jpg" alt="talent warning icon" style="width:20px;height:auto"> Talent Not Assigned </div>
             <select class="form-control" ng-model="project.auditions[key].talent" ng-options="talent.talentId as talent.name for talent in project.talent | orderBy:'name'" ng-change="updateTalentAssignedStatus(project.auditions[key].talent)">
@@ -279,7 +279,7 @@
           <td><img ng-if="audition.booked" src="/img/green-check.png" style="width:20px;height:auto"></td>
           <td><img ng-if="audition.favorite == 1" src="/img/gold-trophy.png" alt="favorited audition"></td>
         </tr>
-		  
+
       </table>
     </div>
     </accordion-group>
@@ -394,6 +394,7 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6">
                       <div class="btn-group" data-toggle="buttons" style="padding-top:15px">
+                        <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.voa" btn-radio="'true'">VOA</label>
                         <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.typeCasts" btn-radio="'African-American'">African-American</label>
                         <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.typeCasts" btn-radio="'Caucasian'">Caucasian</label>
                         <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.typeCasts" btn-radio="'British'">British</label>
