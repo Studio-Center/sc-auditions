@@ -114,80 +114,86 @@ exports.reset = function(req, res, next) {
 	// Init Variables
 	var passwordDetails = req.body;
 
-	async.waterfall([
+	if(passwordDetails.newPassword != ''){
 
-		function(done) {
-			User.findOne({
-				resetPasswordToken: req.params.token,
-				resetPasswordExpires: {
-					$gt: Date.now()
-				}
-			}, function(err, user) {
-				if (!err && user) {
-					if (passwordDetails.newPassword === passwordDetails.verifyPassword) {
-						user.password = passwordDetails.newPassword;
-						user.resetPasswordToken = undefined;
-						user.resetPasswordExpires = undefined;
+		async.waterfall([
 
-						// store password as Base64 Value
-						user.passwordText = new Buffer(user.password).toString('base64');
+			function(done) {
+				User.findOne({
+					resetPasswordToken: req.params.token,
+					resetPasswordExpires: {
+						$gt: Date.now()
+					}
+				}, function(err, user) {
+					if (!err && user) {
+						if (passwordDetails.newPassword === passwordDetails.verifyPassword) {
+							user.password = passwordDetails.newPassword;
+							user.resetPasswordToken = undefined;
+							user.resetPasswordExpires = undefined;
 
-						user.save(function(err) {
-							if (err) {
-								return res.status(400).send({
-									message: errorHandler.getErrorMessage(err)
-								});
-							} else {
-								req.login(user, function(err) {
-									if (err) {
-										res.status(400).send(err);
-									} else {
-										// Return authenticated user 
-										res.jsonp(user);
+							// store password as Base64 Value
+							user.passwordText = new Buffer(user.password).toString('base64');
 
-										done(err, user);
-									}
-								});
-							}
-						});
+							user.save(function(err) {
+								if (err) {
+									return res.status(400).send({
+										message: errorHandler.getErrorMessage(err)
+									});
+								} else {
+									req.login(user, function(err) {
+										if (err) {
+											res.status(400).send(err);
+										} else {
+											// Return authenticated user
+											res.jsonp(user);
+
+											done(err, user);
+										}
+									});
+								}
+							});
+						} else {
+							return res.status(400).send({
+								message: 'Passwords do not match'
+							});
+						}
 					} else {
 						return res.status(400).send({
-							message: 'Passwords do not match'
+							message: 'Password reset token is invalid or has expired.'
 						});
 					}
-				} else {
-					return res.status(400).send({
-						message: 'Password reset token is invalid or has expired.'
-					});
-				}
-			});
-		},
-		function(user, done) {
-			res.render('templates/reset-password-confirm-email', {
-				name: user.displayName,
-				appName: config.app.title
-			}, function(err, emailHTML) {
-				done(err, emailHTML, user);
-			});
-		},
-		// If valid email, send reset email using service
-		function(emailHTML, user, done) {
-			var smtpTransport = nodemailer.createTransport(sgTransport(config.mailer.options));
-			var mailOptions = {
-				to: user.email,
-				from: config.mailer.from,
-				cc: config.mailer.notifications,
-				subject: 'Your password has been changed',
-				html: emailHTML
-			};
+				});
+			},
+			function(user, done) {
+				res.render('templates/reset-password-confirm-email', {
+					name: user.displayName,
+					appName: config.app.title
+				}, function(err, emailHTML) {
+					done(err, emailHTML, user);
+				});
+			},
+			// If valid email, send reset email using service
+			function(emailHTML, user, done) {
+				var smtpTransport = nodemailer.createTransport(sgTransport(config.mailer.options));
+				var mailOptions = {
+					to: user.email,
+					from: config.mailer.from,
+					cc: config.mailer.notifications,
+					subject: 'Your password has been changed',
+					html: emailHTML
+				};
 
-			smtpTransport.sendMail(mailOptions, function(err) {
-				done(err, 'done');
-			});
-		}
-	], function(err) {
-		if (err) return next(err);
-	});
+				smtpTransport.sendMail(mailOptions, function(err) {
+					done(err, 'done');
+				});
+			}
+		], function(err) {
+			if (err) return next(err);
+		});
+
+	} else {
+		return res.status(400).send('password field empty');
+	}
 };
 
 /**
