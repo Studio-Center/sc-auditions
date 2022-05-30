@@ -114,7 +114,7 @@ exports.reset = function(req, res, next) {
 	// Init Variables
 	var passwordDetails = req.body;
 
-	if(passwordDetails.newPassword != ''){
+	if(passwordDetails.newPassword != '' && passwordDetails.newPassword != null){
 
 		async.waterfall([
 
