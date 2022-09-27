@@ -964,35 +964,36 @@ exports.updateNoRefresh = function(req, res){
 
                     project = _.extend(project, req.body.project);
 
-                    project.markModified('talent');
-                    project.markModified('modified');
+					if(project){
+						project.markModified('talent');
+						project.markModified('modified');
 
-                    req.project = project;
+						req.project = project;
 
-                    //delete project.__v;
+						//delete project.__v;
 
-                    project.save(function(err) {
-                        if (err) {
+						project.save(function(err) {
+							if (err) {
 
-                            log = {
-                                type: 'error',
-                                sharedKey: String(project._id),
-                                description: String(err) + ' Project ID: ' + String(project._id),
-                                user: req.user
-                            };
-                            log = new Log(log);
-                            log.save();
+								log = {
+									type: 'error',
+									sharedKey: String(project._id),
+									description: String(err) + ' Project ID: ' + String(project._id),
+									user: req.user
+								};
+								log = new Log(log);
+								log.save();
 
-                            return res.status(400).json(err);
-                        } else {
-                            var socketio = req.app.get('socketio');
-                                socketio.sockets.emit('projectUpdate', {id: project._id});
-                                socketio.sockets.emit('callListUpdate', {filter: ''});
+								return res.status(400).json(err);
+							} else {
+								var socketio = req.app.get('socketio');
+									socketio.sockets.emit('projectUpdate', {id: project._id});
+									socketio.sockets.emit('callListUpdate', {filter: ''});
 
-                            res.jsonp(project);
-                        }
-                    });
-
+								res.jsonp(project);
+							}
+						});
+					}
                 });
             }
         }
