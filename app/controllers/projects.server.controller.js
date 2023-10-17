@@ -3233,7 +3233,7 @@ exports.downloadAllAuditionsClient = function(req, res, next){
 
 	var auditionsFiles = loadPublishedAuditions(req.body.project._id),
 		i = 0,
-		audFileCnt = auditionsFiles.length,
+		audFileCnt = 0,
 		fileLoc = '';
 	// get app dir
 	var appDir = global.appRoot;
@@ -3257,6 +3257,7 @@ exports.downloadAllAuditionsClient = function(req, res, next){
 	  res.jsonp({zip:zipName});
 	});
 
+	audFileCnt = auditionsFiles.length;
 	for(i = 0; i < audFileCnt; i++){
 		fileLoc = newPath + auditionsFiles[i].file.name;
 		archive.file(fileLoc, { name:auditionsFiles[i].file.name });
