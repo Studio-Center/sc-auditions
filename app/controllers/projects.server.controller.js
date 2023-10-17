@@ -1731,19 +1731,6 @@ exports.loadAuditions = function(req, res){
 
 };
 
-// load project audition files
-var loadPublishedAuditions = function(projId){
-
-	Audition.find({'project': Object(projId),'published':{ "$in": ["true",true] }}).sort('-created').exec(function(err, auditions) {
-		if (err) {
-			return [];
-		} else {
-			return auditions;
-		}
-	});
-
-};
-
 // save project audition files
 exports.deleteAudition = function(req, res){
 
@@ -3162,8 +3149,6 @@ exports.uploadTempAudition = function(req, res, next){
 	// We are able to access req.files.file thanks to
     // the multiparty middleware
     var file = req.files.file;
-    //console.log(file.name);
-    //console.log(file.type);
 
     var project = JSON.parse(req.body.data);
     project = project.project;
@@ -3193,10 +3178,7 @@ exports.uploadTempAudition = function(req, res, next){
     // add file path
     newPath += file.name;
 
-    //console.log(newPath);
-
     mv(tempPath, newPath, function(err) {
-        //console.log(err);
         if (err){
             res.status(500).end();
         }else{
@@ -3252,8 +3234,6 @@ exports.downloadAllAuditionsClient = function(req, res, next){
 				fs.mkdirSync(savePath);
 			}
 
-			//console.log(newPath);
-
 			var output = fs.createWriteStream(newZip);
 			var archive = archiver('zip');
 
@@ -3266,8 +3246,6 @@ exports.downloadAllAuditionsClient = function(req, res, next){
 				archive.file(fileLoc, { name:auditionsFiles[i].file.name });
 			}
 
-			//archive.directory(newPath, 'my-auditions');
-
 			archive.pipe(output);
 
 			archive.finalize();
@@ -3275,12 +3253,6 @@ exports.downloadAllAuditionsClient = function(req, res, next){
 		}
 	});
 	
-	
-
- //    res.setHeader('Content-Type', 'application/zip');
-	// res.setHeader('content-disposition', 'attachment; filename="auditions.zip"');
- //    return archive.pipe(res);
-
 };
 
 
