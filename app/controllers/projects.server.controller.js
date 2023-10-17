@@ -1734,7 +1734,7 @@ exports.loadAuditions = function(req, res){
 // load project audition files
 var loadPublishedAuditions = function(projId){
 
-	Audition.find({'project': Object(projId),'published':true}).sort('-created').exec(function(err, auditions) {
+	Audition.find({'project': Object(projId),'published':{ "$in": ["true",true] }}).sort('-created').exec(function(err, auditions) {
 		if (err) {
 			return [];
 		} else {
@@ -3233,7 +3233,7 @@ exports.downloadAllAuditionsClient = function(req, res, next){
 
 	var auditionsFiles = loadPublishedAuditions(req.body.project._id),
 		i = 0,
-		audFileCnt = 0,
+		audFileCnt = auditionsFiles.length,
 		fileLoc = '';
 	// get app dir
 	var appDir = global.appRoot;
@@ -3257,7 +3257,6 @@ exports.downloadAllAuditionsClient = function(req, res, next){
 	  res.jsonp({zip:zipName});
 	});
 
-	audFileCnt = auditionsFiles.length;
 	for(i = 0; i < audFileCnt; i++){
 		fileLoc = newPath + auditionsFiles[i].file.name;
 		archive.file(fileLoc, { name:auditionsFiles[i].file.name });
