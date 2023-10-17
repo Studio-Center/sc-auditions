@@ -76,6 +76,8 @@ module.exports = function(app) {
 	// download all auditions for selected project
 	app.route('/projects/downloadallauditions')
 		.post(users.requiresLogin, projects.downloadAllAuditions);
+	app.route('/projects/downloadAllAuditionsClient')
+		.post(users.requiresLogin, projects.downloadAllAuditionsClient);
 	app.route('/projects/downloadBookedAuditions')
 		.post(users.requiresLogin, projects.downloadBookedAuditions);
 	app.route('/projects/downloadSelectedAuditions')

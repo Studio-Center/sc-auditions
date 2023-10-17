@@ -702,7 +702,7 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
   	// download all auditions from project
   	$scope.downloadAllAuditions = function(){
 
-		$http.post('/projects/downloadallauditions', {
+		$http.post('/projects/downloadAllAuditionsClient', {
 		        project: $scope.project
 	    }).
 		success(function(data, status, headers, config) {

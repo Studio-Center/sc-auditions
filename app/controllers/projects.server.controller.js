@@ -1731,6 +1731,19 @@ exports.loadAuditions = function(req, res){
 
 };
 
+// load project audition files
+var loadPublishedAuditions = function(projId){
+
+	Audition.find({'project': Object(projId),'published':true}).sort('-created').exec(function(err, auditions) {
+		if (err) {
+			return [];
+		} else {
+			return auditions;
+		}
+	});
+
+};
+
 // save project audition files
 exports.deleteAudition = function(req, res){
 
@@ -3130,13 +3143,13 @@ exports.uploadAudition = function(req, res, next){
         if (err) {
             return res.status(500).json(err);
         } else {
-            console.log('worked here too nearly end');
+            //console.log('worked here too nearly end');
             var socketio = req.app.get('socketio');
                 socketio.sockets.emit('projectUpdate', {id: req.body.projectId});
                 socketio.sockets.emit('auditionUpdate', {id: req.body.projectId});
                 socketio.sockets.emit('callListUpdate', {filter: ''});
             return res.jsonp({'status':'success'});
-            console.log('worked here too at end');
+            //console.log('worked here too at end');
 
         }
 
@@ -3214,6 +3227,53 @@ exports.uploadTempAudition = function(req, res, next){
     });
 
 };
+
+
+exports.downloadAllAuditionsClient = function(req, res, next){
+
+	var auditionsFiles = loadPublishedAuditions(req.body.project._id),
+		i = 0,
+		audFileCnt = auditionsFiles.length,
+		fileLoc = '';
+	// get app dir
+	var appDir = global.appRoot;
+	var relativePath =  'res' + '/' + 'auditions' + '/' + req.body.project._id + '/';
+    var newPath = appDir + '/public/' + relativePath;
+    var savePath = appDir + '/public/' + 'res' + '/' + 'archives' + '/';
+    var zipName = req.body.project.title.replace('/','-') + '.zip';
+    var newZip = savePath + zipName;
+
+    // check for existing parent directory, create if needed
+    if (!fs.existsSync(savePath)) {
+        fs.mkdirSync(savePath);
+    }
+
+    //console.log(newPath);
+
+    var output = fs.createWriteStream(newZip);
+	var archive = archiver('zip');
+
+	output.on('close', function() {
+	  res.jsonp({zip:zipName});
+	});
+
+	for(i = 0; i < audFileCnt; i++){
+		fileLoc = newPath + auditionsFiles[i].file.name;
+		archive.file(fileLoc, { name:auditionsFiles[i].file.name });
+	}
+
+    //archive.directory(newPath, 'my-auditions');
+
+    archive.pipe(output);
+
+    archive.finalize();
+
+ //    res.setHeader('Content-Type', 'application/zip');
+	// res.setHeader('content-disposition', 'attachment; filename="auditions.zip"');
+ //    return archive.pipe(res);
+
+};
+
 
 exports.downloadAllAuditions = function(req, res, next){
 	// get app dir
