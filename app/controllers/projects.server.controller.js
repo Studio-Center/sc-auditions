@@ -3231,42 +3231,51 @@ exports.uploadTempAudition = function(req, res, next){
 
 exports.downloadAllAuditionsClient = function(req, res, next){
 
-	var auditionsFiles = loadPublishedAuditions(req.body.project._id),
-		i = 0,
-		audFileCnt = auditionsFiles.length,
-		fileLoc = '';
-	// get app dir
-	var appDir = global.appRoot;
-	var relativePath =  'res' + '/' + 'auditions' + '/' + req.body.project._id + '/';
-    var newPath = appDir + '/public/' + relativePath;
-    var savePath = appDir + '/public/' + 'res' + '/' + 'archives' + '/';
-    var zipName = req.body.project.title.replace('/','-') + '.zip';
-    var newZip = savePath + zipName;
+	Audition.find({'project': Object(req.body.project._id),'published':{ "$in": ["true",true] }}).sort('-created').exec(function(err, auditionsFiles) {
+		if (err) {
+			res.status(500).end();
+		} else {
+			
+			var i = 0,
+				audFileCnt = auditionsFiles.length,
+				fileLoc = '';
+			// get app dir
+			var appDir = global.appRoot;
+			var relativePath =  'res' + '/' + 'auditions' + '/' + req.body.project._id + '/';
+			var newPath = appDir + '/public/' + relativePath;
+			var savePath = appDir + '/public/' + 'res' + '/' + 'archives' + '/';
+			var zipName = req.body.project.title.replace('/','-') + '.zip';
+			var newZip = savePath + zipName;
 
-    // check for existing parent directory, create if needed
-    if (!fs.existsSync(savePath)) {
-        fs.mkdirSync(savePath);
-    }
+			// check for existing parent directory, create if needed
+			if (!fs.existsSync(savePath)) {
+				fs.mkdirSync(savePath);
+			}
 
-    //console.log(newPath);
+			//console.log(newPath);
 
-    var output = fs.createWriteStream(newZip);
-	var archive = archiver('zip');
+			var output = fs.createWriteStream(newZip);
+			var archive = archiver('zip');
 
-	output.on('close', function() {
-	  res.jsonp({zip:zipName});
+			output.on('close', function() {
+				res.jsonp({zip:zipName});
+			});
+
+			for(i = 0; i < audFileCnt; i++){
+				fileLoc = newPath + auditionsFiles[i].file.name;
+				archive.file(fileLoc, { name:auditionsFiles[i].file.name });
+			}
+
+			//archive.directory(newPath, 'my-auditions');
+
+			archive.pipe(output);
+
+			archive.finalize();
+
+		}
 	});
-
-	for(i = 0; i < audFileCnt; i++){
-		fileLoc = newPath + auditionsFiles[i].file.name;
-		archive.file(fileLoc, { name:auditionsFiles[i].file.name });
-	}
-
-    //archive.directory(newPath, 'my-auditions');
-
-    archive.pipe(output);
-
-    archive.finalize();
+	
+	
 
  //    res.setHeader('Content-Type', 'application/zip');
 	// res.setHeader('content-disposition', 'attachment; filename="auditions.zip"');
