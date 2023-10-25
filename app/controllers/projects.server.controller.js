@@ -2858,7 +2858,7 @@ exports.uploadTempScript = function(req, res, next){
 		var script = {
 						file: req.files.file,
 						by: {
-							userId: req.user._id,
+							userId: uid,
 							date: moment().tz('America/New_York').format(),
 							name: req.user.displayName
 						},
