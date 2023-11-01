@@ -2860,7 +2860,7 @@ exports.uploadTempScript = function(req, res, next){
 						by: {
 							userId: uid,
 							date: moment().tz('America/New_York').format(),
-							name: req.user.displayName
+							name: uname
 						},
 						filecheck: 0,
 						filecheckdate: ''
