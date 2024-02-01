@@ -666,7 +666,7 @@ var yesterday = new Date(req.body.dateFilterStart);
                     User.findOne({'_id':audition.approved.by.userId}).sort('-created').exec(function(err, user) {
                         if (err) {
                         } else if(typeof user !== 'undefined'){
-                            if(typeof audsResult[audition.approved.by.userId] == 'undefined'){
+                            if(typeof audsResult[audition.approved.by.userId] == 'undefined' && user != null){
                                 //console.log(audition.approved);
                                 audsResult[audition.approved.by.userId] = {};
                                 audsResult[audition.approved.by.userId].name = user.firstName + ' ' + user.lastName;

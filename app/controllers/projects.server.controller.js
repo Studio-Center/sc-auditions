@@ -1738,34 +1738,35 @@ exports.deleteAudition = function(req, res){
         appDir = global.appRoot,
         audFile = '';
 
-	Audition.findById(aud._id).sort('-created').exec(function(err, audition) {
-		if (err) {
-			return res.status(400).send(err);
-		} else {
-            // set aud file path
-            audFile = appDir + '/public/res/auditions/' + String(audition.project) + '/' + audition.file.name;
-            // remove file from file system
-            if (fs.existsSync(audFile)) {
-	    	fs.unlink(audFile);
-	    }
-            // remove audition from adution collection
-			audition.remove(function(err) {
-				if (err) {
-					return res.status(400).send({
-						message: errorHandler.getErrorMessage(err)
-					});
-				} else {
-//					// emit an event for all connected clients
-					var socketio = req.app.get('socketio');
-//					socketio.sockets.emit('projectsListUpdate');
-//					return res.jsonp(project);
-					socketio.sockets.emit('auditionUpdate', {id: aud.project});
-					return res.status(200).send();
-				}
-			});
-		}
-	});
-
+	if(audition != null){
+		Audition.findById(aud._id).sort('-created').exec(function(err, audition) {
+			if (err) {
+				return res.status(400).send(err);
+			} else {
+				// set aud file path
+				audFile = appDir + '/public/res/auditions/' + String(audition.project) + '/' + audition.file.name;
+				// remove file from file system
+				if (fs.existsSync(audFile)) {
+				fs.unlink(audFile);
+			}
+				// remove audition from adution collection
+				audition.remove(function(err) {
+					if (err) {
+						return res.status(400).send({
+							message: errorHandler.getErrorMessage(err)
+						});
+					} else {
+	//					// emit an event for all connected clients
+						var socketio = req.app.get('socketio');
+	//					socketio.sockets.emit('projectsListUpdate');
+	//					return res.jsonp(project);
+						socketio.sockets.emit('auditionUpdate', {id: aud.project});
+						return res.status(200).send();
+					}
+				});
+			}
+		});
+	}
 };
 
 // save project audition files

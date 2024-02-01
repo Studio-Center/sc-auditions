@@ -387,13 +387,13 @@ var getTalentsFilters = function(req){
 
 	// filter by project title
 	if(req.body.filter.fName){
-		filterObj.name = new RegExp(req.body.filter.fName, 'i');
+		filterObj.name = new RegExp(req.body.filter.fName.trim(), 'i');
 	}
 	if(req.body.filter.lName){
-		filterObj.lastName = new RegExp(req.body.filter.lName, 'i');
+		filterObj.lastName = new RegExp(req.body.filter.lName.trim(), 'i');
 	}
 	if(req.body.filter.email){
-		filterObj.email = new RegExp(req.body.filter.email, 'i');
+		filterObj.email = new RegExp(req.body.filter.email.trim(), 'i');
 	}
 	// filter by gender
 	if(req.body.filter.gender){
@@ -436,7 +436,7 @@ var getTalentsFilters = function(req){
 
 	// locationISDN
 	if(req.body.filter.typeCasts){
-		filterObj.typeCasts = new RegExp("^" + req.body.filter.typeCasts.toLowerCase(), "i");
+		filterObj.typeCasts = new RegExp("^" + req.body.filter.typeCasts.toLowerCase().trim(), "i");
 		if(filterObj.typeCasts === 'Spanish'){
 			delete filterObj.typeCasts;
 			//filterObj.typeCasts = ['Spanish-Dialect','Spanish-Showcase'];
