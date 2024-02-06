@@ -99,7 +99,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				$scope.projAuditions = data;
 			// file not found
 			}).error(function(data, status, headers, config) {
-				console.log('Problem loading project auditions.');
+				console.log('Problem loading project auditions. ' . JSON.stringify(data));
 			});
 
 		};
@@ -1705,7 +1705,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
                 
 			// file not found
 			}).error(function(data, status, headers, config) {
-				console.log('Problem loading project.');
+				console.log('Problem loading project. ' . JSON.stringify(data));
 			});
 
 			loadAuditions();
@@ -2318,7 +2318,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			loadAuditions();
 		// file not saved
 		}).error(function(data, status, headers, config) {
-			console.log('Problem saving audition.');
+			console.log('Problem saving audition. ' . JSON.stringify(data));
 		});
 
 	};
@@ -2372,7 +2372,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				loadAuditions();
 
 			}).error(function(data, status, headers, config) {
-				console.log('Problem deleting audition.');
+				console.log('Problem deleting audition. ' . JSON.stringify(data));
 			});
 
 
@@ -2394,7 +2394,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				loadAuditions();
 
 			}).error(function(data, status, headers, config) {
-				console.log('Problem deleting auditions.');
+				console.log('Problem deleting auditions. ' . JSON.stringify(data));
 			});
 
 
