@@ -1736,7 +1736,8 @@ exports.deleteAudition = function(req, res){
 
 	var aud = req.body.audition,
         appDir = global.appRoot,
-        audFile = '';
+        audFile = '',
+		socketio = req.app.get('socketio');
 
 	if(aud != null){
 		Audition.findById(aud._id).sort('-created').exec(function(err, audition) {
@@ -1747,8 +1748,8 @@ exports.deleteAudition = function(req, res){
 				audFile = appDir + '/public/res/auditions/' + String(audition.project) + '/' + audition.file.name;
 				// remove file from file system
 				if (fs.existsSync(audFile)) {
-				fs.unlink(audFile);
-			}
+					fs.unlink(audFile);
+				}
 				// remove audition from adution collection
 				audition.remove(function(err) {
 					if (err) {
@@ -1757,9 +1758,6 @@ exports.deleteAudition = function(req, res){
 						});
 					} else {
 	//					// emit an event for all connected clients
-						var socketio = req.app.get('socketio');
-	//					socketio.sockets.emit('projectsListUpdate');
-	//					return res.jsonp(project);
 						socketio.sockets.emit('auditionUpdate', {id: aud.project});
 						return res.status(200).send();
 					}
