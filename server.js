@@ -63,7 +63,7 @@ if (cluster.isMaster) {
 	// Start the app by listening on <port>
 	var server = app.get('server').listen(config.port);
 
-	var io = sio(server, {reconnect: true, 'transports': ['websocket', 'polling']});
+	var io = sio(server, {reconnect: true, 'transports': ['websocket']});
 //
 //	// config / init socket io with redis
 	io.adapter(sio_redis({ host: 'localhost', port: 6379 }));
