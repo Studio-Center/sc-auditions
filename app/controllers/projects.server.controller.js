@@ -1738,7 +1738,7 @@ exports.deleteAudition = function(req, res){
         appDir = global.appRoot,
         audFile = '';
 
-	if(aud!= null){
+	if(aud != null){
 		Audition.findById(aud._id).sort('-created').exec(function(err, aud) {
 			if (err) {
 				return res.status(400).send(err);
