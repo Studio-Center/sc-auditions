@@ -1738,19 +1738,19 @@ exports.deleteAudition = function(req, res){
         appDir = global.appRoot,
         audFile = '';
 
-	if(audition != null){
-		Audition.findById(aud._id).sort('-created').exec(function(err, audition) {
+	if(aud!= null){
+		Audition.findById(aud._id).sort('-created').exec(function(err, aud) {
 			if (err) {
 				return res.status(400).send(err);
 			} else {
 				// set aud file path
-				audFile = appDir + '/public/res/auditions/' + String(audition.project) + '/' + audition.file.name;
+				audFile = appDir + '/public/res/auditions/' + String(aud.project) + '/' + aud.file.name;
 				// remove file from file system
 				if (fs.existsSync(audFile)) {
 				fs.unlink(audFile);
 			}
 				// remove audition from adution collection
-				audition.remove(function(err) {
+				aud.remove(function(err) {
 					if (err) {
 						return res.status(400).send({
 							message: errorHandler.getErrorMessage(err)
