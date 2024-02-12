@@ -19,7 +19,7 @@ angular.module('users').controller('UsersController', ['$scope', '$stateParams',
 		$scope.Math = window.Math;
 		$scope.currentPage = 0;
 		$scope.filtered = [];
-		$scope.limit = 20;
+		$scope.limit = 50;
 		$scope.queryLimit = 50;
 		$scope.range = function(min, max, step){
 		    step = step || 1;

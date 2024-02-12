@@ -3781,7 +3781,7 @@ exports.uploadBackup = function(req, res, next){
 										async.waterfall([
 											function(done) {
 												// check for associated media directories
-												fs.exists(auditionsBackupDir, function(exists) {
+												fs.existsSync(auditionsBackupDir, function(exists) {
 													if (!exists) {
 														done(err);
 													} else {
@@ -3793,7 +3793,7 @@ exports.uploadBackup = function(req, res, next){
 												});
 											},
 											function(done) {
-											    fs.exists(scriptsBackupDir, function(exists) {
+											    fs.existsSync(scriptsBackupDir, function(exists) {
 											    	if (!exists) {
 														done(err);
 													} else {
@@ -3806,7 +3806,7 @@ exports.uploadBackup = function(req, res, next){
 											    });
 											},
 											function(done) {
-											    fs.exists(referenceFilesBackupDir, function(exists) {
+											    fs.existsSync(referenceFilesBackupDir, function(exists) {
 											    	if (!exists) {
 														done(err);
 													} else {
