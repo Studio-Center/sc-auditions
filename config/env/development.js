@@ -82,13 +82,18 @@ module.exports = {
     clientSecret: process.env.LINKEDIN_SECRET || 'APP_SECRET',
     callbackURL: '/api/auth/linkedin/callback'
   },
-        mailer: {
-                from: process.env.MAILER_FROM || 'no-reply@studiocenter.com',
-                notifications: 'audition-notification@studiocenter.com',
-                options: {
-                    auth: {
-                        api_key: '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'
-                    }
+  mailer: {
+        from: process.env.MAILER_FROM || 'no-reply@studiocenter.com',
+        notifications: 'audition-notification@studiocenter.com',
+        options: {
+                auth: {
+                api_key: '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'
                 }
         }
+  },
+  TWILIO: {
+        ACCOUNT_SID: '',
+        AUTH_TOKEN: '',
+        ACCOUNT_SUBACCOUNT_SID: ''
+  }
 };

@@ -79,5 +79,10 @@ module.exports = {
 		        api_key: 'SENDGRID_API_KEY'
 		    }
 		}
+	},
+	TWILIO: {
+		  ACCOUNT_SID: '',
+		  AUTH_TOKEN: '',
+		  ACCOUNT_SUBACCOUNT_SID: ''
 	}
 };

@@ -35,5 +35,10 @@ module.exports = {
 				pass: process.env.MAILER_PASSWORD || 'MAILER_PASSWORD'
 			}
 		}
+	},
+	TWILIO: {
+		  ACCOUNT_SID: '',
+		  AUTH_TOKEN: '',
+		  ACCOUNT_SUBACCOUNT_SID: ''
 	}
 };
