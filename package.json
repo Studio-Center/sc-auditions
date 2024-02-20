@@ -61,7 +61,8 @@
     "socket.io": "^1.4.4",
     "socket.io-redis": "^0.1.4",
     "swig": "~1.4.1",
-    "unzip-wrapper": "^0.1.5"
+    "unzip-wrapper": "^0.1.5",
+    "twilio":"3.17.2"
   },
   "devDependencies": {
     "grunt-concurrent": "~1.0.0",
