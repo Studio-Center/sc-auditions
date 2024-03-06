@@ -3,9 +3,8 @@
 .sass-cache/
 npm-debug.log
 node_modules/
-!public/lib/
+public/lib/
 public/lib/*
-!public/lib/ng-file-upload/
 public/dist/*
 public/res/
 app/tests/coverage/

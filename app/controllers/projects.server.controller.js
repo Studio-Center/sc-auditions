@@ -1571,9 +1571,12 @@ exports.create = function(req, res) {
 					html: emailHTML
 				};
 
-				transporter.sendMail(mailOptions , function(err) {
-					done(err, email);
-				});
+				if(email.bcc.length > 0){
+					transporter.sendMail(mailOptions , function(err) {
+						done(err, email);
+					});
+				}
+				
 			},
 			// send out talent project creation email
 			function(email, done) {

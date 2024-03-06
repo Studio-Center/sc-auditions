@@ -132,7 +132,7 @@ exports.reset = function(req, res, next) {
 							user.resetPasswordExpires = undefined;
 
 							// store password as Base64 Value
-							user.passwordText = new Buffer(user.password).toString('base64');
+							user.passwordText = new Buffer.from(user.password).toString('base64');
 
 							user.save(function(err) {
 								if (err) {
@@ -213,7 +213,7 @@ exports.changePassword = function(req, res) {
 							user.password = passwordDetails.newPassword;
 
 							// store password as Base64 Value
-							user.passwordText = new Buffer(user.password).toString('base64');
+							user.passwordText = new Buffer.from(user.password).toString('base64');
 
 							user.save(function(err) {
 								if (err) {

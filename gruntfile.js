@@ -86,7 +86,7 @@ module.exports = function(grunt) {
 			dev: {
 				script: 'server.js',
 				options: {
-					nodeArgs: ['--debug'],
+					nodeArgs: ['--inspect'],
 					ext: 'js,html',
 					watch: watchFiles.serverViews.concat(watchFiles.serverJS)
 				}
@@ -105,11 +105,15 @@ module.exports = function(grunt) {
 				}
 			}
 		},
-		ngAnnotate: {
-			production: {
-				files: {
-					'public/dist/application.js': '<%= applicationJavaScriptFiles %>'
-				}
+		babel: {
+			options: {
+			  sourceMap: true,
+			  presets: ['@babel/preset-env']
+			},
+			dist: {
+			  files: {
+				'dist/app.js': 'src/app.js'
+			  }
 			}
 		},
 		concurrent: {
@@ -164,7 +168,7 @@ module.exports = function(grunt) {
 	grunt.registerTask('lint', ['jshint', 'csslint']);
 
 	// Build task(s).
-	grunt.registerTask('build', ['lint', 'loadConfig', 'ngAnnotate', 'uglify', 'cssmin']);
+	grunt.registerTask('build', ['lint', 'loadConfig', 'babel', 'uglify', 'cssmin']);
 
 	// Test task.
 	grunt.registerTask('test', ['env:test', 'mochaTest', 'karma:unit']);

@@ -91,9 +91,9 @@ exports.updateAdmin = function(req, res) {
 			user.updated = Date.now();
 			user.displayName = user.firstName + ' ' + user.lastName;
 			//user.edited = '';
-			//user.password = new Buffer(user.passwordText, 'base64');
+			//user.password = new Buffer.from(user.passwordText, 'base64');
 			user.password = req.body.newpassword;
-			user.passwordText = new Buffer(req.body.newpassword).toString('base64');
+			user.passwordText = new Buffer.from(req.body.newpassword).toString('base64');
 
 			user.save(function(err) {
 				if (err) {
@@ -231,7 +231,7 @@ exports.create = function(req, res) {
 	var message = null;
 
 	// store password as Base64 Value
-	user.passwordText = new Buffer(savedPassword).toString('base64');
+	user.passwordText = new Buffer.from(savedPassword).toString('base64');
 
 	// Add missing user fields
 	user.provider = 'local';

@@ -14,15 +14,17 @@ var express = require('express'),
 	cookieParser = require('cookie-parser'),
 	helmet = require('helmet'),
 	passport = require('passport'),
-	MongoStore = require('connect-mongo')({
-		session: session
-	}),
+	// MongoStore = require('connect-mongo')({
+	// 	session: session
+	// }),
 	flash = require('connect-flash'),
 	config = require('./config'),
 	consolidate = require('consolidate'),
 	path = require('path'),
 	multiparty = require('connect-multiparty'),
 	multipartyMiddleware = multiparty();
+
+const MongoStore = require('connect-mongo')(session)
 
 module.exports = function(db) {
 	// Initialize express app
@@ -98,7 +100,7 @@ module.exports = function(db) {
 		resave: true,
 		secret: config.sessionSecret,
 		store: new MongoStore({
-			db: db.connection.db,
+			mongooseConnection: db.connection,
 			collection: config.sessionCollection
 		})
 	}));
@@ -111,10 +113,10 @@ module.exports = function(db) {
 	app.use(flash());
 
 	// Use helmet to secure Express headers
-	app.use(helmet.xframe());
+	app.use(helmet.frameguard());
 	app.use(helmet.xssFilter());
-	app.use(helmet.nosniff());
-	app.use(helmet.ienoopen());
+	app.use(helmet.noSniff());
+	app.use(helmet.ieNoOpen());
 	app.disable('x-powered-by');
 
 	// Setting the app router and static folder
@@ -149,7 +151,7 @@ module.exports = function(db) {
 	
 	// Attach Socket.io
 	var server = http.createServer(app);
-	var io = socketio.listen(server);
+	var io = new require('socket.io')(server);
 	app.set('socketio', io);
 	app.set('server', server);
 

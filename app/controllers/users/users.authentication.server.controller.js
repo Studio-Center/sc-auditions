@@ -28,11 +28,12 @@ exports.signup = function(req, res) {
 	user.displayName = user.firstName + ' ' + user.lastName;
 
 	// store password as Base64 Value
-	user.passwordText = new Buffer(user.password).toString('base64');
-
+	user.passwordText = new Buffer.from(user.password).toString('base64');
+console.log(user);
 	// Then save the user 
 	user.save(function(err) {
 		if (err) {
+			console.log(err);
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
@@ -192,8 +193,10 @@ exports.jwtauth = function(req, res, next){
  * Signout
  */
 exports.signout = function(req, res) {
-	req.logout();
-	res.redirect('/');
+	req.logout(function(err) {
+		if (err) { return next(err); }
+		res.redirect('/');
+	});
 };
 
 /**
