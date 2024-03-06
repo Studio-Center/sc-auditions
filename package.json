@@ -72,7 +72,7 @@
     "grunt-env": "~1.0.1",
     "grunt-karma": "~3.0.0",
     "grunt-mocha-test": "~0.13.3",
-    "grunt-nodemon": "~0.3.0",
+    "grunt-nodemon": "~0.4.2",
     "grunt-babel": "~5.0.0",
     "karma": "~3.0.0",
     "karma-chrome-launcher": "~3.0.0",
