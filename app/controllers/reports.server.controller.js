@@ -3,7 +3,7 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'),
+const mongoose = require('mongoose'),
 	errorHandler = require('./errors'),
 	Project = mongoose.model('Project'),
     Audition = mongoose.model('Audition'),

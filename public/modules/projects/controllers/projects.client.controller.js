@@ -2488,27 +2488,28 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 						username: 'System',
 						item: note,
 						deleted: false
-					};
-      		// add to project discussion
-      		project.discussion.push(item);
+				};
 
-					// send note email
-					$scope.gatherToAddresses('saveDiscussion');
-			    $scope.email.subject = project.title + ' - ' + note;
-			    $scope.email.message = 'Project: ' + project.title + '<br>';
-			    $scope.email.message += 'Added by: System<br>';
-					$scope.email.message += 'Discussion Item: ' + note + '<br>';
-			    $scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 || $location.port() !== 443 ? ':' + $location.port() : '') + '/#!/projects/' + project._id + '<br>';
+				// add to project discussion
+				project.discussion.push(item);
 
-			    $http.post('/projects/sendemail', {
-						email: $scope.email
-					});
+				// send note email
+				$scope.gatherToAddresses('saveDiscussion');
+				$scope.email.subject = project.title + ' - ' + note;
+				$scope.email.message = 'Project: ' + project.title + '<br>';
+				$scope.email.message += 'Added by: System<br>';
+				$scope.email.message += 'Discussion Item: ' + note + '<br>';
+				$scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 || $location.port() !== 443 ? ':' + $location.port() : '') + '/#!/projects/' + project._id + '<br>';
 
-					// update project store
-					$scope.updateNoRefresh();
-				}
+				$http.post('/projects/sendemail', {
+					email: $scope.email
+				});
 
-			});
+				// update project store
+				$scope.updateNoRefresh();
+			}
+
+		});
   	};
 
   	// upload reference files to server

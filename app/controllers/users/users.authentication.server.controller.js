@@ -3,7 +3,7 @@
 /**
  * Module dependencies.
  */
-var _ = require('lodash'),
+const _ = require('lodash'),
 	errorHandler = require('../errors'),
 	mongoose = require('mongoose'),
 	passport = require('passport'),

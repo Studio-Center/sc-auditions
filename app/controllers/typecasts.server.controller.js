@@ -3,7 +3,7 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'),
+const mongoose = require('mongoose'),
 	errorHandler = require('./errors'),
 	Typecast = mongoose.model('Typecast'),
 	_ = require('lodash');

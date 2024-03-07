@@ -3,7 +3,7 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'),
+const mongoose = require('mongoose'),
 	Schema = mongoose.Schema,
 	crypto = require('crypto'),
     uniqueValidator = require('mongoose-unique-validator');

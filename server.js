@@ -12,8 +12,8 @@ const path = require('path');
 global.appRoot = path.resolve(__dirname);
 
 // multithreading
-const cluster = require('cluster');
-const sio = require('socket.io'),
+const cluster = require('cluster'),
+	sio = require('socket.io'),
 	numCPUs = require('os').cpus().length;
 
 /**
