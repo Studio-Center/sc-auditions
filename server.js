@@ -2,19 +2,19 @@
 /**
  * Module dependencies.
  */
-var init = require('./config/init')(),
+const init = require('./config/init')(),
 	config = require('./config/config'),
 	mongoose = require('mongoose'),
 	jwt = require('jwt-simple'),
 	compression = require('compression');
 
-var path = require('path');
+const path = require('path');
 global.appRoot = path.resolve(__dirname);
 
 // multithreading
-var cluster = require('cluster');
-var sio = require('socket.io'),
-    numCPUs = require('os').cpus().length;
+const cluster = require('cluster');
+const sio = require('socket.io'),
+	numCPUs = require('os').cpus().length;
 
 /**
  * Main application entry file.

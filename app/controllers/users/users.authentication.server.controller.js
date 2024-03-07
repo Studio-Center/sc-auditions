@@ -29,7 +29,7 @@ exports.signup = function(req, res) {
 
 	// store password as Base64 Value
 	user.passwordText = new Buffer.from(user.password).toString('base64');
-console.log(user);
+
 	// Then save the user 
 	user.save(function(err) {
 		if (err) {

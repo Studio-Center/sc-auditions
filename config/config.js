@@ -3,7 +3,7 @@
 /**
  * Module dependencies.
  */
-var _ = require('lodash'),
+const _ = require('lodash'),
 	glob = require('glob');
 	// set application widen timezone
 	process.env.TZ = 'America/New_York';

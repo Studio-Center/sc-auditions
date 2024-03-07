@@ -3,7 +3,7 @@
 /**
  * Module dependencies.
  */
-var express = require('express'),
+const express = require('express'),
 	http = require('http'),
     socketio = require('socket.io'),
 	morgan = require('morgan'),
@@ -22,9 +22,8 @@ var express = require('express'),
 	consolidate = require('consolidate'),
 	path = require('path'),
 	multiparty = require('connect-multiparty'),
-	multipartyMiddleware = multiparty();
-
-const MongoStore = require('connect-mongo')(session)
+	multipartyMiddleware = multiparty(),
+	MongoStore = require('connect-mongo')(session);;
 
 module.exports = function(db) {
 	// Initialize express app
@@ -39,7 +38,6 @@ module.exports = function(db) {
 	app.locals.title = config.app.title;
 	app.locals.description = config.app.description;
 	app.locals.keywords = config.app.keywords;
-	app.locals.facebookAppId = config.facebook.clientID;
 	app.locals.jsFiles = config.getJavaScriptAssets();
 	app.locals.cssFiles = config.getCSSAssets();
 

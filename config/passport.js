@@ -1,6 +1,6 @@
 'use strict';
 
-var passport = require('passport'),
+const passport = require('passport'),
 	User = require('mongoose').model('User'),
 	path = require('path'),
 	config = require('./config');

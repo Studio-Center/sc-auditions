@@ -3,7 +3,7 @@
 /**
  * Module dependencies.
  */
-var glob = require('glob');
+const glob = require('glob');
 
 /**
  * Module init function.
