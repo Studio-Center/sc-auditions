@@ -25,7 +25,7 @@ var validateLocalStrategyPassword = function(password) {
 /**
  * User Schema
  */
-var UserSchema = new Schema({
+const UserSchema = new Schema({
 	firstName: {
 		type: String,
 		trim: true,
@@ -116,6 +116,8 @@ var UserSchema = new Schema({
   	edited: {
 		type: Object
 	}
+}, {
+	strictPopulate: false
 });
 
 UserSchema.plugin(uniqueValidator);

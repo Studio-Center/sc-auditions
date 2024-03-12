@@ -9,7 +9,7 @@ const mongoose = require('mongoose'),
 /**
  * Log Schema
  */
-var NewprojectSchema = new Schema({
+const NewprojectSchema = new Schema({
 	project: {
 		type: String,
 		required: 'Please enter a project',

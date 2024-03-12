@@ -21,16 +21,16 @@ const cluster = require('cluster'),
  * Please note that the order of loading is important.
  */
 
-// if (cluster.isMaster) {
-// //  // Fork workers.
-//   for (var i = 0; i < numCPUs; i++) {
-//     cluster.fork();
-//   }
-// //
-//   cluster.on('exit', function(worker, code, signal) {
-//    console.log('worker ' + worker.process.pid + ' died');
-//   });
-// } else {
+if (cluster.isMaster) {
+//  // Fork workers.
+  for (var i = 0; i < numCPUs; i++) {
+    cluster.fork();
+  }
+//
+  cluster.on('exit', function(worker, code, signal) {
+   console.log('worker ' + worker.process.pid + ' died');
+  });
+} else {
   // Workers can share any TCP connection
   // In this case its a HTTP server
   // http.createServer(function(req, res) {
@@ -81,7 +81,7 @@ const cluster = require('cluster'),
 	// Expose app
 	exports = module.exports = app;
 
-//}
+}
 
 // Logging initialization
 console.log('MEAN.JS application started on port ' + config.port);

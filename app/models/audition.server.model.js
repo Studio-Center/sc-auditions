@@ -9,7 +9,7 @@ const mongoose = require('mongoose'),
 /**
  * Audition Schema
  */
-var AuditionSchema = new Schema({
+const AuditionSchema = new Schema({
 	created: {
 		type: Date,
 		default: Date.now

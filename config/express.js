@@ -14,17 +14,14 @@ const express = require('express'),
 	cookieParser = require('cookie-parser'),
 	helmet = require('helmet'),
 	passport = require('passport'),
-	// MongoStore = require('connect-mongo')({
-	// 	session: session
-	// }),
 	flash = require('connect-flash'),
 	config = require('./config'),
 	consolidate = require('consolidate'),
 	path = require('path'),
 	multiparty = require('connect-multiparty'),
 	multipartyMiddleware = multiparty(),
-	MongoStore = require('connect-mongo')(session);;
-
+	MongoStore = require('connect-mongo');
+	
 module.exports = function(db) {
 	// Initialize express app
 	var app = express();
@@ -97,10 +94,9 @@ module.exports = function(db) {
 		saveUninitialized: true,
 		resave: true,
 		secret: config.sessionSecret,
-		store: new MongoStore({
-			mongooseConnection: db.connection,
-			collection: config.sessionCollection
-		})
+		store: MongoStore.create({
+            client: db.connection.getClient()
+        })
 	}));
 
 	// use passport session

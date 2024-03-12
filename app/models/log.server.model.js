@@ -9,7 +9,7 @@ const mongoose = require('mongoose'),
 /**
  * Log Schema
  */
-var LogSchema = new Schema({
+const LogSchema = new Schema({
 	type: {
 		type: String,
 		required: 'Please enter a type',

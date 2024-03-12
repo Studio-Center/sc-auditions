@@ -9,7 +9,7 @@ const mongoose = require('mongoose'),
 /**
  * Project Schema
  */
-var ProjectSchema = new Schema({
+const ProjectSchema = new Schema({
 	created: {
 		type: Date,
 		default: Date.now

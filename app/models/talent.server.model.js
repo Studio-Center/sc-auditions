@@ -9,7 +9,7 @@ const mongoose = require('mongoose'),
 /**
  * Talent Schema
  */
-var TalentSchema = new Schema({
+const TalentSchema = new Schema({
 	name: {
 		type: String,
 		default: '',

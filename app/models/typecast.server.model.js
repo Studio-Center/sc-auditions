@@ -9,7 +9,7 @@ const mongoose = require('mongoose'),
 /**
  * Typecast Schema
  */
-var TypecastSchema = new Schema({
+const TypecastSchema = new Schema({
 	sort: {
 		type: Number,
 		default: 0
