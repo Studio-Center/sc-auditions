@@ -60,7 +60,7 @@
     "sanitize-filename": "^1.6.3",
     "socket.io": "^4.7.4",
     "swig": "~1.4.1",
-    "twilio": "^3.84.1",
+    "twilio": "^5.0.0",
     "unzip-wrapper": "^0.1.5"
   },
   "devDependencies": {
