@@ -48,7 +48,7 @@ module.exports = {
                                 'public/lib/textAngular/dist/textAngular-sanitize.min.js',
                                 'public/lib/angular-ui-tinymce/src/tinymce.js',
                                 'public/lib/textAngular/dist/textAngular.min.js',
-                                'public/lib/socket.io-client/socket.io.js',
+                                'public/lib/socket.io-client/dist/socket.io.js',
                                 'public/lib/angular-socket-io/socket.min.js'
                         ]
                 },
@@ -67,7 +67,7 @@ module.exports = {
         notifications: 'audition-notification@studiocenter.com',
         options: {
                 auth: {
-                api_key: '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'
+                api_key: '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'
                 }
         }
   },
