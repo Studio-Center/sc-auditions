@@ -49,7 +49,7 @@ grunt
 
 Alternately you could run the app with forever.js (first insstall forever)
 ```
-npm install -g bower
+npm install -g forever
 ```
 Then
 ```
