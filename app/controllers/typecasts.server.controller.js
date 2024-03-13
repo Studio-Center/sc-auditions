@@ -18,17 +18,15 @@ exports.create = function(req, res) {
 	var allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern','talent director'];
 
 	if (_.intersection(req.user.roles, allowedRoles).length) {
-		typecast.save(function(err) {
-			if (err) {
-				return res.status(400).send({
-					message: errorHandler.getErrorMessage(err)
-				});
-			} else {
-				var socketio = req.app.get('socketio');
-				socketio.sockets.emit('typecastsListUpdate'); 
-				
-				return res.jsonp(typecast);
-			}
+		typecast.save().then(function () {
+			var socketio = req.app.get('socketio');
+			socketio.sockets.emit('typecastsListUpdate'); 
+			
+			return res.jsonp(typecast);
+		}).catch(function (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
 		});
 	} else {
 		return res.status(403).send('User is not authorized');
@@ -50,14 +48,12 @@ exports.update = function(req, res) {
 
 	typecast = _.extend(typecast , req.body);
 
-	typecast.save(function(err) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(typecast);
-		}
+	typecast.save().then(function () {
+		res.jsonp(typecast);
+	}).catch(function (err) {
+		return res.status(400).send({
+			message: errorHandler.getErrorMessage(err)
+		});
 	});
 };
 
@@ -67,42 +63,41 @@ exports.update = function(req, res) {
 exports.delete = function(req, res) {
 	var typecast = req.typecast ;
 
-	typecast.remove(function(err) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			var socketio = req.app.get('socketio');
-			socketio.sockets.emit('typecastsListUpdate'); 
-			
-			res.jsonp(typecast);
-		}
+	typecast.remove().then(function () {
+		var socketio = req.app.get('socketio');
+		socketio.sockets.emit('typecastsListUpdate'); 
+		
+		res.jsonp(typecast);
+	}).catch(function (err) {
+		return res.status(400).send({
+			message: errorHandler.getErrorMessage(err)
+		});
 	});
 };
 
 /**
  * List of Typecasts
  */
-exports.list = function(req, res) { Typecast.find().sort('-created').populate('user', 'displayName').exec(function(err, typecasts) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(typecasts);
-		}
+exports.list = function(req, res) { 
+	Typecast.find().sort('-created').populate('user', 'displayName').then(function (typecasts) {
+		res.jsonp(typecasts);
+	}).catch(function (err) {
+		return res.status(400).send({
+			message: errorHandler.getErrorMessage(err)
+		});
 	});
 };
 
 /**
  * Typecast middleware
  */
-exports.typecastByID = function(req, res, next, id) { Typecast.findById(id).populate('user', 'displayName').exec(function(err, typecast) {
-		if (err) return next(err);
+exports.typecastByID = function(req, res, next, id) { 
+	Typecast.findById(id).populate('user', 'displayName').then(function (typecast) {
 		if (! typecast) return next(new Error('Failed to load Typecast ' + id));
 		req.typecast = typecast ;
 		next();
+	}).catch(function (err) {
+		return next(err);
 	});
 };
 

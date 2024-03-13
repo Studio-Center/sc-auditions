@@ -39,12 +39,7 @@ if (cluster.isMaster) {
   // }).listen(8000);
 
 	// Bootstrap db connection
-	mongoose.connect(config.db, function(err) {
-		if (err) {
-			console.error('\x1b[31m', 'Could not connect to MongoDB!');
-			console.log(err);
-		}
-	});
+	mongoose.connect(config.db);
 
 	// Init the express application
 	var app = require('./config/express')(mongoose);

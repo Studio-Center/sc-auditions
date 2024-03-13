@@ -39,32 +39,27 @@ exports.emailMissingAuds = function(req, res){
 
 	var searchCriteria = {'estimatedCompletionDate': {$gte: yesterday, $lt: tomorrow}};
 
-	Project.find(searchCriteria).sort('-estimatedCompletionDate').populate('project', 'displayName').exec(function(err, projects) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
+	Project.find(searchCriteria).sort('-estimatedCompletionDate').populate('project', 'displayName').then(function (projects) {
 
-			async.waterfall([
+		async.waterfall([
 				function(done) {
-					User.find({'roles':'admin','noemail':{ $ne: true }}).sort('-created').exec(function(err, admins) {
-						done(err, admins);
+					User.find({'roles':'admin','noemail':{ $ne: true }}).sort('-created').then(function (admins) {
+						done(null, admins);
 					});
 				},
 				function(admins, done) {
-					User.find({'roles':{ $in: ['producer/auditions director', 'auditions director', 'audio intern']},'noemail':{ $ne: true }}).sort('-created').exec(function(err, directors) {
-						done(err, admins, directors);
+					User.find({'roles':{ $in: ['producer/auditions director', 'auditions director', 'audio intern']},'noemail':{ $ne: true }}).sort('-created').then(function (directors) {
+						done(null, admins, directors);
 					});
 				},
 				function(admins, directors, done) {
-					User.find({'roles':'production coordinator','noemail':{ $ne: true }}).sort('-created').exec(function(err, coordinators) {
-						done(err, admins, directors, coordinators);
+					User.find({'roles':'production coordinator','noemail':{ $ne: true }}).sort('-created').then(function (coordinators) {
+						done(null, admins, directors, coordinators);
 					});
 				},
 				function(admins, directors, coordinators, done) {
-					User.find({'roles':'talent director','noemail':{ $ne: true }}).sort('-created').exec(function(err, talentdirectors) {
-						done(err, admins, directors, coordinators, talentdirectors);
+					User.find({'roles':'talent director','noemail':{ $ne: true }}).sort('-created').then(function (talentdirectors) {
+						done(null, admins, directors, coordinators, talentdirectors);
 					});
 				},
 				function(admins, directors, coordinators, talentdirectors, done) {
@@ -115,8 +110,8 @@ exports.emailMissingAuds = function(req, res){
 									async.waterfall([
 										// gather info for selected talent
 										function(done) {
-											Talent.findOne({'_id':talent.talentId}).sort('-created').exec(function(err, talentInfo) {
-												done(err, talentInfo);
+											Talent.findOne({'_id':talent.talentId}).sort('-created').then(function (talentInfo) {
+												done(null, talentInfo);
 											});
 										},
 										function(talentInfo, done){
@@ -210,7 +205,10 @@ exports.emailMissingAuds = function(req, res){
 				}
 			});
 
-		}
+	}).catch(function (err) {
+		return res.status(400).send({
+			message: errorHandler.getErrorMessage(err)
+		});	
 	});
 
 };
@@ -227,92 +225,90 @@ exports.findMissingAuds = function(req, res){
 
 	var searchCriteria = {'estimatedCompletionDate': {$gte: yesterday, $lt: tomorrow}};
 
-	Project.find(searchCriteria).sort('-estimatedCompletionDate').populate('project', 'displayName').exec(function(err, projects) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
+	Project.find(searchCriteria).sort('-estimatedCompletionDate').populate('project', 'displayName').then(function (projects) {
 
-			// walk through found projects
-			async.forEach(projects, function (project, callback) {
-				// walk through found talents
-				if(typeof project.talent !== 'undefined' && project.talent.length > 0){
+		// walk through found projects
+		async.forEach(projects, function (project, callback) {
+			// walk through found talents
+			if(typeof project.talent !== 'undefined' && project.talent.length > 0){
 
-					// create project object
-					callTalents[project._id] = {
-												project: {
-															_id: '',
-															title: '',
-															estimatedCompletionDate: ''
-														},
-												missingAudsCnt: 0,
-												talents: []
-												};
-					callTalents[project._id].project._id = project._id;
-					callTalents[project._id].project.title = project.title;
-					callTalents[project._id].project.estimatedCompletionDate = project.estimatedCompletionDate;
+				// create project object
+				callTalents[project._id] = {
+											project: {
+														_id: '',
+														title: '',
+														estimatedCompletionDate: ''
+													},
+											missingAudsCnt: 0,
+											talents: []
+											};
+				callTalents[project._id].project._id = project._id;
+				callTalents[project._id].project.title = project.title;
+				callTalents[project._id].project.estimatedCompletionDate = project.estimatedCompletionDate;
 
-					// walk through project found talent
-					async.forEach(project.talent, function (talent, talentCallback) {
+				// walk through project found talent
+				async.forEach(project.talent, function (talent, talentCallback) {
 
-						if(typeof talent !== 'undefined'){
+					if(typeof talent !== 'undefined'){
 
-							async.waterfall([
-								// gather info for selected talent
-								function(done) {
-									Talent.findOne({'_id':talent.talentId}).sort('-created').exec(function(err, talentInfo) {
-										done(err, talentInfo);
-									});
-								},
-								function(talentInfo, done){
+						async.waterfall([
+							// gather info for selected talent
+							function(done) {
+								Talent.findOne({'_id':talent.talentId}).sort('-created').then(function (talentInfo) {
+									done(null, talentInfo);
+								});
+							},
+							function(talentInfo, done){
 
-									if(talent.status !== 'Out' && talent.status !== 'Posted' && talent.status !== 'Not Posted (Bad Read)'){
-										callTalents[project._id].talents.push(talent);
-										talentId = callTalents[project._id].talents.length - 1;
-										callTalents[project._id].talents[talentId].data = talentInfo;
-										++callTalents[project._id].missingAudsCnt;
-										++missingCnt;
-									}
-									done('');
+								if(talent.status !== 'Out' && talent.status !== 'Posted' && talent.status !== 'Not Posted (Bad Read)'){
+									callTalents[project._id].talents.push(talent);
+									talentId = callTalents[project._id].talents.length - 1;
+									callTalents[project._id].talents[talentId].data = talentInfo;
+									++callTalents[project._id].missingAudsCnt;
+									++missingCnt;
 								}
-								], function(err) {
-								if (err) {
-									return res.status(400).json(err);
-								} else {
-									talentCallback();
-								}
-							});
+								done('');
+							}
+							], function(err) {
+							if (err) {
+								return res.status(400).json(err);
+							} else {
+								talentCallback();
+							}
+						});
 
-						}
+					}
 
-					}, function (err) {
-						if( err ) {
-							return res.status(400).send({
-								message: errorHandler.getErrorMessage(err)
-							});
-						} else {
-			            	callback();
-						}
-		           	});
+				}, function (err) {
+					if( err ) {
+						return res.status(400).send({
+							message: errorHandler.getErrorMessage(err)
+						});
+					} else {
+						callback();
+					}
+				});
 
-				} else {
+			} else {
 
-					callback();
+				callback();
 
-				}
+			}
 
-			}, function (err) {
-				if( err ) {
-					return res.status(400).send({
-						message: errorHandler.getErrorMessage(err)
-					});
-				} else {
-					return res.jsonp({count: missingCnt, results:callTalents});
-				}
-           	});
+		}, function (err) {
+			if( err ) {
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
+			} else {
+				return res.jsonp({count: missingCnt, results:callTalents});
+			}
+		});
 
-		}
+	}).catch(function (err) {
+		return res.status(400).send({
+			message: errorHandler.getErrorMessage(err)
+		});
 	});
 };
 
@@ -407,62 +403,62 @@ exports.convertToCSV = function(req, res){
 
 exports.findAuditionsBooked = function(req, res){
 
-// method vars
-var statusOpts = [
-					'In Progress',
-					'On Hold',
-					'Booked',
-					'Canceled',
-					'ReAuditioned',
-					'Dead',
-					'Closed - Pending Client Decision',
-					'Complete'
-				];
-// projects
-var projectsStats = [];
-var projectData = {
-	id: '',
-	name: '',
-	client: [],
-	dueDate: '',
-	projectCoordinator: '',
-	status: '',
-	talentChosen: []
-};
-// stats
-var pCStats = [];
-var pCStatsData = {
-	id: '',
-	name: '',
-	totalInProgress: 0,
-	totalOnHold: 0,
-	totalBooked: 0,
-	totalCanceled: 0,
-	totalPending: 0,
-	totalReAuditioned: 0,
-	totalDead: 0,
-	totalClosed: 0,
-	totalAuditions: 0,
-	totalBookedPercent: 0
-};
+	// method vars
+	var statusOpts = [
+						'In Progress',
+						'On Hold',
+						'Booked',
+						'Canceled',
+						'ReAuditioned',
+						'Dead',
+						'Closed - Pending Client Decision',
+						'Complete'
+					];
+	// projects
+	var projectsStats = [];
+	var projectData = {
+		id: '',
+		name: '',
+		client: [],
+		dueDate: '',
+		projectCoordinator: '',
+		status: '',
+		talentChosen: []
+	};
+	// stats
+	var pCStats = [];
+	var pCStatsData = {
+		id: '',
+		name: '',
+		totalInProgress: 0,
+		totalOnHold: 0,
+		totalBooked: 0,
+		totalCanceled: 0,
+		totalPending: 0,
+		totalReAuditioned: 0,
+		totalDead: 0,
+		totalClosed: 0,
+		totalAuditions: 0,
+		totalBookedPercent: 0
+	};
 
-// generate start dates
-//var yesterday = new Date(req.body.dateFilterStart);
-//	yesterday.setDate(yesterday.getDate() - 1);
-//	var tomorrow = new Date(req.body.dateFilterEnd);
-//	tomorrow.setDate(tomorrow.getDate() + 1);
-var yesterday = new Date(req.body.dateFilterStart);
+	// generate start dates
+	//var yesterday = new Date(req.body.dateFilterStart);
+	//	yesterday.setDate(yesterday.getDate() - 1);
+	//	var tomorrow = new Date(req.body.dateFilterEnd);
+	//	tomorrow.setDate(tomorrow.getDate() + 1);
+	var yesterday = new Date(req.body.dateFilterStart);
 	yesterday.setDate(yesterday.getDate());
-    yesterday.setHours(0, 0, 0);
+	yesterday.setHours(0, 0, 0);
 	var tomorrow = new Date(req.body.dateFilterEnd);
 	tomorrow.setDate(tomorrow.getDate());
-    tomorrow.setHours(23, 59, 59);
-    
+	tomorrow.setHours(23, 59, 59);
+
 	// assign filter criteria
 	var searchCriteria = {'estimatedCompletionDate': {$gte: yesterday, $lt: tomorrow}};
 
 	// walk found projects
-	Project.find(searchCriteria).sort('-estimatedCompletionDate').populate('project', 'displayName').exec(function(err, projects) {
+	Project.find(searchCriteria).sort('-estimatedCompletionDate').populate('project', 'displayName').then(function (projects) {
 
 		async.eachSeries(projects, function (project, projectCallback) {
 
@@ -475,7 +471,7 @@ var yesterday = new Date(req.body.dateFilterStart);
 				ownerId = project.owner;
 			}
 
-			User.findOne({'_id':ownerId}).sort('-created').exec(function(err, user) {
+			User.findOne({'_id':ownerId}).sort('-created').then(function (user) {
 				if(user){
 					var talentBooked = [];
 
@@ -618,15 +614,15 @@ exports.systemStats = function(req, res, next){
 	};
 
 	njds.drives(
-				function (err, drives) {
-						njds.drivesDetail(
-								drives,
-								function (err, data) {
-									stats.disks = data;
-									res.jsonp(stats);
-								}
-					);
-			}
+		function (err, drives) {
+			njds.drivesDetail(
+				drives,
+				function (err, data) {
+					stats.disks = data;
+					res.jsonp(stats);
+				}
+			);
+		}
 	);
 
 };
@@ -652,80 +648,73 @@ var yesterday = new Date(req.body.dateFilterStart);
 	var searchCriteria = {'created': {$gte: yesterday, $lt: tomorrow}};
 
     // walk found auditions
-	Audition.find(searchCriteria).sort('-created').exec(function(err, auditions) {
-        if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			// walk through found projects
-			async.eachSeries(auditions, function (audition, callback) {
-                
-                // load project auditions
-                if(typeof audition.approved.by.userId !== 'undefined'){
-                    User.findOne({'_id':audition.approved.by.userId}).sort('-created').exec(function(err, user) {
-                        if (err) {
-                        } else if(typeof user !== 'undefined'){
-                            if(typeof audsResult[audition.approved.by.userId] == 'undefined' && user != null){
-                                //console.log(audition.approved);
-                                audsResult[audition.approved.by.userId] = {};
-                                audsResult[audition.approved.by.userId].name = user.firstName + ' ' + user.lastName;
-                                audsResult[audition.approved.by.userId].email = user.email;
-                                audsResult[audition.approved.by.userId].username = user.username;
-                                audsResult[audition.approved.by.userId].projects = {};
-                                audsResult[audition.approved.by.userId].projects[audition.project] = {};
-                                audsResult[audition.approved.by.userId].projects[audition.project].title = audition.project;
-                                Project.findOne({'_id':audition.project}).sort('-created').exec(function(err, project) {
-                                    if (err) {
-                                        audsResult[audition.approved.by.userId].projects[audition.project].title = audition.project;
-                                    } else if(typeof project != 'undefined'){
-                                        audsResult[audition.approved.by.userId].projects[audition.project].title = project.title;
-                                    }
-                                });
-                                
-                                audsResult[audition.approved.by.userId].projects[audition.project].count = 1;
+	Audition.find(searchCriteria).sort('-created').then(function (auditions) {
+		// walk through found projects
+		async.eachSeries(auditions, function (audition, callback) {
+			
+			// load project auditions
+			if(typeof audition.approved.by.userId !== 'undefined'){
+				User.findOne({'_id':audition.approved.by.userId}).sort('-created').then(function (user) {
+					if(typeof user !== 'undefined'){
+						if(typeof audsResult[audition.approved.by.userId] == 'undefined' && user != null){
+							//console.log(audition.approved);
+							audsResult[audition.approved.by.userId] = {};
+							audsResult[audition.approved.by.userId].name = user.firstName + ' ' + user.lastName;
+							audsResult[audition.approved.by.userId].email = user.email;
+							audsResult[audition.approved.by.userId].username = user.username;
+							audsResult[audition.approved.by.userId].projects = {};
+							audsResult[audition.approved.by.userId].projects[audition.project] = {};
+							audsResult[audition.approved.by.userId].projects[audition.project].title = audition.project;
+							Project.findOne({'_id':audition.project}).sort('-created').then(function (project) {
+								audsResult[audition.approved.by.userId].projects[audition.project].title = project.title;
+							}).catch(function (err) {
+								audsResult[audition.approved.by.userId].projects[audition.project].title = audition.project;
+							});
+							
+							audsResult[audition.approved.by.userId].projects[audition.project].count = 1;
 
-                                audsResult[audition.approved.by.userId].count = 1;
-                            } else {
-                                
-                                if(typeof audsResult[audition.approved.by.userId].projects[audition.project] == 'undefined'){
-                                    audsResult[audition.approved.by.userId].projects[audition.project] = {};
-                                    
-                                    audsResult[audition.approved.by.userId].projects[audition.project].title = audition.project;
-                                    Project.findOne({'_id':audition.project}).sort('-created').exec(function(err, project) {
-                                        if (err) {
-                                            audsResult[audition.approved.by.userId].projects[audition.project].title = audition.project;
-                                        } else if(typeof project != 'undefined' && project != null){
-                                            audsResult[audition.approved.by.userId].projects[audition.project].title = project.title;
-                                        }
-                                    });
-                                    
-                                    audsResult[audition.approved.by.userId].projects[audition.project].count = 1;
-                                } else {
-                                    audsResult[audition.approved.by.userId].projects[audition.project].count += 1;
-                                }
-                                
-                                audsResult[audition.approved.by.userId].count += 1;
+							audsResult[audition.approved.by.userId].count = 1;
+						} else {
+							
+							if(typeof audsResult[audition.approved.by.userId].projects[audition.project] == 'undefined'){
+								audsResult[audition.approved.by.userId].projects[audition.project] = {};
+								
+								audsResult[audition.approved.by.userId].projects[audition.project].title = audition.project;
+								Project.findOne({'_id':audition.project}).sort('-created').then(function (project) {
+									audsResult[audition.approved.by.userId].projects[audition.project].title = project.title;
+								}).catch(function (err) {
+									audsResult[audition.approved.by.userId].projects[audition.project].title = audition.project;
+								});
+								
+								audsResult[audition.approved.by.userId].projects[audition.project].count = 1;
+							} else {
+								audsResult[audition.approved.by.userId].projects[audition.project].count += 1;
+							}
+							
+							audsResult[audition.approved.by.userId].count += 1;
 
-                            }
-                        }
-                        
-                        callback();
-                    });
-                } else {
-                    callback();
-                }
-                
-            }, function (err) {
-                if( err ) {
-                    return res.status(400).send({
-                        message: errorHandler.getErrorMessage(err)
-                    });
-                } else {
-                    return res.jsonp(audsResult);
-                }
-            });
-        }
+						}
+					}
+					
+					callback();
+				});
+			} else {
+				callback();
+			}
+			
+		}, function (err) {
+			if( err ) {
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
+			} else {
+				return res.jsonp(audsResult);
+			}
+		});
+	}).catch(function (err) {
+		return res.status(400).send({
+			message: errorHandler.getErrorMessage(err)
+		});
     });
 
 };

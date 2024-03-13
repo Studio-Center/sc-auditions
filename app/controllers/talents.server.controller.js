@@ -26,13 +26,7 @@ exports.create = function(req, res) {
 
 	if (_.intersection(req.user.roles, allowedRoles).length) {
 		//console.log(talent);
-		talent.save(function(err) {
-			if (err) {
-				return res.status(400).send({
-					message: errorHandler.getErrorMessage(err)
-				});
-			} else {
-
+		talent.save().then(function () {
 			// write change to log
 			var log = {
 				type: 'talent',
@@ -224,7 +218,10 @@ exports.create = function(req, res) {
 				socketio.sockets.emit('talentsListUpdate');
 
 				return res.jsonp(talent);
-			}
+		}).catch(function (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
 		});
 	} else {
 		return res.status(403).send('User is not authorized');
@@ -246,25 +243,24 @@ exports.update = function(req, res) {
 
 	talent = _.extend(talent , req.body);
 
-	talent.save(function(err) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
+	talent.save().then(function () {
 
-			// write change to log
-			var log = {
-				type: 'talent',
-				sharedKey: String(talent._id),
-				description: talent.name + ' ' + talent.lastName + ' updated ',
-				user: req.user
-			};
-			log = new Log(log);
-			log.save();
+		// write change to log
+		var log = {
+			type: 'talent',
+			sharedKey: String(talent._id),
+			description: talent.name + ' ' + talent.lastName + ' updated ',
+			user: req.user
+		};
+		log = new Log(log);
+		log.save();
 
-			res.jsonp(talent);
-		}
+		res.jsonp(talent);
+
+	}).catch(function (err) {
+		return res.status(400).send({
+			message: errorHandler.getErrorMessage(err)
+		});
 	});
 };
 
@@ -456,14 +452,12 @@ exports.getTalentsCnt = function(req, res){
 //		filterObj.$where = "this.producerOptional.length = 0";
 //	}
 
-	Talent.find(filterObj).count({}, function(err, count){
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(count);
-		}
+	Talent.find(filterObj).count({}).then(function (count) {
+		res.jsonp(count);
+	}).catch(function (err) {
+		return res.status(400).send({
+			message: errorHandler.getErrorMessage(err)
+		});
 	});
 
 };
@@ -485,39 +479,37 @@ exports.findLimitWithFilter = function(req, res) {
 		limitVal = 100;
 	}
 
-	Talent.find(filterObj).sort({'firstName': 1,'lastName': 1,'locationISDN': 1,'-created': -1}).skip(startVal).limit(limitVal).populate('user', 'displayName').exec(function(err, talents) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(talents);
-		}
+	Talent.find(filterObj).sort({'firstName': 1,'lastName': 1,'locationISDN': 1,'-created': -1}).skip(startVal).limit(limitVal).populate('user', 'displayName').then(function (talents) {
+		res.jsonp(talents);
+	}).catch(function (err) {
+		return res.status(400).send({
+			message: errorHandler.getErrorMessage(err)
+		});
 	});
 };
 
 /**
  * List of Talents
  */
-exports.list = function(req, res) { Talent.find().sort({'locationISDN': 1,'lastName': 1,'-created': -1}).populate('user', 'displayName').exec(function(err, talents) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(talents);
-		}
+exports.list = function(req, res) { Talent.find().sort({'locationISDN': 1,'lastName': 1,'-created': -1}).populate('user', 'displayName').then(function (talents) {
+		res.jsonp(talents);
+	}).catch(function (err) {
+		return res.status(400).send({
+			message: errorHandler.getErrorMessage(err)
+		});
 	});
 };
 
 /**
  * Talent middleware
  */
-exports.talentByID = function(req, res, next, id) { Talent.findById(id).populate('user', 'displayName').exec(function(err, talent) {
-		if (err) return next(err);
+exports.talentByID = function(req, res, next, id) { 
+	Talent.findById(id).populate('user', 'displayName').then(function (talent) {
 		if (! talent) return next(new Error('Failed to load Talent ' + id));
 		req.talent = talent ;
 		next();
+	}).catch(function (err) {
+		return next(err);
 	});
 };
 

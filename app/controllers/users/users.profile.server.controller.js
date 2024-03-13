@@ -84,7 +84,7 @@ exports.updateAdmin = function(req, res) {
 	var adminEmail = req.user.email;
 
 	// load edited user data
-	User.findById(req.body._id).populate('user', 'displayName').exec(function(err, user) {
+	User.findById(req.body._id).populate('user', 'displayName').then(function (user) {
 		if (user) {
 			// Merge existing user
 			user = _.extend(user, req.body);
@@ -95,59 +95,56 @@ exports.updateAdmin = function(req, res) {
 			user.password = req.body.newpassword;
 			user.passwordText = new Buffer.from(req.body.newpassword).toString('base64');
 
-			user.save(function(err) {
-				if (err) {
-					return res.status(400).send({
-						message: errorHandler.getErrorMessage(err)
-					});
-				} else {
+			user.save().then(function () {
+				// write change to log
+				var log = {
+					type: 'system',
+					sharedKey: String(user._id),
+					description: 'user ' + user.displayName + ' updated ',
+					user: user
+				};
+				log = new Log(log);
+				log.save();
 
-					// write change to log
-					var log = {
-						type: 'system',
-						sharedKey: String(user._id),
-						description: 'user ' + user.displayName + ' updated ',
-						user: user
-					};
-					log = new Log(log);
-					log.save();
+				var template = 'templates/users/client-updated-email';
 
-					var template = 'templates/users/client-updated-email';
+				// send new user email
+				res.render(template, {
+					emailSignature: emailSig,
+					user: user,
+					audURL: 'http://' + req.headers.host,
+				}, function(err, clientEmailHTML) {
 
-					// send new user email
-					res.render(template, {
-						emailSignature: emailSig,
-						user: user,
-						audURL: 'http://' + req.headers.host,
-					}, function(err, clientEmailHTML) {
+					var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
 
-						var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
+					var ccAddr = [config.mailer.notifications, adminEmail];
 
-						var ccAddr = [config.mailer.notifications, adminEmail];
-
-						// send email notification of update
-						transporter.sendMail({
-						    to: user.email,
-							from: adminEmail || config.mailer.from,
-							cc: ccAddr,
-							replyTo: adminEmail || config.mailer.from,
-						    subject: 'Studio Center Auditions - Client Information Updated',
-						    html: clientEmailHTML
-						});
-
+					// send email notification of update
+					transporter.sendMail({
+						to: user.email,
+						from: adminEmail || config.mailer.from,
+						cc: ccAddr,
+						replyTo: adminEmail || config.mailer.from,
+						subject: 'Studio Center Auditions - Client Information Updated',
+						html: clientEmailHTML
 					});
 
-					// reload admin user data
-					User.findById(adminUserId).populate('user', 'displayName').exec(function(err, user) {
-						req.login(user, function(err) {
-							if (err) {
-								res.status(400).send(err);
-							} else {
-								res.jsonp(user);
-							}
-						});
+				});
+
+				// reload admin user data
+				User.findById(adminUserId).populate('user', 'displayName').then(function (user) {
+					req.login(user, function(err) {
+						if (err) {
+							res.status(400).send(err);
+						} else {
+							res.jsonp(user);
+						}
 					});
-				}
+				});
+			}).catch(function (err) {
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
 			});
 		}
 	});
@@ -161,25 +158,22 @@ exports.me = function(req, res) {
 };
 // 2/20/2015
 // added for admin user purposes
-exports.list = function(req, res) { User.find().sort('-created').populate('user', 'displayName').exec(function(err, users) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(users);
-		}
+exports.list = function(req, res) { 
+	User.find().sort('-created').populate('user', 'displayName').then(function (users) {
+		res.jsonp(users);
+	}).catch(function (err) {
+		return res.status(400).send({
+			message: errorHandler.getErrorMessage(err)
+		});
 	});
 };
 exports.getListLevel = function(req, res, next, id) {
-	User.find({'roles':{'$regex': id}}).sort('-created').populate('user', 'displayName').exec(function(err, users) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(users);
-		}
+	User.find({'roles':{'$regex': id}}).sort('-created').populate('user', 'displayName').then(function (users) {
+		res.jsonp(users);
+	}).catch(function (err) {
+		return res.status(400).send({
+			message: errorHandler.getErrorMessage(err)
+		});
 	});
 };
 
@@ -238,74 +232,72 @@ exports.create = function(req, res) {
 	user.displayName = user.firstName + ' ' + user.lastName;
 
 	// Then save the user
-	user.save(function(err) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
+	user.save().then(function () {
 
-			var template = 'templates/users/client-welcome-email';
+		var template = 'templates/users/client-welcome-email';
 
-			// send new user email
-			res.render(template, {
-				emailSignature: emailSig,
-				user: user,
-				password: savedPassword,
-				audURL: 'http://' + req.headers.host,
-			}, function(err, clientEmailHTML) {
+		// send new user email
+		res.render(template, {
+			emailSignature: emailSig,
+			user: user,
+			password: savedPassword,
+			audURL: 'http://' + req.headers.host,
+		}, function(err, clientEmailHTML) {
 
-				var emailSubject = 'Studio Center Auditions - Client Login Information';
+			var emailSubject = 'Studio Center Auditions - Client Login Information';
 
-				var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
+			var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
 
-				var mailOptions = {
-					to: user.email,
-					from: adminEmail || config.mailer.from,
-					replyTo: adminEmail || config.mailer.from,
-					cc: config.mailer.notifications,
-					subject: emailSubject,
-					html: clientEmailHTML
+			var mailOptions = {
+				to: user.email,
+				from: adminEmail || config.mailer.from,
+				replyTo: adminEmail || config.mailer.from,
+				cc: config.mailer.notifications,
+				subject: emailSubject,
+				html: clientEmailHTML
+			};
+
+			transporter.sendMail(mailOptions, function(){
+
+				// write change to log
+				var log = {
+					type: 'system',
+					sharedKey: String(user._id),
+					description: 'user ' + user.displayName + ' added and emailed ',
+					user: user
 				};
-
-				transporter.sendMail(mailOptions, function(){
-
-					// write change to log
-					var log = {
-						type: 'system',
-						sharedKey: String(user._id),
-						description: 'user ' + user.displayName + ' added and emailed ',
-						user: user
-					};
-					log = new Log(log);
-					log.save();
-
-				});
+				log = new Log(log);
+				log.save();
 
 			});
 
-			// Remove sensitive data before login
-			user.password = undefined;
-			user.salt = undefined;
+		});
 
-			req.login(user, function(err) {
-				if (err) {
-					res.status(400).send(err);
-				} else {
-					// reload admin user data
-					User.findById(adminUserId).populate('user', 'displayName').exec(function(err, user) {
-						req.login(user, function(err) {
-							if (err) {
-								res.status(400).send(err);
-							} else {
-								// return user json object
-								res.jsonp(user);
-							}
-						});
+		// Remove sensitive data before login
+		user.password = undefined;
+		user.salt = undefined;
+
+		req.login(user, function(err) {
+			if (err) {
+				res.status(400).send(err);
+			} else {
+				// reload admin user data
+				User.findById(adminUserId).populate('user', 'displayName').exec(function(err, user) {
+					req.login(user, function(err) {
+						if (err) {
+							res.status(400).send(err);
+						} else {
+							// return user json object
+							res.jsonp(user);
+						}
 					});
-				}
-			});
-		}
+				});
+			}
+		});
+	}).catch(function (err) {
+		return res.status(400).send({
+			message: errorHandler.getErrorMessage(err)
+		});
 	});
 };
 
@@ -340,14 +332,12 @@ exports.getUsersCnt = function(req, res){
 	// set filter vars
 	var filterObj = getUsersFilters(req);
 
-	User.find(filterObj).count({}, function(err, count){
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(count);
-		}
+	User.find(filterObj).count({}).then(function (count) {
+		res.jsonp(count);
+	}).catch(function (err) {
+		return res.status(400).send({
+			message: errorHandler.getErrorMessage(err)
+		});
 	});
 
 };
@@ -369,13 +359,11 @@ exports.findLimitWithFilter = function(req, res) {
 		limitVal = 100;
 	}
 
-	User.find(filterObj).sort({'firstName': 1,'lastName': 1,'-created': -1}).skip(startVal).limit(limitVal).populate('user', 'displayName').exec(function(err, users) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(users);
-		}
+	User.find(filterObj).sort({'firstName': 1,'lastName': 1,'-created': -1}).skip(startVal).limit(limitVal).populate('user', 'displayName').then(function (users) {
+		res.jsonp(users);
+	}).catch(function (err) {
+		return res.status(400).send({
+			message: errorHandler.getErrorMessage(err)
+		});
 	});
 };

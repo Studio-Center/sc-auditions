@@ -15,14 +15,12 @@ exports.create = function(req, res) {
 	var log = new Log(req.body);
 	log.user = req.user;
 
-	log.save(function(err) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(log);
-		}
+	log.save().then(function () {
+		res.jsonp(log);
+	}).catch(function (err) {
+		return res.status(400).send({
+			message: errorHandler.getErrorMessage(err)
+		});
 	});
 };
 
@@ -41,7 +39,7 @@ exports.update = function(req, res) {
 
 	log = _.extend(log , req.body);
 
-	log.save(function(err) {
+	log.save().then(function () {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
@@ -59,13 +57,11 @@ exports.delete = function(req, res) {
 	var log = req.log ;
 
 	log.remove(function(err) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(log);
-		}
+		res.jsonp(log);
+	}).catch(function (err) {
+		return res.status(400).send({
+			message: errorHandler.getErrorMessage(err)
+		});
 	});
 };
 
@@ -83,14 +79,12 @@ exports.recCount = function(req, res){
 		filterObj.description = new RegExp(searchTxt, 'i');
 	}
 
-	Log.find(filterObj).count({}, function(err, count){
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(count);
-		}
+	Log.find(filterObj).count({}).then(function (count) {
+		res.jsonp(count);
+	}).catch(function (err) {
+		return res.status(400).send({
+			message: errorHandler.getErrorMessage(err)
+		});
 	});
 
 };
@@ -113,14 +107,12 @@ exports.list = function(req, res) {
 		limitVal = 100;
 	}
 
-	Log.find().sort('-created').skip(startVal).limit(limitVal).populate('user', 'displayName').exec(function(err, logs) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(logs);
-		}
+	Log.find().sort('-created').skip(startVal).limit(limitVal).populate('user', 'displayName').then(function (logs) {
+		res.jsonp(logs);
+	}).catch(function (err) {
+		return res.status(400).send({
+			message: errorHandler.getErrorMessage(err)
+		});
 	});
 };
 
@@ -142,14 +134,12 @@ exports.listFilter = function(req, res){
 
 	var filter = req.body.filter;
 
-	Log.find(filter).sort('-created').skip(startVal).limit(limitVal).populate('user', 'displayName').exec(function(err, logs) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(logs);
-		}
+	Log.find(filter).sort('-created').skip(startVal).limit(limitVal).populate('user', 'displayName').then(function (logs) {
+		res.jsonp(logs);
+	}).catch(function (err) {
+		return res.status(400).send({
+			message: errorHandler.getErrorMessage(err)
+		});
 	});
 
 };
@@ -181,14 +171,12 @@ exports.listTypeFilter = function(req, res){
 		filterObj.description = new RegExp(searchTxt, 'i');
 	}
 
-	Log.find(filterObj).sort('-created').skip(startVal).limit(limitVal).populate('user', 'displayName').exec(function(err, logs) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(logs);
-		}
+	Log.find(filterObj).sort('-created').skip(startVal).limit(limitVal).populate('user', 'displayName').then(function (logs) {
+		res.jsonp(logs);
+	}).catch(function (err) {
+		return res.status(400).send({
+			message: errorHandler.getErrorMessage(err)
+		});
 	});
 
 };
@@ -196,11 +184,12 @@ exports.listTypeFilter = function(req, res){
 /**
  * Log middleware
  */
-exports.logByID = function(req, res, next, id) { Log.findById(id).populate('user', 'displayName').exec(function(err, log) {
-		if (err) return next(err);
+exports.logByID = function(req, res, next, id) { Log.findById(id).populate('user', 'displayName').then(function (log) {
 		if (! log) return next(new Error('Failed to load Log ' + id));
 		req.log = log ;
 		next();
+	}).catch(function (err) {
+		return next(err);
 	});
 };
 

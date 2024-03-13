@@ -34,12 +34,7 @@ exports.sendTalentEmails = function(req, res){
 	// email all talents if email all is set to true
 	if(email.all === true){
 
-		Talent.find({'type':'Email'}).sort({'locationISDN': 1,'lastName': 1,'-created': -1}).populate('user', 'displayName').exec(function(err, talents) {
-			if (err) {
-				return res.status(400).send({
-					message: errorHandler.getErrorMessage(err)
-				});
-			} else {
+		Talent.find({'type':'Email'}).sort({'locationISDN': 1,'lastName': 1,'-created': -1}).populate('user', 'displayName').then(function (talents) {
 
 				async.waterfall([
 					function(done) {
@@ -128,18 +123,17 @@ exports.sendTalentEmails = function(req, res){
 						return res.status(200).send();
 					}
 				});
-			}
+
+		}).catch(function (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
 		});
 
 	// email only selected clients
 	} else {
 
-		Talent.where('_id').in(emailClients).sort({'locationISDN': 1,'lastName': 1,'-created': -1}).populate('user', 'displayName').exec(function(err, talents) {
-			if (err) {
-				return res.status(400).send({
-					message: errorHandler.getErrorMessage(err)
-				});
-			} else {
+		Talent.where('_id').in(emailClients).sort({'locationISDN': 1,'lastName': 1,'-created': -1}).populate('user', 'displayName').then(function (talents) {
 
 				async.waterfall([
 					function(done) {
@@ -207,7 +201,11 @@ exports.sendTalentEmails = function(req, res){
 						return res.status(200).send();
 					}
 				});
-			}
+
+		}).catch(function (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
 		});
 	}
 
@@ -225,12 +223,7 @@ var gatherTalentsSearch = function(req, res, filter){
 						'status': { $nin: ['Closed - Pending Client Decision','Canceled','Dead','Complete','Booked','ReAuditioned']}
 						};
 
-	Project.find(searchCriteria).sort('-estimatedCompletionDate').populate('project', 'displayName').exec(function(err, projects) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
+	Project.find(searchCriteria).sort('-estimatedCompletionDate').populate('project', 'displayName').then(function (projects) {
 
 			// walk through found projects
 			async.eachSeries(projects, function (project, callback) {
@@ -245,8 +238,8 @@ var gatherTalentsSearch = function(req, res, filter){
 							async.waterfall([
 								// gather info for selected talent
 								function(done) {
-									Talent.findOne({'_id':talent.talentId}).sort('-created').exec(function(err, talentInfo) {
-										done(err, talentInfo);
+									Talent.findOne({'_id':talent.talentId}).sort('-created').then(function (talentInfo) {
+										done(null, talentInfo);
 									});
 								},
 								function(talentInfo, done){
@@ -314,7 +307,10 @@ var gatherTalentsSearch = function(req, res, filter){
 				}
            	});
 
-		}
+	}).catch(function (err) {
+		return res.status(400).send({
+			message: errorHandler.getErrorMessage(err)
+		});
 	});
 };
 exports.gatherTalentsToCall = function(req, res){
@@ -359,7 +355,7 @@ exports.mainClientsCheck = function(req, res){
 						};
 
 	// gather projects ending in the next hour
-	Project.find(searchCriteria).sort('-estimatedCompletionDate').populate('project', 'displayName').exec(function(err, projects) {
+	Project.find(searchCriteria).sort('-estimatedCompletionDate').populate('project', 'displayName').then(function (projects) {
         
         // walk through all associated projects
 		async.eachSeries(projects, function (project, callback) {
@@ -375,8 +371,8 @@ exports.mainClientsCheck = function(req, res){
 						ownerId = project.owner;
 					}
 
-					User.findOne({'_id':ownerId}).sort('-created').exec(function(err, owner) {
-						done(err, owner);
+					User.findOne({'_id':ownerId}).sort('-created').then(function (owner) {
+						done(null, owner);
 					});
 				},
 				// gather all producers and the talent directors
@@ -391,11 +387,8 @@ exports.mainClientsCheck = function(req, res){
 										'talent director'
 										];
 
-//					User.where('roles').in(searchGroups).sort('-created').exec(function(err, producers) {
-//						done(err, owner, producers);
-//					});
-					User.find({'roles':{ $in: searchGroups },'noemail':{ $ne: true }}).sort('-created').exec(function(err, producers) {
-						done(err, owner, producers);
+					User.find({'roles':{ $in: searchGroups },'noemail':{ $ne: true }}).sort('-created').then(function (producers) {
+						done(null, owner, producers);
 					});
 				},
 				// gather producers emails
@@ -532,7 +525,7 @@ exports.sendPreCloseSummary = function(req, res){
 						};
 
 	// gather projects ending in the next hour
-	Project.find(searchCriteria).sort('-estimatedCompletionDate').populate('project', 'displayName').exec(function(err, projects) {
+	Project.find(searchCriteria).sort('-estimatedCompletionDate').populate('project', 'displayName').then(function (projects) {
 
 		// walk through all associated projects
 		async.eachSeries(projects, function (project, callback) {
@@ -548,8 +541,8 @@ exports.sendPreCloseSummary = function(req, res){
 						ownerId = project.owner;
 					}
 
-					User.findOne({'_id':ownerId}).sort('-created').exec(function(err, owner) {
-						done(err, owner);
+					User.findOne({'_id':ownerId}).sort('-created').then(function (owner) {
+						done(null, owner);
 					});
 				},
 				// gather all producers and the talent directors
@@ -567,8 +560,8 @@ exports.sendPreCloseSummary = function(req, res){
 //					User.where('roles').in(searchGroups).sort('-created').exec(function(err, producers) {
 //						done(err, owner, producers);
 //					});
-                    User.find({'roles':{ $in: searchGroups },'noemail':{ $ne: true }}).sort('-created').exec(function(err, producers) {
-						done(err, owner, producers);
+                    User.find({'roles':{ $in: searchGroups },'noemail':{ $ne: true }}).sort('-created').then(function (producers) {
+						done(null, owner, producers);
 					});
 
 				},
@@ -602,8 +595,8 @@ exports.sendPreCloseSummary = function(req, res){
 						talentIds[i] = project.talent[i].talentId;
 					}
 
-					Talent.where('_id').in(talentIds).sort('-created').exec(function(err, talents) {
-						done(err, talents, owner, producers);
+					Talent.where('_id').in(talentIds).sort('-created').then(function (talents) {
+						done(null, talents, owner, producers);
 					});
 
 				},
@@ -766,7 +759,7 @@ exports.sendPreCloseSummary = function(req, res){
 				// update project to prevent resending of email
 				function(done){
 
-					Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
+					Project.findById(project._id).populate('user', 'displayName').then(function (project) {
 						req.project = project ;
 
 						// update preclose status
@@ -774,13 +767,13 @@ exports.sendPreCloseSummary = function(req, res){
 
 						project = _.extend(req.project, project);
 
-						project.save(function(err) {
-
+						project.save().then(function () {
 							// update connected clients
 							var socketio = req.app.get('socketio');
 							socketio.sockets.emit('projectUpdate', {id: project._id});
 							socketio.sockets.emit('callListUpdate', {filter: ''});
-
+							done(null);
+						}).catch(function (err) {
 							done(err);
 						});
 					});
@@ -896,7 +889,7 @@ exports.uploadTalentCSV = function(req, res){
 
 			// check for existing talent before saving new one
 			if(failed === 0){
-				Talent.findOne({'name': newTalent.name, lastName: newTalent.lastName}).populate('user', 'displayName').exec(function(err, talent) {
+				Talent.findOne({'name': newTalent.name, lastName: newTalent.lastName}).populate('user', 'displayName').then(function (talent) {
 
 					if(talent !== null){
 						++updatedTalents;
@@ -907,7 +900,7 @@ exports.uploadTalentCSV = function(req, res){
 						talent = newTalent;
 					}
 
-					talent.save(function(err) {
+					talent.save().then(function () {
 
 			   			talentCallback();
 
@@ -945,21 +938,20 @@ exports.processGoogleSheet = function(req, res){
 
 // list stored new projects
 exports.listNewprojects = function(req, res) {
-	Newproject.find().sort('-created').exec(function(err, newprojects) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(newprojects);
-		}
+	Newproject.find().sort('-created').then(function (newprojects) {
+		res.jsonp(newprojects);
+	}).catch(function (err) {
+		return res.status(400).send({
+			message: errorHandler.getErrorMessage(err)
+		});
 	});
 };
 exports.newprojectByID = function(req, res, next) {
-	Newproject.findById(req.body.id).exec(function(err, newproject) {
-		if (err) return next(err);
+	Newproject.findById(req.body.id).then(function (newproject) {
 		if (! newproject) return next(new Error('Failed to load Newproject ' + req.body.id));
 		res.jsonp(newproject);
+	}).catch(function (err) {
+		return next(err);
 	});
 };
 

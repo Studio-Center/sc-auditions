@@ -21,7 +21,6 @@ Clients access via client portal which allows them to playback and rank audition
 ## Requirements
 
 - **NodeJS 0.10.4**
-- **Redis-Server**
 - **MongoDB**
 - **Bower**
 - **Grunt**
@@ -32,12 +31,14 @@ Clients access via client portal which allows them to playback and rank audition
 
 ```
 npm install
+npm install -g grunt-cli
+npm install -g bower
 ```
 
 Bower might have some dependency problems
 
 ```
-bower update
+bower install
 ```
 
 ## Start the app
@@ -46,8 +47,11 @@ bower update
 grunt
 ```
 
-Alternately you could run the app with forever.js
-
+Alternately you could run the app with forever.js (first insstall forever)
+```
+npm install -g bower
+```
+Then
 ```
 forever start server.js
 ```

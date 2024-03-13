@@ -36,24 +36,23 @@ exports.sendEmail = function(req, res){
 		// gather admin and producers emails to include in send
 		async.waterfall([
 			function(done) {
-				User.find({'roles':'admin','noemail':{ $ne: true }}).sort('-created').exec(function(err, admins) {
-					done(err, admins);
+				User.find({'roles':'admin','noemail':{ $ne: true }}).sort('-created').then(function (admins) {
+					done(null, admins);
 				});
 			},
 			function(admins, done) {
-				User.find({'roles':{ $in: ['producer/auditions director', 'auditions director', 'audio intern']},'noemail':{ $ne: true }}).sort('-created').exec(function(err, directors) {
-					done(err, admins, directors);
+				User.find({'roles':{ $in: ['producer/auditions director', 'auditions director', 'audio intern']},'noemail':{ $ne: true }}).sort('-created').then(function (directors) {
+					done(null, admins, directors);
 				});
 			},
 			function(admins, directors, done) {
-				User.find({'roles':'production coordinator','noemail':{ $ne: true }}).sort('-created').exec(function(err, coordinators) {
-					done(err, admins, directors, coordinators);
+				User.find({'roles':'production coordinator','noemail':{ $ne: true }}).sort('-created').then(function (coordinators) {
+					done(null, admins, directors, coordinators);
 				});
 			},
 			function(admins, directors, coordinators, done) {
-				User.find({'roles':'talent director','noemail':{ $ne: true }}).sort('-created').exec(function(err, talentdirectors) {
-
-					done(err, admins, directors, coordinators, talentdirectors);
+				User.find({'roles':'talent director','noemail':{ $ne: true }}).sort('-created').then(function (talentdirectors) {
+					done(null, admins, directors, coordinators, talentdirectors);
 				});
 			},
 			function(admins, directors, coordinators, talentdirectors, done) {
@@ -120,13 +119,11 @@ var emailTalent = function(selTalent, talentInfo, email, project, req, res, subj
 	async.waterfall([
 		function(done) {
 			var ownerId = project.owner || project.user._id;
-			User.findOne({'_id':ownerId}).sort('-created').exec(function(err, owner) {
-				if(err){
-					done(err, req.user);
-				} else {
-					owner = owner || req.user;
-					done(err, owner);
-				}
+			User.findOne({'_id':ownerId}).sort('-created').then(function (owner) {
+				owner = owner || req.user;
+				done(null, owner);
+			}).catch(function (err) {
+				done(err, req.user);
 			});
 		},
 		function(owner, done) {
@@ -241,8 +238,10 @@ var sendTalentEmail = function(req, res, project, talent, override){
 	async.waterfall([
 		// gather info for selected talent
 		function(done) {
-			Talent.findOne({'_id':talent.talentId}).sort('-created').exec(function(err, talentInfo) {
-                done(err, talentInfo);
+			Talent.findOne({'_id':talent.talentId}).sort('-created').then(function (talentInfo) {
+                done(null, talentInfo);
+			}).catch(function (err) {
+				done(err, null);
 			});
 		},
 		// generate email body
@@ -334,21 +333,19 @@ var sendTalentEmail = function(req, res, project, talent, override){
 				}
 			}
 
-			Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
+			Project.findById(project._id).populate('user', 'displayName').then(function (project) {
 
 				project = _.extend(project, newProject);
 
 				req.project = project;
 
-				project.save(function(err) {
-					if (err) {
-						done(err);
-					} else {
-						var socketio = req.app.get('socketio');
-						socketio.sockets.emit('projectUpdate', {id: project._id});
-						socketio.sockets.emit('callListUpdate', {filter: ''});
-						res.status(200).json(project);
-					}
+				project.save().then(function () {
+					var socketio = req.app.get('socketio');
+					socketio.sockets.emit('projectUpdate', {id: project._id});
+					socketio.sockets.emit('callListUpdate', {filter: ''});
+					res.status(200).json(project);
+				}).catch(function (err) {
+					done(err);
 				});
 
 			});
@@ -375,12 +372,12 @@ exports.sendTalentCanceledEmail = function(req, res){
 	var override = req.body.override || false;
 
 	// reload project
-	Project.findOne({'_id':projectId}).sort('-created').exec(function(err, project) {
+	Project.findOne({'_id':projectId}).sort('-created').then(function (project) {
 
 		// walk through and email all selected clients
 		async.eachSeries(talents, function (selTalent, callback) {
 
-			Talent.findOne({'_id':selTalent.talentId}).sort('-created').exec(function(err, talentInfo) {
+			Talent.findOne({'_id':selTalent.talentId}).sort('-created').then(function (talentInfo) {
 
 				// check for null talent return
 				if(talentInfo !== null){
@@ -405,13 +402,11 @@ exports.sendTalentCanceledEmail = function(req, res){
 							},
 							function(done) {
 								var ownerId = project.owner || project.user._id;
-								User.findOne({'_id':ownerId}).sort('-created').exec(function(err, owner) {
-									if(err){
-										done(err, req.user);
-									} else {
-										owner = owner || req.user;
-										done(err, owner);
-									}
+								User.findOne({'_id':ownerId}).sort('-created').then(function (owner) {
+									owner = owner || req.user;
+									done(err, owner);
+								}).catch(function (err) {
+									done(err, req.user);
 								});
 							},
 							function(owner, done) {
@@ -519,7 +514,7 @@ exports.sendTalentScriptUpdateEmail = function(req, res){
 	var chgMade = req.body.chgMade;
 
 	// reload project
-	Project.findOne({'_id':projectId}).sort('-created').exec(function(err, project) {
+	Project.findOne({'_id':projectId}).sort('-created').then(function (project) {
 
 		var email =  {
 							projectId: '',
@@ -561,7 +556,7 @@ exports.sendTalentScriptUpdateEmail = function(req, res){
 		// walk through and email all selected clients
 		async.eachSeries(talents, function (selTalent, callback) {
 
-			Talent.findOne({'_id':selTalent.talentId}).sort('-created').exec(function(err, talentInfo) {
+			Talent.findOne({'_id':selTalent.talentId}).sort('-created').then(function (talentInfo) {
 
 				// check for null talent return
 				if(talentInfo !== null){
@@ -603,12 +598,10 @@ exports.sendTalentScriptUpdateEmail = function(req, res){
 // gather project data
 exports.getproject = function(req, res){
 
-	Project.findById(req.body.id).populate('user', 'displayName').exec(function(err, project) {
-		if (err) {
-			return res.status(400).json(err);
-		} else {
-			res.status(200).jsonp(project);
-		}
+	Project.findById(req.body.id).populate('user', 'displayName').then(function (project) {
+		res.status(200).jsonp(project);
+	}).catch(function (err) {
+		return res.status(400).json(err);
 	});
 
 };
@@ -633,24 +626,22 @@ exports.sendTalentDirectorsEmail = function(req, res){
 	var chgMade = req.body.chgMade;
 
 	// reload project
-	Project.findOne({'_id':projectId}).sort('-created').exec(function(err, project) {
+	Project.findOne({'_id':projectId}).sort('-created').then(function (project) {
 
 		// walk through and email all selected clients
 		async.waterfall([
 		function(done) {
 			var ownerId = project.owner || project.user._id;
-			User.findOne({'_id':ownerId}).sort('-created').exec(function(err, owner) {
-				if(err){
-					done(err, req.user);
-				} else {
-					owner = owner || req.user;
-					done(err, owner);
-				}
+			User.findOne({'_id':ownerId}).sort('-created').then(function (owner) {
+				owner = owner || req.user;
+				done(err, owner);
+			}).catch(function (err) {
+				done(err, req.user);
 			});
 		},
 		function(owner, done) {
-			User.find({'roles':'talent director'}).sort('-created').exec(function(err, talentdirectors) {
-				done(err, owner, talentdirectors);
+			User.find({'roles':'talent director'}).sort('-created').then(function (talentdirectors) {
+				done(null, owner, talentdirectors);
 			});
 		},
 		function(owner, talentdirectors, done) {
@@ -728,8 +719,10 @@ exports.sendTalentEmailById = function(req, res){
 	async.waterfall([
 		// gather info for selected talent
 		function(done) {
-			Project.findOne({'_id':projectId}).sort('-created').exec(function(err, project) {
-				done(err, project);
+			Project.findOne({'_id':projectId}).sort('-created').then(function (project) {
+				done(null, project);
+			}).catch(function (err) {
+				done(err, null);
 			});
 		},
 		function(project, done) {
@@ -756,8 +749,10 @@ exports.updateSingleTalentStatus = function (req, res){
 	async.waterfall([
 		// gather info for selected talent
 		function(done) {
-			Project.findOne({'_id':projectId}).sort('-created').exec(function(err, project) {
-				done(err, project);
+			Project.findOne({'_id':projectId}).sort('-created').then(function (project) {
+				done(null, project);
+			}).catch(function (err) {
+				done(err, null);
 			});
 		},
 		// update talent email status
@@ -791,17 +786,17 @@ exports.updateSingleTalentStatus = function (req, res){
 
 			var newProject = project.toObject();
 
-			Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
+			Project.findById(project._id).populate('user', 'displayName').then(function (project) {
 
 				project = _.extend(project, newProject);
 
 				req.project = project;
 
-				project.save(function(err) {
+				project.save().then(function () {
 					var socketio = req.app.get('socketio');
 					socketio.sockets.emit('projectUpdate', {id: project._id});
 					socketio.sockets.emit('callListUpdate', {filter: ''});
-
+				}).catch(function (err) {
 					done(err);
 				});
 
@@ -829,7 +824,7 @@ exports.updateTalentStatus = function(req, res){
 		var project = req.body.project;
 
         if (project._id.match(/^[0-9a-fA-F]{24}$/)) {
-            Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
+            Project.findById(project._id).populate('user', 'displayName').then(function (project) {
 
                 project = _.extend(project, req.body.project);
 
@@ -838,15 +833,13 @@ exports.updateTalentStatus = function(req, res){
                 project.markModified('talent');
                 project.markModified('modified');
 
-                project.save(function(err) {
-                    if (err) {
-                        return res.status(400).json(err);
-                    } else {
-                        var socketio = req.app.get('socketio');
-                            socketio.sockets.emit('projectUpdate', {id: project._id});
-                            socketio.sockets.emit('callListUpdate', {filter: ''});
-                        res.status(200);
-                    }
+                project.save().then(function () {
+					var socketio = req.app.get('socketio');
+						socketio.sockets.emit('projectUpdate', {id: project._id});
+						socketio.sockets.emit('callListUpdate', {filter: ''});
+					res.status(200);
+				}).catch(function (err) {
+					return res.status(400).json(err);
                 });
 
             });
@@ -866,8 +859,10 @@ exports.updateTalentNote = function (req, res){
 	async.waterfall([
 		// gather info for selected talent
 		function(done) {
-			Project.findOne({'_id':projectId}).sort('-created').exec(function(err, project) {
-				done(err, project);
+			Project.findOne({'_id':projectId}).sort('-created').then(function (project) {
+				done(null, project);
+			}).catch(function (err) {
+				done(err, null);
 			});
 		},
 		// update talent email status
@@ -887,7 +882,7 @@ exports.updateTalentNote = function (req, res){
 
 			var newProject = project.toObject();
 
-			Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
+			Project.findById(project._id).populate('user', 'displayName').then(function (projects) {
 
 				project = _.extend(project, newProject);
 
@@ -896,12 +891,11 @@ exports.updateTalentNote = function (req, res){
 
 				req.project = project;
 
-				project.save(function(err) {
-
+				project.save().then(function () {
 					var socketio = req.app.get('socketio');
 					socketio.sockets.emit('projectUpdate', {id: project._id});
 					socketio.sockets.emit('callListUpdate', {filter: ''});
-
+				}).catch(function (err) {
 					done(err);
 				});
 
@@ -954,7 +948,7 @@ exports.updateNoRefresh = function(req, res){
 
                 //project = req.body.project;
 
-                Project.findById(req.body.project._id).populate('user', 'displayName').exec(function(err, project) {
+                Project.findById(req.body.project._id).populate('user', 'displayName').then(function (project) {
 
                     // if(typeof req.body.project.__v !== 'undefined'){
                     // 	delete req.body.project.__v;
@@ -973,26 +967,23 @@ exports.updateNoRefresh = function(req, res){
 
 						//delete project.__v;
 
-						project.save(function(err) {
-							if (err) {
+						project.save().then(function () {
+							var socketio = req.app.get('socketio');
+								socketio.sockets.emit('projectUpdate', {id: project._id});
+								socketio.sockets.emit('callListUpdate', {filter: ''});
 
-								log = {
-									type: 'error',
-									sharedKey: String(project._id),
-									description: String(err) + ' Project ID: ' + String(project._id),
-									user: req.user
-								};
-								log = new Log(log);
-								log.save();
+							res.jsonp(project);
+						}).catch(function (err) {
+							log = {
+								type: 'error',
+								sharedKey: String(project._id),
+								description: String(err) + ' Project ID: ' + String(project._id),
+								user: req.user
+							};
+							log = new Log(log);
+							log.save();
 
-								return res.status(400).json(err);
-							} else {
-								var socketio = req.app.get('socketio');
-									socketio.sockets.emit('projectUpdate', {id: project._id});
-									socketio.sockets.emit('callListUpdate', {filter: ''});
-
-								res.jsonp(project);
-							}
+							return res.status(400).json(err);
 						});
 					}
                 });
@@ -1048,7 +1039,7 @@ exports.sendClientEmail = function(req, res){
 	}
 
 	// query required data then email clients
-	User.where('_id').in(clientIds).sort('-created').exec(function(err, foundClients) {
+	User.where('_id').in(clientIds).sort('-created').then(function (foundClients) {
 
 		// walk through and email all selected clients
 		async.eachSeries(foundClients, function (foundClient, callback) {
@@ -1061,17 +1052,15 @@ exports.sendClientEmail = function(req, res){
 			async.waterfall([
 				function(done) {
 					var ownerId = req.body.project.owner || req.body.project.user._id;
-					User.findOne({'_id':ownerId}).sort('-created').exec(function(err, owner) {
-						if(err){
-							done(err, '');
-						} else {
-							done(err, owner);
-						}
+					User.findOne({'_id':ownerId}).sort('-created').then(function (owner) {
+						done(null, owner);
+					}).catch(function (err) {
+						done(err, '');
 					});
 				},
 				function(owner, done) {
-					User.find({'roles':{ $in: ['producer/auditions director', 'auditions director', 'audio intern']}}).sort('-created').exec(function(err, directors) {
-						done(err, owner, directors);
+					User.find({'roles':{ $in: ['producer/auditions director', 'auditions director', 'audio intern']}}).sort('-created').then(function (directors) {
+						done(null, owner, directors);
 					});
 				},
 				function(owner, directors, done) {
@@ -1173,11 +1162,11 @@ exports.lead = function(req, res){
 
 	// build email
 	var emailBody = 'First Name: ' + req.body.firstName + '\n';
-	emailBody += 'Last Name: ' + req.body.lastName + '\n';
-	emailBody += 'Company: ' + req.body.company + '\n';
-	emailBody += 'Phone: ' + req.body.phone + '\n';
-	emailBody += 'Email: ' + req.body.email + '\n';
-	emailBody += 'Description: ' + req.body.describe + '\n';
+		emailBody += 'Last Name: ' + req.body.lastName + '\n';
+		emailBody += 'Company: ' + req.body.company + '\n';
+		emailBody += 'Phone: ' + req.body.phone + '\n';
+		emailBody += 'Email: ' + req.body.email + '\n';
+		emailBody += 'Description: ' + req.body.describe + '\n';
 
 	//var file = req.files.file;
   var appDir = global.appRoot;
@@ -1245,8 +1234,8 @@ exports.lead = function(req, res){
 var emailClients = function(client, email, project, req, res){
 		async.waterfall([
 			function(done) {
-				User.findOne({'_id':client.userId}).sort('-created').exec(function(err, clientInfo) {
-					done(err, clientInfo);
+				User.findOne({'_id':client.userId}).sort('-created').then(function (clientInfo) {
+					done(null, clientInfo);
 				});
 			},
 			function(clientInfo, done) {
@@ -1328,9 +1317,9 @@ exports.create = function(req, res) {
 	project.user = req.user;
 
 	var appDir = '';
-  var tempPath = '';
-  var relativePath =  '';
-  var newPath = '';
+	var tempPath = '';
+	var relativePath =  '';
+	var newPath = '';
 
 	var allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern','production coordinator'];
 
@@ -1443,17 +1432,15 @@ exports.create = function(req, res) {
 
 				oldProject.status = 'ReAuditioned';
 
-				oldProject.save(function(err) {
-					if (err) {
-						return res.status(400).send({
-							message: errorHandler.getErrorMessage(err)
-						});
-					} else {
-						// emit an event for all connected clients
-						var socketio = req.app.get('socketio');
-						socketio.sockets.emit('projectsListUpdate'); // emit an event for all connected clients
-						socketio.sockets.emit('callListUpdate', {filter: ''});
-					}
+				oldProject.save().then(function () {
+					// emit an event for all connected clients
+					var socketio = req.app.get('socketio');
+					socketio.sockets.emit('projectsListUpdate'); // emit an event for all connected clients
+					socketio.sockets.emit('callListUpdate', {filter: ''});
+				}).catch(function (err) {
+					return res.status(400).send({
+						message: errorHandler.getErrorMessage(err)
+					});
 				});
 			});
 
@@ -1464,23 +1451,23 @@ exports.create = function(req, res) {
 		// send project creation email
 		async.waterfall([
 			function(done) {
-				User.find({'roles':'admin','noemail':{ $ne: true }}).sort('-created').exec(function(err, admins) {
-					done(err, admins);
+				User.find({'roles':'admin','noemail':{ $ne: true }}).sort('-created').then(function (admins) {
+					done(null, admins);
 				});
 			},
 			function(admins, done) {
-				User.find({'roles': { $in: ['producer/auditions director', 'auditions director', 'audio intern']},'noemail':{ $ne: true }}).sort('-created').exec(function(err, directors) {
-					done(err, admins, directors);
+				User.find({'roles': { $in: ['producer/auditions director', 'auditions director', 'audio intern']},'noemail':{ $ne: true }}).sort('-created').then(function (directors) {
+					done(null, admins, directors);
 				});
 			},
 			function(admins, directors, done) {
-				User.find({'roles':'production coordinator','noemail':{ $ne: true }}).sort('-created').exec(function(err, coordinators) {
-					done(err, admins, directors, coordinators);
+				User.find({'roles':'production coordinator','noemail':{ $ne: true }}).sort('-created').then(function (coordinators) {
+					done(null, admins, directors, coordinators);
 				});
 			},
 			function(admins, directors, coordinators, done) {
-				User.find({'roles':'talent director','noemail':{ $ne: true }}).sort('-created').exec(function(err, talentdirectors) {
-					done(err, admins, directors, coordinators, talentdirectors);
+				User.find({'roles':'talent director','noemail':{ $ne: true }}).sort('-created').then(function (talentdirectors) {
+					done(null, admins, directors, coordinators, talentdirectors);
 				});
 			},
 			function(admins, directors, coordinators, talentdirectors, done) {
@@ -1512,10 +1499,10 @@ exports.create = function(req, res) {
 
 				email.subject = 'Audition Project Created - ' + project.title + ' - Due ' + dateFormat(project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
 
-		    email.header = '<strong>Project:</strong> ' + project.title + '<br>';
-		    email.header += '<strong>Due:</strong> ' + dateFormat(project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST<br>';
-		    email.header += '<strong>Created by:</strong> ' + req.user.displayName + '<br>';
-		    email.header += '<strong>Description:</strong> ' + project.description + '<br>';
+				email.header = '<strong>Project:</strong> ' + project.title + '<br>';
+				email.header += '<strong>Due:</strong> ' + dateFormat(project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST<br>';
+				email.header += '<strong>Created by:</strong> ' + req.user.displayName + '<br>';
+				email.header += '<strong>Description:</strong> ' + project.description + '<br>';
 
 				// add scripts and assets to email body
 				email.scripts = '\n' + '<strong>Scripts:</strong>' + '<br>';
@@ -1590,7 +1577,7 @@ exports.create = function(req, res) {
 						talentIds[i] = project.talent[i].talentId;
 					}
 
-					Talent.where('_id').in(talentIds).sort('-created').exec(function(err, talents) {
+					Talent.where('_id').in(talentIds).sort('-created').then(function (talents) {
 
 						async.eachSeries(talents, function (talent, talentCallback) {
 
@@ -1685,29 +1672,26 @@ exports.create = function(req, res) {
 				}
 
 				// save final project
-				project.save(function(err) {
-					if (err) {
-						return res.status(400).send({
-							message: errorHandler.getErrorMessage(err)
-						});
-					} else {
+				project.save().then(function () {
+					// write change to log
+					var log = {
+						type: 'project',
+						sharedKey: String(project._id),
+						description: project.title + ' project created',
+						user: req.user
+					};
+					log = new Log(log);
+					log.save();
 
-						// write change to log
-						var log = {
-							type: 'project',
-							sharedKey: String(project._id),
-							description: project.title + ' project created',
-							user: req.user
-						};
-						log = new Log(log);
-						log.save();
-
-						// emit an event for all connected clients
-						var socketio = req.app.get('socketio');
-						socketio.sockets.emit('projectsListUpdate'); // emit an event for all connected clients
-						socketio.sockets.emit('callListUpdate', {filter: ''});
-						return res.jsonp(project);
-					}
+					// emit an event for all connected clients
+					var socketio = req.app.get('socketio');
+					socketio.sockets.emit('projectsListUpdate'); // emit an event for all connected clients
+					socketio.sockets.emit('callListUpdate', {filter: ''});
+					return res.jsonp(project);
+				}).catch(function (err) {
+					return res.status(400).send({
+						message: errorHandler.getErrorMessage(err)
+					});
 				});
 			},
 			], function(err) {
@@ -1725,12 +1709,10 @@ exports.loadAuditions = function(req, res){
 	// set vars
 	var projId = req.body.projectId;
 
-	Audition.find({'project': Object(projId)}).sort('-created').exec(function(err, auditions) {
-		if (err) {
-			return res.status(400).send(err);
-		} else {
-			return res.jsonp(auditions);
-		}
+	Audition.find({'project': Object(projId)}).sort('-created').then(function (auditions) {
+		return res.jsonp(auditions);
+	}).catch(function (err) {
+		return res.status(400).send(err);
 	});
 
 };
@@ -1744,29 +1726,25 @@ exports.deleteAudition = function(req, res){
 		socketio = req.app.get('socketio');
 
 	if(aud != null){
-		Audition.findById(aud._id).sort('-created').exec(function(err, audition) {
-			if (err) {
-				return res.status(400).send(err);
-			} else {
-				// set aud file path
-				audFile = appDir + '/public/res/auditions/' + String(audition.project) + '/' + audition.file.name;
-				// remove file from file system
-				if (fs.existsSync(audFile)) {
-					fs.unlink(audFile);
-				}
-				// remove audition from adution collection
-				audition.remove(function(err) {
-					if (err) {
-						return res.status(400).send({
-							message: errorHandler.getErrorMessage(err)
-						});
-					} else {
-	//					// emit an event for all connected clients
-						socketio.sockets.emit('auditionUpdate', {id: aud.project});
-						return res.status(200).send();
-					}
-				});
+		Audition.findById(aud._id).sort('-created').then(function (audition) {
+			// set aud file path
+			audFile = appDir + '/public/res/auditions/' + String(audition.project) + '/' + audition.file.name;
+			// remove file from file system
+			if (fs.existsSync(audFile)) {
+				fs.unlink(audFile);
 			}
+			// remove audition from adution collection
+			audition.remove().then(function (audition) {
+//					// emit an event for all connected clients
+				socketio.sockets.emit('auditionUpdate', {id: aud.project});
+				return res.status(200).send();
+			}).catch(function (err) {
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
+			});
+		}).catch(function (err) {
+			return res.status(400).send(err);
 		});
 	}
 };
@@ -1783,16 +1761,12 @@ exports.deleteAllAuditions = function(req, res){
 	rimraf.sync(auditionsDir);
 
     // remove all assocaited auditions
-    Audition.remove({project: Object(prodId)}).exec(function(err, audition) {
-        if (err) {
-			return res.status(400).send(err);
-		} else {
-            socketio.sockets.emit('auditionUpdate', {id: prodId});
-            return res.status(200).send();
-        }
+    Audition.remove({project: Object(prodId)}).then(function (audition) {
+		socketio.sockets.emit('auditionUpdate', {id: prodId});
+		return res.status(200).send();
+	}).catch(function (err) {
+		return res.status(400).send(err);
     });
-
-
 
 };
 
@@ -1803,41 +1777,38 @@ exports.saveAudition = function(req, res){
 	var aud = req.body.audition,
 		appDir = global.appRoot;
 
-	Audition.findById(aud._id).sort('-created').exec(function(err, audition) {
-		if (err) {
-			return res.status(400).send(err);
-		} else {
+	Audition.findById(aud._id).sort('-created').then(function (audition) {
 
-			// check for aud rename
-			if (aud.rename !== '') {
+		// check for aud rename
+		if (aud.rename !== '') {
 
-				var file = appDir + '/public/res/auditions/' + String(aud.project) + '/' + aud.file.name;
-				var newFile = appDir + '/public/res/auditions/' + String(aud.project) + '/' + aud.rename;
+			var file = appDir + '/public/res/auditions/' + String(aud.project) + '/' + aud.file.name;
+			var newFile = appDir + '/public/res/auditions/' + String(aud.project) + '/' + aud.rename;
 
-				// move file if exists
-				if (fs.existsSync(file)){
+			// move file if exists
+			if (fs.existsSync(file)){
 
-					moveFile(file, newFile);
+				moveFile(file, newFile);
 
-					// change stored file name
-					aud.file.name = aud.rename;
-					aud.rename = '';
+				// change stored file name
+				aud.file.name = aud.rename;
+				aud.rename = '';
 
-				}
 			}
-
-			audition = _.extend(audition, aud);
-
-			audition.save(function(err) {
-				if (err) {
-					return res.status(400).send(err);
-				} else {
-					var socketio = req.app.get('socketio');
-					socketio.sockets.emit('auditionUpdate', {id: aud.project});
-					return res.jsonp(audition);
-				}
-			});
 		}
+
+		audition = _.extend(audition, aud);
+
+		audition.save().then(function (upaud) {
+			var socketio = req.app.get('socketio');
+			socketio.sockets.emit('auditionUpdate', {id: aud.project});
+			return res.jsonp(audition);
+		}).catch(function (err) {
+			return res.status(400).send(err);
+		});
+
+	}).catch(function (err) {
+		return res.status(400).send(err);
 	});
 
 };
@@ -1848,30 +1819,26 @@ exports.loadProject = function(req, res){
 	// set vars
 	var projId = req.body.projectId;
 	// load project
-	Project.findById(projId).populate('user', 'displayName').exec(function(err, project) {
-		if(project){
-			// walk through assigned talent
-			async.eachSeries(project.talent, function (curTalent, talentCallback) {
-					// gather updated talent info
-					Talent.findById(curTalent.talentId).populate('user', 'displayName').exec(function(err, talent) {
-						if(talent){
-							curTalent.nameLnmCode = talent.name + ' ' + talent.lastNameCode;
-							curTalent.locationISDN = talent.locationISDN;
-						}
-						talentCallback();
-					});
-				}, function (err) {
-					project.save(function(err) {
-						if (err) {
-							return res.status(400).send(err);
-						} else {
-							return res.jsonp(project);
-						}
-					});
-			});
-		} else {
-			return res.status(400).send();
-		}
+	Project.findById(projId).populate('user', 'displayName').then(function (project) {
+		// walk through assigned talent
+		async.eachSeries(project.talent, function (curTalent, talentCallback) {
+				// gather updated talent info
+				Talent.findById(curTalent.talentId).populate('user', 'displayName').then(function (talent) {
+					if(talent){
+						curTalent.nameLnmCode = talent.name + ' ' + talent.lastNameCode;
+						curTalent.locationISDN = talent.locationISDN;
+					}
+					talentCallback();
+				});
+			}, function (err) {
+				project.save().then(function (upproject) {
+					return res.jsonp(upproject);
+				}).catch(function (err) {
+					return res.status(400).send(err);
+				});
+		});
+	}).catch(function (err) {
+		return res.status(400).send();
 	});
 
 };
@@ -1941,17 +1908,21 @@ exports.deleteFileByName = function(req, res){
 		// log instance if project info included
 		if(typeof req.body.projectId !== 'undefined'){
 
-			Project.findOne({'_id':req.body.projectId}).sort('-created').exec(function(err, project) {
+			Project.findOne({'_id':req.body.projectId}).sort('-created').then(function (project) {
 
-				// write change to log
-				var log = {
-					type: 'project',
-					sharedKey: String(project._id),
-					description: 'file ' + req.body.fileLocation + ' removed from ' + project.title,
-					user: req.user
-				};
-				log = new Log(log);
-				log.save();
+				if(project){
+
+					// write change to log
+					var log = {
+						type: 'project',
+						sharedKey: String(project._id),
+						description: 'file ' + req.body.fileLocation + ' removed from ' + project.title,
+						user: req.user
+					};
+					log = new Log(log);
+					log.save();
+
+				}
 
 			});
 		}
@@ -2069,28 +2040,27 @@ exports.update = function(req, res) {
 				done();
 			},
 			function(done) {
-				project.save(function(err) {
-					if (err) {
-						done(err);
-					} else {
+				project.save().then(function (upproject) {
 
-						// write change to log
-						var log = {
-							type: 'project',
-							sharedKey: String(project._id),
-							description: project.title + ' project updated',
-							user: req.user
-						};
-						log = new Log(log);
-						log.save();
+					// write change to log
+					var log = {
+						type: 'project',
+						sharedKey: String(upproject._id),
+						description: upproject.title + ' project updated',
+						user: req.user
+					};
+					log = new Log(log);
+					log.save();
 
-						// update connected clients
-						var socketio = req.app.get('socketio');
-						socketio.sockets.emit('projectUpdate', {id: project._id});
-						socketio.sockets.emit('callListUpdate', {filter: ''});
+					// update connected clients
+					var socketio = req.app.get('socketio');
+					socketio.sockets.emit('projectUpdate', {id: upproject._id});
+					socketio.sockets.emit('callListUpdate', {filter: ''});
 
-						return res.jsonp(project);
-					}
+					return res.jsonp(upproject);
+
+				}).catch(function (err) {
+					done(err);
 				});
 			}
 			], function(err) {
@@ -2115,11 +2085,11 @@ var removeFolder = function(location) {
                 } else {
                     if (fs.existsSync(file)) {
 		    fs.unlink(file, function (err) {
-                        if (err) {
-                            return cb(err);
-                        }
-                        return cb();
-                    });
+				if (err) {
+					return cb(err);
+				}
+				return cb();
+			});
 		    }
                 }
             });
@@ -2155,33 +2125,28 @@ exports.delete = function(req, res) {
 	log = new Log(log);
 	log.save();
 
-	project.remove(function(err) {
+	project.remove().then(function () {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
 			// remove all assocaited auditions
-			Audition.remove({project: prodId}).exec(function(err, audition) {
-                if (err) {
-                    return res.status(400).send(err);
-                } else {
-                    // emit an event for all connected clients
-                    var socketio = req.app.get('socketio');
-                    socketio.sockets.emit('projectsListUpdate');
-                    return res.jsonp(project);
-                }
+			Audition.remove({project: prodId}).then(function () {
+				// emit an event for all connected clients
+				var socketio = req.app.get('socketio');
+				socketio.sockets.emit('projectsListUpdate');
+				return res.jsonp(project);
+			}).catch(function (err) {
+				return res.status(400).send(err);
             });
-
-
 		}
 	});
 };
 
 exports.deleteById = function(req, res) {
 
-	Project.findById(req.body.projectId).exec(function(err, project) {
-		if (err) return console.log(err);
+	Project.findById(req.body.projectId).then(function (project) {
 		if(project){
 
 			// generate delete files list
@@ -2205,25 +2170,24 @@ exports.deleteById = function(req, res) {
 			log = new Log(log);
 			log.save();
 
-			project.remove(function(err) {
+			project.remove().then(function () {
 				if (err) {
 					return res.status(400).send({
 						message: errorHandler.getErrorMessage(err)
 					});
 				} else {
-					Project.find().sort('-created').populate('user', 'displayName').exec(function(err, projects) {
-						if (err) {
-							return res.status(400).send({
-								message: errorHandler.getErrorMessage(err)
-							});
-						} else {
-							return res.jsonp(projects);
-						}
+					Project.find().sort('-created').populate('user', 'displayName').then(function (projects) {
+						return res.jsonp(projects);
+					}).catch(function (err) {
+						return res.status(400).send({
+							message: errorHandler.getErrorMessage(err)
+						});
 					});
 				}
 			});
 		}
-
+	}).catch(function (err) {
+		return console.log(err);
 	});
 
 };
@@ -2243,24 +2207,20 @@ exports.getTalentFilteredProjects = function(req, res){
 						};
 
 	if(req.body.archived === true){
-		Project.find(searchCriteria).sort('-created').populate('project', 'displayName').exec(function(err, projects) {
-			if (err) {
-				return res.status(400).send({
-					message: errorHandler.getErrorMessage(err)
-				});
-			} else {
-				return res.jsonp(projects);
-			}
+		Project.find(searchCriteria).sort('-created').populate('project', 'displayName').then(function (projects) {
+			return res.jsonp(projects);
+		}).catch(function (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
 		});
 	} else {
-		Project.find(searchCriteria).where('estimatedCompletionDate').gt(dayAgo).sort('-created').populate('project', 'displayName').exec(function(err, projects) {
-			if (err) {
-				return res.status(400).send({
-					message: errorHandler.getErrorMessage(err)
-				});
-			} else {
-				return res.jsonp(projects);
-			}
+		Project.find(searchCriteria).where('estimatedCompletionDate').gt(dayAgo).sort('-created').populate('project', 'displayName').then(function (projects) {
+			return res.jsonp(projects);
+		}).catch(function (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
 		});
 	}
 
@@ -2278,50 +2238,41 @@ var performLoadList = function(req, res, allowedRoles, i, j, limit){
 
 		switch(allowedRoles[j]){
 			case 'user':
-				Project.find({'user._id': curUserId}).sort('-created').populate('user', 'displayName').limit(selLimit).exec(function(err, projects) {
-					if (err) {
-						return res.status(400).send({
-							message: errorHandler.getErrorMessage(err)
-						});
-					} else {
-						return res.jsonp(projects);
-					}
+				Project.find({'user._id': curUserId}).sort('-created').populate('user', 'displayName').limit(selLimit).then(function (projects) {
+					return res.jsonp(projects);
+				}).catch(function (err) {
+					return res.status(400).send({
+						message: errorHandler.getErrorMessage(err)
+					});
 				});
 			break;
 			case 'talent':
 			// talent does not currently have access, added to permit later access
-				Project.find({'talent': { $elemMatch: { 'talentId': curUserId}}}).sort('-created').populate('user', 'displayName').limit(selLimit).exec(function(err, projects) {
-					if (err) {
-						return res.status(400).send({
-							message: errorHandler.getErrorMessage(err)
-						});
-					} else {
-						return res.jsonp(projects);
-					}
+				Project.find({'talent': { $elemMatch: { 'talentId': curUserId}}}).sort('-created').populate('user', 'displayName').limit(selLimit).then(function (projects) {
+					return res.jsonp(projects);
+				}).catch(function (err) {
+					return res.status(400).send({
+						message: errorHandler.getErrorMessage(err)
+					});
 				});
 			break;
 			case 'client':
-				Project.find({'client': { $elemMatch: { 'userId': curUserId}}}).sort('-created').populate('user', 'displayName').limit(selLimit).exec(function(err, projects) {
-					if (err) {
-						return res.status(400).send({
-							message: errorHandler.getErrorMessage(err)
-						});
-					} else {
-						//console.log(projects);
-						return res.jsonp(projects);
-					}
+				Project.find({'client': { $elemMatch: { 'userId': curUserId}}}).sort('-created').populate('user', 'displayName').limit(selLimit).then(function (projects) {
+					return res.jsonp(projects);
+				}).catch(function (err) {
+					return res.status(400).send({
+						message: errorHandler.getErrorMessage(err)
+					});
 				});
 			break;
 			case 'client-client':
 				//console.log(curUserId);
-				Project.find({'clientClient': { $elemMatch: { 'userId': curUserId}}}).sort('-created').populate('user', 'displayName').limit(selLimit).exec(function(err, projects) {
-					if (err) {
-						return res.status(400).send({
-							message: errorHandler.getErrorMessage(err)
-						});
-					} else {
-						return res.jsonp(projects);
-					}
+				Project.find({'clientClient': { $elemMatch: { 'userId': curUserId}}}).sort('-created').populate('user', 'displayName').limit(selLimit).then(function (projects) {
+					return res.jsonp(projects);
+				}).catch(function (err) {
+					return res.status(400).send({
+						message: errorHandler.getErrorMessage(err)
+					});
 				});
 			break;
 		}
@@ -2362,14 +2313,12 @@ exports.getProjectsCnt = function(req, res){
 	var projectName, entireProject, myProjects, inProgress;
 	var filterObj = getProjectsFilters(req);
 
-	Project.find(filterObj).count({}, function(err, count){
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(count);
-		}
+	Project.find(filterObj).count({}).then(function (count) {
+		res.jsonp(count);
+	}).catch(function (err) {
+		return res.status(400).send({
+			message: errorHandler.getErrorMessage(err)
+		});
 	});
 
 };
@@ -2388,15 +2337,12 @@ exports.findLimit = function(req, res) {
 
 	if (_.intersection(req.user.roles, allowedRoles).length) {
 
-		Project.find().sort('-created').populate('user', 'displayName').limit(limit).exec(function(err, projects) {
-			if (err) {
-				//console.log(err);
-				return res.status(400).send({
-					message: errorHandler.getErrorMessage(err)
-				});
-			} else {
-				return res.jsonp(projects);
-			}
+		Project.find().sort('-created').populate('user', 'displayName').limit(limit).then(function (projects) {
+			return res.jsonp(projects);
+		}).catch(function (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
 		});
 
 	// filter results as required for remaning uer roles
@@ -2449,21 +2395,18 @@ exports.findLimitWithFilter = function(req, res) {
 
 	if (_.intersection(req.user.roles, allowedRoles).length) {
 
-		Project.find(filterObj).sort(sortOrder).skip(Number(startVal)).limit(Number(limitVal)).populate('user', 'displayName').exec(function(err, projects) {
-			if (err) {
-				//console.log(err);
-				return res.status(400).send({
-					message: errorHandler.getErrorMessage(err),
-					obj: filterObj,
-					sort: sortOrder,
-					skip: startVal,
-					limit: limitVal
-				});
-				//return res.jsonp(projects);
-			} else {
-				return res.jsonp(projects);
-			}
-		});
+		Project.find(filterObj).sort(sortOrder).skip(Number(startVal)).limit(Number(limitVal)).populate('user', 'displayName')
+		.then(function (projects) {
+			return res.jsonp(projects);
+		}).catch(function (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err),
+				obj: filterObj,
+				sort: sortOrder,
+				skip: startVal,
+				limit: limitVal
+			});
+		});;
 
 	// filter results as required for remaning uer roles
 	} else {
@@ -2486,15 +2429,13 @@ exports.list = function(req, res) {
 
 	if (_.intersection(req.user.roles, allowedRoles).length) {
 
-		Project.find().sort('-created').populate('user', 'displayName').exec(function(err, projects) {
-			if (err) {
-				//console.log(err);
-				return res.status(400).send({
-					message: errorHandler.getErrorMessage(err)
-				});
-			} else {
-				return res.jsonp(projects);
-			}
+		Project.find().sort('-created').populate('user', 'displayName')
+		.then(function (projects) {
+			return res.jsonp(projects);
+		}).catch(function (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
 		});
 
 	// filter results as required for remaning uer roles
@@ -2514,11 +2455,13 @@ exports.list = function(req, res) {
 /**
  * Project middleware
  */
-exports.projectByID = function(req, res, next, id) { Project.findById(id).populate('user', 'displayName').exec(function(err, project) {
-		if (err) return next(err);
-		if (! project) return next(new Error('Failed to load Project '));
-		req.project = project ;
+exports.projectByID = function(req, res, next, id) { 
+	Project.findById(id).populate('user', 'displayName').then(function (project) {
+		if (!project) return next(new Error('Failed to load Project '));
+		req.project = project;
 		next();
+	}).catch(function (err) {
+		return next(err);
 	});
 };
 
@@ -2632,7 +2575,7 @@ exports.uploadScript = function(req, res, next){
 
 	} else {
 
-		Project.findById(projectId).populate('user', 'displayName').exec(function(err, project) {
+		Project.findById(projectId).populate('user', 'displayName').then(function (project) {
 
 			mv(tempPath, newPath, function(err) {
 
@@ -2714,7 +2657,7 @@ exports.uploadReferenceFile = function(req, res, next){
     //console.log(file.name);
     newPath += sanitize(file.name);
 
-		Project.findById(projectId).populate('user', 'displayName').exec(function(err, project) {
+		Project.findById(projectId).populate('user', 'displayName').then(function (project) {
 
 	    mv(tempPath, newPath, function(err) {
 	        //console.log(err);
@@ -2777,15 +2720,15 @@ exports.uploadTempReferenceFile = function(req, res, next){
     var relativePath =  refsPath + 'temp/';
     var newPath = appDir + '/public/' + relativePath;
 
-		// check for existing parent directory, create if needed
-		if (!fs.existsSync(appDir + '/public/' + refsPath)) {
-			fs.mkdirSync(appDir + '/public/' + refsPath);
-		}
+	// check for existing parent directory, create if needed
+	if (!fs.existsSync(appDir + '/public/' + refsPath)) {
+		fs.mkdirSync(appDir + '/public/' + refsPath);
+	}
 
-		// check for existing temp directory, create if needed
-		if (!fs.existsSync(newPath)) {
-			fs.mkdirSync(newPath);
-		}
+	// check for existing temp directory, create if needed
+	if (!fs.existsSync(newPath)) {
+		fs.mkdirSync(newPath);
+	}
 
     // add file path
     newPath += sanitize(file.name);
@@ -2793,13 +2736,13 @@ exports.uploadTempReferenceFile = function(req, res, next){
     //console.log(newPath);
 	req.files.file.name = sanitize(req.files.file.name);
     var referenceFile = {
-    				file: req.files.file,
-    				by: {
-							userId: req.user._id,
-							date: moment().tz('America/New_York').format(),
-							name: req.user.displayName
-						}
-				};
+		file: req.files.file,
+		by: {
+				userId: req.user._id,
+				date: moment().tz('America/New_York').format(),
+				name: req.user.displayName
+			}
+	};
 
 	referenceFiles.push(referenceFile);
 
@@ -2908,10 +2851,7 @@ exports.test = function(req, res, next){
 		}
 	}
 
-    Talent.find({'name': new RegExp('^'+firstName+'$', 'i'), 'lastNameCode': new RegExp('^'+lastNameCode+'$', 'i')}).sort('-created').exec(function(err, talent) {
-        if (err) {
-			return res.status(400).json(err);
-		} else {
+    Talent.find({'name': new RegExp('^'+firstName+'$', 'i'), 'lastNameCode': new RegExp('^'+lastNameCode+'$', 'i')}).sort('-created').then(function (talent) {
             return res.jsonp(talent);
 
 //            Project.findById('56fd5d370cd11652504b0cd4').populate('user', 'displayName').exec(function(err, project) {
@@ -2932,7 +2872,8 @@ exports.test = function(req, res, next){
 //                });
 //			});
             //return res.jsonp(talent);
-        }
+	}).catch(function (err) {
+		return res.status(400).json(err);
     });
 
 }
@@ -3014,13 +2955,13 @@ exports.uploadAudition = function(req, res, next){
                 });
             },
             function(done) {
-                Talent.find({'name': { $regex: '^'+firstName+'$', $options: 'i' }, 'lastNameCode': { $regex: '^'+lastNameCode+'$',  $options: 'i'}}).sort('-created').exec(function(err, talent) {
-                    done(err, talent);
+                Talent.find({'name': { $regex: '^'+firstName+'$', $options: 'i' }, 'lastNameCode': { $regex: '^'+lastNameCode+'$',  $options: 'i'}}).sort('-created').then(function (talent) {
+                    done(null, talent);
                 });
             },
             function(talent, done) {
-                Project.findById(projectId).populate('user', 'displayName').exec(function(err, project) {
-                    done(err, talent, project);
+                Project.findById(projectId).populate('user', 'displayName').then(function (project) {
+                    done(null, talent, project);
                 });
             },
             function(talent, project, done) {
@@ -3041,9 +2982,8 @@ exports.uploadAudition = function(req, res, next){
                                 project.markModified('talent');
                                 project.markModified('modified');
                                 //curTalent.markModified('status');
-                                project.save(function (err) {
-                                  if (err) {
-                                    log = {
+                                project.save().catch(function (err) {
+									log = {
                                         type: 'error',
                                         sharedKey: String(project._id),
                                         description: String(err) + ' Project ID: ' + String(project._id),
@@ -3051,7 +2991,6 @@ exports.uploadAudition = function(req, res, next){
                                     };
                                     log = new Log(log);
                                     log.save();
-                                  }
                                 });
 
                                 // write change to log
@@ -3168,14 +3107,14 @@ exports.uploadTempAudition = function(req, res, next){
     if(fs.existsSync(passDir)){
       tempPath = passDir;
     }
-		var audPath =  'res' + '/' + 'auditions/';
-		var relativePath =  audPath + 'temp/';
+	var audPath =  'res' + '/' + 'auditions/';
+	var relativePath =  audPath + 'temp/';
     var newPath = appDir + '/public/' + relativePath;
 
-		// check for existing parent directory, create if needed
-		if (!fs.existsSync(appDir + '/public/' + audPath)) {
-			fs.mkdirSync(appDir + '/public/' + audPath);
-		}
+	// check for existing parent directory, create if needed
+	if (!fs.existsSync(appDir + '/public/' + audPath)) {
+		fs.mkdirSync(appDir + '/public/' + audPath);
+	}
 
     // create project directory if not found
     if (!fs.existsSync(newPath)) {
@@ -3221,44 +3160,42 @@ exports.uploadTempAudition = function(req, res, next){
 
 exports.downloadAllAuditionsClient = function(req, res, next){
 
-	Audition.find({'project': Object(req.body.project._id),'published':{ "$in": ["true",true] }}).sort('-created').exec(function(err, auditionsFiles) {
-		if (err) {
-			res.status(500).end();
-		} else {
-			
-			var i = 0,
-				audFileCnt = auditionsFiles.length,
-				fileLoc = '';
-			// get app dir
-			var appDir = global.appRoot;
-			var relativePath =  'res' + '/' + 'auditions' + '/' + req.body.project._id + '/';
-			var newPath = appDir + '/public/' + relativePath;
-			var savePath = appDir + '/public/' + 'res' + '/' + 'archives' + '/';
-			var zipName = req.body.project.title.replace('/','-') + '.zip';
-			var newZip = savePath + zipName;
+	Audition.find({'project': Object(req.body.project._id),'published':{ "$in": ["true",true] }}).sort('-created').then(function (auditionsFiles) {
+		
+		var i = 0,
+			audFileCnt = auditionsFiles.length,
+			fileLoc = '';
+		// get app dir
+		var appDir = global.appRoot;
+		var relativePath =  'res' + '/' + 'auditions' + '/' + req.body.project._id + '/';
+		var newPath = appDir + '/public/' + relativePath;
+		var savePath = appDir + '/public/' + 'res' + '/' + 'archives' + '/';
+		var zipName = req.body.project.title.replace('/','-') + '.zip';
+		var newZip = savePath + zipName;
 
-			// check for existing parent directory, create if needed
-			if (!fs.existsSync(savePath)) {
-				fs.mkdirSync(savePath);
-			}
-
-			var output = fs.createWriteStream(newZip);
-			var archive = archiver('zip');
-
-			output.on('close', function() {
-				res.jsonp({zip:zipName});
-			});
-
-			for(i = 0; i < audFileCnt; i++){
-				fileLoc = newPath + auditionsFiles[i].file.name;
-				archive.file(fileLoc, { name:auditionsFiles[i].file.name });
-			}
-
-			archive.pipe(output);
-
-			archive.finalize();
-
+		// check for existing parent directory, create if needed
+		if (!fs.existsSync(savePath)) {
+			fs.mkdirSync(savePath);
 		}
+
+		var output = fs.createWriteStream(newZip);
+		var archive = archiver('zip');
+
+		output.on('close', function() {
+			res.jsonp({zip:zipName});
+		});
+
+		for(i = 0; i < audFileCnt; i++){
+			fileLoc = newPath + auditionsFiles[i].file.name;
+			archive.file(fileLoc, { name:auditionsFiles[i].file.name });
+		}
+
+		archive.pipe(output);
+
+		archive.finalize();
+
+	}).catch(function (err) {
+		res.status(500).end();
 	});
 	
 };
@@ -3266,32 +3203,32 @@ exports.downloadAllAuditionsClient = function(req, res, next){
 
 exports.downloadAllAuditions = function(req, res, next){
 	// get app dir
-  var appDir = global.appRoot;
+	var appDir = global.appRoot;
 	var relativePath =  'res' + '/' + 'auditions' + '/' + req.body.project._id + '/';
-    var newPath = appDir + '/public/' + relativePath;
-    var savePath = appDir + '/public/' + 'res' + '/' + 'archives' + '/';
-    var zipName = req.body.project.title.replace('/','-') + '.zip';
-    var newZip = savePath + zipName;
+	var newPath = appDir + '/public/' + relativePath;
+	var savePath = appDir + '/public/' + 'res' + '/' + 'archives' + '/';
+	var zipName = req.body.project.title.replace('/','-') + '.zip';
+	var newZip = savePath + zipName;
 
-    // check for existing parent directory, create if needed
-    if (!fs.existsSync(savePath)) {
-        fs.mkdirSync(savePath);
-    }
+	// check for existing parent directory, create if needed
+	if (!fs.existsSync(savePath)) {
+		fs.mkdirSync(savePath);
+	}
 
-    //console.log(newPath);
+	//console.log(newPath);
 
-    var output = fs.createWriteStream(newZip);
+	var output = fs.createWriteStream(newZip);
 	var archive = archiver('zip');
 
 	output.on('close', function() {
-	  res.jsonp({zip:zipName});
+		res.jsonp({zip:zipName});
 	});
 
-    archive.directory(newPath, 'my-auditions');
+	archive.directory(newPath, 'my-auditions');
 
-    archive.pipe(output);
+	archive.pipe(output);
 
-    archive.finalize();
+	archive.finalize();
 
  //    res.setHeader('Content-Type', 'application/zip');
 	// res.setHeader('content-disposition', 'attachment; filename="auditions.zip"');
@@ -3318,8 +3255,6 @@ exports.downloadBookedAuditions = function(req, res, next){
 	if (!fs.existsSync(savePath)) {
 		fs.mkdirSync(savePath);
 	}
-
-	//console.log(newPath);
 
 	var output = fs.createWriteStream(newZip);
 	var archive = archiver('zip');
@@ -3398,8 +3333,8 @@ exports.bookAuditions = function(req, res, next){
 	async.waterfall([
 		// gather info for selected project
 		function(done) {
-			Project.findOne({'_id':projectId}).sort('-created').exec(function(err, project) {
-				done(err, project);
+			Project.findOne({'_id':projectId}).sort('-created').then(function (project) {
+				done(null, project);
 			});
 		},
 		// update status for selected booked auditions
@@ -3421,7 +3356,7 @@ exports.bookAuditions = function(req, res, next){
 		function(selAuds, project, done) {
 
 			// gather audition data from auditions collection
-			Audition.find({'project': project._id}).sort('-created').exec(function(err, auditions) {
+			Audition.find({'project': project._id}).sort('-created').then(function (auditions) {
 				if (!err) {
 					async.eachSeries(auditions, function (audition, next) {
 						if(audition.selected === true && (typeof audition.booked === 'undefined' || audition.booked === false)){
@@ -3443,11 +3378,11 @@ exports.bookAuditions = function(req, res, next){
 
 			newProject.status = 'Booked';
 
-			Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
+			Project.findById(project._id).populate('user', 'displayName').then(function (project) {
 
 				project = _.extend(project, newProject);
 
-				project.save(function(err) {
+				project.save().then(function () {
 					var socketio = req.app.get('socketio');
 						socketio.sockets.emit('projectUpdate', {id: project._id});
 						socketio.sockets.emit('auditionUpdate', {id: project._id});
@@ -3464,7 +3399,7 @@ exports.bookAuditions = function(req, res, next){
 
 			async.eachSeries(project.client, function (client, clientCallback) {
 
-				User.findOne({'_id':client.userId}).sort('-created').exec(function(err, clientInfo) {
+				User.findOne({'_id':client.userId}).sort('-created').then(function (clientInfo) {
 					clients.push(clientInfo);
 					clientCallback();
 				});
@@ -3497,8 +3432,8 @@ exports.bookAuditions = function(req, res, next){
 				ownerId = project.owner;
 			}
 
-			User.findOne({'_id':ownerId}).sort('-created').exec(function(err, ownerInfo) {
-				done(err, ownerInfo, clientsEmails, selAuds, project);
+			User.findOne({'_id':ownerId}).sort('-created').then(function (ownerInfo) {
+				done(null, ownerInfo, clientsEmails, selAuds, project);
 			});
 		},
 		function(ownerInfo, clientsEmails, selAuds, project, done){
@@ -3568,13 +3503,13 @@ exports.bookAuditions = function(req, res, next){
 exports.backupProjectsById = function(req, res, next){
 
 	// get app dir
-  var appDir = global.appRoot;
-  var archivesPath = appDir + '/public/' + 'res' + '/' + 'archives' + '/';
+	var appDir = global.appRoot;
+	var archivesPath = appDir + '/public/' + 'res' + '/' + 'archives' + '/';
 	var curDate = moment().format('MMM Do YY');
 	var zippedFilename = 'Auditions Project Backup Bundle - ' + curDate + '.zip';
-  var newZip = archivesPath + zippedFilename;
-  var backupDir = archivesPath + req.user._id + '_backup';
-  var auditionsDir, scriptsDir, referenceFilesDir, projectBuDir;
+	var newZip = archivesPath + zippedFilename;
+	var backupDir = archivesPath + req.user._id + '_backup';
+	var auditionsDir, scriptsDir, referenceFilesDir, projectBuDir;
 
 	// check for existing parent directory, create if needed
 	if (!fs.existsSync(archivesPath)) {
@@ -3604,9 +3539,8 @@ exports.backupProjectsById = function(req, res, next){
 
 	async.eachSeries(req.body.projectList, function (projectId, callback) {
 
-		Project.findById(projectId).populate('user', 'displayName').exec(function(err, project) {
-			if (err) return next(err);
-			if (! project) return next(new Error('Failed to load Project '));
+		Project.findById(projectId).populate('user', 'displayName').then(function (project) {
+			if (!project) return next(new Error('Failed to load Project '));
 			req.project = project ;
 
 			// set project file directory params
@@ -3649,6 +3583,8 @@ exports.backupProjectsById = function(req, res, next){
 			], function(err) {
 				callback(err);
 			});
+		}).catch(function (err) {
+			return next(err);
 		});
 
 	}, function (err) {
@@ -3766,7 +3702,7 @@ exports.uploadBackup = function(req, res, next){
 							req.project = project;
 
 							// delete existing project if exists
-							Project.findById(project._id).exec(function(err, delProject) {
+							Project.findById(project._id).then(function (delProject) {
 
 								// generate delete files list
 								var auditionsDir = appDir + '/public/' + '/res/auditions/' + project._id + '/';
@@ -3778,9 +3714,9 @@ exports.uploadBackup = function(req, res, next){
 								rimraf.sync(scriptsDir);
 								rimraf.sync(referenceFilesDir);
 
-								project.remove(function(err) {
+								project.remove().then(function () {
 
-									project.save(function(err) {
+									project.save().then(function () {
 
 										// current file location
 										auditionsBackupDir = parentPath + '/auditions/';
@@ -3857,14 +3793,12 @@ exports.uploadBackup = function(req, res, next){
 							rimraf.sync(backupPath);
 
 							// reload project list
-							Project.find().sort('-created').populate('user', 'displayName').exec(function(err, projects) {
-								if (err) {
-									return res.status(400).send({
-										message: errorHandler.getErrorMessage(err)
-									});
-								} else {
-									return res.jsonp(projects);
-								}
+							Project.find().sort('-created').populate('user', 'displayName').then(function (projects) {
+								return res.jsonp(projects);
+							}).catch(function (err) {
+								return res.status(400).send({
+									message: errorHandler.getErrorMessage(err)
+								});
 							});
 
 						}
@@ -3891,26 +3825,26 @@ exports.uploadTalentAudition = function(req, res, next){
 	var talentId = req.body.talent;
 
 	// get app dir
-  var appDir = global.appRoot;
-  // check for passenger buffer file location
-  var auditionsTempPath = '/usr/share/passenger/helper-scripts/public/res' + '/' + 'auditions' + '/' + 'temp' + '/';
-  var auditionsPath = appDir + '/public/' + 'res' + '/' + 'auditions' + '/' + 'temp' + '/';
+	var appDir = global.appRoot;
+	// check for passenger buffer file location
+	var auditionsTempPath = '/usr/share/passenger/helper-scripts/public/res' + '/' + 'auditions' + '/' + 'temp' + '/';
+	var auditionsPath = appDir + '/public/' + 'res' + '/' + 'auditions' + '/' + 'temp' + '/';
 	var talentUploadParent = appDir + '/public/' + 'res' + '/' + 'talentUploads' + '/';
 	var talentUploadPath = talentUploadParent + project._id + '/';
-  var talentUploadTalentPath = talentUploadPath + talentId + '/';
+	var talentUploadTalentPath = talentUploadPath + talentId + '/';
 
 	// check for existing parent directory, create if needed
 	if (!fs.existsSync(talentUploadParent)) {
 		fs.mkdirSync(talentUploadParent);
 	}
 
-  // create project directory if not found
-  if (!fs.existsSync(talentUploadPath)) {
-  	fs.mkdirSync(talentUploadPath);
-  }
-  if (!fs.existsSync(talentUploadTalentPath)) {
-  	fs.mkdirSync(talentUploadTalentPath);
-  }
+	// create project directory if not found
+	if (!fs.existsSync(talentUploadPath)) {
+		fs.mkdirSync(talentUploadPath);
+	}
+	if (!fs.existsSync(talentUploadTalentPath)) {
+		fs.mkdirSync(talentUploadTalentPath);
+	}
 
 	// walk through submitted auditions
 	async.waterfall([
@@ -3949,8 +3883,8 @@ exports.uploadTalentAudition = function(req, res, next){
 		},
 		// reload project for most recent data
 		function(done){
-			Project.findById(project._id).exec(function(err, updatedProject) {
-				done(err, updatedProject);
+			Project.findById(project._id).then(function (updatedProject) {
+				done(null, updatedProject);
 			});
 		},
 		// update project with submitted auds
@@ -3982,12 +3916,12 @@ exports.uploadTalentAudition = function(req, res, next){
 		// save updated project
 		function(updatedProject, done){
 
-			Project.findById(project._id).exec(function(err, project) {
+			Project.findById(project._id).then(function (project) {
 
 				project = _.extend(project, updatedProject.toObject());
 				//console.log(updatedProject);
 
-				project.save(function(err) {
+				project.save().then(function () {
 
 					var socketio = req.app.get('socketio');
 						socketio.sockets.emit('projectUpdate', {id: project._id});

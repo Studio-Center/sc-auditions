@@ -13,19 +13,22 @@ const _ = require('lodash'),
 exports.userByID = function(req, res, next, id) {
 	User.findOne({
 		_id: id
-	}).exec(function(err, user) {
-		if (err) return next(err);
+	}).then(function (user) {
 		if (!user) return next(new Error('Failed to load User ' + id));
 		req.profile = user;
 		next();
+	}).catch(function (err) {
+		return next(err);
 	});
 };
 
-exports.userByIDEdit = function(req, res, next, id) { User.findById(id).populate('user', 'displayName').exec(function(err, user) {
-		if (err) return next(err);
+exports.userByIDEdit = function(req, res, next, id) { 
+	User.findById(id).populate('user', 'displayName').then(function (user) {
 		if (! user) return next(new Error('Failed to load User ' + id));
 		req.useredit = user ;
 		next();
+	}).catch(function (err) {
+		return next(err);
 	});
 };
 

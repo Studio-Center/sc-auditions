@@ -31,7 +31,7 @@ exports.forgot = function(req, res, next) {
 			if (req.body.username) {
 				User.findOne({
 					username: req.body.username
-				}, '-salt -password', function(err, user) {
+				}, '-salt -password').then(function (user) {
 					if (!user) {
 						return res.status(400).send({
 							message: 'No account with that username has been found'
@@ -44,8 +44,8 @@ exports.forgot = function(req, res, next) {
 						user.resetPasswordToken = token;
 						user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
 
-						user.save(function(err) {
-							done(err, token, user);
+						user.save(function() {
+							done(null, token, user);
 						});
 					}
 				});
@@ -98,12 +98,14 @@ exports.validateResetToken = function(req, res) {
 		resetPasswordExpires: {
 			$gt: Date.now()
 		}
-	}, function(err, user) {
+	}).then(function (user) {
 		if (!user) {
 			return res.redirect('/#!/password/reset/invalid');
 		}
 
 		res.redirect('/#!/password/reset/' + req.params.token);
+	}).catch(function (err) {
+		return res.redirect('/#!/password/reset/invalid');
 	});
 };
 
@@ -124,8 +126,8 @@ exports.reset = function(req, res, next) {
 					resetPasswordExpires: {
 						$gt: Date.now()
 					}
-				}, function(err, user) {
-					if (!err && user) {
+				}).then(function (user) {
+					if (user) {
 						if (passwordDetails.newPassword === passwordDetails.verifyPassword) {
 							user.password = passwordDetails.newPassword;
 							user.resetPasswordToken = undefined;
@@ -162,6 +164,10 @@ exports.reset = function(req, res, next) {
 							message: 'Password reset token is invalid or has expired.'
 						});
 					}
+				}).catch(function (err) {
+					return res.status(400).send({
+						message: 'Password reset token is invalid or has expired.'
+					});
 				});
 			},
 			function(user, done) {
@@ -205,8 +211,8 @@ exports.changePassword = function(req, res) {
 
 	if (req.user) {
 		if (passwordDetails.newPassword) {
-			User.findById(req.user.id, function(err, user) {
-				if (!err && user) {
+			User.findById(req.user.id).then(function (user) {
+				if (user) {
 					if (user.authenticate(passwordDetails.currentPassword)) {
 						if (passwordDetails.newPassword === passwordDetails.verifyPassword) {
 
@@ -247,6 +253,10 @@ exports.changePassword = function(req, res) {
 						message: 'User is not found'
 					});
 				}
+			}).catch(function (err) {
+				res.status(400).send({
+					message: 'User is not found'
+				});
 			});
 		} else {
 			res.status(400).send({

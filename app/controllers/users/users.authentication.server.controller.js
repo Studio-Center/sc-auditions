@@ -261,7 +261,7 @@ exports.saveOAuthUserProfile = function(req, providerUserProfile, done) {
 						});
 
 						// And save the user
-						user.save(function(err) {
+						user.save().then(function () {
 							return done(err, user);
 						});
 					});
@@ -284,7 +284,7 @@ exports.saveOAuthUserProfile = function(req, providerUserProfile, done) {
 			user.markModified('additionalProvidersData');
 
 			// And save the user
-			user.save(function(err) {
+			user.save().then(function () {
 				return done(err, user, '/#!/settings/accounts');
 			});
 		} else {
@@ -309,20 +309,18 @@ exports.removeOAuthProvider = function(req, res, next) {
 			user.markModified('additionalProvidersData');
 		}
 
-		user.save(function(err) {
-			if (err) {
-				return res.status(400).send({
-					message: errorHandler.getErrorMessage(err)
-				});
-			} else {
-				req.login(user, function(err) {
-					if (err) {
-						res.status(400).send(err);
-					} else {
-						res.jsonp(user);
-					}
-				});
-			}
+		user.save().then(function () {
+			req.login(user, function(err) {
+				if (err) {
+					res.status(400).send(err);
+				} else {
+					res.jsonp(user);
+				}
+			});
+		}).catch(function (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
 		});
 	}
 };
