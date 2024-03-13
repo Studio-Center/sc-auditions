@@ -34,7 +34,7 @@
     "express": "^4.18.3",
     "express-session": "~1.18.0",
     "forever": "~4.0.3",
-    "glob": "^8.1.0",
+    "glob": "^10.3.10",
     "grunt": "^1.6.1",
     "grunt-cli": "^1.4.3",
     "helmet": "~6.2.0",

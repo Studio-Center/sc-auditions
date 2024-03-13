@@ -38,7 +38,7 @@ module.exports.getGlobbedFiles = function(globPatterns, removeRoot) {
 		if (urlRegex.test(globPatterns)) {
 			output.push(globPatterns);
 		} else {
-			var files = glob(globPatterns, { sync: true });
+			var files = glob.globSync(globPatterns);
 
 			if (removeRoot) {
 				files = files.map(function(file) {

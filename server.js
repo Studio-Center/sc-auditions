@@ -62,15 +62,15 @@ if (cluster.isMaster) {
 
 	// Listen to messages sent from the master. Ignore everything else.
 	process.on('message', function(message, connection) {
-	if (message !== 'sticky-session:connection') {
-		return;
-	}
+		if (message !== 'sticky-session:connection') {
+			return;
+		}
 
-	// Emulate a connection event on the server by emitting the
-	// event with the connection the master sent us.
-	server.emit('connection', connection);
+		// Emulate a connection event on the server by emitting the
+		// event with the connection the master sent us.
+		server.emit('connection', connection);
 
-	connection.resume();
+		connection.resume();
 	});
 
 	// Expose app
