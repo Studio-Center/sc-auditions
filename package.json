@@ -9,8 +9,8 @@
     "url": "git://github.com/Studio-Center/sc-auditions.git"
   },
   "engines": {
-    "node": "^16.20.x",
-    "npm": "^8.19.x"
+    "node": "^18.19.x",
+    "npm": "^10.2.x"
   },
   "scripts": {
     "start": "grunt",

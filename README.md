@@ -20,7 +20,8 @@ Clients access via client portal which allows them to playback and rank audition
 
 ## Requirements
 
-- **NodeJS 16.20.x**
+- **NodeJS 18.19.2**
+- **NPM 10.2.4**
 - **MongoDB**
 - **Bower**
 - **Grunt**
