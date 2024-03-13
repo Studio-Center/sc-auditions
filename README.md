@@ -35,7 +35,7 @@ npm install -g grunt-cli
 npm install -g bower
 ```
 
-Bower might have some dependency problems
+Install required front-end modules
 
 ```
 bower install
