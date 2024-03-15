@@ -1,0 +1,34 @@
+[Unit]
+Description=Studio Center Auditions
+
+ExecStart=/var/www/html/service.sh start
+# ExecStart=/usr/local/bin/node /var/www/html/server.js
+# ExecStart=/usr/bin/sudo /usr/bin/node /var/www/html/server.js
+# ExecStart=/usr/local/bin/node /var/www/html/server.js
+
+# Options Stop and Restart
+# ExecStop=
+# ExecReload=# Required on some systems
+# WorkingDirectory=/var/www/html
+
+# Restart service after 10 seconds if node service crashes
+RestartSec=10
+Restart=always
+# Restart=on-failure
+
+# Output to syslog
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=nodejs-sc-auditions
+
+# #### please, not root users
+# RHEL/Fedora uses 'nobody'
+User=nouser
+# Debian/Ubuntu uses 'nogroup', RHEL/Fedora uses 'nobody'
+Group=nogroup
+
+# variables
+Environment=PATH=/usr/bin:/usr/local/bin
+
+[Install]
+WantedBy=multi-user.target
