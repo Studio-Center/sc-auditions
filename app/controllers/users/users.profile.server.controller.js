@@ -30,30 +30,30 @@ exports.update = function(req, res) {
 		user.updated = Date.now();
 		user.displayName = user.firstName + ' ' + user.lastName;
 
-		user.save(function(err) {
-			if (err) {
-				return res.status(400).send({
-					message: errorHandler.getErrorMessage(err)
-				});
-			} else {
-				// write change to log
-				var log = {
-					type: 'system',
-					sharedKey: String(user._id),
-					description: 'user ' + user.displayName + ' updated ',
-					user: user
-				};
-				log = new Log(log);
-				log.save();
+		user.save().then(function () {
 
-				req.login(user, function(err) {
-					if (err) {
-						res.status(400).send(err);
-					} else {
-						res.jsonp(user);
-					}
-				});
-			}
+			// write change to log
+			var log = {
+				type: 'system',
+				sharedKey: String(user._id),
+				description: 'user ' + user.displayName + ' updated ',
+				user: user
+			};
+			log = new Log(log);
+			log.save();
+
+			req.login(user, function(err) {
+				if (err) {
+					res.status(400).send(err);
+				} else {
+					res.jsonp(user);
+				}
+			});
+
+		}).catch(function (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
 		});
 	} else {
 		res.status(400).send({
@@ -282,7 +282,7 @@ exports.create = function(req, res) {
 				res.status(400).send(err);
 			} else {
 				// reload admin user data
-				User.findById(adminUserId).populate('user', 'displayName').exec(function(err, user) {
+				User.findById(adminUserId).populate('user', 'displayName').then(function () {
 					req.login(user, function(err) {
 						if (err) {
 							res.status(400).send(err);

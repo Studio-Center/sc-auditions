@@ -44,7 +44,7 @@ exports.forgot = function(req, res, next) {
 						user.resetPasswordToken = token;
 						user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
 
-						user.save(function() {
+						user.save().then(function () {
 							done(null, token, user);
 						});
 					}
@@ -136,23 +136,21 @@ exports.reset = function(req, res, next) {
 							// store password as Base64 Value
 							user.passwordText = new Buffer.from(user.password).toString('base64');
 
-							user.save(function(err) {
-								if (err) {
-									return res.status(400).send({
-										message: errorHandler.getErrorMessage(err)
-									});
-								} else {
-									req.login(user, function(err) {
-										if (err) {
-											res.status(400).send(err);
-										} else {
-											// Return authenticated user
-											res.jsonp(user);
+							user.save().then(function () {
+								req.login(user, function(err) {
+									if (err) {
+										res.status(400).send(err);
+									} else {
+										// Return authenticated user
+										res.jsonp(user);
 
-											done(err, user);
-										}
-									});
-								}
+										done(err, user);
+									}
+								});
+							}).catch(function (err) {
+								return res.status(400).send({
+									message: errorHandler.getErrorMessage(err)
+								});
 							});
 						} else {
 							return res.status(400).send({
@@ -221,22 +219,20 @@ exports.changePassword = function(req, res) {
 							// store password as Base64 Value
 							user.passwordText = new Buffer.from(user.password).toString('base64');
 
-							user.save(function(err) {
-								if (err) {
-									return res.status(400).send({
-										message: errorHandler.getErrorMessage(err)
-									});
-								} else {
-									req.login(user, function(err) {
-										if (err) {
-											res.status(400).send(err);
-										} else {
-											res.send({
-												message: 'Password changed successfully'
-											});
-										}
-									});
-								}
+							user.save().then(function () {
+								req.login(user, function(err) {
+									if (err) {
+										res.status(400).send(err);
+									} else {
+										res.send({
+											message: 'Password changed successfully'
+										});
+									}
+								});
+							}).catch(function (err) {
+								return res.status(400).send({
+									message: errorHandler.getErrorMessage(err)
+								});
 							});
 						} else {
 							res.status(400).send({

@@ -31,15 +31,9 @@ exports.signup = function(req, res) {
 	user.passwordText = new Buffer.from(user.password).toString('base64');
 
 	// Then save the user 
-	user.save(function(err) {
-		if (err) {
-			console.log(err);
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
+	user.save().then(function () {
 
-			// Remove sensitive data before login
+		// Remove sensitive data before login
 			user.password = undefined;
 			user.salt = undefined;
 
@@ -50,7 +44,11 @@ exports.signup = function(req, res) {
 					res.jsonp(user);
 				}
 			});
-		}
+
+	}).catch(function (err) {
+		return res.status(400).send({
+			message: errorHandler.getErrorMessage(err)
+		});
 	});
 };
 
@@ -166,7 +164,7 @@ exports.jwtauth = function(req, res, next){
 				res.end('Access token has expired', 400);
 			}
 
-			User.findById(decoded.iss).populate('user', 'displayName').exec(function(err, user) {
+			User.findById(decoded.iss).populate('user', 'displayName').then(function (user) {
 
 				req.login(user, function(err) {
 					if (!err) {					
