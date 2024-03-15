@@ -33,7 +33,7 @@ case $1 in
    forever)
       forever_app ;;
    directstart)
-      start_app ;;
+      direct_start_app ;;
    start)
       start_app ;;
     stop)
