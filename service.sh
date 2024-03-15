@@ -8,7 +8,7 @@ DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 # node binary location used for direct start
 NODE=/root/.nvm/versions/node/v4.8.4/bin/node
 
-test -x $NODE || exit 0
+#test -x $NODE || exit 0
 
 function forever_app {
   NODE_ENV=production nohup forever "$DIR/server.js" 1>>"$DIR/logs/sc-auditions.log" 2>&1 &
