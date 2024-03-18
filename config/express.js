@@ -20,7 +20,10 @@ const express = require('express'),
 	path = require('path'),
 	multiparty = require('connect-multiparty'),
 	multipartyMiddleware = multiparty(),
+	nunjucks = require('nunjucks'),
 	MongoStore = require('connect-mongo');
+
+	
 	
 module.exports = function(db) {
 	// Initialize express app
@@ -54,13 +57,30 @@ module.exports = function(db) {
 
 	// Showing stack errors
 	app.set('showStackError', true);
+	
+	const env = nunjucks.configure(['views', './app/views'], {
+		autoescape: true,
+		express: app
+	})
 
+	env.addFilter('is_undefined', function(obj) {
+		return typeof obj === 'undefined';
+	});
+
+	env.addFilter('json', function (value, spaces) {
+		if (value instanceof nunjucks.runtime.SafeString) {
+			value = value.toString()
+		}
+		const jsonString = JSON.stringify(value, null, spaces).replace(/</g, '\\u003c')
+		return nunjucks.runtime.markSafe(jsonString)
+	});
+	
 	// Set swig as the template engine
-	app.engine('server.view.html', consolidate[config.templateEngine]);
+	app.engine('server.view.html', consolidate.nunjucks);
 
 	// Set views path and view engine
 	app.set('view engine', 'server.view.html');
-	app.set('views', './app/views');
+	//app.set('views', './app/views');
 
 	// Environment dependent middleware
 	if (process.env.NODE_ENV === 'development') {

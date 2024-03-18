@@ -7,7 +7,7 @@ module.exports = {
 		keywords: 'studio center, auditions, project management, audio projects'
 	},
 	port: process.env.PORT || 3000,
-	templateEngine: 'swig',
+	templateEngine: 'html',
 	sessionSecret: 'MEAN',
 	sessionCollection: 'sessions',
 	assets: {

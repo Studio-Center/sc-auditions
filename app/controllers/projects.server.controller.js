@@ -936,6 +936,7 @@ exports.updateNoRefresh = function(req, res){
                     // also send log for project if talent log attribute
                     if(log.type === 'talent'){
                         log = log.toObject();
+						delete log._id;
 
                         log.type = 'project';
                         log.sharedKey = String(req.body.project._id);
