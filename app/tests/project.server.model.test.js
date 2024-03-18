@@ -3,6 +3,9 @@
 /**
  * Module dependencies.
  */
+var Project = require('../models/project.server.model.js'),
+	User = require('../models/user.server.model.js');
+
 var should = require('should'),
 	mongoose = require('mongoose'),
 	User = mongoose.model('User'),

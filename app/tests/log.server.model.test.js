@@ -3,45 +3,42 @@
 /**
  * Module dependencies.
  */
+var Logs = require('../models/log.server.model.js'),
+	config = require('./../../config/config');
+
 var should = require('should'),
 	mongoose = require('mongoose'),
-	User = mongoose.model('User'),
 	Log = mongoose.model('Log');
+
+mongoose.connect(config.db);
 
 /**
  * Globals
  */
-var user, log;
+var log;
 
 /**
  * Unit tests
  */
 describe('Log Model Unit Tests:', function() {
 	beforeEach(function(done) {
-		user = new User({
-			firstName: 'Full',
-			lastName: 'Name',
-			displayName: 'Full Name',
-			email: 'test@test.com',
-			username: 'username',
-			password: 'password'
+
+		log = new Log({
+			type: 'test',
+			sharedKey: String('test'),
+			description: 'test-log',
+			user: Object('test-user')
 		});
 
-		user.save(function() {
-			log = new Log({
-				type: 'Full',
-				sharedKey: 'Name',
-				description: 'Full Name',
-				user: user
-			});
-
-			done();
-		});
+		done();
 	});
 
 	describe('Method Save', function() {
 		it('should be able to save without problems', function(done) {
-			return log.save(function(err) {
+			return log.save().then(function (log) {
+				should.exist(log);
+				done();
+			}).catch(function (err) {
 				should.not.exist(err);
 				done();
 			});
@@ -50,16 +47,18 @@ describe('Log Model Unit Tests:', function() {
 		it('should be able to show an error when try to save without type', function(done) {
 			log.type = '';
 
-			return log.save(function(err) {
-				should.exist(err);
+			return log.save().then(function (log) {
+				should.exist(log);
+				done();
+			}).catch(function (err) {
+				should.not.exist(err);
 				done();
 			});
 		});
 	});
 
 	afterEach(function(done) {
-		Log.remove().exec();
-		User.remove().exec();
+		log.remove();
 
 		done();
 	});

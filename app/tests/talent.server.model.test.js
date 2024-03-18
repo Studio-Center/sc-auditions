@@ -3,6 +3,8 @@
 /**
  * Module dependencies.
  */
+var Talent = require('../models/talent.server.model.js');
+
 var should = require('should'),
 	mongoose = require('mongoose'),
 	User = mongoose.model('User'),
