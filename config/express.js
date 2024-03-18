@@ -61,7 +61,7 @@ module.exports = function(db) {
 	const env = nunjucks.configure(['views', './app/views'], {
 		autoescape: true,
 		express: app
-	})
+	});
 
 	env.addFilter('is_undefined', function(obj) {
 		return typeof obj === 'undefined';
@@ -69,10 +69,10 @@ module.exports = function(db) {
 
 	env.addFilter('json', function (value, spaces) {
 		if (value instanceof nunjucks.runtime.SafeString) {
-			value = value.toString()
+			value = value.toString();
 		}
-		const jsonString = JSON.stringify(value, null, spaces).replace(/</g, '\\u003c')
-		return nunjucks.runtime.markSafe(jsonString)
+		const jsonString = JSON.stringify(value, null, spaces).replace(/</g, '\\u003c');
+		return nunjucks.runtime.markSafe(jsonString);
 	});
 	
 	// Set swig as the template engine

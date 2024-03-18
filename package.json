@@ -81,7 +81,6 @@
     "karma-coverage": "~2.0.0",
     "karma-firefox-launcher": "~1.2.0",
     "karma-jasmine": "~2.0.1",
-    "karma-phantomjs-launcher": "~1.0.4",
     "load-grunt-tasks": "~5.1.0",
     "should": "~13.2.3",
     "supertest": "~6.3.4"
