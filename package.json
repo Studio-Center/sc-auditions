@@ -76,7 +76,7 @@
     "grunt-mocha-test": "~0.13.3",
     "grunt-nodemon": "~0.4.2",
     "grunt-babel": "~8.0.0",
-    "karma": "~3.0.0",
+    "karma": "~6.3.16",
     "karma-chrome-launcher": "~3.0.0",
     "karma-coverage": "~2.0.0",
     "karma-firefox-launcher": "~1.2.0",
