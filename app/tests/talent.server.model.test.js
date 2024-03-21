@@ -3,25 +3,24 @@
 /**
  * Module dependencies.
  */
-var Logs = require('../models/log.server.model.js'),
-	Users = require('../models/user.server.model.js'),
+var Talent = require('../models/talent.server.model.js'),
 	config = require('./../../config/config');
 
 var chai = require('chai'),
 	mongoose = require('mongoose'),
-	Log = mongoose.model('Log'),
-	User = mongoose.model('User');
-	
+	User = mongoose.model('User'),
+	Talent = mongoose.model('Talent');
+
 /**
  * Globals
  */
-var log, user, db;
+var talent, db;
 var expect = chai.expect;
 
 /**
  * Unit tests
  */
-describe('Log Model Unit Tests:', function() {
+describe('Talent Model Unit Tests:', function() {
 	before(function(done) {
 
 		mongoose.connect(config.db).then(function () {
@@ -32,31 +31,25 @@ describe('Log Model Unit Tests:', function() {
 		}).catch(function (err) {
 			done(err);
 		});
-		
+
 	});
 
 	beforeEach(function(done) {
-		
-		user = new User({
-			'firstName':'test',
-			'lastName':'user',
-			'username':'testeruser'
-		});
-
-		log = new Log({
-			type: 'test',
-			sharedKey: String('test'),
-			description: 'test-log',
-			user: user
+		talent = new Talent({
+			name: 'Talent Name',
+			lastName: 'namer',
+			type: 'type',
+			unionStatus: ['union'],
+			locationISDN: 'ISDN'
 		});
 
 		done();
 	});
 
 	describe('Method Save', function() {
-		it('should be able to save without problems', function(done) {
-			log.save().then(function (log) {
-				expect(log).to.exist;
+		it('should begin with no talents', function(done) {
+			Talent.find().then(function (talents) {
+				expect(talents).to.have.lengthOf(0);
 				done();
 			}).catch(function (err) {
 				expect.fail(err);
@@ -64,11 +57,21 @@ describe('Log Model Unit Tests:', function() {
 			});
 		});
 
-		it('should be able to show an error when try to save without type', function(done) {
-			log.type = '';
+		it('should be able to save without problems', function(done) {
+			talent.save().then(function (talent) {
+				expect(talent).to.exist;
+				done();
+			}).catch(function (err) {
+				expect.fail(err);
+				done(err);
+			});
+		});
 
-			log.save().then(function (log) {
-				expect(log).to.exist;
+		it('should be able to show an error when try to save without name', function(done) {
+			talent.name = '';
+
+			talent.save().then(function (talent) {
+				expect(talent).to.exist;
 				done();
 			}).catch(function (err) {
 				expect(err).to.throw;
@@ -78,7 +81,7 @@ describe('Log Model Unit Tests:', function() {
 	});
 
 	afterEach(function(done) {
-		log.deleteOne();
+		talent.deleteOne();
 
 		done();
 	});

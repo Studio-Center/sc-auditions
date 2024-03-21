@@ -86,6 +86,7 @@ const ProjectSchema = new Schema({
 				'On Hold',
 				'Booked',
 				'Canceled',
+				'Not started',
 				'ReAuditioned',
 				'Dead',
 				'Closed - Pending Client Decision',

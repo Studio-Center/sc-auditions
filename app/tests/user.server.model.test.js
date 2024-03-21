@@ -3,8 +3,7 @@
 /**
  * Module dependencies.
  */
-var Logs = require('../models/log.server.model.js'),
-	Users = require('../models/user.server.model.js'),
+var Users = require('../models/user.server.model.js'),
 	config = require('./../../config/config');
 
 var chai = require('chai'),
@@ -29,9 +28,6 @@ describe('User Model Unit Tests:', function() {
 			db = mongoose.connection;
 			db.dropDatabase();
 			db.on('error', console.error.bind(console, 'Error connecting to DB'));
-			db.once('open', () => {
-				console.log('Connected to new_demo db');
-			});
 			done();
 		}).catch(function (err) {
 			done(err);
@@ -70,7 +66,7 @@ describe('User Model Unit Tests:', function() {
 				done();
 			}).catch(function (err) {
 				expect.fail(err);
-				done();
+				done(err);
 			});
 		});
 

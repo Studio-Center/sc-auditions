@@ -27,9 +27,6 @@ describe('Typecast Model Unit Tests:', function() {
 			db = mongoose.connection;
 			db.dropDatabase();
 			db.on('error', console.error.bind(console, 'Error connecting to DB'));
-			db.once('open', () => {
-				console.log('Connected to new_demo db');
-			});
 			done();
 		}).catch(function (err) {
 			done(err);
