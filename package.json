@@ -40,7 +40,7 @@
     "helmet": "~6.2.0",
     "jquery": "^3.4.0",
     "jquery-migrate": "^3.0.0",
-    "json2csv": "^3.7.3",
+    "json2csv": "^6.0.0-alpha.2",
     "jwt-simple": "^0.5.6",
     "lodash": "^4.17.21",
     "method-override": "^3.0.0",
