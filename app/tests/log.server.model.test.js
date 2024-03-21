@@ -4,30 +4,53 @@
  * Module dependencies.
  */
 var Logs = require('../models/log.server.model.js'),
+	Users = require('../models/user.server.model.js'),
 	config = require('./../../config/config');
 
-var should = require('should'),
+var chai = require('chai'),
 	mongoose = require('mongoose'),
-	Log = mongoose.model('Log');
-
-mongoose.connect(config.db);
-
+	Log = mongoose.model('Log'),
+	User = mongoose.model('User');
+	
 /**
  * Globals
  */
-var log;
+var log, user, db;
+var expect = chai.expect;
 
 /**
  * Unit tests
  */
 describe('Log Model Unit Tests:', function() {
+	before(function(done) {
+
+		mongoose.connect(config.db).then(function () {
+			db = mongoose.connection;
+			db.dropDatabase();
+			db.on('error', console.error.bind(console, 'Error connecting to DB'));
+			db.once('open', () => {
+				console.log('Connected to new_demo db');
+			});
+			done();
+		}).catch(function (err) {
+			done(err);
+		});
+		
+	});
+
 	beforeEach(function(done) {
+		
+		user = new User({
+			'firstName':'test',
+			'lastName':'user',
+			'username':'testeruser'
+		});
 
 		log = new Log({
 			type: 'test',
 			sharedKey: String('test'),
 			description: 'test-log',
-			user: Object('test-user')
+			user: user
 		});
 
 		done();
@@ -35,30 +58,37 @@ describe('Log Model Unit Tests:', function() {
 
 	describe('Method Save', function() {
 		it('should be able to save without problems', function(done) {
-			return log.save().then(function (log) {
-				should.exist(log);
+			log.save().then(function (log) {
+				expect(log).to.exist;
 				done();
 			}).catch(function (err) {
-				should.not.exist(err);
-				done();
+				expect.fail(err);
+				done(err);
 			});
 		});
 
 		it('should be able to show an error when try to save without type', function(done) {
 			log.type = '';
 
-			return log.save().then(function (log) {
-				should.exist(log);
+			log.save().then(function (log) {
+				expect(log).to.exist;
 				done();
 			}).catch(function (err) {
-				should.not.exist(err);
+				expect(err).to.throw;
 				done();
 			});
 		});
 	});
 
 	afterEach(function(done) {
-		log.remove();
+		log.deleteOne();
+
+		done();
+	});
+
+	after(function(done) {
+
+		mongoose.connection.close(done);
 
 		done();
 	});

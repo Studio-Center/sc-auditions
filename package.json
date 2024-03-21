@@ -83,7 +83,7 @@
     "karma-jasmine": "~5.1.0",
     "karma-phantomjs-launcher": "^1.0.4",
     "load-grunt-tasks": "~5.1.0",
-    "should": "~13.2.3",
+    "chai": "~4.4.1",
     "supertest": "~6.3.4"
   },
   "optionalDependencies": {}

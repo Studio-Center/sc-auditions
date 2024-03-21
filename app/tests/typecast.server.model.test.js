@@ -3,9 +3,10 @@
 /**
  * Module dependencies.
  */
-var Typecast = require('../models/typecast.server.model.js');
+var Typecast = require('../models/typecast.server.model.js'),
+	config = require('./../../config/config');
 
-var should = require('should'),
+var chai = require('chai'),
 	mongoose = require('mongoose'),
 	User = mongoose.model('User'),
 	Typecast = mongoose.model('Typecast');
@@ -13,53 +14,70 @@ var should = require('should'),
 /**
  * Globals
  */
-var user, typecast;
+var typecast, db;
+var expect = chai.expect;
 
 /**
  * Unit tests
  */
 describe('Typecast Model Unit Tests:', function() {
-	beforeEach(function(done) {
-		user = new User({
-			firstName: 'Full',
-			lastName: 'Name',
-			displayName: 'Full Name',
-			email: 'test@test.com',
-			username: 'username',
-			password: 'password'
-		});
+	before(function(done) {
 
-		user.save(function() { 
-			typecast = new Typecast({
-				name: 'Typecast Name',
-				user: user
+		mongoose.connect(config.db).then(function () {
+			db = mongoose.connection;
+			db.dropDatabase();
+			db.on('error', console.error.bind(console, 'Error connecting to DB'));
+			db.once('open', () => {
+				console.log('Connected to new_demo db');
 			});
-
 			done();
+		}).catch(function (err) {
+			done(err);
 		});
+		
+	});
+
+	beforeEach(function(done) {
+		typecast = new Typecast({
+			name: 'Full'
+		});
+
+		done();
 	});
 
 	describe('Method Save', function() {
 		it('should be able to save without problems', function(done) {
-			return typecast.save(function(err) {
-				should.not.exist(err);
+			typecast.save().then(function (typecast) {
+				expect(typecast).to.exist;
 				done();
+			}).catch(function (err) {
+				expect.fail(err);
+				done(err);
 			});
 		});
 
 		it('should be able to show an error when try to save without name', function(done) { 
 			typecast.name = '';
 
-			return typecast.save(function(err) {
-				should.exist(err);
+			typecast.save().then(function (typecast) {
+				expect(typecast).to.exist;
+				done();
+			}).catch(function (err) {
+				expect(err).to.throw;
 				done();
 			});
 		});
 	});
 
 	afterEach(function(done) { 
-		Typecast.remove().exec();
-		User.remove().exec();
+		Typecast.deleteOne();
+
+		done();
+	});
+
+	after(function(done) {
+
+		mongoose.connection.close(done);
 
 		done();
 	});

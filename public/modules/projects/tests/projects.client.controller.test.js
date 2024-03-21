@@ -53,7 +53,9 @@
 		it('$scope.find() should create an array with at least one Project object fetched from XHR', inject(function(Projects) {
 			// Create sample Project using the Projects service
 			var sampleProject = new Projects({
-				name: 'New Project'
+				estimatedCompletionDate: '11/22/2035',
+				title: 'New Project',
+				talent: Array(1,2,3)
 			});
 
 			// Create a sample Projects array that includes the new Project
@@ -73,7 +75,9 @@
 		it('$scope.findOne() should create an array with one Project object fetched from XHR using a projectId URL parameter', inject(function(Projects) {
 			// Define a sample Project object
 			var sampleProject = new Projects({
-				name: 'New Project'
+				estimatedCompletionDate: '11/22/2035',
+				title: 'New Project',
+				talent: Array(1,2,3)
 			});
 
 			// Set the URL parameter
@@ -93,17 +97,21 @@
 		it('$scope.create() with valid form data should send a POST request with the form input values and then locate to new object URL', inject(function(Projects) {
 			// Create a sample Project object
 			var sampleProjectPostData = new Projects({
-				name: 'New Project'
+				estimatedCompletionDate: '11/22/2035',
+				title: 'New Project',
+				talent: Array(1,2,3)
 			});
 
 			// Create a sample Project response
 			var sampleProjectResponse = new Projects({
 				_id: '525cf20451979dea2c000001',
-				name: 'New Project'
+				estimatedCompletionDate: '11/22/2035',
+				title: 'New Project',
+				talent: Array(1,2,3)
 			});
 
 			// Fixture mock form input values
-			scope.name = 'New Project';
+			scope.title = 'New Project';
 
 			// Set POST response
 			$httpBackend.expectPOST('projects', sampleProjectPostData).respond(sampleProjectResponse);
@@ -123,7 +131,9 @@
 			// Define a sample Project put data
 			var sampleProjectPutData = new Projects({
 				_id: '525cf20451979dea2c000001',
-				name: 'New Project'
+				estimatedCompletionDate: '11/22/2035',
+				title: 'New Project',
+				talent: Array(1,2,3)
 			});
 
 			// Mock Project in scope
