@@ -3,24 +3,24 @@
 /**
  * Module dependencies.
  */
-var Projects = require('../models/project.server.model.js'),
-	config = require('./../../config/config');
+var Newprojects = require('../models/newproject.server.model.js'),
+	config = require('../../config/config.js');
 
 var chai = require('chai'),
 	mongoose = require('mongoose'),
-	Project = mongoose.model('Project');
+	Newproject = mongoose.model('Newproject');
 
 	//mongoose.set('debug', true);
 /**
  * Globals
  */
-var project, db;
+var newproject, db;
 var expect = chai.expect;
 
 /**
  * Unit tests
  */
-describe('Project Model Unit Tests:', function() {
+describe('New Project Model Unit Tests:', function() {
 	before(function(done) {
 
 		mongoose.connect(config.db).then(function () {
@@ -36,20 +36,18 @@ describe('Project Model Unit Tests:', function() {
 
 	beforeEach(function(done) {
 
-		project = new Project({
+		newproject = new Newproject({
 			_id: '525cf20451979dea2c000001',
-			estimatedCompletionDate: '11/22/2035',
-			title: 'New Project',
-			talent: Array(1,2,3)
+			project: 'New Project',
 		});
 
 		done();
 	});
 
 	describe('Method Save', function() {
-		it('should begin with no projects', function(done) {
-			Project.find().then(function (projects) {
-				expect(projects).to.have.lengthOf(0);
+		it('should begin with no new projects', function(done) {
+			Newproject.find().then(function (newprojects) {
+				expect(newprojects).to.have.lengthOf(0);
 				done();
 			}).catch(function (err) {
 				expect.fail(err);
@@ -58,8 +56,8 @@ describe('Project Model Unit Tests:', function() {
 		});
 
 		it('should be able to save without problems', function(done) {
-			project.save().then(function (project) {
-				expect(project).to.exist;
+			newproject.save().then(function (newproject) {
+				expect(newproject).to.exist;
 				done();
 			}).catch(function (err) {
 				expect.fail(err);
@@ -68,10 +66,10 @@ describe('Project Model Unit Tests:', function() {
 		});
 
 		it('should be able to show an error when try to save without name', function(done) {
-			project.title = '';
+			newproject.project = '';
 
-			project.save().then(function (project) {
-				expect(project).to.exist;
+			newproject.save().then(function (newproject) {
+				expect(newproject).to.exist;
 				done();
 			}).catch(function (err) {
 				expect(err).to.throw;
@@ -81,7 +79,7 @@ describe('Project Model Unit Tests:', function() {
 	});
 
 	afterEach(function(done) {
-		project.deleteOne();
+		newproject.deleteOne();
 
 		done();
 	});
