@@ -53,8 +53,8 @@
 		it('$scope.find() should create an array with at least one Project object fetched from XHR', inject(function(Projects) {
 			// Create sample Project using the Projects service
 			var sampleProject = new Projects({
-				_id: ObjectId('65f1f1cd9745bcab7c15489b'),
-				estimatedCompletionDate: ISODate('2024-03-30T19:30:00.000Z'),
+				_id: '65f1f1cd9745bcab7c15489b',
+				estimatedCompletionDate: '2024-03-30T19:30:00.000Z',
 				title: 'New Project',
 				talent: [{
 					talentId: '65ea02e5bc4477b0772241ca',
@@ -88,8 +88,8 @@
 		it('$scope.findOne() should create an array with one Project object fetched from XHR using a projectId URL parameter', inject(function(Projects) {
 			// Define a sample Project object
 			var sampleProject = new Projects({
-				_id: ObjectId('65f1f1cd9745bcab7c15489b'),
-				estimatedCompletionDate: ISODate('2024-03-30T19:30:00.000Z'),
+				_id: '65f1f1cd9745bcab7c15489b',
+				estimatedCompletionDate: '2024-03-30T19:30:00.000Z',
 				title: 'New Project',
 				talent: [{
 					talentId: '65ea02e5bc4477b0772241ca',
@@ -123,11 +123,11 @@
 		it('$scope.create() with valid form data should send a POST request with the form input values and then locate to new object URL', inject(function(Projects) {
 			// Create a sample Project object
 			var sampleProjectPostData = new Projects({
-				_id: ObjectId('65f1f1cd9745bcab7c15489b'),
-				estimatedCompletionDate: ISODate('2024-03-30T19:30:00.000Z'),
+				_id: '65f1f1cd9745bcab7c15489b',
+				estimatedCompletionDate: '2024-03-30T19:30:00.000Z',
 				title: 'New Project',
 				talent: [{
-					talentId: ObjectId('65f1f1cd9745bcab7c15489b'),
+					talentId: '65f1f1cd9745bcab7c15489b',
 					name: 'test talent',
 					email: 'test@talent.com',
 					booked: false,
@@ -143,8 +143,8 @@
 
 			// Create a sample Project response
 			var sampleProjectResponse = new Projects({
-				_id: ObjectId('65f1f1cd9745bcab7c15489b'),
-				estimatedCompletionDate: ISODate('2024-03-30T19:30:00.000Z'),
+				_id: '65f1f1cd9745bcab7c15489b',
+				estimatedCompletionDate: '2024-03-30T19:30:00.000Z',
 				title: 'New Project',
 				talent: [{
 					talentId: '65ea02e5bc4477b0772241ca',
@@ -181,8 +181,8 @@
 		it('$scope.update() should update a valid Project', inject(function(Projects) {
 			// Define a sample Project put data
 			var sampleProjectPutData = new Projects({
-				_id: ObjectId('65f1f1cd9745bcab7c15489b'),
-				estimatedCompletionDate: ISODate('2024-03-30T19:30:00.000Z'),
+				_id: '65f1f1cd9745bcab7c15489b',
+				estimatedCompletionDate: '2024-03-30T19:30:00.000Z',
 				title: 'New Project',
 				talent: [{
 					talentId: '65ea02e5bc4477b0772241ca',
@@ -216,7 +216,7 @@
 		it('$scope.remove() should send a DELETE request with a valid projectId and remove the Project from the scope', inject(function(Projects) {
 			// Create new Project object
 			var sampleProject = new Projects({
-				_id: ObjectId('65f1f1cd9745bcab7c15489b')
+				_id: '65f1f1cd9745bcab7c15489b'
 			});
 
 			// Create new Projects array and include the Project

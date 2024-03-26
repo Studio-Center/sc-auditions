@@ -25,8 +25,9 @@ module.exports = {
 				'public/lib/circular-json/build/circular-json.js',
 				'public/lib/moment/moment.js',
 				'public/lib/modernizer/modernizr.js',
+				'public/lib/tinymce/tinymce.js',
 				'public/lib/moment-timezone/builds/moment-timezone-with-data.min.js',
-				'public/lib/angular/angular.min.js',
+				'public/lib/angular/angular.js',
 				'public/lib/angular-base64/angular-base64.min.js',
 				'public/lib/angular-route/angular-route.min.js',
 				'public/lib/angular-sanitize/angular-sanitize.min.js',
@@ -52,8 +53,9 @@ module.exports = {
 				'public/lib/textAngular/dist/textAngularSetup.js',
 				'public/lib/textAngular/dist/textAngular-rangy.min.js',
 				'public/lib/textAngular/dist/textAngular-sanitize.min.js',
+				'public/lib/angular-ui-tinymce/src/tinymce.js',
 				'public/lib/textAngular/dist/textAngular.min.js',
-				'public/lib/socket.io-client/socket.io.js',
+				'public/lib/socket.io-client/dist/socket.io.js',
 				'public/lib/angular-socket-io/socket.min.js'
 			]
 		},

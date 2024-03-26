@@ -1,11 +1,11 @@
 'use strict';
 
 module.exports = {
-	db: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://127.0.0.1:27017/studio-center-auditions-dev',
-	app: {
-		title: 'Studio Center Auditions - Development Environment'
-	},
-    assets: {
+        db: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://127.0.0.1:27017/studio-center-auditions-dev',
+        app: {
+                title: 'Studio Center Auditions - Development Environment'
+        },
+        assets: {
                 lib: {
                         css: [
                                 'public/lib/bootstrap/dist/css/bootstrap.min.css',
@@ -22,7 +22,7 @@ module.exports = {
                                 'public/lib/modernizer/modernizr.js',
                                 'public/lib/tinymce/tinymce.js',
                                 'public/lib/moment-timezone/builds/moment-timezone-with-data.min.js',
-                                'public/lib/angular/angular.min.js',
+                                'public/lib/angular/angular.js',
                                 'public/lib/angular-base64/angular-base64.min.js',
                                 'public/lib/angular-route/angular-route.min.js',
                                 'public/lib/angular-sanitize/angular-sanitize.min.js',
@@ -52,28 +52,28 @@ module.exports = {
                                 'public/lib/angular-socket-io/socket.min.js'
                         ]
                 },
-		css: [
-			'public/modules/**/css/*.css'
-		],
-		js: [
-			'public/config.js',
-			'public/application.js',
-			'public/modules/*/*.js',
-			'public/modules/*/*[!tests]*/*.js'
-		]
-  },
-  mailer: {
-        from: process.env.MAILER_FROM || 'no-reply@studiocenter.com',
-        notifications: 'audition-notification@studiocenter.com',
-        options: {
-                auth: {
-                        api_key: ''
+                css: [
+                        'public/modules/**/css/*.css'
+                ],
+                js: [
+                        'public/config.js',
+                        'public/application.js',
+                        'public/modules/*/*.js',
+                        'public/modules/*/*[!tests]*/*.js'
+                ]
+        },
+        mailer: {
+                from: process.env.MAILER_FROM || 'no-reply@studiocenter.com',
+                notifications: 'audition-notification@studiocenter.com',
+                options: {
+                        auth: {
+                                api_key: ''
+                        }
                 }
+        },
+        TWILIO: {
+                ACCOUNT_SID: '',
+                AUTH_TOKEN: '',
+                ACCOUNT_SUBACCOUNT_SID: ''
         }
-  },
-  TWILIO: {
-        ACCOUNT_SID: '',
-        AUTH_TOKEN: '',
-        ACCOUNT_SUBACCOUNT_SID: ''
-  }
 };
