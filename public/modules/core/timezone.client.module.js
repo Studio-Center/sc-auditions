@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('core').constant('angularMomentConfig', {
+angular.module('studio-center-auditions').constant('angularMomentConfig', {
     timezone: 'America/New_York' // e.g. 'Europe/London'
 });
 

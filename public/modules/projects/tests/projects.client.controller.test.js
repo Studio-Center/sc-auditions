@@ -53,9 +53,22 @@
 		it('$scope.find() should create an array with at least one Project object fetched from XHR', inject(function(Projects) {
 			// Create sample Project using the Projects service
 			var sampleProject = new Projects({
-				estimatedCompletionDate: '11/22/2035',
+				_id: ObjectId('65f1f1cd9745bcab7c15489b'),
+				estimatedCompletionDate: ISODate('2024-03-30T19:30:00.000Z'),
 				title: 'New Project',
-				talent: Array(1,2,3)
+				talent: [{
+					talentId: '65ea02e5bc4477b0772241ca',
+					name: 'test talent',
+					email: 'test@talent.com',
+					booked: false,
+					status: 'Posted',
+					part: '',
+					regular: false,
+					requested: true,
+					added: '2024-03-13T14:34:29-04:00',
+					nameLnmCode: 'test ttt',
+					locationISDN: 'Las Vegas'
+				  }]
 			});
 
 			// Create a sample Projects array that includes the new Project
@@ -75,9 +88,22 @@
 		it('$scope.findOne() should create an array with one Project object fetched from XHR using a projectId URL parameter', inject(function(Projects) {
 			// Define a sample Project object
 			var sampleProject = new Projects({
-				estimatedCompletionDate: '11/22/2035',
+				_id: ObjectId('65f1f1cd9745bcab7c15489b'),
+				estimatedCompletionDate: ISODate('2024-03-30T19:30:00.000Z'),
 				title: 'New Project',
-				talent: Array(1,2,3)
+				talent: [{
+					talentId: '65ea02e5bc4477b0772241ca',
+					name: 'test talent',
+					email: 'test@talent.com',
+					booked: false,
+					status: 'Posted',
+					part: '',
+					regular: false,
+					requested: true,
+					added: '2024-03-13T14:34:29-04:00',
+					nameLnmCode: 'test ttt',
+					locationISDN: 'Las Vegas'
+				  }]
 			});
 
 			// Set the URL parameter
@@ -97,17 +123,42 @@
 		it('$scope.create() with valid form data should send a POST request with the form input values and then locate to new object URL', inject(function(Projects) {
 			// Create a sample Project object
 			var sampleProjectPostData = new Projects({
-				estimatedCompletionDate: '11/22/2035',
+				_id: ObjectId('65f1f1cd9745bcab7c15489b'),
+				estimatedCompletionDate: ISODate('2024-03-30T19:30:00.000Z'),
 				title: 'New Project',
-				talent: Array(1,2,3)
+				talent: [{
+					talentId: ObjectId('65f1f1cd9745bcab7c15489b'),
+					name: 'test talent',
+					email: 'test@talent.com',
+					booked: false,
+					status: 'Posted',
+					part: '',
+					regular: false,
+					requested: true,
+					added: '2024-03-13T14:34:29-04:00',
+					nameLnmCode: 'test ttt',
+					locationISDN: 'Las Vegas'
+				  }]
 			});
 
 			// Create a sample Project response
 			var sampleProjectResponse = new Projects({
-				_id: '525cf20451979dea2c000001',
-				estimatedCompletionDate: '11/22/2035',
+				_id: ObjectId('65f1f1cd9745bcab7c15489b'),
+				estimatedCompletionDate: ISODate('2024-03-30T19:30:00.000Z'),
 				title: 'New Project',
-				talent: Array(1,2,3)
+				talent: [{
+					talentId: '65ea02e5bc4477b0772241ca',
+					name: 'test talent',
+					email: 'test@talent.com',
+					booked: false,
+					status: 'Posted',
+					part: '',
+					regular: false,
+					requested: true,
+					added: '2024-03-13T14:34:29-04:00',
+					nameLnmCode: 'test ttt',
+					locationISDN: 'Las Vegas'
+				  }]
 			});
 
 			// Fixture mock form input values
@@ -130,10 +181,22 @@
 		it('$scope.update() should update a valid Project', inject(function(Projects) {
 			// Define a sample Project put data
 			var sampleProjectPutData = new Projects({
-				_id: '525cf20451979dea2c000001',
-				estimatedCompletionDate: '11/22/2035',
+				_id: ObjectId('65f1f1cd9745bcab7c15489b'),
+				estimatedCompletionDate: ISODate('2024-03-30T19:30:00.000Z'),
 				title: 'New Project',
-				talent: Array(1,2,3)
+				talent: [{
+					talentId: '65ea02e5bc4477b0772241ca',
+					name: 'test talent',
+					email: 'test@talent.com',
+					booked: false,
+					status: 'Posted',
+					part: '',
+					regular: false,
+					requested: true,
+					added: '2024-03-13T14:34:29-04:00',
+					nameLnmCode: 'test ttt',
+					locationISDN: 'Las Vegas'
+				  }]
 			});
 
 			// Mock Project in scope
@@ -153,7 +216,7 @@
 		it('$scope.remove() should send a DELETE request with a valid projectId and remove the Project from the scope', inject(function(Projects) {
 			// Create new Project object
 			var sampleProject = new Projects({
-				_id: '525a8422f6d0f87f0e407a33'
+				_id: ObjectId('65f1f1cd9745bcab7c15489b')
 			});
 
 			// Create new Projects array and include the Project
