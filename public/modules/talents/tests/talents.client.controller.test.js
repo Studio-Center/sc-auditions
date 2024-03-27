@@ -73,6 +73,7 @@
 		it('$scope.findOne() should create an array with one Talent object fetched from XHR using a talentId URL parameter', inject(function(Talents) {
 			// Define a sample Talent object
 			var sampleTalent = new Talents({
+				_id: '525a8422f6d0f87f0e407a33',
 				name: 'New Talent'
 			});
 
@@ -93,7 +94,12 @@
 		it('$scope.create() with valid form data should send a POST request with the form input values and then locate to new object URL', inject(function(Talents) {
 			// Create a sample Talent object
 			var sampleTalentPostData = new Talents({
-				name: 'New Talent'
+				"name":"New Talent",
+				"type":"Email",
+				"unionStatus":[],
+				"typeCasts":[],
+				"unionJoined":[],
+				"prefLanguage":"English"
 			});
 
 			// Create a sample Talent response

@@ -56,7 +56,7 @@ if (cluster.isMaster) {
 	// Start the app by listening on <port>
 	var server = app.get('server').listen(config.port);
 
-	var io = sio(server, {reconnect: true, 'transports': ['websocket']});
+	var io = sio(server, {reconnect: true, 'transports': ['echo-protocol','websocket']});
 	app.set('socketio', io);
 	app.set('server', server);
 

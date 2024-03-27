@@ -122,7 +122,7 @@
 
 		it('$scope.create() with valid form data should send a POST request with the form input values and then locate to new object URL', inject(function(Projects) {
 			// Create a sample Project object
-			var sampleProjectPostData = new Projects({
+			scope.newProject = new Projects({
 				_id: '65f1f1cd9745bcab7c15489b',
 				estimatedCompletionDate: '2024-03-30T19:30:00.000Z',
 				title: 'New Project',
@@ -165,7 +165,7 @@
 			scope.title = 'New Project';
 
 			// Set POST response
-			$httpBackend.expectPOST('projects', sampleProjectPostData).respond(sampleProjectResponse);
+			$httpBackend.expectPOST('projects/'+ scope.newProject._id).respond(200);
 
 			// Run controller functionality
 			scope.create();

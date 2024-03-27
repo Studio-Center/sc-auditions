@@ -1168,8 +1168,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 			// method vars
 			var proStatus = 'In Progress',
-					id = '',
-					newProject = $scope.newProject;
+				id = '',
+				newProject = $scope.newProject;
 
 			// update project status, if needed
 			if(typeof newProject._id !== 'undefined'){
@@ -1179,7 +1179,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 			// Create new Project object
 			var project = new Projects ({
-				id: id,
+				_id: id,
 				title: newProject.title,
 				estimatedCompletionDate: newProject.estimatedCompletionDate,
 				estimatedTime: newProject.estimatedTime,
