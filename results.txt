@@ -1,0 +1,400 @@
+Running "env:test" (env) task
+
+Running "mochaTest:src" (mochaTest) task
+[7m Application loaded using the "test" environment configuration
+[0m
+MEAN.JS application started on port 3001
+
+
+  Audition Model Unit Tests:
+    Method Save
+      ✔ should begin with no auditions
+      ✔ should be able to save without problems
+      ✔ should be able to show an error when try to save without type
+
+  Log Model Unit Tests:
+    Method Save
+      ✔ should be able to save without problems (65ms)
+      ✔ should be able to show an error when try to save without type
+
+  New Project Model Unit Tests:
+    Method Save
+      ✔ should begin with no new projects
+      ✔ should be able to save without problems
+      ✔ should be able to show an error when try to save without name
+
+  Project Model Unit Tests:
+    Method Save
+      ✔ should begin with no projects
+      ✔ should be able to save without problems
+      ✔ should be able to show an error when try to save without name
+
+  Projecttalent Model Unit Tests:
+    Method Save
+      ✔ should begin with no auditions
+      ✔ should be able to save without problems
+      ✔ should be able to show an error when try to save without type
+
+  Talent Model Unit Tests:
+    Method Save
+      ✔ should begin with no talents
+      ✔ should be able to save without problems
+      ✔ should be able to show an error when try to save without name
+
+  Typecast Model Unit Tests:
+    Method Save
+      ✔ should be able to save without problems
+      ✔ should be able to show an error when try to save without name
+
+  User Model Unit Tests:
+    Method Save
+      ✔ should begin with no users
+      ✔ should be able to save without problems (40ms)
+      ✔ should fail to save an existing user again
+      ✔ should be able to show an error when try to save without first name
+
+
+  23 passing (384ms)
+
+
+Running "karma:unit" (karma) task
+Running "env:test" (env) task
+
+Running "mochaTest:src" (mochaTest) task
+Running "env:test" (env) task
+
+Running "mochaTest:src" (mochaTest) task
+[7m Application loaded using the "test" environment configuration
+[0m
+[7m Application loaded using the "test" environment configuration
+[0m
+Running "env:test" (env) task
+
+Running "mochaTest:src" (mochaTest) task
+Running "env:test" (env) task
+
+Running "mochaTest:src" (mochaTest) task
+Running "env:test" (env) task
+Running "env:test" (env) task
+Running "env:test" (env) task
+
+Running "mochaTest:src" (mochaTest) task
+
+Running "mochaTest:src" (mochaTest) task
+
+Running "mochaTest:src" (mochaTest) task
+Running "env:test" (env) task
+[7m Application loaded using the "test" environment configuration
+
+Running "mochaTest:src" (mochaTest) task
+[0m
+Running "env:test" (env) task
+
+Running "mochaTest:src" (mochaTest) task
+Running "env:test" (env) task
+[7m Application loaded using the "test" environment configuration
+[0m
+[7m Application loaded using the "test" environment configuration
+[0m
+[7m Application loaded using the "test" environment configuration
+[7m Application loaded using the "test" environment configuration
+[0m
+[0m
+Running "env:test" (env) task
+
+Running "mochaTest:src" (mochaTest) task
+
+Running "mochaTest:src" (mochaTest) task
+[7m Application loaded using the "test" environment configuration
+[0m
+[7m Application loaded using the "test" environment configuration
+[0m
+Running "env:test" (env) task
+
+Running "mochaTest:src" (mochaTest) task
+[7m Application loaded using the "test" environment configuration
+[0m
+[7m Application loaded using the "test" environment configuration
+[0m
+Running "env:test" (env) task
+Running "env:test" (env) task
+
+Running "mochaTest:src" (mochaTest) task
+
+Running "mochaTest:src" (mochaTest) task
+[7m Application loaded using the "test" environment configuration
+[0m
+[7m Application loaded using the "test" environment configuration
+[0m
+[7m Application loaded using the "test" environment configuration
+[0m
+Running "env:test" (env) task
+
+Running "mochaTest:src" (mochaTest) task
+[7m Application loaded using the "test" environment configuration
+[0m
+Running "env:test" (env) task
+
+Running "mochaTest:src" (mochaTest) task
+[7m Application loaded using the "test" environment configuration
+[0m
+MEAN.JS application started on port 3001
+MEAN.JS application started on port 3001
+MEAN.JS application started on port 3001
+MEAN.JS application started on port 3001
+
+
+  Audition Model Unit Tests:
+
+
+    Method Save
+MEAN.JS application started on port 3001
+
+
+
+
+  Audition Model Unit Tests:
+  Audition Model Unit Tests:
+  Audition Model Unit Tests:
+    Method Save
+    Method Save
+    Method Save
+MEAN.JS application started on port 3001
+
+
+      ✔ should begin with no auditions
+  Audition Model Unit Tests:
+    Method Save
+
+
+      ✔ should begin with no auditions
+  Audition Model Unit Tests:
+      ✔ should begin with no auditions
+      ✔ should begin with no auditions
+    Method Save
+MEAN.JS application started on port 3001
+      ✔ should begin with no auditions
+MEAN.JS application started on port 3001
+MEAN.JS application started on port 3001
+
+
+MEAN.JS application started on port 3001
+
+  Audition Model Unit Tests:
+
+      ✔ should begin with no auditions
+
+
+  Audition Model Unit Tests:
+    Method Save
+  Audition Model Unit Tests:
+    Method Save
+MEAN.JS application started on port 3001
+MEAN.JS application started on port 3001
+    Method Save
+
+
+  Audition Model Unit Tests:
+MEAN.JS application started on port 3001
+MEAN.JS application started on port 3001
+      ✔ should begin with no auditions
+    Method Save
+      ✔ should begin with no auditions
+
+
+      ✔ should begin with no auditions
+  Audition Model Unit Tests:
+
+
+
+
+MEAN.JS application started on port 3001
+
+
+  Audition Model Unit Tests:
+    Method Save
+  Audition Model Unit Tests:
+  Audition Model Unit Tests:
+MEAN.JS application started on port 3001
+    Method Save
+    Method Save
+      ✔ should begin with no auditions
+    Method Save
+
+
+  Audition Model Unit Tests:
+      ✔ should begin with no auditions
+    Method Save
+
+
+      ✔ should begin with no auditions
+  Audition Model Unit Tests:
+      ✔ should begin with no auditions
+      ✔ should begin with no auditions
+    Method Save
+      ✔ should begin with no auditions
+      ✔ should begin with no auditions
+Chrome 123.0.0.0 (Linux x86_64) LOG: [36m'JQMIGRATE: Migrate is installed, version 3.0.0'[39m
+
+
+[1A[2KChrome 123.0.0.0 (Linux x86_64): Executed 0 of 22[32m SUCCESS[39m (0 secs / 0 secs)
+[1A[2KChrome 123.0.0.0 (Linux x86_64): Executed 1 of 22[32m SUCCESS[39m (0 secs / 0.004 secs)
+[1A[2KChrome 123.0.0.0 (Linux x86_64): Executed 2 of 22[32m SUCCESS[39m (0 secs / 0.01 secs)
+[1A[2KChrome 123.0.0.0 (Linux x86_64): Executed 3 of 22[32m SUCCESS[39m (0 secs / 0.015 secs)
+[1A[2KChrome 123.0.0.0 (Linux x86_64): Executed 4 of 22[32m SUCCESS[39m (0 secs / 0.019 secs)
+[1A[2KChrome 123.0.0.0 (Linux x86_64): Executed 5 of 22[32m SUCCESS[39m (0 secs / 0.023 secs)
+[1A[2KChrome 123.0.0.0 (Linux x86_64): Executed 6 of 22[32m SUCCESS[39m (0 secs / 0.027 secs)
+[1A[2KChrome 123.0.0.0 (Linux x86_64): Executed 7 of 22[32m SUCCESS[39m (0 secs / 0.031 secs)
+[1A[2KChrome 123.0.0.0 (Linux x86_64): Executed 8 of 22[32m SUCCESS[39m (0 secs / 0.038 secs)
+[1A[2KChrome 123.0.0.0 (Linux x86_64): Executed 9 of 22[32m SUCCESS[39m (0 secs / 0.044 secs)
+[1A[2KChrome 123.0.0.0 (Linux x86_64): Executed 10 of 22[32m SUCCESS[39m (0 secs / 0.048 secs)
+[1A[2KCONFIRM: [36m'Are you sure?'[39m
+Chrome 123.0.0.0 (Linux x86_64): Executed 10 of 22[32m SUCCESS[39m (0 secs / 0.048 secs)
+      ✔ should be able to save without problems (928ms)
+      ✔ should be able to show an error when try to save without type
+
+  Log Model Unit Tests:
+    Method Save
+      ✔ should be able to save without problems (1726ms)
+      ✔ should be able to show an error when try to save without type
+      ✔ should be able to save without problems (747ms)
+
+  Log Model Unit Tests:
+    Method Save
+      ✔ should be able to show an error when try to save without type
+
+  New Project Model Unit Tests:
+    Method Save
+      ✔ should begin with no new projects
+      1) should be able to save without problems
+      ✔ should be able to show an error when try to save without type
+
+  Log Model Unit Tests:
+    Method Save
+      1) should be able to save without problems
+      ✔ should be able to show an error when try to save without type
+
+  Log Model Unit Tests:
+      1) should be able to save without problems
+    Method Save
+      ✔ should be able to show an error when try to save without type
+
+  Log Model Unit Tests:
+    Method Save
+      1) should be able to save without problems
+      ✔ should be able to show an error when try to save without type
+
+  Log Model Unit Tests:
+    Method Save
+      1) should be able to save without problems
+      ✔ should be able to show an error when try to save without type
+
+  Log Model Unit Tests:
+    Method Save
+      1) should be able to save without problems
+      ✔ should be able to show an error when try to save without type
+
+  Log Model Unit Tests:
+    Method Save
+      1) should be able to save without problems
+      ✔ should be able to show an error when try to save without type
+
+  Log Model Unit Tests:
+    Method Save
+      1) should be able to save without problems
+      ✔ should be able to show an error when try to save without type
+
+  Log Model Unit Tests:
+    Method Save
+      1) should be able to save without problems
+      ✔ should be able to show an error when try to save without type
+
+  Log Model Unit Tests:
+    Method Save
+      1) should be able to save without problems
+      ✔ should be able to show an error when try to save without type
+
+  Log Model Unit Tests:
+      1) should be able to save without problems
+    Method Save
+      ✔ should be able to show an error when try to save without type
+
+  Log Model Unit Tests:
+    Method Save
+      1) should be able to save without problems
+      ✔ should be able to show an error when try to save without type
+
+  Log Model Unit Tests:
+    Method Save
+      1) should be able to save without problems
+      ✔ should be able to show an error when try to save without type
+
+  Log Model Unit Tests:
+    Method Save
+[1A[2KChrome 123.0.0.0 (Linux x86_64): Executed 11 of 22[32m SUCCESS[39m (0 secs / 1.548 secs)
+[1A[2KChrome 123.0.0.0 (Linux x86_64): Executed 12 of 22[32m SUCCESS[39m (0 secs / 1.552 secs)
+      1) should be able to save without problems
+[1A[2KCONFIRM: [36m'Are you sure?'[39m
+Chrome 123.0.0.0 (Linux x86_64): Executed 12 of 22[32m SUCCESS[39m (0 secs / 1.552 secs)
+      ✔ should be able to show an error when try to save without type
+
+  Log Model Unit Tests:
+    Method Save
+      ✔ should be able to save without problems (515ms)
+      ✔ should be able to save without problems (383ms)
+      ✔ should be able to save without problems (397ms)
+      ✔ should be able to save without problems (517ms)
+      ✔ should be able to show an error when try to save without type
+      ✔ should be able to show an error when try to save without type
+      ✔ should be able to show an error when try to save without type
+
+  New Project Model Unit Tests:
+
+
+      ✔ should be able to show an error when try to save without type
+  New Project Model Unit Tests:
+  New Project Model Unit Tests:
+    Method Save
+    Method Save
+    Method Save
+
+  New Project Model Unit Tests:
+    Method Save
+      ✔ should begin with no new projects
+      ✔ should begin with no new projects
+      ✔ should begin with no new projects
+      ✔ should begin with no new projects
+[1A[2KChrome 123.0.0.0 (Linux x86_64): Executed 13 of 22[32m SUCCESS[39m (0 secs / 2.142 secs)
+[1A[2KChrome 123.0.0.0 (Linux x86_64): Executed 14 of 22[32m SUCCESS[39m (0 secs / 2.145 secs)
+[1A[2KChrome 123.0.0.0 (Linux x86_64): Executed 15 of 22[32m SUCCESS[39m (0 secs / 2.147 secs)
+[1A[2KChrome 123.0.0.0 (Linux x86_64): Executed 16 of 22[32m SUCCESS[39m (0 secs / 2.15 secs)
+[1A[2KChrome 123.0.0.0 (Linux x86_64): Executed 17 of 22[32m SUCCESS[39m (0 secs / 2.152 secs)
+[1A[2KCONFIRM: [36m'Are you sure?'[39m
+Chrome 123.0.0.0 (Linux x86_64): Executed 17 of 22[32m SUCCESS[39m (0 secs / 2.152 secs)
+      ✔ should be able to save without problems (309ms)
+      ✔ should be able to show an error when try to save without name
+
+  Project Model Unit Tests:
+    Method Save
+      ✔ should begin with no projects
+      ✔ should be able to save without problems (1050ms)
+      ✔ should be able to show an error when try to save without type
+
+  New Project Model Unit Tests:
+    Method Save
+      ✔ should begin with no new projects
+      ✔ should be able to save without problems (1159ms)
+      ✔ should be able to show an error when try to save without type
+
+  New Project Model Unit Tests:
+    Method Save
+      ✔ should begin with no new projects
+[1A[2KChrome 123.0.0.0 (Linux x86_64): Executed 18 of 22[32m SUCCESS[39m (0 secs / 2.691 secs)
+[1A[2KChrome 123.0.0.0 (Linux x86_64): Executed 19 of 22[32m SUCCESS[39m (0 secs / 2.694 secs)
+[1A[2KChrome 123.0.0.0 (Linux x86_64): Executed 20 of 22[32m SUCCESS[39m (0 secs / 2.698 secs)
+[1A[2KChrome 123.0.0.0 (Linux x86_64): Executed 21 of 22[32m SUCCESS[39m (0 secs / 2.7 secs)
+[1A[2KChrome 123.0.0.0 (Linux x86_64): Executed 22 of 22[32m SUCCESS[39m (0 secs / 2.703 secs)
+[1A[2KChrome 123.0.0.0 (Linux x86_64): Executed 22 of 22[32m SUCCESS[39m (2.731 secs / 2.703 secs)
+[32mTOTAL: 22 SUCCESS[39m
+
+Done.

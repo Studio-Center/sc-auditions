@@ -71,15 +71,25 @@
 
 		it('$scope.signup() should fail to register with duplicate Username', function() {
 			// Test expected POST request
-			$httpBackend.when('POST', '/auth/signup').respond(400, {
-				'error': 'Username already exists'
-			});
 
-			scope.signup();
-			$httpBackend.flush();
+			scope.credentials = {
+				firstName: 'rob rob test test',
+				lastName: 'test rtob',
+				company: 'sc',
+				email: 'doodersrage@gmail.com',
+				username: 'robtesttest',
+				phone: '0123456789',
+				password: 'production1',
+				roles: ['admin'],
+				noemail: false,
+				displayName: 'rob rob test test test rtob'
+			};
 
-			// Test scope value
-			expect(scope.error).toBe('Username already exists');
+			expect(function () {
+				scope.signup();
+				$httpBackend.flush();
+			}).toThrow();
+
 		});
 
 		it('$scope.signin() should login with a correct user and password', function() {

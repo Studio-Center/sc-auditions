@@ -1735,7 +1735,7 @@ exports.deleteAudition = function(req, res){
 				fs.unlink(audFile);
 			}
 			// remove audition from adution collection
-			audition.remove().then(function (audition) {
+			audition.deleteOne().then(function (audition) {
 //					// emit an event for all connected clients
 				socketio.sockets.emit('auditionUpdate', {id: aud.project});
 				return res.status(200).send();
@@ -3019,6 +3019,7 @@ exports.uploadAudition = function(req, res, next){
 
                     var audition = {
                         project: project._id,
+						owner: curUser,
                         file: curFile,
                         discussion: [],
                         description: '',

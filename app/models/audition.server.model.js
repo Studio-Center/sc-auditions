@@ -20,12 +20,10 @@ const AuditionSchema = new Schema({
 	},
 	project: {
 		type: Schema.ObjectId,
-		ref: 'Project',
-		required: 'Project needs to be defined'
+		ref: 'Project'
 	},
 	owner: {
-		type: String,
-		required: 'Owner needs to be assigned'
+		type: String
 	},
 	file: {
 		type: Object,
