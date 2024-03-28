@@ -19,6 +19,12 @@ const mongoose = require('mongoose'),
  * Create a Talent
  */
 exports.create = function(req, res) {
+
+	// clear empty talent _id
+	if(typeof req.body != 'undefined' && typeof req.body._id != 'undefined'){
+		delete req.body._id;
+	}
+
 	var talent = new Talent(req.body);
 	talent.user = req.user;
 

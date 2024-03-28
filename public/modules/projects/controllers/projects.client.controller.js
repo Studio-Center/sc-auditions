@@ -1468,7 +1468,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.updateSoundersStatus = function(){
 
 			var now = new Date(),
-					project = $scope.project;
+				project = $scope.project;
 			var item = {
 							date: now,
 							userid: '',
@@ -1485,7 +1485,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.updateProjectStatus = function(){
 
 			var now = new Date(),
-					project = $scope.project;
+				project = $scope.project,
+				newStatus = $scope.project.status;
 			var item = {
 							date: now,
 							userid: '',
@@ -1493,11 +1494,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 							item: 'Changed to ' + project.status + ' by ' + Authentication.user.displayName,
 							deleted: false
 						};
-
-			project.discussion.push(item);
-
-			// update project with new status
-			$scope.updateNoRefresh();
 
 			// email associated talent and update talent status
 			if(project.status === 'Canceled'){
@@ -1511,9 +1507,21 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					// update project store
 					project = angular.extend(project, data);
 
+					// reassign new status 
+					project.status = newStatus;
+
+					project.discussion.push(item);
+
 					// update project with new status
 					$scope.update();
 				});
+
+			} else {
+				
+				project.discussion.push(item);
+
+				// update project with new status
+				$scope.updateNoRefresh();
 
 			}
 

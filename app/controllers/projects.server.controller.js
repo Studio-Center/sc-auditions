@@ -228,7 +228,7 @@ var emailTalent = function(selTalent, talentInfo, email, project, req, res, subj
 			});
 		},
 		], function(err) {
-		//if (err) return console.log(err);
+		//return res.status(400).json(err);
 	});
 
 };
@@ -294,11 +294,9 @@ var sendTalentEmail = function(req, res, project, talent, override){
 			// update talent email status
 			for(var i = 0; i < project.talent.length; ++i){
 				if(project.talent[i].talentId === talent.talentId){
-					//console.log(project.talent[i].status);
 					if(talentInfo.type.toLowerCase() === 'email' || override === true){
 						project.talent[i].status = 'Emailed';
 					}
-					//console.log(project.talent[i].status);
 					done('', email, talentInfo);
 				}
 			}
@@ -404,7 +402,7 @@ exports.sendTalentCanceledEmail = function(req, res){
 								var ownerId = project.owner || project.user._id;
 								User.findOne({'_id':ownerId}).sort('-created').then(function (owner) {
 									owner = owner || req.user;
-									done(err, owner);
+									done(null, owner);
 								}).catch(function (err) {
 									done(err, req.user);
 								});
@@ -487,7 +485,6 @@ exports.sendTalentCanceledEmail = function(req, res){
 
 		}, function (err) {
 			if( err ) {
-				console.log(err);
 				return res.status(400).send({
 					message: errorHandler.getErrorMessage(err)
 				});
@@ -580,7 +577,6 @@ exports.sendTalentScriptUpdateEmail = function(req, res){
 		}, function (err) {
 
 			if( err ) {
-				//console.log(err);
 				return res.status(400).send({
 					message: errorHandler.getErrorMessage(err)
 				});
@@ -1340,8 +1336,6 @@ exports.create = function(req, res) {
 			project.discussion.push(item);
 		}
 
-		//console.log(project._id);
-
 		// move new saved files from temp to project id based directory
 		if(typeof project.scripts !== 'undefined'){
 			for(i = 0; i < project.scripts.length; ++i){
@@ -2071,8 +2065,8 @@ exports.update = function(req, res) {
 			}
 			], function(err) {
 				if (err) return res.status(400).send({
-							message: errorHandler.getErrorMessage(err)
-						});
+					message: errorHandler.getErrorMessage(err)
+				});
 			});
 
 	}
@@ -2191,7 +2185,9 @@ exports.deleteById = function(req, res) {
 			});
 		}
 	}).catch(function (err) {
-		return console.log(err);
+		return res.status(400).send({
+			message: errorHandler.getErrorMessage(err)
+		});
 	});
 
 };
@@ -2270,7 +2266,6 @@ var performLoadList = function(req, res, allowedRoles, i, j, limit){
 				});
 			break;
 			case 'client-client':
-				//console.log(curUserId);
 				Project.find({'clientClient': { $elemMatch: { 'userId': curUserId}}}).sort('-created').limit(selLimit).then(function (projects) {
 					return res.jsonp(projects);
 				}).catch(function (err) {
@@ -2487,9 +2482,8 @@ exports.uploadFile = function(req, res, next){
 	// We are able to access req.files.file thanks to
     // the multiparty middleware
     var file = req.files.file;
-    //console.log(file.name);
-    //console.log(file.type);
-    var project = JSON.parse(req.body.data);
+
+	var project = JSON.parse(req.body.data);
 
     //var file = req.files.file;
     var appDir = global.appRoot;
@@ -2511,11 +2505,9 @@ exports.uploadFile = function(req, res, next){
     // add file to path
     newPath += sanitize(file.name);
 
-    //console.log(newPath);
-
     mv(tempPath, newPath, function(err) {
-        //console.log(err);
-        if (err){
+
+		if (err){
             return res.status(500).end();
         }else{
 
@@ -2540,7 +2532,6 @@ exports.uploadScript = function(req, res, next){
 	// We are able to access req.files.file thanks to
     // the multiparty middleware
     var file = req.files.file;
-    //console.log(req.files);
 
     // var project = JSON.parse(req.body.data);
     // project = project.project;
@@ -2570,7 +2561,6 @@ exports.uploadScript = function(req, res, next){
     }
 
     // add file path
-    //console.log(file.name);
     newPath += sanitize(file.name);
 
 	if(file.name.indexOf('#') > -1){
@@ -2626,9 +2616,6 @@ exports.uploadReferenceFile = function(req, res, next){
     // the multiparty middleware
 	
     var file = req.files.file;
-    //console.log(req.files);
-    //console.log(file.name);
-    //console.log(file.type);
 
     // var project = JSON.parse(req.body.data);
     // project = project.project;
@@ -2658,14 +2645,13 @@ exports.uploadReferenceFile = function(req, res, next){
     }
 
     // add file path
-    //console.log(file.name);
     newPath += sanitize(file.name);
 
 		Project.findById(projectId).then(function (project) {
 
 	    mv(tempPath, newPath, function(err) {
-	        //console.log(err);
-	        if (err){
+
+			if (err){
 	            return res.status(500).end();
 	        }else{
 
@@ -2703,10 +2689,8 @@ exports.uploadTempReferenceFile = function(req, res, next){
 	// We are able to access req.files.file thanks to
     // the multiparty middleware
     var file = req.files.file;
-    //console.log(file.name);
-    //console.log(file.type);
 
-    var referenceFiles = [];
+	var referenceFiles = [];
 
     //var file = req.files.file;
     var appDir = global.appRoot;
@@ -2733,7 +2717,6 @@ exports.uploadTempReferenceFile = function(req, res, next){
     // add file path
     newPath += sanitize(file.name);
 
-    //console.log(newPath);
 	req.files.file.name = sanitize(req.files.file.name);
     var referenceFile = {
 		file: req.files.file,
@@ -2760,8 +2743,6 @@ exports.uploadTempScript = function(req, res, next){
 	// We are able to access req.files.file thanks to
 	// the multiparty middleware
 	var file = req.files.file;
-	//console.log(file.name);
-	//console.log(file.type);
 
 	var scripts = [];
 
@@ -2804,7 +2785,6 @@ exports.uploadTempScript = function(req, res, next){
 
 		req.files.file.name = sanitize(req.files.file.name);
 
-		//console.log(newPath);
 		var script = {
 						file: req.files.file,
 						by: {
@@ -2889,15 +2869,12 @@ exports.uploadAudition = function(req, res, next){
 
     var uploadedFiles = (Array.isArray(req.files.file) ? req.files.file : [req.files.file] );
 
-    //console.log(uploadedFiles);
     //return res.jsonp(req.files);
-    //console.log(req.files);
     // upload all files from files array
     async.eachSeries(uploadedFiles, function iteratee(curFile, fileCallback) {
 
         // We are able to access req.files.file thanks to
         // the multiparty middleware
-        //console.log(curFile);
         var file = curFile;
 
         // read in project document
@@ -2929,7 +2906,6 @@ exports.uploadAudition = function(req, res, next){
 
         // add file path
         newPath += sanitize(file.name);
-        //console.log(newPath);
 
         // strip talent name and last name code from audition
         var regStr = /([a-z_A-Z]+)\.\w{3}$/i.exec(file.name.trim());
@@ -3077,13 +3053,11 @@ exports.uploadAudition = function(req, res, next){
         if (err) {
             return res.status(500).json(err);
         } else {
-            //console.log('worked here too nearly end');
             var socketio = req.app.get('socketio');
                 socketio.sockets.emit('projectUpdate', {id: req.body.projectId});
                 socketio.sockets.emit('auditionUpdate', {id: req.body.projectId});
                 socketio.sockets.emit('callListUpdate', {filter: ''});
             return res.jsonp({'status':'success'});
-            //console.log('worked here too at end');
 
         }
 
@@ -3215,8 +3189,6 @@ exports.downloadAllAuditions = function(req, res, next){
 	if (!fs.existsSync(savePath)) {
 		fs.mkdirSync(savePath);
 	}
-
-	//console.log(newPath);
 
 	var output = fs.createWriteStream(newZip);
 	var archive = archiver('zip');
@@ -3920,7 +3892,6 @@ exports.uploadTalentAudition = function(req, res, next){
 			Project.findById(project._id).then(function (project) {
 
 				project = _.extend(project, updatedProject.toObject());
-				//console.log(updatedProject);
 
 				project.save().then(function () {
 
@@ -3937,7 +3908,6 @@ exports.uploadTalentAudition = function(req, res, next){
 		}
 		], function(err) {
 			if (err) {
-				// console.log(err);
 				return res.status(400).send({
 					message: errorHandler.getErrorMessage(err)
 				});
