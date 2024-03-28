@@ -8,11 +8,11 @@
         <h1>Call List</h1>
     </div>
     <div class="col-md-12" data-ng-init="gatherTalentsToCall()">
-        <accordion close-others="oneAtATime">
-            <accordion-group is-open="status.open">
-                <accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
+        <uib-accordion close-others="oneAtATime">
+            <uib-accordion-group is-open="status.open">
+                <uib-accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
                     <h3>Talent to Call ({{callProjects.length}})<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i></h3>
-                </accordion-heading>
+                </uib-accordion-heading>
 
             	<div class="row">
                     <div class="table-responsive">
@@ -95,16 +95,16 @@
                     </div>
             	</div>
             </div>
-        </accordion-group>
-    </accordion>
+        </uib-accordion-group>
+    </uib-accordion>
     </div>
 
     <div class="col-md-12" data-ng-init="gatherTalentsMessagesLeft()">
-        <accordion close-others="oneAtATime">
-            <accordion-group is-open="status.open">
-                <accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
+        <uib-accordion close-others="oneAtATime">
+            <uib-accordion-group is-open="status.open">
+                <uib-accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
                     <h3>Messages Left ({{messagedTalents.length}})<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i></h3>
-                </accordion-heading>
+                </uib-accordion-heading>
 
             	<div class="row">
                     <div class="table-responsive">
@@ -187,14 +187,14 @@
                     </div>
             	</div>
             </div>
-        </accordion-group>
-    </accordion>
+        </uib-accordion-group>
+    </uib-accordion>
     <div class="col-md-12" data-ng-init="gatherTalentsAlreadyScheduled()">
-        <accordion close-others="oneAtATime">
-            <accordion-group is-open="status.open">
-                <accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
+        <uib-accordion close-others="oneAtATime">
+            <uib-accordion-group is-open="status.open">
+                <uib-accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
                     <h3>Already Scheduled Talent ({{alreadyScheduledTalents.length}})<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i></h3>
-                </accordion-heading>
+                </uib-accordion-heading>
 
             	<div class="row">
                     <div class="table-responsive">
@@ -276,15 +276,15 @@
             		</table>
                 </div>
             	</div>
-            </accordion-group>
-        </accordion>
+            </uib-accordion-group>
+        </uib-accordion>
     </div>
     <div class="col-md-12" data-ng-init="gatherEmailedTalent()">
-        <accordion close-others="oneAtATime">
-            <accordion-group is-open="status.open">
-                <accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
+        <uib-accordion close-others="oneAtATime">
+            <uib-accordion-group is-open="status.open">
+                <uib-accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
                     <h3>Emailed Talent ({{emailedTalents.length}})<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i></h3>
-                </accordion-heading>
+                </uib-accordion-heading>
 
                 <div class="row">
                     <div class="table-responsive">
@@ -369,7 +369,7 @@
                     </table>
                     </div>
                 </div>
-            </accordion-group>
-        </accordion>
+            </uib-accordion-group>
+        </uib-accordion>
     </div>
 </section>

@@ -107,7 +107,7 @@
                                     <strong><a target="_blank" data-ng-href="#!/projects/{{project._id}}">{{project.title}}</a></strong> <small>Due {{project.estimatedCompletionDate | date:'short'}} EST</small>
                                 </div>
                                 <div class="col-lg-3 col-md-3 col-sm-3">
-                                    <progressbar value="calcProjectProg(project)" type="success" ng-model="progress"><b>{{calcProjectProg(project)}}%</b></progressbar>
+                                    <uib-progressbar value="calcProjectProg(project)" type="success" ng-model="progress"><b>{{calcProjectProg(project)}}%</b></uib-progressbar>
                                 </div>
                                 <div class="col-lg-3 col-md-3 col-sm-3"></div>
                             </div>

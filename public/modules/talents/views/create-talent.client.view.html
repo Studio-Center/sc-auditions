@@ -70,7 +70,7 @@
                     <label class="control-label" for="prefLanguage">Preferred Contact Lanaguge</label><br>
                     <div class="btn-group">
                         <div class="btn-group">
-                            <label ng-repeat="language in prefLangOpts" class="btn btn-primary" ng-model="$parent.prefLanguage" btn-radio="language">{{language}}</label>
+                            <label ng-repeat="language in prefLangOpts" class="btn btn-primary" ng-model="$parent.prefLanguage" uib-btn-radio="language">{{language}}</label>
                         </div>
                     </div>
                 </div>
@@ -78,7 +78,7 @@
                     <label class="control-label" for="type">Type</label>
                     <div class="controls">
                         <div class="btn-group">
-                            <label ng-repeat="type in typeOptions" class="btn btn-primary" ng-model="$parent.typeSelected" btn-radio="type">{{type}}</label>
+                            <label ng-repeat="type in typeOptions" class="btn btn-primary" ng-model="$parent.typeSelected" uib-btn-radio="type">{{type}}</label>
                         </div>
                     </div>
                 </div>
@@ -100,15 +100,15 @@
                 <div class="form-group">
                     <label class="control-label" for="gender">Gender</label><br/>
                     <div class="btn-group">
-                        <label class="btn btn-primary" ng-model="gender" btn-radio="'male'">Male</label>
-                        <label class="btn btn-primary" ng-model="gender" btn-radio="'female'">Female</label>
+                        <label class="btn btn-primary" ng-model="gender" uib-btn-radio="'male'">Male</label>
+                        <label class="btn btn-primary" ng-model="gender" uib-btn-radio="'female'">Female</label>
                     </div>
                 </div>
                  <div class="form-group">
                    <div class="btn-group">
-                        <label class="btn btn-primary" ng-model="ageRange" btn-radio="'kid'">Kid</label>
-                        <label class="btn btn-primary" ng-model="ageRange" btn-radio="'teen'">Teen</label>
-                        <label class="btn btn-primary" ng-model="ageRange" btn-radio="'adult'">Adult</label>
+                        <label class="btn btn-primary" ng-model="ageRange" uib-btn-radio="'kid'">Kid</label>
+                        <label class="btn btn-primary" ng-model="ageRange" uib-btn-radio="'teen'">Teen</label>
+                        <label class="btn btn-primary" ng-model="ageRange" uib-btn-radio="'adult'">Adult</label>
                     </div>
                 </div>
             </div>

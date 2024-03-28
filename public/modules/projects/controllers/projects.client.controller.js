@@ -1,8 +1,8 @@
 'use strict';
 
 // Projects controller
-angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$upload', 'ngAudio', '$http', '$modal', '$rootScope', 'Socket', '$cookies', 'moment', '$window', 'Talents', 'IS_NOT_MOBILE',
-	function($scope, $stateParams, $location, Authentication, Projects, $upload, ngAudio, $http, $modal, $rootScope, Socket, $cookies, moment, $window, Talents, IS_NOT_MOBILE ) {
+angular.module('projects').controller('ProjectsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$upload', 'ngAudio', '$http', '$uibModal', '$rootScope', 'Socket', '$cookies', 'moment', '$window', 'Talents', 'IS_NOT_MOBILE',
+	function($scope, $stateParams, $location, Authentication, Projects, $upload, ngAudio, $http, $uibModal, $rootScope, Socket, $cookies, moment, $window, Talents, IS_NOT_MOBILE ) {
 
 		$scope.authentication = Authentication;
 		$scope.projectsTotalCnt = 0;
@@ -169,7 +169,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
   	// create user modals
   	$scope.createClient = function (owner) {
 
-    var modalInstance = $modal.open({
+    var modalInstance = $uibModal.open({
       animation: true,
       templateUrl: 'modules/users/views/modal-create.client.view.html',
       controller: 'UsersModalController',
@@ -193,7 +193,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		};
 		// create talent modal
 		$scope.createTalent = function(){
-			var modalInstance = $modal.open({
+			var modalInstance = $uibModal.open({
 		      animation: true,
 		      templateUrl: 'modules/talents/views/create-talent-modal.client.view.html',
 		      controller: 'TalentsModalController'
@@ -2874,7 +2874,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 	// talent uploads modal
   	$scope.talentSubmissionsModal = function(talent){
-  		var modalInstance = $modal.open({
+  		var modalInstance = $uibModal.open({
       animation: true,
       templateUrl: 'modules/projects/views/talent-submissions-modal.client.view.html',
       controller: 'ProjectsModalController',

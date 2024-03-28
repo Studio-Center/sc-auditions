@@ -1,8 +1,8 @@
 'use strict';
 
 // Talents controller
-angular.module('talents').controller('TalentsModalController', ['$scope', '$stateParams', '$location', 'Authentication', 'Talents', '$http', '$modalInstance', '$rootScope',
-	function($scope, $stateParams, $location, Authentication, Talents, $http, $modalInstance, $rootScope) {
+angular.module('talents').controller('TalentsModalController', ['$scope', '$stateParams', '$location', 'Authentication', 'Talents', '$http', '$uibModalInstance', '$rootScope',
+	function($scope, $stateParams, $location, Authentication, Talents, $http, $uibModalInstance, $rootScope) {
 		$scope.authentication = Authentication;
 
 		// talent static options
@@ -101,7 +101,7 @@ angular.module('talents').controller('TalentsModalController', ['$scope', '$stat
 		};
 
 		$scope.cancel = function () {
-			$modalInstance.dismiss('cancel');
+			$uibModalInstance.dismiss('cancel');
 		};
 
 		// Create new Talent
@@ -139,7 +139,7 @@ angular.module('talents').controller('TalentsModalController', ['$scope', '$stat
 
 			// Redirect after save
 			talent.$save(function(response) {
-				$modalInstance.close();
+				$uibModalInstance.close();
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
 			});

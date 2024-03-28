@@ -22,7 +22,7 @@
         <h4>Created by <a ng-href="/#!/usersedit/{{::project.user._id}}" target="_blank" ng-bind="::project.user.displayName"></a> <span ng-bind="project.created | amDateFormat:'M/DD/YY h:mm:ss a'"></span> EST</h4>
         <a class="btn btn-primary" href="/#!/clients/projects/{{::project._id}}" target="_blank">View in Client Portal</a> <a data-ng-if="::permitRoles(['admin','production coordinator']) || isOwner()" class="btn btn-success" ng-click="toggleShowEdit()">Extend Audition</a> <a data-ng-if="::permitRoles(['admin','production coordinator']) || isOwner()" class="btn btn-danger" href="/#!/projects/create/{{::project._id}}">ReAudition</a> </div>
       <div class="col-lg-4 col-md-4 col-sm-4">
-        <progressbar value="dynamic" type="success" ng-model="progress"><b>{{dynamic}}%</b></progressbar>
+        <uib-progressbar value="dynamic" type="success" ng-model="progress"><b>{{dynamic}}%</b></uib-progressbar>
         <div ng-if="::permitRoles(['admin', 'producer/auditions director', 'auditions director', 'audio intern']) === false" class="panel-body" ng-bind="::project.status" style="text-align:center"></div>
         <select class="form-control" style="display:block;margin:0 auto" ng-show="::permitRoles(['admin', 'producer/auditions director','auditions director', 'production coordinator', 'audio intern'])" ng-model="project.status" ng-change="updateProjectStatus()" ng-class="{redBG: project.status == 'In Progress' && checkPassed(project.estimatedCompletionDate), greenBg: project.status == 'Booked', lgreenBG: project.status == 'Closed - Pending Client Decision', orangeBG: project.status == 'On Hold', lgray: project.status == 'Cancelled', mgray: project.status == 'ReAuditioned', gray: project.status == 'Dead', blueBg: project.status == 'In Progress' && compareDates(project.estimatedCompletionDate),lblueBG: project.status == 'In Progress' && compareDatesDay(project.estimatedCompletionDate) == false && compareDates(project.estimatedCompletionDate) == false, defClr: project.status == 'In Progress' && compareDatesDay(project.estimatedCompletionDate), yellowBg: project.sounders == 'No Sounders - Approved By William' && compareDates(project.estimatedCompletionDate), lyellowBg: project.sounders == 'No Sounders - Approved By William' && compareDates(project.estimatedCompletionDate) == false}">
           <option ng-repeat="item in statusOpts" ng-selected="project.status[0] == item" value="{{::item}}">{{::item}}</option>
@@ -87,11 +87,11 @@
   </div>
   <div class="row">
     <div class="col-lg-6 col-md-6 col-sm-6">
-      <accordion close-others="oneAtATime">
-        <accordion-group is-open="status.open">
-          <accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
+      <uib-accordion close-others="oneAtATime">
+        <uib-accordion-group is-open="status.open">
+          <uib-accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
             <h4 class="panel-title accordion-toggle"> Scripts (<span ng-bind="project.scripts.length"></span>) <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i> </h4>
-          </accordion-heading>
+          </uib-accordion-heading>
           <div data-ng-if="::permitRoles(['admin', 'producer/auditions director','auditions director','audio intern','production coordinator']) || isOwner()" class="clearfix" style="padding-bottom:5px">
             <fieldset>
               <h4>Upload Script: </h4>
@@ -116,15 +116,15 @@
               </div>
             </li>
           </ul>
-        </accordion-group>
-      </accordion>
+        </uib-accordion-group>
+      </uib-accordion>
     </div>
     <div class="col-lg-6 col-md-6 col-sm-6">
-    <accordion close-others="oneAtATime">
-      <accordion-group is-open="toggleRefs">
-        <accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
+    <uib-accordion close-others="oneAtATime">
+      <uib-accordion-group is-open="toggleRefs">
+        <uib-accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
           <h4 class="panel-title accordion-toggle"> Reference Files (<span ng-bind="project.referenceFiles.length"></span>)<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i> </h4>
-        </accordion-heading>
+        </uib-accordion-heading>
         <div data-ng-if="::permitRoles(['admin', 'producer/auditions director','auditions director','audio intern','production coordinator']) || isOwner()" class="clearfix" style="padding-bottom:5px">
           <h4>Upload Reference: </h4>
           <div ng-file-drop ng-file-select="uploadReferenceFile($files)" ng-model="files" ng-model-rejected="rejFiles"
@@ -158,17 +158,17 @@
           </div>
           </li>
         </ul>
-      </accordion-group>
-    </accordion>
+      </uib-accordion-group>
+    </uib-accordion>
   </div>
   </div>
   <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
-      <accordion close-others="oneAtATime">
-      <accordion-group is-open="status.open">
-      <accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
+      <uib-accordion close-others="oneAtATime">
+      <uib-accordion-group is-open="status.open">
+      <uib-accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
         <h4 class="panel-title accordion-toggle"> Auditions (<span ng-bind="project.auditions.length + projAuditions.length"></span>)<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i> </h4>
-      </accordion-heading>
+      </uib-accordion-heading>
       <div data-ng-if="::permitRoles(['admin', 'producer/auditions director','auditions director','audio intern','production coordinator']) || isOwner()" class="clearfix" style="padding-bottom:5px">
         <h4>Upload Audition Files: (*.mp3 only!)</h4>
         <div ng-file-drop ng-file-select="uploadAudition($files)" ng-model="files" ng-model-rejected="rejFiles"
@@ -229,9 +229,9 @@
           <td><div ng-if="audition.talent == ''"> <img src="img/warning.jpg" alt="talent warning icon" style="width:20px;height:auto"> Talent Not Assigned </div>
             <select class="form-control" ng-model="audition.talent" ng-options="talent.talentId as talent.name for talent in project.talent | orderBy:'name'" ng-change="updateTalentAssignedStatusSingle(audition)">
             </select></td>
-          <td><rating ng-model="audition.avgRating" readonly="false" ng-click="updateRatingSingle(audition, false)" max="max" on-leave="overStar = audition.avgRating" on-hover="hoveringOver(value,key)"></rating>
+          <td><uib-rating ng-model="audition.avgRating" readonly="false" ng-click="updateRatingSingle(audition, false)" max="max" on-leave="overStar = audition.avgRating" on-hover="hoveringOver(value,key)"></rating>
             <p data-ng-if="audition.avgRating">Average: <br>
-              <rating ng-model="audition.avgRating" readonly="true" max="max" on-leave="overStar = audition.avgRating" ></rating>
+              <uib-rating ng-model="audition.avgRating" readonly="true" max="max" on-leave="overStar = audition.avgRating" ></rating>
           </td>
           <td><input style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin:10px" type="checkbox" value="true" ng-click="updatePublishedSingle(audition)" ng-model="projAuditions[key].published"></td>
           <td><img ng-if="audition.booked" src="/img/green-check.png" style="width:20px;height:auto"></td>
@@ -271,9 +271,9 @@
           <td><div ng-if="!project.auditions[key].talent"> <img src="img/warning.jpg" alt="talent warning icon" style="width:20px;height:auto"> Talent Not Assigned </div>
             <select class="form-control" ng-model="project.auditions[key].talent" ng-options="talent.talentId as talent.name for talent in project.talent | orderBy:'name'" ng-change="updateTalentAssignedStatus(project.auditions[key].talent)">
             </select></td>
-          <td><rating ng-model="audition.avgRating" readonly="false" ng-click="updateRating(audition.file.path, false)" max="max" on-leave="overStar = audition.avgRating" on-hover="hoveringOver(value,key)"></rating>
+          <td><uib-rating ng-model="audition.avgRating" readonly="false" ng-click="updateRating(audition.file.path, false)" max="max" on-leave="overStar = audition.avgRating" on-hover="hoveringOver(value,key)"></rating>
             <p data-ng-if="audition.avgRating">Average: <br>
-              <rating ng-model="audition.avgRating" readonly="true" max="max" on-leave="overStar = audition.avgRating" ></rating>
+              <uib-rating ng-model="audition.avgRating" readonly="true" max="max" on-leave="overStar = audition.avgRating" ></rating>
           </td>
           <td><input style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin:10px" type="checkbox" value="true" ng-click="updatePublished(key)" ng-model="project.auditions[key].published"></td>
           <td><img ng-if="audition.booked" src="/img/green-check.png" style="width:20px;height:auto"></td>
@@ -282,17 +282,17 @@
 
       </table>
     </div>
-    </accordion-group>
-    </accordion>
+    </uib-accordion-group>
+    </uib-accordion>
   </div>
   </div>
   <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
-      <accordion close-others="oneAtATime">
-        <accordion-group is-open="status.open">
-          <accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
+      <uib-accordion close-others="oneAtATime">
+        <uib-accordion-group is-open="status.open">
+          <uib-accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
             <h4 class="panel-title accordion-toggle"> Talent (<span ng-bind="project.talent.length"></span>)<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i> </h4>
-          </accordion-heading>
+          </uib-accordion-heading>
           <div class="table-responsive">
             <table class="table table-striped">
               <tr>
@@ -328,11 +328,11 @@
               </tr>
             </table>
           </div>
-          <accordion close-others="oneAtATime" data-ng-if="::permitRoles(['admin', 'producer/auditions director','auditions director','audio intern','production coordinator'])">
-            <accordion-group is-open="statusInt.open">
-              <accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
+          <uib-accordion close-others="oneAtATime" data-ng-if="::permitRoles(['admin', 'producer/auditions director','auditions director','audio intern','production coordinator'])">
+            <uib-accordion-group is-open="statusInt.open">
+              <uib-accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
                 <h4 class="panel-title accordion-toggle"> Edit Talent<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': statusInt.open, 'glyphicon-chevron-right': !statusInt.open}"></i> </h4>
-              </accordion-heading>
+              </uib-accordion-heading>
               <div class="controls" ng-module="talents">
                 <div style="text-align:center">
                   <button class="btn btn-primary" ng-click="createTalent()">Create Talent</button>
@@ -359,17 +359,17 @@
                   <div class="row">
                     <div class="col-lg-3 col-md-3 col-sm-3">
                       <div class="btn-group" data-toggle="buttons" style="padding-top:15px">
-                        <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.gender" btn-radio="'male'">Male</label>
-                        <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.gender" btn-radio="'female'">Female</label>
-                        <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.gender" btn-radio="">All</label>
+                        <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.gender" uib-btn-radio="'male'">Male</label>
+                        <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.gender" uib-btn-radio="'female'">Female</label>
+                        <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.gender" uib-btn-radio="">All</label>
                       </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6">
                       <div class="btn-group" data-toggle="buttons" style="padding-top:15px">
-                        <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.unionStatus" btn-radio="'union'">Union</label>
-                        <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.unionStatus" btn-radio="'non-union'">Non-union</label>
-                        <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.unionStatus" btn-radio="['union','non-union']">Union and Non-union</label>
-                        <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.unionStatus" btn-radio="">All</label>
+                        <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.unionStatus" uib-btn-radio="'union'">Union</label>
+                        <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.unionStatus" uib-btn-radio="'non-union'">Non-union</label>
+                        <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.unionStatus" uib-btn-radio="['union','non-union']">Union and Non-union</label>
+                        <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.unionStatus" uib-btn-radio="">All</label>
                       </div>
                     </div>
                     <div class="col-lg-2 col-md-2 col-sm-2">
@@ -380,10 +380,10 @@
                   <div class="row" style="padding-bottom:10px">
                     <div class="col-lg-3 col-md-3 col-sm-3">
                       <div class="btn-group" data-toggle="buttons" style="padding-top:15px">
-                        <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.ageRange" btn-radio="'kid'">Kid</label>
-                        <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.ageRange" btn-radio="'teen'">Teen</label>
-                        <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.ageRange" btn-radio="'adult'">Adult</label>
-                        <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.ageRange" btn-radio="">All</label>
+                        <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.ageRange" uib-btn-radio="'kid'">Kid</label>
+                        <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.ageRange" uib-btn-radio="'teen'">Teen</label>
+                        <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.ageRange" uib-btn-radio="'adult'">Adult</label>
+                        <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.ageRange" uib-btn-radio="">All</label>
                       </div>
                     </div>
                     <div class="col-lg-3 col-md-3 col-sm-3">
@@ -394,13 +394,13 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6">
                       <div class="btn-group" data-toggle="buttons" style="padding-top:15px">
-                        <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.voa" btn-radio="'true'">VOA</label>
-                        <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.typeCasts" btn-radio="'African-American'">African-American</label>
-                        <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.typeCasts" btn-radio="'Caucasian'">Caucasian</label>
-                        <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.typeCasts" btn-radio="'British'">British</label>
-                        <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.typeCasts" btn-radio="'Spanish'">Spanish</label>
-                        <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.typeCasts" btn-radio="'Foreign Language'">Foreign Language</label>
-                        <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.typeCasts" btn-radio="">All</label>
+                        <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.voa" uib-btn-radio="'true'">VOA</label>
+                        <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.typeCasts" uib-btn-radio="'African-American'">African-American</label>
+                        <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.typeCasts" uib-btn-radio="'Caucasian'">Caucasian</label>
+                        <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.typeCasts" uib-btn-radio="'British'">British</label>
+                        <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.typeCasts" uib-btn-radio="'Spanish'">Spanish</label>
+                        <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.typeCasts" uib-btn-radio="'Foreign Language'">Foreign Language</label>
+                        <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.typeCasts" uib-btn-radio="">All</label>
                       </div>
                     </div>
                   </div>
@@ -467,19 +467,19 @@
                   </div>
                 </div>
               </div>
-            </accordion-group>
-          </accordion>
-        </accordion-group>
-      </accordion>
+            </uib-accordion-group>
+          </uib-accordion>
+        </uib-accordion-group>
+      </uib-accordion>
     </div>
   </div>
   <div class="row">
     <div class="col-lg-6 col-md-6 col-sm-6">
-      <accordion close-others="oneAtATime" data-ng-if="::permitRoles(['admin', 'producer/auditions director','auditions director','audio intern','production coordinator'])">
-        <accordion-group is-open="status.open">
-          <accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
+      <uib-accordion close-others="oneAtATime" data-ng-if="::permitRoles(['admin', 'producer/auditions director','auditions director','audio intern','production coordinator'])">
+        <uib-accordion-group is-open="status.open">
+          <uib-accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
             <h4 class="panel-title accordion-toggle"> Main Clients (<span ng-bind="project.client.length"></span>)<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i> </h4>
-          </accordion-heading>
+          </uib-accordion-heading>
           <div style="text-align:center;padding-bottom:7px">
             <button class="btn btn-primary" ng-click="sendClientEmail('opening')">Opening Email</button>
             <button class="btn btn-primary" ng-click="sendClientEmail('carryover')">Carryover Email</button>
@@ -490,11 +490,11 @@
               <input style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin:10px" type="checkbox" ng-model="selectedMainClients[key]" ng-true-value="'{{::member.userId}}'">
               <a target="_blank" ng-href="/#!/usersedit/{{::member.userId}}" ng-bind="::member.name + ' ' + member.company"></a> - <span ng-bind="::useredit.company"></span> </li>
           </ul>
-          <accordion close-others="oneAtATime" ng-if="::permitRoles(['admin','production coordinator'])">
-            <accordion-group is-open="statusInt.open">
-              <accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
+          <uib-accordion close-others="oneAtATime" ng-if="::permitRoles(['admin','production coordinator'])">
+            <uib-accordion-group is-open="statusInt.open">
+              <uib-accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
                 <h4 class="panel-title accordion-toggle"> Edit Main Clients<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': statusInt.open, 'glyphicon-chevron-right': !statusInt.open}"></i> </h4>
-              </accordion-heading>
+              </uib-accordion-heading>
               <div class="controls" ng-module="users">
                 <div style="text-align:center">
                   <button class="btn btn-primary" ng-click="createClient('client')">Create Client</button>
@@ -567,23 +567,23 @@
                   </div>
                 </div>
               </div>
-            </accordion-group>
-          </accordion>
-        </accordion-group>
-      </accordion>
-      <accordion close-others="oneAtATime">
-        <accordion-group is-open="status.open">
-          <accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
+            </uib-accordion-group>
+          </uib-accordion>
+        </uib-accordion-group>
+      </uib-accordion>
+      <uib-accordion close-others="oneAtATime">
+        <uib-accordion-group is-open="status.open">
+          <uib-accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
             <h4 class="panel-title accordion-toggle"> Additional Clients (<span ng-bind="project.clientClient.length"></span>)<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i> </h4>
-          </accordion-heading>
+          </uib-accordion-heading>
           <ul class="list-group">
             <li class="list-group-item" ng-repeat="(key, member) in project.clientClient" ng-module="users" ng-controller="UsersController" data-ng-init="getOne(member.userId)"> <a target="_blank" ng-href="/#!/usersedit/{{::member.userId}}" ng-bind="::member.name"> </a> - <span ng-bind="::useredit.company"></span> </li>
           </ul>
-          <accordion close-others="oneAtATime" ng-if="::permitRoles(['admin','production coordinator'])">
-            <accordion-group is-open="statusInt.open">
-              <accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
+          <uib-accordion close-others="oneAtATime" ng-if="::permitRoles(['admin','production coordinator'])">
+            <uib-accordion-group is-open="statusInt.open">
+              <uib-accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
                 <h4 class="panel-title accordion-toggle"> Edit Additional Clients<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': statusInt.open, 'glyphicon-chevron-right': !statusInt.open}"></i> </h4>
-              </accordion-heading>
+              </uib-accordion-heading>
               <div class="controls" ng-module="users">
                 <div style="text-align:center">
                   <button class="btn btn-primary" ng-click="createClient('client-client')">Create Client</button>
@@ -656,18 +656,18 @@
                   </div>
                 </div>
               </div>
-            </accordion-group>
-          </accordion>
-        </accordion-group>
-      </accordion>
+            </uib-accordion-group>
+          </uib-accordion>
+        </uib-accordion-group>
+      </uib-accordion>
     </div>
     <div class="col-lg-6 col-md-6 col-sm-6">
-      <accordion close-others="oneAtATime" data-ng-if="::permitRoles(['admin', 'producer/auditions director','auditions director','audio intern','production coordinator'])">
-        <accordion-group is-open="status.open">
-        <accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
+      <uib-accordion close-others="oneAtATime" data-ng-if="::permitRoles(['admin', 'producer/auditions director','auditions director','audio intern','production coordinator'])">
+        <uib-accordion-group is-open="status.open">
+        <uib-accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
           <h4 class="panel-title accordion-toggle"> Phases<i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i> </h4>
-        </accordion-heading>
-        <accordion close-others="oneAtATime">
+        </uib-accordion-heading>
+        <uib-accordion close-others="oneAtATime">
           <div class="panel panel-default" ng-repeat="(key, phase) in project.phases">
             <div class="panel-heading"><strong ng-bind="::project.phases[key].name"></strong></div>
             <div class="panel-body"> <span>
@@ -698,8 +698,8 @@
               </div>
               </span> </div>
           </div>
-        </accordion>
-      </accordion>
+        </uib-accordion>
+      </uib-accordion>
     </div>
   </div>
   </div>
@@ -711,7 +711,7 @@
           <li class="sel-file" ng-repeat="f in rejFiles"> Rejected file: {{f.name}} - size: {{f.size}}B - type: {{f.type}} </li>
         </ul>
         <div data-ng-bind="uploadStatus"></div>
-        <progressbar animate="false" value="uploadprogress" type="success" ng-model="upload"><b ng-bind="uploadfile"></b></progressbar>
+        <uib-progressbar animate="false" value="uploadprogress" type="success" ng-model="upload"><b ng-bind="uploadfile"></b></uib-progressbar>
       </div>
     </div>
   </div>

@@ -1,8 +1,8 @@
 'use strict';
 
 // Users controller
-angular.module('users').controller('UsersModalController', ['$scope', '$stateParams', '$location', 'Authentication', 'UsersEdit', 'UsersFind', '$http', '$modalInstance', '$rootScope', 'owner',
-	function($scope, $stateParams, $location, Authentication, UsersEdit, UsersFind, $http, $modalInstance, $rootScope, owner) {
+angular.module('users').controller('UsersModalController', ['$scope', '$stateParams', '$location', 'Authentication', 'UsersEdit', 'UsersFind', '$http', '$uibModalInstance', '$rootScope', 'owner',
+	function($scope, $stateParams, $location, Authentication, UsersEdit, UsersFind, $http, $uibModalInstance, $rootScope, owner) {
 		$scope.authentication = Authentication;
 
 		$scope.roleOpts = ['client', 'client-client'];
@@ -12,7 +12,7 @@ angular.module('users').controller('UsersModalController', ['$scope', '$statePar
 		$scope.Math = window.Math;
 
 		$scope.cancel = function () {
-			$modalInstance.dismiss('cancel');
+			$uibModalInstance.dismiss('cancel');
 		};
 
 		$scope.createModel = function() {
@@ -37,7 +37,7 @@ angular.module('users').controller('UsersModalController', ['$scope', '$statePar
 				} else {
 					$rootScope.$broadcast('refreshListFilter', 'client-client');
 				}
-				$modalInstance.close();
+				$uibModalInstance.close();
 			}).error(function(response) {
 				$scope.error = response.message;
 			});

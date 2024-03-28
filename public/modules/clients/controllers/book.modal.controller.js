@@ -1,8 +1,8 @@
 'use strict';
 
 // Projects controller
-angular.module('clients').controller('BookModalController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$upload', 'ngAudio', '$http', '$modalInstance', 'data', '$rootScope', 'IS_NOT_MOBILE',
-	function($scope, $stateParams, $location, Authentication, Projects, $upload, ngAudio, $http, $modalInstance, data, $rootScope, IS_NOT_MOBILE ) {
+angular.module('clients').controller('BookModalController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$upload', 'ngAudio', '$http', '$uibModalInstance', 'data', '$rootScope', 'IS_NOT_MOBILE',
+	function($scope, $stateParams, $location, Authentication, Projects, $upload, ngAudio, $http, $uibModalInstance, data, $rootScope, IS_NOT_MOBILE ) {
 
 		$scope.authentication = Authentication;
 
@@ -145,7 +145,7 @@ angular.module('clients').controller('BookModalController', ['$scope', '$statePa
 			if(typeof $scope.audio === 'object'){
 				$scope.audio.stop();
 			}
-			$modalInstance.dismiss('cancel');
+			$uibModalInstance.dismiss('cancel');
 		};
 		
 		$scope.verifyAudioSingle = function(audition){
@@ -415,7 +415,7 @@ angular.module('clients').controller('BookModalController', ['$scope', '$statePa
 			success(function(data, status, headers, config) {
 				$rootScope.$broadcast('refreshProject', $scope.data.project);
 				//console.log('finished');
-				$modalInstance.close();
+				$uibModalInstance.close();
 			}).error(function(data, status, headers, config) {
 				console.log('Problem booking auditions.');
 			});

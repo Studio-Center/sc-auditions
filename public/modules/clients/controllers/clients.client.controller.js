@@ -1,8 +1,8 @@
 'use strict';
 
 // Projects controller
-angular.module('clients').controller('ClientsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$upload', 'ngAudio', 'ngAudioGlobals', '$http', '$modal', '$rootScope', 'Socket', '$cookies', '$window', 'IS_NOT_MOBILE',
-	function($scope, $stateParams, $location, Authentication, Projects, $upload, ngAudio, ngAudioGlobals, $http, $modal, $rootScope, Socket, $cookies, $window, IS_NOT_MOBILE ) {
+angular.module('clients').controller('ClientsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Projects', '$upload', 'ngAudio', 'ngAudioGlobals', '$http', '$uibModal', '$rootScope', 'Socket', '$cookies', '$window', 'IS_NOT_MOBILE',
+	function($scope, $stateParams, $location, Authentication, Projects, $upload, ngAudio, ngAudioGlobals, $http, $uibModal, $rootScope, Socket, $cookies, $window, IS_NOT_MOBILE ) {
 
 	$scope.authentication = Authentication;
 
@@ -967,7 +967,7 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 
     // book clients modal
   	$scope.bookSelectedAuditions = function(){
-  		var modalInstance = $modal.open({
+  		var modalInstance = $uibModal.open({
         animation: true,
         templateUrl: 'modules/clients/views/book-auditon-modal.client.view.html',
         controller: 'BookModalController',
