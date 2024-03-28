@@ -476,7 +476,7 @@ exports.findLimitWithFilter = function(req, res) {
 		limitVal = 100;
 	}
 
-	Talent.find(filterObj).sort({'firstName': 1,'lastName': 1,'locationISDN': 1,'-created': -1}).skip(startVal).limit(limitVal).populate('user', 'displayName').then(function (talents) {
+	Talent.find(filterObj).sort({'firstName': 1,'lastName': 1,'locationISDN': 1,'-created': -1}).skip(startVal).limit(limitVal).then(function (talents) {
 		res.jsonp(talents);
 	}).catch(function (err) {
 		return res.status(400).send({
@@ -488,7 +488,7 @@ exports.findLimitWithFilter = function(req, res) {
 /**
  * List of Talents
  */
-exports.list = function(req, res) { Talent.find().sort({'locationISDN': 1,'lastName': 1,'-created': -1}).populate('user', 'displayName').then(function (talents) {
+exports.list = function(req, res) { Talent.find().sort({'locationISDN': 1,'lastName': 1,'-created': -1}).then(function (talents) {
 		res.jsonp(talents);
 	}).catch(function (err) {
 		return res.status(400).send({
@@ -501,7 +501,7 @@ exports.list = function(req, res) { Talent.find().sort({'locationISDN': 1,'lastN
  * Talent middleware
  */
 exports.talentByID = function(req, res, next, id) { 
-	Talent.findById(id).populate('user', 'displayName').then(function (talent) {
+	Talent.findById(id).then(function (talent) {
 		if (! talent) return next(new Error('Failed to load Talent ' + id));
 		req.talent = talent ;
 		next();

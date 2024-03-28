@@ -164,7 +164,7 @@ exports.jwtauth = function(req, res, next){
 				res.end('Access token has expired', 400);
 			}
 
-			User.findById(decoded.iss).populate('user', 'displayName').then(function (user) {
+			User.findById(decoded.iss).then(function (user) {
 
 				req.login(user, function(err) {
 					if (!err) {					

@@ -32,7 +32,7 @@ angular.module('users').config(['$httpProvider',
 angular.module('users').run(['Menus', 'Authentication',
 	function(Menus, Authentication) {
 		// Set top bar menu items
-		Menus.addMenuItem('topbar', 'Users', 'users', 'dropdown', '/usersedit(/create)?', false, ['admin','producer/auditions director','auditions director','audio intern','production coordinator'], 5);
+		Menus.addMenuItem('topbar', 'Users', 'users', 'dropdown', '/usersedit(/create)?', false, ['admin','producer/auditions director','auditions director','audio intern','production coordinator'], 6);
 		Menus.addSubMenuItem('topbar', 'users', 'Browse', 'usersedit', false, false, ['admin','producer/auditions director','auditions director','audio intern','production coordinator']);
 		Menus.addSubMenuItem('topbar', 'users', 'New', 'usersedit/create', false, false, ['admin']);
 	}

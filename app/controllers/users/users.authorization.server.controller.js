@@ -23,7 +23,7 @@ exports.userByID = function(req, res, next, id) {
 };
 
 exports.userByIDEdit = function(req, res, next, id) { 
-	User.findById(id).populate('user', 'displayName').then(function (user) {
+	User.findById(id).then(function (user) {
 		if (! user) return next(new Error('Failed to load User ' + id));
 		req.useredit = user ;
 		next();

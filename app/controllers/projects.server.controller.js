@@ -333,7 +333,7 @@ var sendTalentEmail = function(req, res, project, talent, override){
 				}
 			}
 
-			Project.findById(project._id).populate('user', 'displayName').then(function (project) {
+			Project.findById(project._id).then(function (project) {
 
 				project = _.extend(project, newProject);
 
@@ -598,7 +598,7 @@ exports.sendTalentScriptUpdateEmail = function(req, res){
 // gather project data
 exports.getproject = function(req, res){
 
-	Project.findById(req.body.id).populate('user', 'displayName').then(function (project) {
+	Project.findById(req.body.id).then(function (project) {
 		res.status(200).jsonp(project);
 	}).catch(function (err) {
 		return res.status(400).json(err);
@@ -786,7 +786,7 @@ exports.updateSingleTalentStatus = function (req, res){
 
 			var newProject = project.toObject();
 
-			Project.findById(project._id).populate('user', 'displayName').then(function (project) {
+			Project.findById(project._id).then(function (project) {
 
 				project = _.extend(project, newProject);
 
@@ -824,7 +824,7 @@ exports.updateTalentStatus = function(req, res){
 		var project = req.body.project;
 
         if (project._id.match(/^[0-9a-fA-F]{24}$/)) {
-            Project.findById(project._id).populate('user', 'displayName').then(function (project) {
+            Project.findById(project._id).then(function (project) {
 
                 project = _.extend(project, req.body.project);
 
@@ -882,7 +882,7 @@ exports.updateTalentNote = function (req, res){
 
 			var newProject = project.toObject();
 
-			Project.findById(project._id).populate('user', 'displayName').then(function (projects) {
+			Project.findById(project._id).then(function (projects) {
 
 				project = _.extend(project, newProject);
 
@@ -949,7 +949,7 @@ exports.updateNoRefresh = function(req, res){
 
                 //project = req.body.project;
 
-                Project.findById(req.body.project._id).populate('user', 'displayName').then(function (project) {
+                Project.findById(req.body.project._id).then(function (project) {
 
                     // if(typeof req.body.project.__v !== 'undefined'){
                     // 	delete req.body.project.__v;
@@ -1312,6 +1312,11 @@ var moveFile = function(tempPath, newPath){
  */
 exports.create = function(req, res) {
 
+	// clear empty project _id
+	if(typeof req.body != 'undefined' && typeof req.body._id != 'undefined'){
+		delete req.body._id;
+	}
+	
 	// method vars
 	var i, j;
 	var project = new Project(req.body);
@@ -1820,11 +1825,11 @@ exports.loadProject = function(req, res){
 	// set vars
 	var projId = req.body.projectId;
 	// load project
-	Project.findById(projId).populate('user', 'displayName').then(function (project) {
+	Project.findById(projId).then(function (project) {
 		// walk through assigned talent
 		async.eachSeries(project.talent, function (curTalent, talentCallback) {
 				// gather updated talent info
-				Talent.findById(curTalent.talentId).populate('user', 'displayName').then(function (talent) {
+				Talent.findById(curTalent.talentId).then(function (talent) {
 					if(talent){
 						curTalent.nameLnmCode = talent.name + ' ' + talent.lastNameCode;
 						curTalent.locationISDN = talent.locationISDN;
@@ -2172,19 +2177,17 @@ exports.deleteById = function(req, res) {
 			log.save();
 
 			project.deleteOne().then(function () {
-				if (err) {
+				Project.find().sort('-created').then(function (projects) {
+					return res.jsonp(projects);
+				}).catch(function (err) {
 					return res.status(400).send({
 						message: errorHandler.getErrorMessage(err)
 					});
-				} else {
-					Project.find().sort('-created').populate('user', 'displayName').then(function (projects) {
-						return res.jsonp(projects);
-					}).catch(function (err) {
-						return res.status(400).send({
-							message: errorHandler.getErrorMessage(err)
-						});
-					});
-				}
+				});
+			}).catch(function (err) {
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
 			});
 		}
 	}).catch(function (err) {
@@ -2200,15 +2203,15 @@ exports.getTalentFilteredProjects = function(req, res){
 	dayAgo.setDate(dayAgo.getDay() - 14);
 
 	var searchCriteria = {
-						'talent': {
-									$elemMatch: {
-										'talentId': req.body.talentId
-									}
-								}
-						};
+		'talent': {
+					$elemMatch: {
+						'talentId': req.body.talentId
+					}
+				}
+	};
 
 	if(req.body.archived === true){
-		Project.find(searchCriteria).sort('-created').populate('project', 'displayName').then(function (projects) {
+		Project.find(searchCriteria).sort('-created').then(function (projects) {
 			return res.jsonp(projects);
 		}).catch(function (err) {
 			return res.status(400).send({
@@ -2216,7 +2219,7 @@ exports.getTalentFilteredProjects = function(req, res){
 			});
 		});
 	} else {
-		Project.find(searchCriteria).where('estimatedCompletionDate').gt(dayAgo).sort('-created').populate('project', 'displayName').then(function (projects) {
+		Project.find(searchCriteria).where('estimatedCompletionDate').gt(dayAgo).sort('-created').then(function (projects) {
 			return res.jsonp(projects);
 		}).catch(function (err) {
 			return res.status(400).send({
@@ -2239,7 +2242,7 @@ var performLoadList = function(req, res, allowedRoles, i, j, limit){
 
 		switch(allowedRoles[j]){
 			case 'user':
-				Project.find({'user._id': curUserId}).sort('-created').populate('user', 'displayName').limit(selLimit).then(function (projects) {
+				Project.find({'user._id': curUserId}).sort('-created').limit(selLimit).then(function (projects) {
 					return res.jsonp(projects);
 				}).catch(function (err) {
 					return res.status(400).send({
@@ -2249,7 +2252,7 @@ var performLoadList = function(req, res, allowedRoles, i, j, limit){
 			break;
 			case 'talent':
 			// talent does not currently have access, added to permit later access
-				Project.find({'talent': { $elemMatch: { 'talentId': curUserId}}}).sort('-created').populate('user', 'displayName').limit(selLimit).then(function (projects) {
+				Project.find({'talent': { $elemMatch: { 'talentId': curUserId}}}).sort('-created').limit(selLimit).then(function (projects) {
 					return res.jsonp(projects);
 				}).catch(function (err) {
 					return res.status(400).send({
@@ -2258,7 +2261,7 @@ var performLoadList = function(req, res, allowedRoles, i, j, limit){
 				});
 			break;
 			case 'client':
-				Project.find({'client': { $elemMatch: { 'userId': curUserId}}}).sort('-created').populate('user', 'displayName').limit(selLimit).then(function (projects) {
+				Project.find({'client': { $elemMatch: { 'userId': curUserId}}}).sort('-created').limit(selLimit).then(function (projects) {
 					return res.jsonp(projects);
 				}).catch(function (err) {
 					return res.status(400).send({
@@ -2268,7 +2271,7 @@ var performLoadList = function(req, res, allowedRoles, i, j, limit){
 			break;
 			case 'client-client':
 				//console.log(curUserId);
-				Project.find({'clientClient': { $elemMatch: { 'userId': curUserId}}}).sort('-created').populate('user', 'displayName').limit(selLimit).then(function (projects) {
+				Project.find({'clientClient': { $elemMatch: { 'userId': curUserId}}}).sort('-created').limit(selLimit).then(function (projects) {
 					return res.jsonp(projects);
 				}).catch(function (err) {
 					return res.status(400).send({
@@ -2338,7 +2341,7 @@ exports.findLimit = function(req, res) {
 
 	if (_.intersection(req.user.roles, allowedRoles).length) {
 
-		Project.find().sort('-created').populate('user', 'displayName').limit(limit).then(function (projects) {
+		Project.find().sort('-created').limit(limit).then(function (projects) {
 			return res.jsonp(projects);
 		}).catch(function (err) {
 			return res.status(400).send({
@@ -2396,7 +2399,7 @@ exports.findLimitWithFilter = function(req, res) {
 
 	if (_.intersection(req.user.roles, allowedRoles).length) {
 
-		Project.find(filterObj).sort(sortOrder).skip(Number(startVal)).limit(Number(limitVal)).populate('user', 'displayName')
+		Project.find(filterObj).sort(sortOrder).skip(Number(startVal)).limit(Number(limitVal))
 		.then(function (projects) {
 			return res.jsonp(projects);
 		}).catch(function (err) {
@@ -2430,7 +2433,7 @@ exports.list = function(req, res) {
 
 	if (_.intersection(req.user.roles, allowedRoles).length) {
 
-		Project.find().sort('-created').populate('user', 'displayName')
+		Project.find().sort('-created')
 		.then(function (projects) {
 			return res.jsonp(projects);
 		}).catch(function (err) {
@@ -2457,7 +2460,7 @@ exports.list = function(req, res) {
  * Project middleware
  */
 exports.projectByID = function(req, res, next, id) { 
-	Project.findById(id).populate('user', 'displayName').then(function (project) {
+	Project.findById(id).then(function (project) {
 		if (!project) return next(new Error('Failed to load Project '));
 		req.project = project;
 		next();
@@ -2576,7 +2579,7 @@ exports.uploadScript = function(req, res, next){
 
 	} else {
 
-		Project.findById(projectId).populate('user', 'displayName').then(function (project) {
+		Project.findById(projectId).then(function (project) {
 
 			mv(tempPath, newPath, function(err) {
 
@@ -2658,17 +2661,13 @@ exports.uploadReferenceFile = function(req, res, next){
     //console.log(file.name);
     newPath += sanitize(file.name);
 
-		Project.findById(projectId).populate('user', 'displayName').then(function (project) {
+		Project.findById(projectId).then(function (project) {
 
 	    mv(tempPath, newPath, function(err) {
 	        //console.log(err);
 	        if (err){
 	            return res.status(500).end();
 	        }else{
-	    //     	Project.findById(project._id).populate('user', 'displayName').exec(function(err, project) {
-					// if (err) return next(err);
-					// if (! project) return next(new Error('Failed to load Project '));
-					// req.project = project ;
 
 					req.files.file.name = sanitize(req.files.file.name);
 					
@@ -2961,7 +2960,7 @@ exports.uploadAudition = function(req, res, next){
                 });
             },
             function(talent, done) {
-                Project.findById(projectId).populate('user', 'displayName').then(function (project) {
+                Project.findById(projectId).then(function (project) {
                     done(null, talent, project);
                 });
             },
@@ -3380,7 +3379,7 @@ exports.bookAuditions = function(req, res, next){
 
 			newProject.status = 'Booked';
 
-			Project.findById(project._id).populate('user', 'displayName').then(function (project) {
+			Project.findById(project._id).then(function (project) {
 
 				project = _.extend(project, newProject);
 
@@ -3541,7 +3540,7 @@ exports.backupProjectsById = function(req, res, next){
 
 	async.eachSeries(req.body.projectList, function (projectId, callback) {
 
-		Project.findById(projectId).populate('user', 'displayName').then(function (project) {
+		Project.findById(projectId).then(function (project) {
 			if (!project) return next(new Error('Failed to load Project '));
 			req.project = project ;
 
@@ -3795,7 +3794,7 @@ exports.uploadBackup = function(req, res, next){
 							rimraf.sync(backupPath);
 
 							// reload project list
-							Project.find().sort('-created').populate('user', 'displayName').then(function (projects) {
+							Project.find().sort('-created').then(function (projects) {
 								return res.jsonp(projects);
 							}).catch(function (err) {
 								return res.status(400).send({

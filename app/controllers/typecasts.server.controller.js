@@ -79,7 +79,7 @@ exports.delete = function(req, res) {
  * List of Typecasts
  */
 exports.list = function(req, res) { 
-	Typecast.find().sort('-created').populate('user', 'displayName').then(function (typecasts) {
+	Typecast.find().sort('-created').then(function (typecasts) {
 		res.jsonp(typecasts);
 	}).catch(function (err) {
 		return res.status(400).send({
@@ -92,7 +92,7 @@ exports.list = function(req, res) {
  * Typecast middleware
  */
 exports.typecastByID = function(req, res, next, id) { 
-	Typecast.findById(id).populate('user', 'displayName').then(function (typecast) {
+	Typecast.findById(id).then(function (typecast) {
 		if (! typecast) return next(new Error('Failed to load Typecast ' + id));
 		req.typecast = typecast ;
 		next();

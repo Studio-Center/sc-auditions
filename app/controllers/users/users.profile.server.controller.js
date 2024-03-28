@@ -84,7 +84,7 @@ exports.updateAdmin = function(req, res) {
 	var adminEmail = req.user.email;
 
 	// load edited user data
-	User.findById(req.body._id).populate('user', 'displayName').then(function (user) {
+	User.findById(req.body._id).then(function (user) {
 		if (user) {
 			// Merge existing user
 			user = _.extend(user, req.body);
@@ -132,7 +132,7 @@ exports.updateAdmin = function(req, res) {
 				});
 
 				// reload admin user data
-				User.findById(adminUserId).populate('user', 'displayName').then(function (user) {
+				User.findById(adminUserId).then(function (user) {
 					req.login(user, function(err) {
 						if (err) {
 							res.status(400).send(err);
@@ -159,7 +159,7 @@ exports.me = function(req, res) {
 // 2/20/2015
 // added for admin user purposes
 exports.list = function(req, res) { 
-	User.find().sort('-created').populate('user', 'displayName').then(function (users) {
+	User.find().sort('-created').then(function (users) {
 		res.jsonp(users);
 	}).catch(function (err) {
 		return res.status(400).send({
@@ -168,7 +168,7 @@ exports.list = function(req, res) {
 	});
 };
 exports.getListLevel = function(req, res, next, id) {
-	User.find({'roles':{'$regex': id}}).sort('-created').populate('user', 'displayName').then(function (users) {
+	User.find({'roles':{'$regex': id}}).sort('-created').then(function (users) {
 		res.jsonp(users);
 	}).catch(function (err) {
 		return res.status(400).send({
@@ -280,7 +280,7 @@ exports.create = function(req, res) {
 				res.status(400).send(err);
 			} else {
 				// reload admin user data
-				User.findById(adminUserId).populate('user', 'displayName').then(function () {
+				User.findById(adminUserId).then(function () {
 					req.login(user, function(err) {
 						if (err) {
 							res.status(400).send(err);
@@ -357,7 +357,7 @@ exports.findLimitWithFilter = function(req, res) {
 		limitVal = 100;
 	}
 
-	User.find(filterObj).sort({'firstName': 1,'lastName': 1,'-created': -1}).skip(startVal).limit(limitVal).populate('user', 'displayName').then(function (users) {
+	User.find(filterObj).sort({'firstName': 1,'lastName': 1,'-created': -1}).skip(startVal).limit(limitVal).then(function (users) {
 		res.jsonp(users);
 	}).catch(function (err) {
 		return res.status(400).send({

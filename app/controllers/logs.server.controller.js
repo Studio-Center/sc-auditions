@@ -105,7 +105,7 @@ exports.list = function(req, res) {
 		limitVal = 100;
 	}
 
-	Log.find().sort('-created').skip(startVal).limit(limitVal).populate('user', 'displayName').then(function (logs) {
+	Log.find().sort('-created').skip(startVal).limit(limitVal).then(function (logs) {
 		res.jsonp(logs);
 	}).catch(function (err) {
 		return res.status(400).send({
@@ -132,7 +132,7 @@ exports.listFilter = function(req, res){
 
 	var filter = req.body.filter;
 
-	Log.find(filter).sort('-created').skip(startVal).limit(limitVal).populate('user', 'displayName').then(function (logs) {
+	Log.find(filter).sort('-created').skip(startVal).limit(limitVal).then(function (logs) {
 		res.jsonp(logs);
 	}).catch(function (err) {
 		return res.status(400).send({
@@ -169,7 +169,7 @@ exports.listTypeFilter = function(req, res){
 		filterObj.description = new RegExp(searchTxt, 'i');
 	}
 
-	Log.find(filterObj).sort('-created').skip(startVal).limit(limitVal).populate('user', 'displayName').then(function (logs) {
+	Log.find(filterObj).sort('-created').skip(startVal).limit(limitVal).then(function (logs) {
 		res.jsonp(logs);
 	}).catch(function (err) {
 		return res.status(400).send({
@@ -182,7 +182,7 @@ exports.listTypeFilter = function(req, res){
 /**
  * Log middleware
  */
-exports.logByID = function(req, res, next, id) { Log.findById(id).populate('user', 'displayName').then(function (log) {
+exports.logByID = function(req, res, next, id) { Log.findById(id).then(function (log) {
 		if (! log) return next(new Error('Failed to load Log ' + id));
 		req.log = log ;
 		next();
