@@ -1,6 +1,6 @@
 
-	<p>{% autoescape false %}{{email.header}}{% endautoescape %}</p>
+	<p>{{email.header|safe}}</p>
 	<br>
-	<p>{% autoescape false %}{{email.scripts}}{% endautoescape %}</p>
-	<p>{% autoescape false %}{{email.referenceFiles}}{% endautoescape %}</p>
-	<p>{% autoescape false %}{{email.footer}}{% endautoescape %}</p>
+	<p>{{email.scripts|safe}}</p>
+	<p>{{email.referenceFiles|safe}}</p>
+	<p>{{email.footer|safe}}</p>

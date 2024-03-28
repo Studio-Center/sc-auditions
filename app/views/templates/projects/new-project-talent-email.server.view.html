@@ -1,11 +1,11 @@
 
 	<p>We have a {{requestedTxt}}audition for you that is due {{dueDate}} EST</p>
 
-	{% autoescape false %}{{part}}{% endautoescape %}
+	{{part|safe}}
 
-	<p>{% autoescape false %}{{email.scripts}}{% endautoescape %}</p>
+	<p>{{email.scripts|safe}}</p>
 
-	<p>{% autoescape false %}{{email.referenceFiles}}{% endautoescape %}</p>
+	<p>{{email.referenceFiles|safe}}</p>
 
 	<p>Please record the Linked script(s) and e-mail the mp3(s) to <a href="mailto:auds@studiocenter.com">auds@studiocenter.com</a> or call the Talent Department to 
 		schedule an audition in the Studio Center location nearest to you. (call 866-515-2111)</p>
@@ -28,4 +28,4 @@
 	<p>HomeDepot-Anncr-DaveSmith<br>
 	HomeDepot-Salesman-DaveSmith</p>
 
-	{% autoescape false %}{{emailSignature}}{% endautoescape %}
+	{{emailSignature|safe}}

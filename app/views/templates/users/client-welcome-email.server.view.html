@@ -24,4 +24,4 @@
 
 <p>Thank you for your business! </p>
 
-{% autoescape false %}{{emailSignature}}{% endautoescape %}
+{{emailSignature|safe}}

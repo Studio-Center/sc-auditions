@@ -355,16 +355,13 @@ exports.delete = function(req, res) {
 			log = new Log(log);
 			log.save();
 
-			talent.remove(function(err) {
-				if (err) {
-					done(err);
-				} else {
-					var socketio = req.app.get('socketio');
-					socketio.sockets.emit('talentsListUpdate');
+			talent.deleteOne().then(function(talent) {
+				var socketio = req.app.get('socketio');
+				socketio.sockets.emit('talentsListUpdate');
 
-					res.jsonp(talent);
-					done(err);
-				}
+				res.jsonp(talent);
+			}).catch(function (err) {
+				done(err);
 			});
 		}
 	], function(err) {

@@ -39,14 +39,12 @@ exports.update = function(req, res) {
 
 	log = _.extend(log , req.body);
 
-	log.save().then(function () {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(log);
-		}
+	log.save().then(function (log) {
+		res.jsonp(log);
+	}).catch(function (err) {
+		return res.status(400).send({
+			message: errorHandler.getErrorMessage(err)
+		});
 	});
 };
 
@@ -56,7 +54,7 @@ exports.update = function(req, res) {
 exports.delete = function(req, res) {
 	var log = req.log ;
 
-	log.remove(function(err) {
+	log.deleteOne().then(function(log) {
 		res.jsonp(log);
 	}).catch(function (err) {
 		return res.status(400).send({

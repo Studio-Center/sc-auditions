@@ -14,4 +14,4 @@
 
 	<p>Thank you for your business, please let us know if you need anything else!</p>
 
-	{% autoescape false %}{{emailSignature}}{% endautoescape %}
+	{{emailSignature|safe}}

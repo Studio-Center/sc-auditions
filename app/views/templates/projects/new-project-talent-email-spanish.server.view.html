@@ -1,10 +1,10 @@
 <p>Tenemos {{requestedTxt}}una audición para usted que necesita entregar a mas tardar{{dueDate}} EST</p>
 
-{% autoescape false %}{{part}}{% endautoescape %}
+{{part|safe}}
 
-<p>{% autoescape false %}{{email.scripts}}{% endautoescape %}</p>
+<p>{{email.scripts|safe}}</p>
 
-<p>{% autoescape false %}{{email.referenceFiles}}{% endautoescape %}</p>
+<p>{{email.referenceFiles|safe}}</p>
 <p>Graba los guiones y envíalos como MP3 por correo electrónico a auds@studiocenter.com o llama al Departamento de
 	Talento para programar una audición en las oficinas de Studio Center más cercanas a ti. (Llamar al 866-515-2111)
 	Es extremadamente importante que nombres tus archivos MP3 con cuidado. Por favor, asegúrate de que cualquier
@@ -27,4 +27,4 @@
 <p>HomeDepot-Anncr-MateoGarcia<br>
 	HomeDepot-Man1-MateoGarcia</p>
 
-{% autoescape false %}{{emailSignature}}{% endautoescape%}
+{{emailSignature|safe}}

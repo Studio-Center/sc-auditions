@@ -2126,7 +2126,7 @@ exports.delete = function(req, res) {
 	log = new Log(log);
 	log.save();
 
-	project.remove().then(function () {
+	project.deleteOne().then(function () {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
@@ -2171,7 +2171,7 @@ exports.deleteById = function(req, res) {
 			log = new Log(log);
 			log.save();
 
-			project.remove().then(function () {
+			project.deleteOne().then(function () {
 				if (err) {
 					return res.status(400).send({
 						message: errorHandler.getErrorMessage(err)
@@ -3716,7 +3716,7 @@ exports.uploadBackup = function(req, res, next){
 								rimraf.sync(scriptsDir);
 								rimraf.sync(referenceFilesDir);
 
-								project.remove().then(function () {
+								project.deleteOne().then(function () {
 
 									project.save().then(function () {
 

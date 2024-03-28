@@ -1,10 +1,10 @@
 
 	<p>NEW TALENT ADDITION TO VO ROSTER:</p>
 
-	{% autoescape false %}{{talentData}}{% endautoescape %}
+	{{talentData|safe}}
 
 	<p>**********TALENT ACTIONS NEEDED********** </p>
 
 	<p>Please add talent to Office Tracker</p>
 
-	{% autoescape false %}{{emailSignature}}{% endautoescape %}
+	{{emailSignature|safe}}

@@ -1,10 +1,10 @@
 
 	<p>TALENT TERMINATED FROM VO ROSTER:</p>
 
-	{% autoescape false %}{{talent.name}} {{talent.lastName}}{% endautoescape %}
+	{{talent.name|safe}} {{talent.lastName|safe}}
 
 	<p>**********TALENT ACTIONS NEEDED********** </p>
 
 	<p>Please remove Talent from Office Tracker</p>
 
-	{% autoescape false %}{{emailSignature}}{% endautoescape %}
+	{{emailSignature|safe}}

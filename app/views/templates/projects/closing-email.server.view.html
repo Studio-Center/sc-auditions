@@ -11,4 +11,4 @@ happy to arrange a free live audition with your top candidates.</p>
 
 	<p>Thank you for your business!</p>
 
-	{% autoescape false %}{{emailSignature}}{% endautoescape %}
+	{{emailSignature|safe}}

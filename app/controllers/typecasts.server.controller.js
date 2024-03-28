@@ -63,7 +63,7 @@ exports.update = function(req, res) {
 exports.delete = function(req, res) {
 	var typecast = req.typecast ;
 
-	typecast.remove().then(function () {
+	typecast.deleteOne().then(function (typecast) {
 		var socketio = req.app.get('socketio');
 		socketio.sockets.emit('typecastsListUpdate'); 
 		

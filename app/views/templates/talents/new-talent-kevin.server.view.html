@@ -1,10 +1,10 @@
 
 	<p>NEW TALENT ADDITION TO VO ROSTER:</p>
 	
-	<p>{{talent.name}} {{talent.lastName}}</p>
+	<p>{{talent.name|safe}} {{talent.lastName|safe}}</p>
 
 	<p>**********TALENT ACTIONS NEEDED********** </p>
 
 	<p>Please have Dru record name slate</p>
 
-	{% autoescape false %}{{emailSignature}}{% endautoescape %}
+	{{emailSignature|safe}}

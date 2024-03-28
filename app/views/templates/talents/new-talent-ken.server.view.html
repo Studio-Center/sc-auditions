@@ -1,10 +1,10 @@
 
 	<p>NEW TALENT ADDITION TO VO ROSTER:</p>
 
-	{% autoescape false %}{{talentData}}{% endautoescape %}
+	{{talentData|safe}}
 
 	<p>**********TALENT ACTIONS NEEDED********** </p>
 
 	<p>Please add to the (New Talent) Page  -----Substitute “New Talent” for “Kids” if The Talent is a Kid or “Foreign Language” if they are a Foreign Language Talent</p>
 
-	{% autoescape false %}{{emailSignature}}{% endautoescape %}
+	{{emailSignature|safe}}

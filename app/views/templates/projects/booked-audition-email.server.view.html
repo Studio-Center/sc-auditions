@@ -5,7 +5,7 @@
 
 	<p>Here are links to your selections;</p>
 
-	{% autoescape false %}{{bookedText}}{% endautoescape %}
+	{{bookedText|safe}}
 
 	<p>You can review the project by logging in to our dedicated auditions website at <a href="http://www.studiocenterauditions.com/#!/signin'">http://www.studiocenterauditions.com/#!/signin</a>.</p>
 
@@ -13,4 +13,4 @@
 
 	<p>Thank you so much for working with us!</p>
 
-	{% autoescape false %}{{emailSignature}}{% endautoescape %}
+	{{emailSignature|safe}}

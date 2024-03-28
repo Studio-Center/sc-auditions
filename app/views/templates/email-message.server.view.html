@@ -1,2 +1,2 @@
 
-	<p>{% autoescape false %}{{email.message}}{% endautoescape %}</p>
+	<p>{{email.message|safe}}</p>

@@ -190,14 +190,12 @@ exports.readAdmin = function(req, res) {
 exports.delete = function(req, res) {
 	var user = req.useredit ;
 
-	user.remove(function(err) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(user);
-		}
+	user.deleteOne().then(function(err) {
+		res.jsonp(user);
+	}).catch(function (err) {
+		return res.status(400).send({
+			message: errorHandler.getErrorMessage(err)
+		});
 	});
 };
 

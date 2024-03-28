@@ -1,4 +1,4 @@
 
-	<p>{% autoescape false %}{{email.body}}{% endautoescape %}</p>
+	<p>{{email.body}}</p>
 
-	{% autoescape false %}{{emailSignature}}{% endautoescape %}
+	{{emailSignature|safe}}

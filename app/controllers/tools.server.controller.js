@@ -34,7 +34,7 @@ exports.sendTalentEmails = function(req, res){
 	// email all talents if email all is set to true
 	if(email.all === true){
 
-		Talent.find({'type':'Email'}).sort({'locationISDN': 1,'lastName': 1,'-created': -1}).populate('user', 'displayName').then(function (talents) {
+		Talent.find({'type':'Email'}).sort({'locationISDN': 1,'lastName': 1,'-created': -1}).then(function (talents) {
 
 				async.waterfall([
 					function(done) {
@@ -84,7 +84,7 @@ exports.sendTalentEmails = function(req, res){
 													html: talentEmailHTML
 												};
 
-								transporter.sendMail(mailOptions, function(){
+								transporter.sendMail(mailOptions, function(err){
 
 									// write change to log
 									var log = {
@@ -133,7 +133,7 @@ exports.sendTalentEmails = function(req, res){
 	// email only selected clients
 	} else {
 
-		Talent.where('_id').in(emailClients).sort({'locationISDN': 1,'lastName': 1,'-created': -1}).populate('user', 'displayName').then(function (talents) {
+		Talent.where('_id').in(emailClients).sort({'locationISDN': 1,'lastName': 1,'-created': -1}).then(function (talents) {
 
 				async.waterfall([
 					function(done) {
@@ -182,7 +182,7 @@ exports.sendTalentEmails = function(req, res){
 														html: talentEmailHTML
 													};
 
-									transporter.sendMail(mailOptions, function(){
+									transporter.sendMail(mailOptions, function(err){
 										callback(err);
 									});
 
@@ -223,7 +223,7 @@ var gatherTalentsSearch = function(req, res, filter){
 						'status': { $nin: ['Closed - Pending Client Decision','Canceled','Dead','Complete','Booked','ReAuditioned']}
 						};
 
-	Project.find(searchCriteria).sort('-estimatedCompletionDate').populate('project', 'displayName').then(function (projects) {
+	Project.find(searchCriteria).sort('-estimatedCompletionDate').then(function (projects) {
 
 			// walk through found projects
 			async.eachSeries(projects, function (project, callback) {
@@ -355,7 +355,7 @@ exports.mainClientsCheck = function(req, res){
 						};
 
 	// gather projects ending in the next hour
-	Project.find(searchCriteria).sort('-estimatedCompletionDate').populate('project', 'displayName').then(function (projects) {
+	Project.find(searchCriteria).sort('-estimatedCompletionDate').then(function (projects) {
         
         // walk through all associated projects
 		async.eachSeries(projects, function (project, callback) {
@@ -525,7 +525,7 @@ exports.sendPreCloseSummary = function(req, res){
 						};
 
 	// gather projects ending in the next hour
-	Project.find(searchCriteria).sort('-estimatedCompletionDate').populate('project', 'displayName').then(function (projects) {
+	Project.find(searchCriteria).sort('-estimatedCompletionDate').then(function (projects) {
 
 		// walk through all associated projects
 		async.eachSeries(projects, function (project, callback) {
@@ -759,7 +759,7 @@ exports.sendPreCloseSummary = function(req, res){
 				// update project to prevent resending of email
 				function(done){
 
-					Project.findById(project._id).populate('user', 'displayName').then(function (project) {
+					Project.findById(project._id).then(function (project) {
 						req.project = project ;
 
 						// update preclose status
@@ -889,7 +889,7 @@ exports.uploadTalentCSV = function(req, res){
 
 			// check for existing talent before saving new one
 			if(failed === 0){
-				Talent.findOne({'name': newTalent.name, lastName: newTalent.lastName}).populate('user', 'displayName').then(function (talent) {
+				Talent.findOne({'name': newTalent.name, lastName: newTalent.lastName}).then(function (talent) {
 
 					if(talent !== null){
 						++updatedTalents;

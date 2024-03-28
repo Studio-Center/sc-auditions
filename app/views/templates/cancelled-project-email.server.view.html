@@ -7,4 +7,4 @@
 
 	<p>Thank you!</p>
 
-	{% autoescape false %}{{emailSignature}}{% endautoescape %}
+	{{emailSignature|safe}}

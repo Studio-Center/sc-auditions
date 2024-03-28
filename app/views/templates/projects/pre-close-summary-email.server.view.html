@@ -1,12 +1,12 @@
 
 	<p><a href="http://studiocenterauditions.com/#!/projects/{{project.id}}">View {{project.title}} project page.</a></p>
 	
-	{% autoescape false %}{{talentPosted}}{% endautoescape %}
+	{{talentPosted|safe}}
 
-	{% autoescape false %}{{talentNotCalled}}{% endautoescape %}
+	{{talentNotCalled|safe}}
 
-	{% autoescape false %}{{talentNotPosted}}{% endautoescape %}
+	{{talentNotPosted|safe}}
 
-	{% autoescape false %}{{talentOut}}{% endautoescape %}
+	{{talentOut|safe}}
 
-	{% autoescape false %}{{emailSignature}}{% endautoescape %}
+	{{emailSignature|safe}}

@@ -38,7 +38,7 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 		// filter vars
 		$scope.predicate = '';
 		$scope.reverse = '';
-		$scope.searchText = {};
+		$scope.searchText = '';
 
 		// spreadsheet processing
 		$scope.google = {
