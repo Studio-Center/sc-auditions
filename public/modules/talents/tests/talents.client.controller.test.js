@@ -94,12 +94,12 @@
 		it('$scope.create() with valid form data should send a POST request with the form input values and then locate to new object URL', inject(function(Talents) {
 			// Create a sample Talent object
 			var sampleTalentPostData = new Talents({
-				"name":"New Talent",
-				"type":"Email",
-				"unionStatus":[],
-				"typeCasts":[],
-				"unionJoined":[],
-				"prefLanguage":"English"
+				'name':'New Talent',
+				'type':'Email',
+				'unionStatus':[],
+				'typeCasts':[],
+				'unionJoined':[],
+				'prefLanguage':'English'
 			});
 
 			// Create a sample Talent response

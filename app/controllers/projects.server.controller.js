@@ -1127,7 +1127,7 @@ exports.sendClientEmail = function(req, res){
 										html: clientEmailHTML
 									};
 
-					transporter.sendMail(mailOptions, function(){
+					transporter.sendMail(mailOptions, function(err){
 						// write change to log
 						var log = {
 							type: 'project',
