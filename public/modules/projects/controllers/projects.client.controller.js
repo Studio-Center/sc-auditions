@@ -1478,7 +1478,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 						};
 
 			project.discussion.push(item);
-			$scope.updateNoRefresh();
+			$scope.update();
 
 		};
 
@@ -1521,7 +1521,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				project.discussion.push(item);
 
 				// update project with new status
-				$scope.updateNoRefresh();
+				$scope.update();
 
 			}
 

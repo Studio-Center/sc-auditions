@@ -14,7 +14,8 @@ global.appRoot = path.resolve(__dirname);
 // multithreading
 const cluster = require('cluster'),
 	sio = require('socket.io'),
-	numCPUs = require('os').cpus().length;
+	numCPUs = require('os').cpus().length,
+	sioNum = 0;
 
 /**
  * Main application entry file.
@@ -30,13 +31,11 @@ if (cluster.isMaster) {
   cluster.on('exit', function(worker, code, signal) {
    console.log('worker ' + worker.process.pid + ' died');
   });
+
+  cluster.on('fork', function (worker) {
+  });
+
 } else {
-  // Workers can share any TCP connection
-  // In this case its a HTTP server
-  // http.createServer(function(req, res) {
-  //   res.writeHead(200);
-  //   res.end("hello world\n");
-  // }).listen(8000);
 
 	// Bootstrap db connection
 	mongoose.connect(config.db);
@@ -56,8 +55,10 @@ if (cluster.isMaster) {
 	// Start the app by listening on <port>
 	var server = app.get('server').listen(config.port);
 
-	var io = sio(server, {reconnect: true, 'transports': ['echo-protocol','websocket']});
-	app.set('socketio', io);
+	if(cluster.worker.id == 1){
+		var io = sio(server, {reconnect: true, 'transports': ['echo-protocol','websocket']});
+		app.set('socketio', io);
+	}
 	app.set('server', server);
 
 	// Listen to messages sent from the master. Ignore everything else.
