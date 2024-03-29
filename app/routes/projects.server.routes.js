@@ -11,6 +11,11 @@ module.exports = function(app) {
 		.get(users.requiresLogin, projects.list)
 		.post(users.requiresLogin, projects.create);
 
+	app.route('/projects/:projectId')
+		.get(users.jwtauth, projects.read)
+		.put(users.jwtauth, users.requiresLogin, projects.update)
+		.delete(users.requiresLogin, projects.hasAuthorization, projects.delete);
+
 	// load projects using a set collection count limit
 	app.route('/projects/loadProject')
 		.post(users.requiresLogin, projects.loadProject);
@@ -46,11 +51,6 @@ module.exports = function(app) {
 	// list projects for clients
 	app.route('/projects-client')
 		.get(users.jwtauth, users.requiresLogin, projects.list);
-
-	app.route('/projects/:projectId')
-		.get(users.jwtauth, projects.read)
-		.put(users.jwtauth, users.requiresLogin, projects.update)
-		.delete(users.requiresLogin, projects.hasAuthorization, projects.delete);
 
 	// custom delete method for delete tool
 	app.route('/projects/getproject')

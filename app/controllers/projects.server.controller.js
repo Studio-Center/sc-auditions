@@ -1307,15 +1307,18 @@ var moveFile = function(tempPath, newPath){
  * Create a Project
  */
 exports.create = function(req, res) {
-
-	// clear empty project _id
-	if(typeof req.body != 'undefined' && typeof req.body._id != 'undefined'){
-		delete req.body._id;
-	}
 	
+	// remove project id definition if defined
+	var oldID = '';
+	if(typeof req.body.project != 'undefined'){
+		oldID = req.body.project._id;
+		delete req.body.project._id;
+	}
 	// method vars
 	var i, j;
-	var project = new Project(req.body);
+	var project = new Project(req.body.project),
+		copiedScripts = req.body.copiedScripts,
+		copiedReferenceFiles = req.body.copiedReferenceFiles;
 	project.user = req.user;
 
 	var appDir = '';
@@ -1327,375 +1330,398 @@ exports.create = function(req, res) {
 
 	if (_.intersection(req.user.roles, allowedRoles).length) {
 
-		// perform before save routines
-		if(req.body.notifyClient === true){
-			// create new project note stating client notified
-			var discussionTxt = 'Client Notified of Project Start by ' + req.user.displayName;
-			var item = {date: moment().tz('America/New_York').format(), userid: '', username: 'system', item: discussionTxt, deleted: false};
+		// save final project
+		project.save().then(function (project) {
 
-			project.discussion.push(item);
-		}
+			// perform before save routines
+			if(req.body.notifyClient === true){
+				// create new project note stating client notified
+				var discussionTxt = 'Client Notified of Project Start by ' + req.user.displayName;
+				var item = {date: moment().tz('America/New_York').format(), userid: '', username: 'system', item: discussionTxt, deleted: false};
 
-		// move new saved files from temp to project id based directory
-		if(typeof project.scripts !== 'undefined'){
-			for(i = 0; i < project.scripts.length; ++i){
-				if(typeof project.scripts[i] !== 'undefined'){
-					appDir = global.appRoot;
-				    tempPath = appDir + '/public/res/scripts/temp/' + project.scripts[i].file.name;
-				    relativePath =  'res/scripts/' + project._id + '/';
-				    newPath = appDir + '/public/' + relativePath;
-
-				    // create project directory if not found
-				    if (!fs.existsSync(newPath)) {
-				    	fs.mkdirSync(newPath);
-				    }
-
-				    // add file path
-				    newPath += project.scripts[i].file.name;
-
-				    moveFile(tempPath, newPath);
-				}
+				project.discussion.push(item);
 			}
-		}
-		if(typeof project.referenceFiles !== 'undefined'){
-			for(j = 0; j < project.referenceFiles.length; ++j){
-				if(typeof project.referenceFiles[j] !== 'undefined'){
-					appDir = global.appRoot;
-			    tempPath = appDir + '/public/res/referenceFiles/temp/' + project.referenceFiles[j].file.name;
-			    relativePath =  'res/referenceFiles/' + project._id + '/';
-			    newPath = appDir + '/public/' + relativePath;
 
-			    // create project directory if not found
-			    if (!fs.existsSync(newPath)) {
-			    	fs.mkdirSync(newPath);
-			    }
-
-			    // add file path
-			    newPath += project.referenceFiles[j].file.name;
-
-			    moveFile(tempPath, newPath);
-				}
-			}
-		}
-
-		// move copied ref and script files for re-auditioned projects
-		if(req.body.status === 'ReAuditioned'){
-			if(typeof req.body.copiedScripts !== 'undefined'){
-				for(i = 0; i < req.body.copiedScripts.length; ++i){
-					if(typeof req.body.copiedScripts[i] !== 'undefined'){
+			// move new saved files from temp to project id based directory
+			if(typeof project.scripts !== 'undefined'){
+				for(i = 0; i < project.scripts.length; ++i){
+					if(typeof project.scripts[i] !== 'undefined'){
 						appDir = global.appRoot;
-				    tempPath = appDir + '/public/res/scripts/' + req.body.id + '/' + req.body.copiedScripts[i].file.name;
-				    relativePath =  'res/scripts/' + project._id + '/';
-				    newPath = appDir + '/public/' + relativePath;
+						tempPath = appDir + '/public/res/scripts/temp/' + project.scripts[i].file.name;
+						relativePath =  'res/scripts/' + project._id + '/';
+						newPath = appDir + '/public/' + relativePath;
 
-				    // create project directory if not found
-				    if (!fs.existsSync(newPath)) {
-				    	fs.mkdirSync(newPath);
-				    }
+						// create project directory if not found
+						if (!fs.existsSync(newPath)) {
+							fs.mkdirSync(newPath);
+						}
 
-				    // add file path
-				    newPath += req.body.copiedScripts[i].file.name;
+						// add file path
+						newPath += sanitize(project.scripts[i].file.name);
 
-				    moveFile(tempPath, newPath);
-
-				    // add script file to project ref list
-				    project.scripts.push(req.body.copiedScripts[i]);
+						moveFile(tempPath, newPath);
 					}
 				}
 			}
-			if(typeof req.body.copiedReferenceFiles !== 'undefined'){
-				for(j = 0; j < req.body.copiedReferenceFiles.length; ++j){
-					if(typeof req.body.copiedReferenceFiles[j] !== 'undefined'){
+			if(typeof project.referenceFiles !== 'undefined'){
+				for(j = 0; j < project.referenceFiles.length; ++j){
+					if(typeof project.referenceFiles[j] !== 'undefined'){
 						appDir = global.appRoot;
-				    tempPath = appDir + '/public/res/referenceFiles/' + req.body.id + '/' + req.body.copiedReferenceFiles[j].file.name;
-				    relativePath =  'res/referenceFiles/' + project._id + '/';
-				    newPath = appDir + '/public/' + relativePath;
+						tempPath = appDir + '/public/res/referenceFiles/temp/' + project.referenceFiles[j].file.name;
+						relativePath =  'res/referenceFiles/' + project._id + '/';
+						newPath = appDir + '/public/' + relativePath;
 
-				    // create project directory if not found
-				    if (!fs.existsSync(newPath)) {
-				    	fs.mkdirSync(newPath);
-				    }
+						// create project directory if not found
+						if (!fs.existsSync(newPath)) {
+							fs.mkdirSync(newPath);
+						}
 
-				    // add file path
-				    newPath += req.body.copiedReferenceFiles[j].file.name;
+						// add file path
+						newPath += sanitize(project.referenceFiles[j].file.name);
 
-				    moveFile(tempPath, newPath);
-
-				    // add ref file to project ref list
-				    project.referenceFiles.push(req.body.copiedReferenceFiles[j]);
+						moveFile(tempPath, newPath);
 					}
 				}
 			}
 
-			// update old project status
-			Project.findById(req.body.id).exec(function(err, oldProject) {
+			// move copied ref and script files for re-auditioned projects
+			if(project.status[0] === 'ReAuditioned'){
+				if(typeof copiedScripts !== 'undefined'){
+					for(i = 0; i < copiedScripts.length; ++i){
+						if(typeof copiedScripts[i] !== 'undefined'){
+							appDir = global.appRoot;
+							tempPath = appDir + '/public/res/scripts/' + oldID + '/' + copiedScripts[i].file.name;
+							relativePath =  'res/scripts/' + project._id + '/';
+							newPath = appDir + '/public/' + relativePath;
 
-				oldProject.status = 'ReAuditioned';
+							// create project directory if not found
+							if (!fs.existsSync(newPath)) {
+								fs.mkdirSync(newPath);
+							}
 
-				oldProject.save().then(function () {
-					// emit an event for all connected clients
-					var socketio = req.app.get('socketio');
-					socketio.sockets.emit('projectsListUpdate'); // emit an event for all connected clients
-					socketio.sockets.emit('callListUpdate', {filter: ''});
-				}).catch(function (err) {
-					return res.status(400).send({
-						message: errorHandler.getErrorMessage(err)
+							// add file path
+							newPath += sanitize(copiedScripts[i].file.name);
+
+							fs.copyFile(tempPath, newPath, function(err){
+								if (err) {
+									console.log("Error Found:", err);
+								}
+							});
+
+							// add script file to project ref list
+							project.scripts.push(copiedScripts[i]);
+						}
+					}
+				}
+
+				if(typeof copiedReferenceFiles !== 'undefined'){
+					for(j = 0; j < copiedReferenceFiles.length; ++j){
+						if(typeof copiedReferenceFiles[j] !== 'undefined'){
+							appDir = global.appRoot;
+							tempPath = appDir + '/public/res/referenceFiles/' + oldID + '/' + copiedReferenceFiles[j].file.name;
+							relativePath =  'res/referenceFiles/' + project._id + '/';
+							newPath = appDir + '/public/' + relativePath;
+
+							// create project directory if not found
+							if (!fs.existsSync(newPath)) {
+								fs.mkdirSync(newPath);
+							}
+
+							// add file path
+							newPath += sanitize(copiedReferenceFiles[j].file.name);
+
+							fs.copyFile(tempPath, newPath, function(err){
+								if (err) {
+									console.log("Error Found:", err);
+								}
+							});
+
+							// add ref file to project ref list
+							project.referenceFiles.push(copiedReferenceFiles[j]);
+
+						}
+					}
+				}
+
+				// update old project status
+				Project.findById(project.id).then(function (oldProject) {
+
+					oldProject.status = 'ReAuditioned';
+
+					oldProject.save().then(function (oldProject) {
+						// emit an event for all connected clients
+						var socketio = req.app.get('socketio');
+						socketio.sockets.emit('projectsListUpdate'); // emit an event for all connected clients
+						socketio.sockets.emit('callListUpdate', {filter: ''});
+					}).catch(function (err) {
+						console.log('update fail '+err);
+						return res.status(400).send({
+							message: errorHandler.getErrorMessage(err)
+						});
 					});
 				});
-			});
 
-			// reset current project status
-			project.status = 'In Progress';
-		}
+				// reset current project status
+				project.status = 'In Progress';
+			}
 
-		// send project creation email
-		async.waterfall([
-			function(done) {
-				User.find({'roles':'admin','noemail':{ $ne: true }}).sort('-created').then(function (admins) {
-					done(null, admins);
-				});
-			},
-			function(admins, done) {
-				User.find({'roles': { $in: ['producer/auditions director', 'auditions director', 'audio intern']},'noemail':{ $ne: true }}).sort('-created').then(function (directors) {
-					done(null, admins, directors);
-				});
-			},
-			function(admins, directors, done) {
-				User.find({'roles':'production coordinator','noemail':{ $ne: true }}).sort('-created').then(function (coordinators) {
-					done(null, admins, directors, coordinators);
-				});
-			},
-			function(admins, directors, coordinators, done) {
-				User.find({'roles':'talent director','noemail':{ $ne: true }}).sort('-created').then(function (talentdirectors) {
-					done(null, admins, directors, coordinators, talentdirectors);
-				});
-			},
-			function(admins, directors, coordinators, talentdirectors, done) {
+			// send project creation email
+			async.waterfall([
+				function(done) {
+					User.find({'roles':'admin','noemail':{ $ne: true }}).sort('-created').then(function (admins) {
+						done(null, admins);
+					});
+				},
+				function(admins, done) {
+					User.find({'roles': { $in: ['producer/auditions director', 'auditions director', 'audio intern']},'noemail':{ $ne: true }}).sort('-created').then(function (directors) {
+						done(null, admins, directors);
+					});
+				},
+				function(admins, directors, done) {
+					User.find({'roles':'production coordinator','noemail':{ $ne: true }}).sort('-created').then(function (coordinators) {
+						done(null, admins, directors, coordinators);
+					});
+				},
+				function(admins, directors, coordinators, done) {
+					User.find({'roles':'talent director','noemail':{ $ne: true }}).sort('-created').then(function (talentdirectors) {
+						done(null, admins, directors, coordinators, talentdirectors);
+					});
+				},
+				function(admins, directors, coordinators, talentdirectors, done) {
 
-				var i, email =  {
-								projectId: '',
-								to: [],
-								bcc: [],
-								subject: '',
-								header: '',
-								footer: '',
-								scripts: '',
-								referenceFiles: ''
-							};
+					var i, email =  {
+									projectId: '',
+									to: [],
+									bcc: [],
+									subject: '',
+									header: '',
+									footer: '',
+									scripts: '',
+									referenceFiles: ''
+								};
 
-				// add previously queried roles to email list
-				for(i = 0; i < admins.length; ++i){
-					email.bcc.push(admins[i].email);
-				}
-				for(i = 0; i < directors.length; ++i){
-					email.bcc.push(directors[i].email);
-				}
-				// for(i = 0; i < coordinators.length; ++i){
-				// 	email.bcc.push(coordinators[i].email);
-				// }
-				for(i = 0; i < talentdirectors.length; ++i){
-					email.bcc.push(talentdirectors[i].email);
-				}
+					// add previously queried roles to email list
+					for(i = 0; i < admins.length; ++i){
+						email.bcc.push(admins[i].email);
+					}
+					for(i = 0; i < directors.length; ++i){
+						email.bcc.push(directors[i].email);
+					}
+					// for(i = 0; i < coordinators.length; ++i){
+					// 	email.bcc.push(coordinators[i].email);
+					// }
+					for(i = 0; i < talentdirectors.length; ++i){
+						email.bcc.push(talentdirectors[i].email);
+					}
 
-				email.subject = 'Audition Project Created - ' + project.title + ' - Due ' + dateFormat(project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
+					email.subject = 'Audition Project Created - ' + project.title + ' - Due ' + dateFormat(project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
 
-				email.header = '<strong>Project:</strong> ' + project.title + '<br>';
-				email.header += '<strong>Due:</strong> ' + dateFormat(project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST<br>';
-				email.header += '<strong>Created by:</strong> ' + req.user.displayName + '<br>';
-				email.header += '<strong>Description:</strong> ' + project.description + '<br>';
+					email.header = '<strong>Project:</strong> ' + project.title + '<br>';
+					email.header += '<strong>Due:</strong> ' + dateFormat(project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST<br>';
+					email.header += '<strong>Created by:</strong> ' + req.user.displayName + '<br>';
+					email.header += '<strong>Description:</strong> ' + project.description + '<br>';
 
-				// add scripts and assets to email body
-				email.scripts = '\n' + '<strong>Scripts:</strong>' + '<br>';
-				if(typeof project.scripts !== 'undefined'){
-					if(project.scripts.length > 0){
-						for(i = 0; i < project.scripts.length; ++i){
-							email.scripts += '<a href="http://' + req.headers.host + '/res/scripts/' + project._id + '/' + project.scripts[i].file.name + '">' + project.scripts[i].file.name + '</a><br>';
+					// add scripts and assets to email body
+					email.scripts = '\n' + '<strong>Scripts:</strong>' + '<br>';
+					if(typeof project.scripts !== 'undefined'){
+						if(project.scripts.length > 0){
+							for(i = 0; i < project.scripts.length; ++i){
+								email.scripts += '<a href="http://' + req.headers.host + '/res/scripts/' + project._id + '/' + project.scripts[i].file.name + '">' + project.scripts[i].file.name + '</a><br>';
+							}
+						} else {
+							email.scripts += 'None';
 						}
 					} else {
 						email.scripts += 'None';
 					}
-				} else {
-					email.scripts += 'None';
-				}
-				email.referenceFiles = '\n' + '<strong>Reference Files:</strong>' + '<br>';
-				if(typeof project.referenceFiles !== 'undefined'){
-					if(project.referenceFiles.length > 0){
-						for(var j = 0; j < project.referenceFiles.length; ++j){
-							email.referenceFiles += '<a href="http://' + req.headers.host + '/res/referenceFiles/' + project._id + '/' + project.referenceFiles[j].file.name + '">' + project.referenceFiles[j].file.name + '</a><br>';
+					email.referenceFiles = '\n' + '<strong>Reference Files:</strong>' + '<br>';
+					if(typeof project.referenceFiles !== 'undefined'){
+						if(project.referenceFiles.length > 0){
+							for(var j = 0; j < project.referenceFiles.length; ++j){
+								email.referenceFiles += '<a href="http://' + req.headers.host + '/res/referenceFiles/' + project._id + '/' + project.referenceFiles[j].file.name + '">' + project.referenceFiles[j].file.name + '</a><br>';
+							}
+						} else {
+							email.referenceFiles += 'None';
 						}
 					} else {
 						email.referenceFiles += 'None';
 					}
-				} else {
-					email.referenceFiles += 'None';
-				}
 
-				// // append default footer to email
-				// email.footer =  'The ' + config.app.title + ' Support Team' + '<br>';
-				// email.footer += 'To view your StudioCenterAuditions.com Home Page, visit:' + '<br>';
-				// email.footer += 'http://' + req.headers.host;
+					// // append default footer to email
+					// email.footer =  'The ' + config.app.title + ' Support Team' + '<br>';
+					// email.footer += 'To view your StudioCenterAuditions.com Home Page, visit:' + '<br>';
+					// email.footer += 'http://' + req.headers.host;
 
-				done('', email);
-			},
-			// render regular email body
-			function(email, done) {
-				res.render('templates/projects/create-project', {
-					email: email
-				}, function(err, emailHTML) {
-					done(err, emailHTML, email);
-				});
-			},
-			// send out regular project creation email
-			function(emailHTML, email, done) {
-				// send email
-				var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
-
-				var mailOptions = {
-					to: email.bcc,
-					cc: config.mailer.notifications,
-					from: req.user.email || config.mailer.from,
-					replyTo: req.user.email || config.mailer.from,
-					subject: email.subject,
-					html: emailHTML
-				};
-
-				if(email.bcc.length > 0){
-					transporter.sendMail(mailOptions , function(err) {
-						done(err, email);
+					done('', email);
+				},
+				// render regular email body
+				function(email, done) {
+					res.render('templates/projects/create-project', {
+						email: email
+					}, function(err, emailHTML) {
+						done(err, emailHTML, email);
 					});
-				}
-				
-			},
-			// send out talent project creation email
-			function(email, done) {
+				},
+				// send out regular project creation email
+				function(emailHTML, email, done) {
+					// send email
+					var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
 
-				if(typeof project.talent !== 'undefined'){
+					var mailOptions = {
+						to: email.bcc,
+						cc: config.mailer.notifications,
+						from: req.user.email || config.mailer.from,
+						replyTo: req.user.email || config.mailer.from,
+						subject: email.subject,
+						html: emailHTML
+					};
 
-					var talentIds = [];
-					var emailTalentChk;
-					for(var i = 0; i < project.talent.length; ++i){
-						talentIds[i] = project.talent[i].talentId;
+					if(email.bcc.length > 0){
+						transporter.sendMail(mailOptions , function(err) {
+							done(err, email);
+						});
 					}
+					
+				},
+				// send out talent project creation email
+				function(email, done) {
 
-					Talent.where('_id').in(talentIds).sort('-created').then(function (talents) {
+					if(typeof project.talent !== 'undefined'){
 
-						async.eachSeries(talents, function (talent, talentCallback) {
+						var talentIds = [];
+						var emailTalentChk;
+						for(var i = 0; i < project.talent.length; ++i){
+							talentIds[i] = project.talent[i].talentId;
+						}
 
-							// write change to log
-							var log = {
-								type: 'talent',
-								sharedKey: String(talent._id),
-								description: talent.name + ' ' + talent.lastName + ' added to project ' + project.title,
-								user: req.user
-							};
-							log = new Log(log);
-							log.save();
+						Talent.where('_id').in(talentIds).sort('-created').then(function (talents) {
 
-							// check for email flag
-							emailTalentChk = false;
-							if(talent.type.toLowerCase() === 'email'){
-								emailTalentChk = true;
-							}
+							async.eachSeries(talents, function (talent, talentCallback) {
 
-							// verify talent needs to be emailed
-							if(emailTalentChk === true){
-								for(j = 0; j < project.talent.length; ++j){
-									if(project.talent[j].talentId === String(talent._id)){
-										// email talent
-										emailTalent(project.talent[j], talent, email, project, req, res);
-										// update talent status as needed
-										project.talent[j].status = 'Emailed';
+								// write change to log
+								var log = {
+									type: 'talent',
+									sharedKey: String(talent._id),
+									description: talent.name + ' ' + talent.lastName + ' added to project ' + project.title,
+									user: req.user
+								};
+								log = new Log(log);
+								log.save();
+
+								// check for email flag
+								emailTalentChk = false;
+								if(talent.type.toLowerCase() === 'email'){
+									emailTalentChk = true;
+								}
+
+								// verify talent needs to be emailed
+								if(emailTalentChk === true){
+									for(j = 0; j < project.talent.length; ++j){
+										if(project.talent[j].talentId === String(talent._id)){
+											// email talent
+											emailTalent(project.talent[j], talent, email, project, req, res);
+											// update talent status as needed
+											project.talent[j].status = 'Emailed';
+										}
 									}
 								}
-							}
 
-							talentCallback();
+								talentCallback();
 
-						}, function (err) {
-							done('', email);
-					   	});
+							}, function (err) {
+								done('', email);
+							});
 
-					});
+						});
 
-				} else {
-					done('', email);
-				}
-
-			},
-			function(email, done) {
-				// send email to client accounts, if needed
-				if(req.body.notifyClient === true){
-
-					if(typeof project.client !== 'undefined'){
-						for(i = 0; i < project.client.length; ++i){
-
-							// write change to log
-							var log = {
-								type: 'user',
-								sharedKey: String(project.client.clientId),
-								description: project.client.name + ' added to project ' + project.title,
-								user: req.user
-							};
-							log = new Log(log);
-							log.save();
-
-							emailClients(project.client[i], email, project, req, res);
-						}
+					} else {
+						done('', email);
 					}
 
-				}
+				},
+				function(email, done) {
+					// send email to client accounts, if needed
+					if(req.body.notifyClient === true){
 
-				done('');
-			},
-			// save final project document
-			function(done) {
+						if(typeof project.client !== 'undefined'){
+							for(i = 0; i < project.client.length; ++i){
 
-				// set project owner
-				project.owner = req.user._id;
+								// write change to log
+								var log = {
+									type: 'user',
+									sharedKey: String(project.client.clientId),
+									description: project.client.name + ' added to project ' + project.title,
+									user: req.user
+								};
+								log = new Log(log);
+								log.save();
 
-				// check for assigned clients, if none assigned update P&P phase
-				if(project.client.length === 0){
+								emailClients(project.client[i], email, project, req, res);
+							}
+						}
 
-					// set project phase status
-					project.phases[2].status = 'Waiting For Clients to Be Added';
+					}
 
-					// gen project note
-					var discussion = 'Project phase ' + project.phases[2].name + ' status changed to ' + project.phases[2].status + ' on ' + moment().tz('America/New_York').format() + ' EST by ' + req.user.displayName;
-					var item = {
-						date: moment().tz('America/New_York').format(),
-						userid: '',
-						username: 'System',
-						item: discussion,
-						deleted: false
-					};
-					project.discussion.push(item);
-				}
+					done('');
+				},
+				// save final project document
+				function(done) {
 
-				// save final project
-				project.save().then(function () {
-					// write change to log
-					var log = {
-						type: 'project',
-						sharedKey: String(project._id),
-						description: project.title + ' project created',
-						user: req.user
-					};
-					log = new Log(log);
-					log.save();
+					// set project owner
+					project.owner = req.user._id;
 
-					// emit an event for all connected clients
-					var socketio = req.app.get('socketio');
-					socketio.sockets.emit('projectsListUpdate'); // emit an event for all connected clients
-					socketio.sockets.emit('callListUpdate', {filter: ''});
-					return res.jsonp(project);
-				}).catch(function (err) {
-					return res.status(400).send({
-						message: errorHandler.getErrorMessage(err)
+					// check for assigned clients, if none assigned update P&P phase
+					if(project.client.length === 0){
+
+						// set project phase status
+						project.phases[2].status = 'Waiting For Clients to Be Added';
+
+						// gen project note
+						var discussion = 'Project phase ' + project.phases[2].name + ' status changed to ' + project.phases[2].status + ' on ' + moment().tz('America/New_York').format() + ' EST by ' + req.user.displayName;
+						var item = {
+							date: moment().tz('America/New_York').format(),
+							userid: '',
+							username: 'System',
+							item: discussion,
+							deleted: false
+						};
+						project.discussion.push(item);
+					}
+					
+					// save final project
+					project.save().then(function () {
+						// write change to log
+						var log = {
+							type: 'project',
+							sharedKey: String(project._id),
+							description: project.title + ' project created',
+							user: req.user
+						};
+						log = new Log(log);
+						log.save();
+
+						// emit an event for all connected clients
+						var socketio = req.app.get('socketio');
+						socketio.sockets.emit('projectsListUpdate'); // emit an event for all connected clients
+						socketio.sockets.emit('callListUpdate', {filter: ''});
+						return res.jsonp(project);
+					}).catch(function (err) {
+						console.log('save fail'+err);
+						return res.status(400).send({
+							message: errorHandler.getErrorMessage(err)
+						});
 					});
-				});
-			},
-			], function(err) {
-			if (err) return console.log(err);
+				
+				},
+				], function(err) {
+				if (err) return console.log(err);
+			});
+
+		}).catch(function (err) {
+			console.log('save fail'+err);
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
 		});
 
 	} else {
@@ -1883,8 +1909,8 @@ var deleteFiles = function(project, req, user){
 exports.fileExists = function(req, res){
 
 	// method vars
-	var appDir = global.appRoot;
-	var file = appDir + '/public' + req.body.file;
+	var appDir = global.appRoot,
+		file = appDir + '/public' + req.body.file;
 
 	// check if file exists
 	if (fs.existsSync(file)) {
@@ -1898,8 +1924,10 @@ exports.fileExists = function(req, res){
 // handle remote file delete requests
 exports.deleteFileByName = function(req, res){
 
-	var appDir = global.appRoot;
-	var file = appDir + '/public' + req.body.fileLocation;
+	var appDir = global.appRoot,
+		fileLocation = req.body.fileLocation,
+		file = appDir + '/public' + fileLocation,
+		projectId = req.body.projectId;
 
 	// remove file is exists
 	if (fs.existsSync(file)) {
@@ -1908,7 +1936,7 @@ exports.deleteFileByName = function(req, res){
 		// log instance if project info included
 		if(typeof req.body.projectId !== 'undefined'){
 
-			Project.findOne({'_id':req.body.projectId}).sort('-created').then(function (project) {
+			Project.findOne({'_id':projectId}).sort('-created').then(function (project) {
 
 				if(project){
 
@@ -1916,7 +1944,7 @@ exports.deleteFileByName = function(req, res){
 					var log = {
 						type: 'project',
 						sharedKey: String(project._id),
-						description: 'file ' + req.body.fileLocation + ' removed from ' + project.title,
+						description: 'file ' + fileLocation + ' removed from ' + project.title,
 						user: req.user
 					};
 					log = new Log(log);
@@ -2126,21 +2154,20 @@ exports.delete = function(req, res) {
 	log.save();
 
 	project.deleteOne().then(function () {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			// remove all assocaited auditions
-			Audition.remove({project: prodId}).then(function () {
-				// emit an event for all connected clients
-				var socketio = req.app.get('socketio');
-				socketio.sockets.emit('projectsListUpdate');
-				return res.jsonp(project);
-			}).catch(function (err) {
-				return res.status(400).send(err);
-            });
-		}
+		// remove all assocaited auditions
+		Audition.deleteMany({project: prodId}).then(function () {
+			// emit an event for all connected clients
+			var socketio = req.app.get('socketio');
+			socketio.sockets.emit('projectsListUpdate');
+			return res.jsonp(project);
+		}).catch(function (err) {
+			return res.status(400).send(err);
+		});
+	}).catch(function (err) {
+		console.log(err);
+		return res.status(400).send({
+			message: errorHandler.getErrorMessage(err)
+		});
 	});
 };
 

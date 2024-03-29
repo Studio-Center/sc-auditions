@@ -1187,9 +1187,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				status: proStatus,
 				sounders: newProject.sounders,
 				scripts: newProject.scripts,
-				copiedScripts: newProject.copiedScripts,
 				referenceFiles: newProject.referenceFiles,
-				copiedReferenceFiles: newProject.copiedReferenceFiles,
 				description: newProject.description,
 				client: newProject.client,
 				talent: newProject.talent,
@@ -1197,12 +1195,18 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			});
 
 			// Redirect after save
-			project.$save(function(response) {
-				$location.path('projects/' + response._id);
+			$http.post('/projects', {
+				project: project,
+				copiedScripts: newProject.copiedScripts,
+				copiedReferenceFiles: newProject.copiedReferenceFiles
+			}).success(function(data, status, headers, config) {
+
+				$location.path('projects/' + data._id);
 
 				// Clear form fields
 				$scope.name = '';
 				$scope.newProject = '';
+
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
 			});
@@ -1236,7 +1240,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 			project.$update(function() {
 				if(redirect === true){
-					$location.path('projects/' + project._id);
+					//$location.path('projects/' + project._id);
+					window.location.reload();
 				}
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
@@ -2184,15 +2189,17 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 				var file = '/res/scripts/' + project._id + '/' + project.scripts[idx].file.name;
 
-				$http.put('/projects/deletefile', {
+				$http.post('/projects/deletefile', {
 					fileLocation: file,
 					projectId: project._id
-				  });
+				}).success(function(data, status, headers, config) {
 
-				project.scripts.splice(idx, 1);
+					project.scripts.splice(idx, 1);
 
-				// update project store
-				$scope.updateNoRefresh();
+					// update project store
+					$scope.updateNoRefresh();
+
+				});
 
 			}
 		};
