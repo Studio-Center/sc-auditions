@@ -319,9 +319,10 @@ var sendTalentEmail = function(req, res, project, talent, override){
 				log = new Log(log);
 				log.save();
 
-				// also senf log for project if talent log attribute
+				// also send log for project if talent log attribute
 				if(log.type === 'talent'){
 					log = log.toObject();
+					delete log._id;
 
 					log.type = 'project';
 					log.sharedKey = String(project._id);
@@ -630,7 +631,7 @@ exports.sendTalentDirectorsEmail = function(req, res){
 			var ownerId = project.owner || project.user._id;
 			User.findOne({'_id':ownerId}).sort('-created').then(function (owner) {
 				owner = owner || req.user;
-				done(err, owner);
+				done(null, owner);
 			}).catch(function (err) {
 				done(err, req.user);
 			});
@@ -667,30 +668,34 @@ exports.sendTalentDirectorsEmail = function(req, res){
 			// assign email subject line
 			emailSubject = project.title + ' - Additional Talent Added';
 
-//			var mailOptions = {
-//				to: to,
-//				from: owner.email || config.mailer.from,
-//				replyTo: owner.email || config.mailer.from,
-//				cc: config.mailer.notifications,
-//				subject: emailSubject,
-//				html: talentEmailHTML
-//			};
-//
-//			transporter.sendMail(mailOptions, function(err){
-
-				// write change to log
-				var log = {
-					type: 'project',
-					sharedKey: project._id,
-					description: 'sent talent added email for ' + project.title,
-					user: req.user
+			if(to.length > 0){
+				var mailOptions = {
+					to: to,
+					from: owner.email || config.mailer.from,
+					replyTo: owner.email || config.mailer.from,
+					cc: config.mailer.notifications,
+					subject: emailSubject,
+					html: talentEmailHTML
 				};
-				log = new Log(log);
-				log.save();
-
-				done(err);
-			//});
-
+	
+				transporter.sendMail(mailOptions, function(err){
+	
+					// write change to log
+					var log = {
+						type: 'project',
+						sharedKey: project._id,
+						description: 'sent talent added email for ' + project.title,
+						user: req.user
+					};
+					log = new Log(log);
+					log.save();
+	
+					done(err);
+				});
+			} else {
+				done();
+			}
+			
 		}
 		], function(err) {
 			if (err) {

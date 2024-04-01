@@ -198,14 +198,14 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 			// Trigger validation flag.
 		$scope.submitted = true;
 
-			$http.post('/projects/lead', {
-		firstName: $scope.newLead.firstName || '',
-		lastName: $scope.newLead.lastName || '',
-		company: $scope.newLead.company || '',
-		phone: $scope.newLead.phone || '',
-		email: $scope.newLead.email || '',
-		describe: $scope.newLead.describe || '',
-		scripts: $scope.newProject.scripts || ''
+		$http.post('/projects/lead', {
+			firstName: $scope.newLead.firstName || '',
+			lastName: $scope.newLead.lastName || '',
+			company: $scope.newLead.company || '',
+			phone: $scope.newLead.phone || '',
+			email: $scope.newLead.email || '',
+			describe: $scope.newLead.describe || '',
+			scripts: $scope.newProject.scripts || ''
 		}).
 			success(function(data, status, headers, config) {
 		$location.path('/clients/new-audition-form/thanks');
@@ -215,10 +215,10 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 	$scope.leadFormPop = function(){
 		if(typeof Authentication.user === 'object'){
 			$scope.newLead.firstName = Authentication.user.firstName || '';
-	$scope.newLead.lastName = Authentication.user.lastName || '';
-	$scope.newLead.company = Authentication.user.company || '';
-	$scope.newLead.phone = Authentication.user.phone || '';
-	$scope.newLead.email = Authentication.user.email || '';
+			$scope.newLead.lastName = Authentication.user.lastName || '';
+			$scope.newLead.company = Authentication.user.company || '';
+			$scope.newLead.phone = Authentication.user.phone || '';
+			$scope.newLead.email = Authentication.user.email || '';
 		}
 	};
 

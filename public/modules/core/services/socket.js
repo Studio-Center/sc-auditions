@@ -6,7 +6,7 @@ angular.module('core').factory('Socket', ['socketFactory',
     function(socketFactory) {
         return socketFactory({
             prefix: '',
-            ioSocket: io('http://'+location.host, {reconnect: true, 'transports': ['echo-protocol','websocket']})
+            ioSocket: io(location.protocol+'//'+location.host, {upgrade: false, transports: ['websocket']})
         });
     }
 ]);

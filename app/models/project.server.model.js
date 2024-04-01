@@ -93,7 +93,7 @@ const ProjectSchema = new Schema({
 				'Complete'
 			]
 		}],
-		default: ['Not started']
+		default: 'Not started'
 	},
 	title: {
 		type: String,
@@ -114,7 +114,7 @@ const ProjectSchema = new Schema({
 				'No Sounders - Approved By William'
 			]
 		}],
-		default: ['Sounders']
+		default: 'Sounders'
 	},
 	scripts: {
 		type: Array

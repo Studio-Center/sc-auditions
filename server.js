@@ -6,7 +6,8 @@ const init = require('./config/init')(),
 	config = require('./config/config'),
 	mongoose = require('mongoose'),
 	jwt = require('jwt-simple'),
-	compression = require('compression');
+	compression = require('compression'),
+	redisAdapter = require('socket.io-redis');
 
 const path = require('path');
 global.appRoot = path.resolve(__dirname);
@@ -29,7 +30,9 @@ if (cluster.isMaster) {
   }
 //
   cluster.on('exit', function(worker, code, signal) {
-   console.log('worker ' + worker.process.pid + ' died');
+   console.log('worker ' + worker.process.pid + ' died, restarted');
+   // start new worker
+   cluster.fork();
   });
 
   cluster.on('fork', function (worker) {
@@ -55,10 +58,11 @@ if (cluster.isMaster) {
 	// Start the app by listening on <port>
 	var server = app.get('server').listen(config.port);
 
-	if(cluster.worker.id == 1){
-		var io = sio(server, {reconnect: true, 'transports': ['echo-protocol','websocket']});
-		app.set('socketio', io);
-	}
+	var io = sio(server, {upgrade: false, transports: ['websocket']});
+	io.adapter(redisAdapter({ host: 'localhost', port: 6379 }));
+	
+	app.set('socketio', io);
+
 	app.set('server', server);
 
 	// Listen to messages sent from the master. Ignore everything else.

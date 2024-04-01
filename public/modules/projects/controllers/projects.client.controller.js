@@ -79,15 +79,15 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		// clear mem leaks on controller destroy
 		$scope.$on('$destroy', function (event) {
-			// clear all socket listeners
-      Socket.removeAllListeners();
+				// clear all socket listeners
+		Socket.removeAllListeners();
 
-			// // clear all watchers
-			// angular.forEach($scope.watchersObj, function(watcherObj, key) {
-			// 	watcherObj();
-			// 	delete $scope.watchersObj[key];
-			// });
-    });
+				// // clear all watchers
+				// angular.forEach($scope.watchersObj, function(watcherObj, key) {
+				// 	watcherObj();
+				// 	delete $scope.watchersObj[key];
+				// });
+		});
 
 		var loadAuditions = function(){
 
@@ -1629,11 +1629,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			$scope.findLimit();
 		};
 
-		// dynamically update project view
-		Socket.on('projectsListUpdate', function() {
-			$scope.findLimitWithFilter();
-		});
-
 		// find single project by id
 		$scope.findOneById = function(id) {
 
@@ -1651,6 +1646,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			$scope.curRatings();
 
 		};
+
+		// dynamically update project view
+		Socket.on('projectsListUpdate', function() {
+			$scope.findLimitWithFilter();
+		});
 
 		Socket.on('projectUpdate', function(pojectData) {
 
