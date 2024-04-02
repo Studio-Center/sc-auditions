@@ -58,10 +58,18 @@ if (cluster.isMaster) {
 	// Start the app by listening on <port>
 	var server = app.get('server').listen(config.port);
 
-	var io = sio(server, {upgrade: false, transports: ['websocket']});
+	var io = sio(server, {cors: { origin: '*' }, upgrade: false, reconnect: true, transports: [ 'websocket', 'polling', 'flashsocket' ]});
 	io.adapter(redisAdapter({ host: 'localhost', port: 6379 }));
 	
 	app.set('socketio', io);
+
+	io.on('connection', (socket) => {
+		console.log('a user connected');
+	  
+		socket.on('disconnect', ()=>{
+		 console.log('a user disconnected')
+		})
+	  });
 
 	app.set('server', server);
 

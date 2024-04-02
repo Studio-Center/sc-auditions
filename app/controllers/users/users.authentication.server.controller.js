@@ -92,7 +92,7 @@ exports.appsignin = function(req, res, next) {
 					user = user.toObject();
 
 					// Great, user has successfully authenticated, so we can generate and send them a token.	
-					var expires = moment().add(7, 'days').valueOf();
+					var expires = moment((new Date()).toUTCString()).add(7, 'days').valueOf();
 					var token = jwt.encode(
 						{
 							iss: user.id,
@@ -120,7 +120,7 @@ exports.token = function(req, res, next){
 	if (user) {	
 
 		// Great, user has successfully authenticated, so we can generate and send them a token.	
-		var expires = moment().add(7, 'days').valueOf();
+		var expires = moment((new Date()).toUTCString()).add(7, 'days').valueOf();
 		var token = jwt.encode(
 			{
 				iss: user.id,

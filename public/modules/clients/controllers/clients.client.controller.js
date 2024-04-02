@@ -167,7 +167,7 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 	};
 
 	// reload auditions if single aud updated
-	Socket.on('auditionUpdate', function(pojectID) {
+	Socket.on('clientauditionUpdate', function(pojectID) {
 
 		var project = $scope.project;
 
@@ -179,7 +179,7 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 
 	});
 
-	Socket.on('projectUpdate', function(pojectData) {
+	Socket.on('clientprojectUpdate', function(pojectData) {
 
 		if(String(pojectData.id) === String($scope.project._id)){
 			// merge existing open project with updated project

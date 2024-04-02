@@ -77,6 +77,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		//
 		// });
 
+		Socket.on('connect_error', (err) => {
+			console.log(err.message);
+		  });
+
 		// clear mem leaks on controller destroy
 		$scope.$on('$destroy', function (event) {
 				// clear all socket listeners
@@ -96,6 +100,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				projectId: $stateParams.projectId
 			// file found
 			}).success(function(data, status, headers, config) {
+
+				for(var i = 0; i < data.length; i++){
+					data[i].approved.by.date = (new Date(data[i].approved.by.date)).toUTCString();
+				}
+
 				$scope.projAuditions = data;
 			// file not found
 			}).error(function(data, status, headers, config) {
@@ -707,7 +716,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 							'part': $scope.parts[talentId] || '',
 							'regular': true,
 							'requested': false,
-							'added': moment().tz('America/New_York').format()
+							'added': moment((new Date()).toUTCString()).tz('America/New_York').format()
 						};
 
 			$scope.addTalent = false;
@@ -799,7 +808,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 							'part': $scope.parts[talentId] || '',
 							'regular': false,
 							'requested': true,
-							'added': moment().tz('America/New_York').format()
+							'added': moment((new Date()).toUTCString()).tz('America/New_York').format()
 						};
 
 			$scope.addTalent = false;
@@ -882,7 +891,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 							part: $scope.parts[talentId] || '',
 							regular: true,
 							requested: false,
-							added: moment().tz('America/New_York').format()
+							added: moment((new Date()).toUTCString()).tz('America/New_York').format()
 						};
 
 			// check for existing item
@@ -929,7 +938,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 							part: $scope.parts[talentId] || '',
 							regular: false,
 							requested: true,
-							added: moment().tz('America/New_York').format()
+							added: moment((new Date()).toUTCString()).tz('America/New_York').format()
 						};
 
 			// check for existing item
@@ -1259,6 +1268,29 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
                     // update local project document
                     if(data){
+						for(var i = 0; i < data.discussion.length; i++){
+							data.discussion[i].date = (new Date(data.discussion[i].date)).toUTCString();
+						}
+						for(var i = 0; i < data.clientNotes.length; i++){
+							data.clientNotes[i].date = (new Date(data.clientNotes[i].date)).toUTCString();
+						}
+						for(var i = 0; i < data.scripts.length; i++){
+							data.scripts[i].date = (new Date(data.scripts[i].date)).toUTCString();
+						}
+						for(var i = 0; i < data.referenceFiles.length; i++){
+							data.referenceFiles[i].date = (new Date(data.referenceFiles[i].date)).toUTCString();
+						}
+						for(var i = 0; i < data.talent.length; i++){
+							data.talent[i].added = (new Date(data.talent[i].added)).toUTCString();
+						}
+						for(var i = 0; i < data.talent.length; i++){
+							data.talent[i].added = (new Date(data.talent[i].added)).toUTCString();
+						}
+						for(var i = 0; i < data.phases.length; i++){
+							data.phases[i].changeDate = (new Date(data.phases[i].changeDate)).toUTCString();
+							data.phases[i].endDate = (new Date(data.phases[i].endDate)).toUTCString();
+						}
+						
                         $scope.project = angular.extend($scope.project, data);
                     }
 
@@ -1385,7 +1417,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					i = 0,
 					clientLimit = 0;
 
-			var newDate = moment(new Date()).format('MM/DD/YYYY h:mm a');
+			var newDate = moment((new Date()).toUTCString()).format('MM/DD/YYYY h:mm a');
 			project.phases[key].changeDate = newDate;
 
 			// send email if P&P status set to specified values
@@ -1447,8 +1479,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}
 
 	    if(project.phases[key].status === 'complete'){
-	    	var now = new Date();
-	    	project.phases[key].endDate = now.toJSON();
+	    	project.phases[key].endDate = moment((new Date()).toUTCString()).format('MM/DD/YYYY h:mm a');
 				// update project status only for "Posting and Publishing" phase
 				if(project.phases[key].name === 'Posting and Publishing'){
 					// reset overall project status to closed
@@ -1709,6 +1740,34 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			// file found
 			}).success(function(data, status, headers, config) {
 				$scope.project = new Projects();
+
+				// format dates - fix Moment deprecation warning
+				data.estimatedCompletionDate = (new Date(data.estimatedCompletionDate)).toUTCString();
+				data.created = (new Date(data.created)).toUTCString();
+
+				for(var i = 0; i < data.discussion.length; i++){
+					data.discussion[i].date = (new Date(data.discussion[i].date)).toUTCString();
+				}
+				for(var i = 0; i < data.clientNotes.length; i++){
+					data.clientNotes[i].date = (new Date(data.clientNotes[i].date)).toUTCString();
+				}
+				for(var i = 0; i < data.scripts.length; i++){
+					data.scripts[i].date = (new Date(data.scripts[i].date)).toUTCString();
+				}
+				for(var i = 0; i < data.referenceFiles.length; i++){
+					data.referenceFiles[i].date = (new Date(data.referenceFiles[i].date)).toUTCString();
+				}
+				for(var i = 0; i < data.talent.length; i++){
+					data.talent[i].added = (new Date(data.talent[i].added)).toUTCString();
+				}
+				for(var i = 0; i < data.talent.length; i++){
+					data.talent[i].added = (new Date(data.talent[i].added)).toUTCString();
+				}
+				for(var i = 0; i < data.phases.length; i++){
+					data.phases[i].changeDate = (new Date(data.phases[i].changeDate)).toUTCString();
+					data.phases[i].endDate = (new Date(data.phases[i].endDate)).toUTCString();
+				}
+
 				$scope.project = angular.extend($scope.project, data);
                 //console.log(data);
                 
@@ -2054,8 +2113,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 			var project = $scope.project;
 
-			var newDate = moment(new Date(project.estimatedCompletionDate)).format('MM/DD/YYYY h:mm a');
-			var newNewDate = moment(new Date()).format('MM/DD/YYYY h:mm a');
+			var newDate = moment((new Date(project.estimatedCompletionDate)).toUTCString()).format('MM/DD/YYYY h:mm a');
+			var newNewDate = moment((new Date()).toUTCString()).format('MM/DD/YYYY h:mm a');
 
 			project.estimatedCompletionDate = newDate;
 
