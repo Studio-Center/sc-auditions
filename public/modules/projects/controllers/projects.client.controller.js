@@ -78,13 +78,21 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		// });
 
 		Socket.on('connect_error', (err) => {
-			console.log(err.message);
+			console.log(err);
+		  });
+
+		//   Socket.on('message', (message) => {
+		// 	console.log(message);
+		//   });
+
+		  Socket.on("connection", (socket) => {
+			console.log('connected socketio');
 		  });
 
 		// clear mem leaks on controller destroy
 		$scope.$on('$destroy', function (event) {
 				// clear all socket listeners
-		Socket.removeAllListeners();
+			Socket.removeAllListeners();
 
 				// // clear all watchers
 				// angular.forEach($scope.watchersObj, function(watcherObj, key) {

@@ -7,7 +7,7 @@ const init = require('./config/init')(),
 	mongoose = require('mongoose'),
 	jwt = require('jwt-simple'),
 	compression = require('compression'),
-	redisAdapter = require('socket.io-redis');
+	url = require('url');
 
 const path = require('path');
 global.appRoot = path.resolve(__dirname);
@@ -58,18 +58,34 @@ if (cluster.isMaster) {
 	// Start the app by listening on <port>
 	var server = app.get('server').listen(config.port);
 
-	var io = sio(server, {cors: { origin: '*' }, upgrade: false, reconnect: true, transports: [ 'websocket', 'polling', 'flashsocket' ]});
-	io.adapter(redisAdapter({ host: 'localhost', port: 6379 }));
-	
-	app.set('socketio', io);
+	var io = sio(server, { cors: { origin: '*' }, reconnection: true, reconnectionDelay: 1000, reconnectionDelayMax: 5000, reconnectionAttempts: 3, transports: [ 'websocket']});
+	//io.adapter(redisAdapter({ host: 'localhost', port: 6379 }));
 
-	io.on('connection', (socket) => {
-		console.log('a user connected');
-	  
-		socket.on('disconnect', ()=>{
-		 console.log('a user disconnected')
-		})
-	  });
+	// io.on('connection', (socket) => {
+	// 	console.log('a user connected');
+
+	// 	socket.emit('message', 'I\'m a message!');
+
+	// 	socket.on('disconnect', (event)=>{
+	// 	 console.log('a user disconnected');
+	// 	});
+	// });
+
+	// override default socket upgrade listener to allow socketio connection
+	let [serverUpgradeListener, socketioUpgradeListener] = server.listeners('upgrade').slice(0);
+	server.removeAllListeners('upgrade');
+	server.on('upgrade', (req, socket, head) => {
+		const pathname = url.parse(req.url).pathname;
+		console.log('UPGRADE: '+pathname);
+		if (pathname === '/socket.io/'){
+			socketioUpgradeListener(req, socket, head);
+			console.log('UPGRADE: SUCCESS '+pathname);
+		} else {
+			socket.destroy();
+		}
+	});
+
+	app.set('socketio', io);
 
 	app.set('server', server);
 

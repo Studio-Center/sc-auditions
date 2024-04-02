@@ -6,7 +6,7 @@ angular.module('core').factory('Socket', ['socketFactory',
     function(socketFactory) {
         return socketFactory({
             prefix: '',
-            ioSocket: io.connect(location.protocol+'//'+location.host, {upgrade: false, reconnect: true, 'transports': [ 'websocket', 'polling', 'flashsocket' ]})
+            ioSocket: io.connect(location.protocol+'//'+location.host, {query: "token=my custom token", 'transports': [ 'websocket']})
         });
     }
 ]);
