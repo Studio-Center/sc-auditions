@@ -70,31 +70,15 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.reverse = '';
 		$scope.searchText = {};
 
-		// // on close check
-		// $scope.$on('$locationChangeStart', function( event ) {
-		//
-		// 	// nothing for the moment
-		//
-		// });
-
 		Socket.on('connect_error', (err) => {
 			console.log(err);
-		  });
-
-		//   Socket.on('message', (message) => {
-		// 	console.log(message);
-		//   });
+		});
 
 		// clear mem leaks on controller destroy
 		$scope.$on('$destroy', function (event) {
 				// clear all socket listeners
 			Socket.removeAllListeners();
 
-				// // clear all watchers
-				// angular.forEach($scope.watchersObj, function(watcherObj, key) {
-				// 	watcherObj();
-				// 	delete $scope.watchersObj[key];
-				// });
 		});
 
 		var loadAuditions = function(){
@@ -116,11 +100,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			});
 
 		};
-
-//        $http.post('/projects/test')
-//        .success(function(data, status, headers, config) {
-//            console.log(data);
-//        });
         
         $scope.tinymceOptions = {
             plugins: 'link image code',
@@ -1366,7 +1345,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			// determine if update should result in user redirect
 			redirect = typeof redirect === 'undefined' ? true : redirect;
 
-			// console.log($scope.rate[key]);
 			var key, ratingCnt = 0, avgRating = 0;
 
 			// get key for selected audition
@@ -1686,16 +1664,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		// dynamically update project view
 		Socket.on('projectsListUpdate', function() {
-			
-			console.log('project list socket trigger');
-
 			$scope.findLimitWithFilter();
 		});
 
 		Socket.on('projectUpdate', function(pojectData) {
-
-			console.log('project update socket trigger');
-
 			var project = $scope.project;
 
 			if(String(pojectData.id) === String(project._id)){
@@ -1767,7 +1739,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				}
 
 				$scope.project = angular.extend($scope.project, data);
-                //console.log(data);
                 
                 jQuery('section.content').animate({backgroundColor:'#ddd'},{duration:500,complete: function() {
                   jQuery('section.content').animate({backgroundColor:'transparent'},{duration:500});
@@ -2017,7 +1988,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			if(typeof audio === 'object'){
 				audio.unbind();
 				audio.stop();
-				// console.log('stop');
 				$scope.audioStatus = 2;
 			}
 		};
@@ -2036,43 +2006,26 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			if(IS_NOT_MOBILE){
 
 				// check media file play state
-				// console.log(typeof $scope.audio);
-				// console.log($scope.lastAudioID);
 				if(key !== $scope.lastAudioID && typeof $scope.audio === 'object'){
 					$scope.audio.unbind();
 					$scope.audio.stop();
-					// console.log('stop');
 				}
 				if(typeof $scope.audio === 'object' && key === $scope.lastAudioID && $scope.audioStatus === 1){
 					$scope.audio.pause();
 					$scope.audioStatus = 0;
-					//console.log('pause');
 					return;
 				}
 				if(typeof $scope.audio === 'object' && key === $scope.lastAudioID && $scope.audioStatus === 0){
 					$scope.audio.play();
 					$scope.audioStatus = 1;
-					// console.log('play');
 					return;
 				}
-				// if(typeof $scope.audio === 'object' && key === $scope.lastAudioID && $scope.audioStatus === 2){
-				// 	$scope.audio.play();
-				// 	$scope.audioStatus = 1;
-				// 	// console.log('play');
-				// 	return;
-				// }
 
-				//if($scope.audio = ngAudio.load(fileName)){
-					$scope.audio = ngAudio.load(fileName).play();
-					$scope.loop = 0;
-					//$scope.audio.unbind();
-					$scope.audioStatus = 1;
+				$scope.audio = ngAudio.load(fileName).play();
+				$scope.loop = 0;
+				$scope.audioStatus = 1;
 
-					// store current audio key
-					$scope.lastAudioID = key;
-
-					//$scope.audio.play();
-				//}
+				$scope.lastAudioID = key;
 
 			// mobile and tablet playback
 			} else {
@@ -2484,7 +2437,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		// determine if update should result in user redirect
 		redirect = typeof redirect === 'undefined' ? true : redirect;
 
-		// console.log($scope.rate[key]);
 		var key, ratingCnt = 0, avgRating = 0;
 
 		// walk through existing ratings
@@ -2604,7 +2556,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 	        $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
 	    }).success(function(data, status, headers, config) {
 	        // file is uploaded successfully
-	        //console.log(data);
 	        $scope.newProject.referenceFiles.push(data[0]);
 	    });
   	};
@@ -2710,142 +2661,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.uploadedAuds = [];
 		$scope.uploadAudsCnt = 0;
 		$scope.audUpComp = 0;
-//		if(typeof $scope.watchersObj.newAudUpload !== 'object'){
-//			$scope.$watchCollection('newAudUpload', function(){
-//
-//				// get curent index
-//				var i = $scope.uploadedAuds.length;
-//
-//				// file is uploaded successfully
-//				$scope.uploadedAuds[i] = $scope.newAudUpload;
-//
-//				// update talents with posted status for uploaded talent
-//				if(typeof $scope.project.talent !== 'undefined' && $scope.project.talent.length > 0){
-//					angular.forEach($scope.project.talent, function(talent, key) {
-//
-////						if(talent.talentId === $scope.newAudUpload.talent){
-////							$scope.project.talent[key].status = 'Posted';
-////						}
-//
-//						// save on finish loop
-//						if($scope.project.talent.length === (key+1)){
-//
-//							// save project on finish
-//							if($scope.uploadAudsCnt === $scope.uploadedAuds.length){
-//
-//								//$scope.project.auditions = $scope.project.auditions.concat($scope.uploadedAuds);
-//
-//								// save with pause, ensure loop finished
-//								//setTimeout(function(){
-//
-//								// save project on last file upload
-//								$scope.verifyFilesList = [];
-//
-//								// update project store
-//								//$scope.updateNoRefresh();
-//                                jQuery('section.content').animate({backgroundColor:'#ddd'},{duration:500,complete: function() {
-//                                  jQuery('section.content').animate({backgroundColor:'transparent'},{duration:500});
-//                                }});
-//                                $scope.loadProject();
-//                                $scope.processing = false;
-//                                $scope.serverUpdate = false;
-//								loadAuditions();
-//
-//								// trigger new file check walk
-//								$scope.fileCheck = false;
-//
-//								//}, 1500);
-//
-//							}
-//						}
-//
-//					});
-//				} else {
-//					// save project on finish
-//					if($scope.uploadAudsCnt === $scope.uploadedAuds.length){
-//
-//						//$scope.project.auditions = $scope.project.auditions.concat($scope.uploadedAuds);
-//
-//						// save with pause, ensure loop finished
-//						//setTimeout(function(){
-//
-//						// save project on last file upload
-//						$scope.verifyFilesList = [];
-//
-//						// update project store
-//                        jQuery('section.content').animate({backgroundColor:'#ddd'},{duration:500,complete: function() {
-//                          jQuery('section.content').animate({backgroundColor:'transparent'},{duration:500});
-//                        }});
-//						//$scope.updateNoRefresh();
-//                        $scope.loadProject();
-//                        $scope.processing = false;
-//                        $scope.serverUpdate = false;
-//						loadAuditions();
-//
-//						// trigger new file check walk
-//						$scope.fileCheck = false;
-//
-//						//}, 1500);
-//
-//					}
-//				}
-//
-//			});
-//		}
 
-//	var performUploadAudition = function(file, i, $files){
-//
-//		$scope.upload = $upload.upload({
-//			url: 'projects/uploads/audition', //upload.php script, node.js route, or servlet url
-//			data: {projectId: $scope.project._id},
-//			//file: file // or list of files ($files) for html5 only
-//			file: $files // or list of files ($files) for html5 only
-//		}).progress(function(evt) {
-//			$scope.uploadStatus = (i + 1) + ' of ' + $files.length + ' files uploaded';
-//			$scope.uploadfile = evt.config.file.name;
-//			//$scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
-//		}).success(function(data, status, headers, config) {
-//            //$scope.loadProject();
-//            console.log(JSON.stringify(data));
-//            jQuery('section.content').animate({backgroundColor:'#ddd'},{duration:500,complete: function() {
-//              jQuery('section.content').animate({backgroundColor:'transparent'},{duration:500});
-//            }});
-//            $scope.loadProject();
-//            $scope.processing = false;
-//            $scope.serverUpdate = false;
-//            $scope.fileCheck = false;
-//            loadAuditions();
-//			$scope.newAudUpload = data;
-//			$scope.audUpComp += 1;
-//			$scope.uploadprogress = parseInt(100.0 / ($files.length - ($scope.audUpComp - 1)));
-//		}).error(function(data, status, headers, config) {
-//            console.log('Problem uploading auditions ' + JSON.stringify(data));
-//        });
-//
-//	};
-	$scope.uploadAudition = function($files) {
+		$scope.uploadAudition = function($files) {
 
 		$scope.uploadAudsCnt = 0;
 
 		if(typeof $files !== 'undefined' && $files.length > 0){
 
-//			// reset upload counter
-//			$scope.audUpComp = 0;
-//			$scope.uploadAudsCnt = $files.length;
-//
-//			$scope.uploadedAuds = [];
-//			$scope.audFiles = $files;
-//
-//			// prevent any other action
-//			$scope.processing = true;
-//            $scope.serverUpdate = true;
-
-			//$files: an array of files selected, each file has name, size, and type.
-			//angular.forEach($files, function(file, key) {
-
-				//performUploadAudition(file, key, $files);
-
-			//});
             $scope.uploadprogress = 0;
             $scope.processing = true;
             $scope.upload = $upload.upload({
@@ -2853,19 +2675,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
                 data: {projectId: $scope.project._id},
                 file: $files // or list of files ($files) for html5 only
             }).success(function(data, status, headers, config) {
-                //$scope.loadProject();
                 $scope.processing = false;
                 jQuery('section.content').animate({backgroundColor:'#ddd'},{duration:500,complete: function() {
                     jQuery('section.content').animate({backgroundColor:'transparent'},{duration:500});
                 }});
-//                $scope.serverUpdate = false;
-//                $scope.fileCheck = false;
                 $scope.loadProject();
                 loadAuditions();
-                //$scope.uploadprogress = parseInt(100.0);
             }).progress(function(evt) {
-                //$scope.uploadStatus = (i + 1) + ' of ' + $files.length + ' files uploaded';
-                //$scope.uploadfile = evt.config.file.name;
                 $scope.uploadprogress = parseInt(100.0 * evt.loaded / evt.total);
             });
 
@@ -2916,7 +2732,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 	// perform talent audition uploads
 	$scope.submitTalentAuditions = function(){
-		//console.log($stateParams.talentId);
 
 		if(confirm('Are you sure?') === true){
 
@@ -2926,7 +2741,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				talent: $stateParams.talentId
 			}).success(function(data, status, headers, config) {
 				// file is uploaded successfully
-				//console.log(data);
 				$scope.auditions = [];
 
 				alert('Auditions have been submitted. Thank you!');
@@ -2956,7 +2770,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
       //$scope.selected = selectedItem;
     }, function () {
       //$log.info('Modal dismissed at: ' + new Date());
-
     });
 	};
 

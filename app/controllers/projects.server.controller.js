@@ -1439,7 +1439,6 @@ exports.create = function(req, res) {
 
 					oldProject.save().then(function (oldProject) {
 					}).catch(function (err) {
-						console.log('update fail '+err);
 						return res.status(400).send({
 							message: errorHandler.getErrorMessage(err)
 						});
@@ -1688,7 +1687,6 @@ exports.create = function(req, res) {
 						// emit an event for all connected clients
 						return res.jsonp(project);
 					}).catch(function (err) {
-						console.log('save fail'+err);
 						return res.status(400).send({
 							message: errorHandler.getErrorMessage(err)
 						});
@@ -1700,7 +1698,6 @@ exports.create = function(req, res) {
 			});
 
 		}).catch(function (err) {
-			console.log('save fail'+err);
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
@@ -2133,7 +2130,6 @@ exports.delete = function(req, res) {
 			return res.status(400).send(err);
 		});
 	}).catch(function (err) {
-		console.log(err);
 		return res.status(400).send({
 			message: errorHandler.getErrorMessage(err)
 		});
