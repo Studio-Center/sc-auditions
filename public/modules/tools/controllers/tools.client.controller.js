@@ -1,8 +1,8 @@
 'use strict';
 
 // Tools controller
-angular.module('tools').controller('ToolsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Tools', 'Talents', '$http', 'Socket', 'Projects', '$upload',
-	function($scope, $stateParams, $location, Authentication, Tools, Talents, $http, Socket, Projects, $upload ) {
+angular.module('tools').controller('ToolsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Talents', '$http', 'Socket', 'Projects', '$upload',
+	function($scope, $stateParams, $location, Authentication, Talents, $http, Socket, Projects, $upload ) {
 		$scope.authentication = Authentication;
 
 		// scope variables

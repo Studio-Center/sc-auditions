@@ -1725,7 +1725,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					data.scripts[iii].date = (new Date(data.scripts[iii].date)).toUTCString();
 				}
 				for(var j = 0; j < data.referenceFiles.length; j++){
-					data.referenceFiles[i].date = (new Date(data.referenceFiles[i].date)).toUTCString();
+					data.referenceFiles[j].date = (new Date(data.referenceFiles[j].date)).toUTCString();
 				}
 				for(var jj = 0; jj < data.talent.length; jj++){
 					data.talent[jj].added = (new Date(data.talent[jj].added)).toUTCString();

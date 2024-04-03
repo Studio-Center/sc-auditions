@@ -2,8 +2,8 @@
 'use strict';
 
 // Reports controller
-angular.module('reports').controller('ReportsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Reports', '$http',
-	function($scope, $stateParams, $location, Authentication, Reports, $http ) {
+angular.module('reports').controller('ReportsController', ['$scope', '$stateParams', '$location', 'Authentication', '$http',
+	function($scope, $stateParams, $location, Authentication, $http ) {
 		$scope.authentication = Authentication;
 		$scope.dateFilter = '';
 		$scope.sysstats = {};
