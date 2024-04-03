@@ -300,9 +300,6 @@ var gatherTalentsSearch = function(req, res, filter){
 						message: errorHandler.getErrorMessage(err)
 					});
 				} else {
-					var socketio = req.app.get('socketio'); // tacke out socket instance from the app container
-					socketio.sockets.emit('callListUpdate', {talents: callTalents, filter: filter}); // emit an event for all connected clients
-
 					res.jsonp(callTalents);
 				}
            	});
@@ -768,10 +765,6 @@ exports.sendPreCloseSummary = function(req, res){
 						project = _.extend(req.project, project);
 
 						project.save().then(function () {
-							// update connected clients
-							var socketio = req.app.get('socketio');
-							socketio.sockets.emit('projectUpdate', {id: project._id});
-							socketio.sockets.emit('callListUpdate', {filter: ''});
 							done(null);
 						}).catch(function (err) {
 							done(err);

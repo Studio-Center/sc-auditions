@@ -97,7 +97,7 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 		$http.post('/projects/updateNoRefresh', {
 			project: $scope.project
 		}).success(function(data, status, headers, config) {
-
+			Socket.emit('projectUpdateRequest', {id: data._id});
 			// update local project document
 			$scope.project = angular.extend($scope.project, data);
 
@@ -165,19 +165,6 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 		$scope.curRatings();
 
 	};
-
-	// reload auditions if single aud updated
-	Socket.on('clientauditionUpdate', function(pojectID) {
-
-		var project = $scope.project;
-
-		if(String(pojectID.id) === String(project._id)){
-
-			loadAuditions();
-
-		}
-
-	});
 
 	Socket.on('clientprojectUpdate', function(pojectData) {
 
@@ -433,6 +420,8 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 			audition: audition
 		// file found
 		}).success(function(data, status, headers, config) {
+			Socket.emit('projectUpdateRequest', {id: $stateParams.projectId});
+			
 			// reload auditions
 			loadAuditions();
 		// file not saved

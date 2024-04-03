@@ -339,9 +339,6 @@ var sendTalentEmail = function(req, res, project, talent, override){
 				req.project = project;
 
 				project.save().then(function () {
-					var socketio = req.app.get('socketio');
-					socketio.sockets.emit('projectUpdate', {id: project._id});
-					socketio.sockets.emit('callListUpdate', {filter: ''});
 					res.status(200).json(project);
 				}).catch(function (err) {
 					done(err);
@@ -794,9 +791,6 @@ exports.updateSingleTalentStatus = function (req, res){
 				req.project = project;
 
 				project.save().then(function () {
-					var socketio = req.app.get('socketio');
-					socketio.sockets.emit('projectUpdate', {id: project._id});
-					socketio.sockets.emit('callListUpdate', {filter: ''});
 				}).catch(function (err) {
 					done(err);
 				});
@@ -835,9 +829,6 @@ exports.updateTalentStatus = function(req, res){
                 project.markModified('modified');
 
                 project.save().then(function () {
-					var socketio = req.app.get('socketio');
-						socketio.sockets.emit('projectUpdate', {id: project._id});
-						socketio.sockets.emit('callListUpdate', {filter: ''});
 					res.status(200);
 				}).catch(function (err) {
 					return res.status(400).json(err);
@@ -893,9 +884,6 @@ exports.updateTalentNote = function (req, res){
 				req.project = project;
 
 				project.save().then(function () {
-					var socketio = req.app.get('socketio');
-					socketio.sockets.emit('projectUpdate', {id: project._id});
-					socketio.sockets.emit('callListUpdate', {filter: ''});
 				}).catch(function (err) {
 					done(err);
 				});
@@ -970,10 +958,6 @@ exports.updateNoRefresh = function(req, res){
 						//delete project.__v;
 
 						project.save().then(function () {
-							var socketio = req.app.get('socketio');
-								socketio.sockets.emit('projectUpdate', {id: project._id});
-								socketio.sockets.emit('callListUpdate', {filter: ''});
-
 							res.jsonp(project);
 						}).catch(function (err) {
 							log = {
@@ -1454,10 +1438,6 @@ exports.create = function(req, res) {
 					oldProject.status = 'ReAuditioned';
 
 					oldProject.save().then(function (oldProject) {
-						// emit an event for all connected clients
-						var socketio = req.app.get('socketio');
-						socketio.sockets.emit('projectsListUpdate'); // emit an event for all connected clients
-						socketio.sockets.emit('callListUpdate', {filter: ''});
 					}).catch(function (err) {
 						console.log('update fail '+err);
 						return res.status(400).send({
@@ -1706,9 +1686,6 @@ exports.create = function(req, res) {
 						log.save();
 
 						// emit an event for all connected clients
-						var socketio = req.app.get('socketio');
-						socketio.sockets.emit('projectsListUpdate'); // emit an event for all connected clients
-						socketio.sockets.emit('callListUpdate', {filter: ''});
 						return res.jsonp(project);
 					}).catch(function (err) {
 						console.log('save fail'+err);
@@ -1753,8 +1730,7 @@ exports.deleteAudition = function(req, res){
 
 	var aud = req.body.audition,
         appDir = global.appRoot,
-        audFile = '',
-		socketio = req.app.get('socketio');
+        audFile = '';
 
 	if(aud != null){
 		Audition.findById(aud._id).sort('-created').then(function (audition) {
@@ -1767,7 +1743,6 @@ exports.deleteAudition = function(req, res){
 			// remove audition from adution collection
 			audition.deleteOne().then(function (audition) {
 //					// emit an event for all connected clients
-				socketio.sockets.emit('auditionUpdate', {id: aud.project});
 				return res.status(200).send();
 			}).catch(function (err) {
 				return res.status(400).send({
@@ -1785,15 +1760,13 @@ exports.deleteAllAuditions = function(req, res){
 
     var prodId = req.body.project_ID,
         appDir = global.appRoot + '/public',
-        auditionsDir = appDir + '/res/auditions/' + prodId + '/',
-        socketio = req.app.get('socketio');
+        auditionsDir = appDir + '/res/auditions/' + prodId + '/';
 
 	// remove all file if exists
 	rimraf.sync(auditionsDir);
 
     // remove all assocaited auditions
     Audition.remove({project: Object(prodId)}).then(function (audition) {
-		socketio.sockets.emit('auditionUpdate', {id: prodId});
 		return res.status(200).send();
 	}).catch(function (err) {
 		return res.status(400).send(err);
@@ -1831,8 +1804,6 @@ exports.saveAudition = function(req, res){
 		audition = _.extend(audition, aud);
 
 		audition.save().then(function (upaud) {
-			var socketio = req.app.get('socketio');
-			socketio.sockets.emit('auditionUpdate', {id: aud.project});
 			return res.jsonp(audition);
 		}).catch(function (err) {
 			return res.status(400).send(err);
@@ -2085,11 +2056,6 @@ exports.update = function(req, res) {
 					log = new Log(log);
 					log.save();
 
-					// update connected clients
-					var socketio = req.app.get('socketio');
-					socketio.sockets.emit('projectUpdate', {id: upproject._id});
-					socketio.sockets.emit('callListUpdate', {filter: ''});
-
 					return res.jsonp(upproject);
 
 				}).catch(function (err) {
@@ -2162,8 +2128,6 @@ exports.delete = function(req, res) {
 		// remove all assocaited auditions
 		Audition.deleteMany({project: prodId}).then(function () {
 			// emit an event for all connected clients
-			var socketio = req.app.get('socketio');
-			socketio.sockets.emit('projectsListUpdate');
 			return res.jsonp(project);
 		}).catch(function (err) {
 			return res.status(400).send(err);
@@ -3063,10 +3027,6 @@ exports.uploadAudition = function(req, res, next){
                     log = new Log(log);
                     log.save();
 
-                    //				// update everyone else
-    //				var socketio = req.app.get('socketio');
-    //				socketio.sockets.emit('auditionUpdate', {id: aud.project});
-
                     // send audition data to client
 
                     //return res.jsonp(audition);
@@ -3085,10 +3045,6 @@ exports.uploadAudition = function(req, res, next){
         if (err) {
             return res.status(500).json(err);
         } else {
-            var socketio = req.app.get('socketio');
-                socketio.sockets.emit('projectUpdate', {id: req.body.projectId});
-                socketio.sockets.emit('auditionUpdate', {id: req.body.projectId});
-                socketio.sockets.emit('callListUpdate', {filter: ''});
             return res.jsonp({'status':'success'});
 
         }
@@ -3388,10 +3344,6 @@ exports.bookAuditions = function(req, res, next){
 				project = _.extend(project, newProject);
 
 				project.save().then(function () {
-					var socketio = req.app.get('socketio');
-						socketio.sockets.emit('projectUpdate', {id: project._id});
-						socketio.sockets.emit('auditionUpdate', {id: project._id});
-						socketio.sockets.emit('callListUpdate', {filter: ''});
 						done(err, selAuds, project);
 				});
 
@@ -3926,10 +3878,6 @@ exports.uploadTalentAudition = function(req, res, next){
 				project = _.extend(project, updatedProject.toObject());
 
 				project.save().then(function () {
-
-					var socketio = req.app.get('socketio');
-						socketio.sockets.emit('projectUpdate', {id: project._id});
-						socketio.sockets.emit('callListUpdate', {filter: ''});
 
 					done(err);
 

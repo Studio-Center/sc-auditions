@@ -220,9 +220,6 @@ exports.create = function(req, res) {
 				], function(err) {
 				if (err) return console.log(err);
 			});
-				var socketio = req.app.get('socketio');
-				socketio.sockets.emit('talentsListUpdate');
-
 				return res.jsonp(talent);
 		}).catch(function (err) {
 			return res.status(400).send({
@@ -362,9 +359,6 @@ exports.delete = function(req, res) {
 			log.save();
 
 			talent.deleteOne().then(function(talent) {
-				var socketio = req.app.get('socketio');
-				socketio.sockets.emit('talentsListUpdate');
-
 				res.jsonp(talent);
 			}).catch(function (err) {
 				done(err);

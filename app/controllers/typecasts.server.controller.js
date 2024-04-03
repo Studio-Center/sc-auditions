@@ -19,9 +19,6 @@ exports.create = function(req, res) {
 
 	if (_.intersection(req.user.roles, allowedRoles).length) {
 		typecast.save().then(function () {
-			var socketio = req.app.get('socketio');
-			socketio.sockets.emit('typecastsListUpdate'); 
-			
 			return res.jsonp(typecast);
 		}).catch(function (err) {
 			return res.status(400).send({
@@ -64,9 +61,6 @@ exports.delete = function(req, res) {
 	var typecast = req.typecast ;
 
 	typecast.deleteOne().then(function (typecast) {
-		var socketio = req.app.get('socketio');
-		socketio.sockets.emit('typecastsListUpdate'); 
-		
 		res.jsonp(typecast);
 	}).catch(function (err) {
 		return res.status(400).send({

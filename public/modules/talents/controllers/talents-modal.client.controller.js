@@ -139,6 +139,7 @@ angular.module('talents').controller('TalentsModalController', ['$scope', '$stat
 
 			// Redirect after save
 			talent.$save(function(response) {
+				Socket.emit('talentsListUpdateRequest');
 				$uibModalInstance.close();
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;

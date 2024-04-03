@@ -61,32 +61,46 @@ if (cluster.isMaster) {
 	var io = sio(server, { cors: { origin: '*' }, reconnection: true, reconnectionDelay: 1000, reconnectionDelayMax: 5000, reconnectionAttempts: 3, transports: [ 'websocket']});
 	//io.adapter(redisAdapter({ host: 'localhost', port: 6379 }));
 
-	// io.on('connection', (socket) => {
-	// 	console.log('a user connected');
-
+	io.on('connection', (socket) => {
+		// console.log('a user connected');
+		
+	// 	socket.emit('projectUpdate', {id: '66059c3dc400852b320d3159'});
 	// 	socket.emit('message', 'I\'m a message!');
 
-	// 	socket.on('disconnect', (event)=>{
-	// 	 console.log('a user disconnected');
-	// 	});
-	// });
+		socket.on('projectUpdateRequest', (event)=>{
+			socket.emit('projectUpdate',{id: event.id});
+			socket.emit('clientprojectUpdate',{id: event.id});
+			socket.emit('callListUpdate', {filter: ''});
+			socket.emit('projectsListUpdate');
+		});
+
+		socket.on('talentsListUpdateRequest', (event)=>{
+			socket.emit('talentsListUpdate');
+		});
+
+		socket.on('typecastsListUpdateRequest', (event)=>{
+			socket.emit('typecastsListUpdate');
+		});
+
+		// socket.on('disconnect', (event)=>{
+		//  	console.log('a user disconnected');
+		// });
+	});
 
 	// override default socket upgrade listener to allow socketio connection
 	let [serverUpgradeListener, socketioUpgradeListener] = server.listeners('upgrade').slice(0);
 	server.removeAllListeners('upgrade');
 	server.on('upgrade', (req, socket, head) => {
 		const pathname = url.parse(req.url).pathname;
-		console.log('UPGRADE: '+pathname);
 		if (pathname === '/socket.io/'){
 			socketioUpgradeListener(req, socket, head);
-			console.log('UPGRADE: SUCCESS '+pathname);
 		} else {
-			socket.destroy();
+			serverUpgradeListener(req, socket, head);
+			//socket.destroy();
 		}
 	});
 
-	app.set('socketio', io);
-
+	//app.set('socketio', io);
 	app.set('server', server);
 
 	// Listen to messages sent from the master. Ignore everything else.

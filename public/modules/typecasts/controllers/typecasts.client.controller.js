@@ -55,6 +55,8 @@ angular.module('typecasts').controller('TypecastsController', ['$scope', '$state
 
 			// Redirect after save
 			typecast.$save(function(response) {
+				Socket.emit('typecastsListUpdateRequest');
+
 				$location.path('typecasts/' + response._id);
 
 				// Clear form fields
@@ -76,6 +78,7 @@ angular.module('typecasts').controller('TypecastsController', ['$scope', '$state
 					}
 				} else {
 					$scope.typecast.$remove(function() {
+						Socket.emit('typecastsListUpdateRequest');
 						$location.path('typecasts');
 					});
 				}
@@ -87,6 +90,7 @@ angular.module('typecasts').controller('TypecastsController', ['$scope', '$state
 			var typecast = $scope.typecast ;
 
 			typecast.$update(function() {
+				Socket.emit('typecastsListUpdateRequest');
 				$location.path('typecasts/' + typecast._id);
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;

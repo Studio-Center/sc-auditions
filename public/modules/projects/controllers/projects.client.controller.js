@@ -85,10 +85,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		// 	console.log(message);
 		//   });
 
-		  Socket.on("connection", (socket) => {
-			console.log('connected socketio');
-		  });
-
 		// clear mem leaks on controller destroy
 		$scope.$on('$destroy', function (event) {
 				// clear all socket listeners
@@ -1255,9 +1251,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			redirect = typeof redirect === 'undefined' ? true : redirect;
 
 
-			project.$update(function() {
+			project.$update(function(data) {
 				if(redirect === true){
 					//$location.path('projects/' + project._id);
+					Socket.emit('projectUpdateRequest', {id: data._id});
 					window.location.reload();
 				}
 			}, function(errorResponse) {
@@ -1300,6 +1297,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 						}
 						
                         $scope.project = angular.extend($scope.project, data);
+						Socket.emit('projectUpdateRequest', {id: data._id});
                     }
 
                     jQuery('section.content').animate({backgroundColor:'#ddd'},{duration:500,complete: function() {
@@ -1688,10 +1686,15 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		// dynamically update project view
 		Socket.on('projectsListUpdate', function() {
+			
+			console.log('project list socket trigger');
+
 			$scope.findLimitWithFilter();
 		});
 
 		Socket.on('projectUpdate', function(pojectData) {
+
+			console.log('project update socket trigger');
 
 			var project = $scope.project;
 
@@ -1706,19 +1709,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
                       jQuery('section.content').animate({backgroundColor:'transparent'},{duration:500});
                     }});
 				});
-			}
-
-		});
-
-		// reload auditions if single aud updated
-		Socket.on('auditionUpdate', function(pojectID) {
-
-			var project = $scope.project;
-
-			if(String(pojectID.id) === String(project._id)){
-
-				loadAuditions();
-
 			}
 
 		});
@@ -2179,7 +2169,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.saveDiscussion = function(){
 
 			var project = $scope.project,
-					authUser = Authentication.user;
+				authUser = Authentication.user;
 
 			if(typeof $scope.discussion !== 'undefined' && this.discussion !== ''){
 				var now = new Date();
@@ -2195,11 +2185,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 				// send update email
 				$scope.gatherToAddresses('saveDiscussion');
-		    $scope.email.subject = project.title + ' discussion added';
-		    $scope.email.message = 'Project: ' + project.title + '<br>';
-		    $scope.email.message += 'Added by: ' + authUser.displayName + '<br>';
+				$scope.email.subject = project.title + ' discussion added';
+				$scope.email.message = 'Project: ' + project.title + '<br>';
+				$scope.email.message += 'Added by: ' + authUser.displayName + '<br>';
 				$scope.email.message += 'Discussion Item: ' + this.discussion + '<br>';
-		    $scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 || $location.port() !== 443 ? ':' + $location.port() : '') + '/#!/projects/' + project._id + '<br>';
+				$scope.email.message += '<br>' + 'For more information, please visit: ' + $location.protocol() + '://' + $location.host() + ($location.port() !== 80 || $location.port() !== 443 ? ':' + $location.port() : '') + '/#!/projects/' + project._id + '<br>';
 
 				$scope.discussion = '';
 				this.discussion = '';

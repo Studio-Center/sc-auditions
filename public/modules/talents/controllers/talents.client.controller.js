@@ -204,6 +204,9 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 
 			// Redirect after save
 			talent.$save(function(response) {
+
+				Socket.emit('talentsListUpdateRequest');
+
 				$location.path('talents/' + response._id);
 
 				// Clear form fields
@@ -236,6 +239,7 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 			var talent = $scope.talent ;
 
 			talent.$update(function() {
+				Socket.emit('talentsListUpdateRequest');
 				$location.path('talents/' + talent._id);
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
