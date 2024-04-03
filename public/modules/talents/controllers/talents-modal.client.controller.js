@@ -1,8 +1,8 @@
 'use strict';
 
 // Talents controller
-angular.module('talents').controller('TalentsModalController', ['$scope', '$stateParams', '$location', 'Authentication', 'Talents', '$http', '$uibModalInstance', '$rootScope',
-	function($scope, $stateParams, $location, Authentication, Talents, $http, $uibModalInstance, $rootScope) {
+angular.module('talents').controller('TalentsModalController', ['$scope', '$stateParams', '$location', 'Authentication', 'Talents', '$http', '$uibModalInstance', '$rootScope', 'Socket',
+	function($scope, $stateParams, $location, Authentication, Talents, $http, $uibModalInstance, $rootScope, Socket) {
 		$scope.authentication = Authentication;
 
 		// talent static options

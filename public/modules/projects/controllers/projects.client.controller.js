@@ -1255,24 +1255,24 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 						for(var i = 0; i < data.discussion.length; i++){
 							data.discussion[i].date = (new Date(data.discussion[i].date)).toUTCString();
 						}
-						for(var i = 0; i < data.clientNotes.length; i++){
-							data.clientNotes[i].date = (new Date(data.clientNotes[i].date)).toUTCString();
+						for(var ii = 0; ii < data.clientNotes.length; ii++){
+							data.clientNotes[ii].date = (new Date(data.clientNotes[ii].date)).toUTCString();
 						}
-						for(var i = 0; i < data.scripts.length; i++){
-							data.scripts[i].date = (new Date(data.scripts[i].date)).toUTCString();
+						for(var iii = 0; iii < data.scripts.length; iii++){
+							data.scripts[iii].date = (new Date(data.scripts[iii].date)).toUTCString();
 						}
-						for(var i = 0; i < data.referenceFiles.length; i++){
-							data.referenceFiles[i].date = (new Date(data.referenceFiles[i].date)).toUTCString();
+						for(var j = 0; j < data.referenceFiles.length; j++){
+							data.referenceFiles[j].date = (new Date(data.referenceFiles[j].date)).toUTCString();
 						}
-						for(var i = 0; i < data.talent.length; i++){
-							data.talent[i].added = (new Date(data.talent[i].added)).toUTCString();
+						for(var jj = 0; jj < data.talent.length; jj++){
+							data.talent[jj].added = (new Date(data.talent[jj].added)).toUTCString();
 						}
-						for(var i = 0; i < data.talent.length; i++){
-							data.talent[i].added = (new Date(data.talent[i].added)).toUTCString();
+						for(var jjj = 0; jjj < data.talent.length; jjj++){
+							data.talent[jjj].added = (new Date(data.talent[jjj].added)).toUTCString();
 						}
-						for(var i = 0; i < data.phases.length; i++){
-							data.phases[i].changeDate = (new Date(data.phases[i].changeDate)).toUTCString();
-							data.phases[i].endDate = (new Date(data.phases[i].endDate)).toUTCString();
+						for(var k = 0; k < data.phases.length; k++){
+							data.phases[k].changeDate = (new Date(data.phases[k].changeDate)).toUTCString();
+							data.phases[k].endDate = (new Date(data.phases[k].endDate)).toUTCString();
 						}
 						
                         $scope.project = angular.extend($scope.project, data);
@@ -1718,24 +1718,24 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				for(var i = 0; i < data.discussion.length; i++){
 					data.discussion[i].date = (new Date(data.discussion[i].date)).toUTCString();
 				}
-				for(var i = 0; i < data.clientNotes.length; i++){
-					data.clientNotes[i].date = (new Date(data.clientNotes[i].date)).toUTCString();
+				for(var ii = 0; ii < data.clientNotes.length; ii++){
+					data.clientNotes[ii].date = (new Date(data.clientNotes[ii].date)).toUTCString();
 				}
-				for(var i = 0; i < data.scripts.length; i++){
-					data.scripts[i].date = (new Date(data.scripts[i].date)).toUTCString();
+				for(var iii = 0; iii < data.scripts.length; iii++){
+					data.scripts[iii].date = (new Date(data.scripts[iii].date)).toUTCString();
 				}
-				for(var i = 0; i < data.referenceFiles.length; i++){
+				for(var j = 0; j < data.referenceFiles.length; j++){
 					data.referenceFiles[i].date = (new Date(data.referenceFiles[i].date)).toUTCString();
 				}
-				for(var i = 0; i < data.talent.length; i++){
-					data.talent[i].added = (new Date(data.talent[i].added)).toUTCString();
+				for(var jj = 0; jj < data.talent.length; jj++){
+					data.talent[jj].added = (new Date(data.talent[jj].added)).toUTCString();
 				}
-				for(var i = 0; i < data.talent.length; i++){
-					data.talent[i].added = (new Date(data.talent[i].added)).toUTCString();
+				for(var jjj = 0; jjj < data.talent.length; jjj++){
+					data.talent[jjj].added = (new Date(data.talent[jjj].added)).toUTCString();
 				}
-				for(var i = 0; i < data.phases.length; i++){
-					data.phases[i].changeDate = (new Date(data.phases[i].changeDate)).toUTCString();
-					data.phases[i].endDate = (new Date(data.phases[i].endDate)).toUTCString();
+				for(var k = 0; k < data.phases.length; k++){
+					data.phases[k].changeDate = (new Date(data.phases[k].changeDate)).toUTCString();
+					data.phases[k].endDate = (new Date(data.phases[k].endDate)).toUTCString();
 				}
 
 				$scope.project = angular.extend($scope.project, data);
