@@ -230,7 +230,7 @@ exports.create = function(req, res) {
 	user.displayName = user.firstName + ' ' + user.lastName;
 
 	// Then save the user
-	user.save().then(function () {
+	user.save().then(function (user) {
 
 		var template = 'templates/users/client-welcome-email';
 
@@ -267,31 +267,12 @@ exports.create = function(req, res) {
 				log = new Log(log);
 				log.save();
 
+				res.jsonp(user);
+
 			});
 
 		});
-
-		// Remove sensitive data before login
-		user.password = undefined;
-		user.salt = undefined;
-
-		req.login(user, function(err) {
-			if (err) {
-				res.status(400).send(err);
-			} else {
-				// reload admin user data
-				User.findById(adminUserId).then(function () {
-					req.login(user, function(err) {
-						if (err) {
-							res.status(400).send(err);
-						} else {
-							// return user json object
-							res.jsonp(user);
-						}
-					});
-				});
-			}
-		});
+		
 	}).catch(function (err) {
 		return res.status(400).send({
 			message: errorHandler.getErrorMessage(err)
