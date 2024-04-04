@@ -1037,10 +1037,12 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 			// check for existing item
 			for(i = 0; i < limit; ++i){
-				if(clients[i].userId === userId){
-					clients.splice(i, 1);
-					found = 1;
-				}
+				if(typeof clients[i] !== 'undefined'){
+					if(clients[i].userId === userId){
+						clients.splice(i, 1);
+						found = 1;
+					}
+				} 
 			}
 
 			if(found === 0){

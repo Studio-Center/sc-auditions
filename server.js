@@ -68,18 +68,18 @@ if (cluster.isMaster) {
 	// 	socket.emit('message', 'I\'m a message!');
 
 		socket.on('projectUpdateRequest', (event)=>{
-			socket.emit('projectUpdate',{id: event.id});
-			socket.emit('clientprojectUpdate',{id: event.id});
-			socket.emit('callListUpdate', {filter: ''});
-			socket.emit('projectsListUpdate');
+			socket.broadcast.emit('projectUpdate',{id: event.id});
+			socket.broadcast.emit('clientprojectUpdate',{id: event.id});
+			socket.broadcast.emit('callListUpdate', {filter: ''});
+			socket.broadcast.emit('projectsListUpdate');
 		});
 
 		socket.on('talentsListUpdateRequest', (event)=>{
-			socket.emit('talentsListUpdate');
+			socket.broadcast.emit('talentsListUpdate');
 		});
 
 		socket.on('typecastsListUpdateRequest', (event)=>{
-			socket.emit('typecastsListUpdate');
+			socket.broadcast.emit('typecastsListUpdate');
 		});
 
 		// socket.on('disconnect', (event)=>{

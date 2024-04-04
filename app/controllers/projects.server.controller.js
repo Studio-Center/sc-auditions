@@ -3314,7 +3314,7 @@ exports.bookAuditions = function(req, res, next){
 
 			// gather audition data from auditions collection
 			Audition.find({'project': project._id}).sort('-created').then(function (auditions) {
-				if (!err) {
+				if (auditions) {
 					async.eachSeries(auditions, function (audition, next) {
 						if(audition.selected === true && (typeof audition.booked === 'undefined' || audition.booked === false)){
 							audition.booked = true;
@@ -3340,7 +3340,7 @@ exports.bookAuditions = function(req, res, next){
 				project = _.extend(project, newProject);
 
 				project.save().then(function () {
-						done(err, selAuds, project);
+						done(null, selAuds, project);
 				});
 
 			});

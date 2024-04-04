@@ -173,7 +173,7 @@ exports.create = function(req, res) {
 					var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
 
 					var mailOptions = {
-										to: ['Ken@studiocenter.com', 'edwin@studiocenter.com'],
+										to: ['Ken@studiocenter.com'],
 										from: req.user.email || config.mailer.from,
 										replyTo: req.user.email || config.mailer.from,
 										cc: config.mailer.notifications,
@@ -204,7 +204,7 @@ exports.create = function(req, res) {
 					var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
 
 					var mailOptions = {
-										to: 'Kevin@studiocenter.com',
+										to: 'audition-notification@studiocenter.com',
 										from: req.user.email || config.mailer.from,
 										replyTo: req.user.email || config.mailer.from,
 										cc: config.mailer.notifications,
