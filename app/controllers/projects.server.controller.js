@@ -2336,7 +2336,6 @@ exports.findLimit = function(req, res) {
 	if (_.intersection(req.user.roles, allowedRoles).length) {
 
 		Project.find().sort('-created').limit(limit).then(function (projects) {
-			projects.populate('user', 'displayName');
 			return res.jsonp(projects);
 		}).catch(function (err) {
 			return res.status(400).send({
@@ -2396,7 +2395,6 @@ exports.findLimitWithFilter = function(req, res) {
 
 		Project.find(filterObj).sort(sortOrder).skip(Number(startVal)).limit(Number(limitVal))
 		.then(function (projects) {
-			projects.populate('user', 'displayName');
 			return res.jsonp(projects);
 		}).catch(function (err) {
 			return res.status(400).send({
