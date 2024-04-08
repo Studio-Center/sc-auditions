@@ -62,6 +62,7 @@ exports.signin = function(req, res, next) {
 		} else {
 			// Remove sensitive data before login
 			user.password = undefined;
+			user.passwordText = undefined;
 			user.salt = undefined;
 
 			req.login(user, function(err) {
