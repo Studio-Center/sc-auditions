@@ -125,8 +125,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.Math = window.Math;
 		$scope.currentPage = 0;
 		$scope.filtered = [];
-		$scope.limit = 20;
-		$scope.queryLimit = 50;
+		$scope.limit = 100;
+		$scope.queryLimit = 100;
 		$scope.range = function(min, max, step){
 		    step = step || 1;
 		    var input = [];
