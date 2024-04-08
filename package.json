@@ -9,8 +9,8 @@
     "url": "git://github.com/Studio-Center/sc-auditions.git"
   },
   "engines": {
-    "node": "^18.19.x",
-    "npm": "^10.2.x"
+    "node": "16.20.x",
+    "npm": "^8.19.x"
   },
   "scripts": {
     "start": "grunt",
@@ -74,7 +74,7 @@
     "grunt-env": "~1.0.1",
     "grunt-karma": "~4.0.2",
     "grunt-mocha-test": "~0.13.3",
-    "grunt-nodemon": "~0.4.2",
+   "grunt-nodemon": "~0.4.2",
     "grunt-babel": "~8.0.0",
     "karma": "~6.4.3",
     "karma-chrome-launcher": "~3.2.0",

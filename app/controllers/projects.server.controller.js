@@ -333,6 +333,7 @@ var sendTalentEmail = function(req, res, project, talent, override){
 			}
 
 			Project.findById(project._id).then(function (project) {
+				project.populate('user', 'displayName');
 
 				project = _.extend(project, newProject);
 
@@ -593,6 +594,7 @@ exports.sendTalentScriptUpdateEmail = function(req, res){
 exports.getproject = function(req, res){
 
 	Project.findById(req.body.id).then(function (project) {
+		project.populate('user', 'displayName');
 		res.status(200).jsonp(project);
 	}).catch(function (err) {
 		return res.status(400).json(err);
@@ -785,6 +787,7 @@ exports.updateSingleTalentStatus = function (req, res){
 			var newProject = project.toObject();
 
 			Project.findById(project._id).then(function (project) {
+				project.populate('user', 'displayName');
 
 				project = _.extend(project, newProject);
 
@@ -820,6 +823,7 @@ exports.updateTalentStatus = function(req, res){
 
         if (project._id.match(/^[0-9a-fA-F]{24}$/)) {
             Project.findById(project._id).then(function (project) {
+				project.populate('user', 'displayName');
 
                 project = _.extend(project, req.body.project);
 
@@ -875,6 +879,7 @@ exports.updateTalentNote = function (req, res){
 			var newProject = project.toObject();
 
 			Project.findById(project._id).then(function (projects) {
+				project.populate('user', 'displayName');
 
 				project = _.extend(project, newProject);
 
@@ -939,6 +944,7 @@ exports.updateNoRefresh = function(req, res){
                 //project = req.body.project;
 
                 Project.findById(req.body.project._id).then(function (project) {
+					project.populate('user', 'displayName');
 
                     // if(typeof req.body.project.__v !== 'undefined'){
                     // 	delete req.body.project.__v;
@@ -1819,6 +1825,7 @@ exports.loadProject = function(req, res){
 	var projId = req.body.projectId;
 	// load project
 	Project.findById(projId).then(function (project) {
+		project.populate('user', 'displayName');
 		// walk through assigned talent
 		async.eachSeries(project.talent, function (curTalent, talentCallback) {
 				// gather updated talent info
@@ -2329,6 +2336,7 @@ exports.findLimit = function(req, res) {
 	if (_.intersection(req.user.roles, allowedRoles).length) {
 
 		Project.find().sort('-created').limit(limit).then(function (projects) {
+			projects.populate('user', 'displayName');
 			return res.jsonp(projects);
 		}).catch(function (err) {
 			return res.status(400).send({
@@ -2388,6 +2396,7 @@ exports.findLimitWithFilter = function(req, res) {
 
 		Project.find(filterObj).sort(sortOrder).skip(Number(startVal)).limit(Number(limitVal))
 		.then(function (projects) {
+			projects.populate('user', 'displayName');
 			return res.jsonp(projects);
 		}).catch(function (err) {
 			return res.status(400).send({
@@ -2422,6 +2431,7 @@ exports.list = function(req, res) {
 
 		Project.find().sort('-created')
 		.then(function (projects) {
+			projects.populate('user', 'displayName');
 			return res.jsonp(projects);
 		}).catch(function (err) {
 			return res.status(400).send({
@@ -2449,6 +2459,7 @@ exports.list = function(req, res) {
 exports.projectByID = function(req, res, next, id) { 
 	Project.findById(id).then(function (project) {
 		if (!project) return next(new Error('Failed to load Project '));
+		project.populate('user', 'displayName');
 		req.project = project;
 		next();
 	}).catch(function (err) {
