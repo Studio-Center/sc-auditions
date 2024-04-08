@@ -15,6 +15,7 @@ exports.userByID = function(req, res, next, id) {
 		_id: id
 	}).then(function (user) {
 		if (!user) return next(new Error('Failed to load User ' + id));
+		user.passwordText = undefined;
 		req.profile = user;
 		next();
 	}).catch(function (err) {

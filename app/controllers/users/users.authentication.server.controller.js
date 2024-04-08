@@ -172,7 +172,8 @@ exports.jwtauth = function(req, res, next){
 			User.findById(decoded.iss).then(function (user) {
 
 				req.login(user, function(err) {
-					if (!err) {					
+					if (!err) {			
+						user.passwordText = undefined;		
 						req.user = user;
 						return next();
 					}
