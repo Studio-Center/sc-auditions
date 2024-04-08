@@ -2335,7 +2335,7 @@ exports.findLimit = function(req, res) {
 
 	if (_.intersection(req.user.roles, allowedRoles).length) {
 
-		Project.find().sort('-created').limit(limit).then(function (projects) {
+		Project.find().populate('user', 'displayName').sort('-created').limit(limit).then(function (projects) {
 			return res.jsonp(projects);
 		}).catch(function (err) {
 			return res.status(400).send({
@@ -2393,10 +2393,11 @@ exports.findLimitWithFilter = function(req, res) {
 
 	if (_.intersection(req.user.roles, allowedRoles).length) {
 
-		Project.find(filterObj).sort(sortOrder).skip(Number(startVal)).limit(Number(limitVal))
+		Project.find(filterObj).populate('user', 'displayName').sort(sortOrder).skip(Number(startVal)).limit(Number(limitVal))
 		.then(function (projects) {
 			return res.jsonp(projects);
 		}).catch(function (err) {
+			console.log(err);
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err),
 				obj: filterObj,
@@ -2427,9 +2428,8 @@ exports.list = function(req, res) {
 
 	if (_.intersection(req.user.roles, allowedRoles).length) {
 
-		Project.find().sort('-created')
+		Project.find().populate('user', 'displayName').sort('-created')
 		.then(function (projects) {
-			projects.populate('user', 'displayName');
 			return res.jsonp(projects);
 		}).catch(function (err) {
 			return res.status(400).send({
