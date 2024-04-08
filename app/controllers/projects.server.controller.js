@@ -1741,7 +1741,12 @@ exports.deleteAudition = function(req, res){
 			audFile = appDir + '/public/res/auditions/' + String(audition.project) + '/' + audition.file.name;
 			// remove file from file system
 			if (fs.existsSync(audFile)) {
-				fs.unlink(audFile);
+				fs.unlink(audFile, (err) => {
+						if (err) {
+							return res.status(400).send(err);
+						}
+					}
+				);
 			}
 			// remove audition from adution collection
 			audition.deleteOne().then(function (audition) {
@@ -1753,6 +1758,7 @@ exports.deleteAudition = function(req, res){
 				});
 			});
 		}).catch(function (err) {
+			console.log(err);
 			return res.status(400).send(err);
 		});
 	}
@@ -1866,7 +1872,11 @@ var deleteFiles = function(project, req, user){
 
 		// remove file if exists
 		if (fs.existsSync(file)) {
-			fs.unlinkSync(file);
+			fs.unlinkSync(file, (err) => {
+				if (err) {
+					return res.status(400).send(err);
+				}
+			});
 
 			// write change to log
 			var log = {
@@ -1911,7 +1921,11 @@ exports.deleteFileByName = function(req, res){
 
 	// remove file is exists
 	if (fs.existsSync(file)) {
-		fs.unlinkSync(file);
+		fs.unlinkSync(file, (err) => {
+			if (err) {
+				return res.status(400).send(err);
+			}
+		});
 
 		// log instance if project info included
 		if(typeof req.body.projectId !== 'undefined'){
@@ -1948,7 +1962,11 @@ exports.deleteTempScript = function(req, res){
 
 	// remove file is exists
 	if (fs.existsSync(file)) {
-		fs.unlinkSync(file);
+		fs.unlinkSync(file, (err) => {
+			if (err) {
+				return res.status(400).send(err);
+			}
+		});
 		return res.status(200).send();
 	} else {
 		return res.status(200).send();
@@ -2038,7 +2056,11 @@ exports.update = function(req, res) {
 
 					// remove file is exists
 					if (fs.existsSync(file)) {
-						fs.unlinkSync(file);
+						fs.unlinkSync(file, (err) => {
+							if (err) {
+								return res.status(400).send(err);
+							}
+						});
 					}
 
 					// remove file from delete queue
@@ -3822,7 +3844,11 @@ exports.uploadTalentAudition = function(req, res, next){
 
 					// remove file if exists
 					if (fs.existsSync(tempPath)) {
-						fs.unlinkSync(tempPath);
+						fs.unlinkSync(tempPath, (err) => {
+							if (err) {
+								return res.status(400).send(err);
+							}
+						});
 					}
 
 					// write change to log
