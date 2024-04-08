@@ -35,12 +35,14 @@ exports.signup = function(req, res) {
 
 		// Remove sensitive data before login
 			user.password = undefined;
+			user.passwordText = undefined;
 			user.salt = undefined;
 
 			req.login(user, function(err) {
 				if (err) {
 					res.status(400).send(err);
 				} else {
+					user.passwordText = undefined;
 					res.jsonp(user);
 				}
 			});
@@ -69,6 +71,7 @@ exports.signin = function(req, res, next) {
 				if (err) {
 					res.status(400).send(err);
 				} else {
+					user.passwordText = undefined;
 					res.jsonp(user);
 				}
 			});
@@ -83,13 +86,14 @@ exports.appsignin = function(req, res, next) {
 		} else {
 			// Remove sensitive data before login
 			user.password = undefined;
+			user.passwordText = undefined;
 			user.salt = undefined;
 
 			req.login(user, function(err) {
 				if (err) {
 					res.status(400).send(err);
 				} else {
-
+					user.passwordText = undefined;
 					user = user.toObject();
 
 					// Great, user has successfully authenticated, so we can generate and send them a token.	
