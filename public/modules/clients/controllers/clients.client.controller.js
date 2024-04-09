@@ -192,7 +192,8 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 			phone: $scope.newLead.phone || '',
 			email: $scope.newLead.email || '',
 			describe: $scope.newLead.describe || '',
-			scripts: $scope.newProject.scripts || ''
+			scripts: $scope.newProject.scripts || '',
+			acomment: $scope.newLead.acomment || ''
 		}).
 			success(function(data, status, headers, config) {
 		$location.path('/clients/new-audition-form/thanks');

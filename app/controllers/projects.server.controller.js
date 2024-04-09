@@ -1152,73 +1152,78 @@ exports.sendClientEmail = function(req, res){
 // send emails from lead form
 exports.lead = function(req, res){
 
-	// build email
-	var emailBody = 'First Name: ' + req.body.firstName + '\n';
-		emailBody += 'Last Name: ' + req.body.lastName + '\n';
-		emailBody += 'Company: ' + req.body.company + '\n';
-		emailBody += 'Phone: ' + req.body.phone + '\n';
-		emailBody += 'Email: ' + req.body.email + '\n';
-		emailBody += 'Description: ' + req.body.describe + '\n';
+	// if honey pot empty perform mailer, if not pretend was success anyway
+	if(req.body.acomment.length == 0){
 
-	//var file = req.files.file;
-  var appDir = global.appRoot;
+		// build email
+		var emailBody = 'First Name: ' + req.body.firstName + '\n';
+			emailBody += 'Last Name: ' + req.body.lastName + '\n';
+			emailBody += 'Company: ' + req.body.company + '\n';
+			emailBody += 'Phone: ' + req.body.phone + '\n';
+			emailBody += 'Email: ' + req.body.email + '\n';
+			emailBody += 'Description: ' + req.body.describe + '\n';
 
-  var relativePath =  'res' + '/' + 'scripts' + '/temp/';
-  var newPath = appDir + '/public/' + relativePath;
+		//var file = req.files.file;
+	var appDir = global.appRoot;
 
-	var attachements = [];
+	var relativePath =  'res' + '/' + 'scripts' + '/temp/';
+	var newPath = appDir + '/public/' + relativePath;
 
-	for(var i = 0; i < req.body.scripts.length; ++i){
-		attachements[i] = {
-			filename: req.body.scripts[i].file.name,
-			path: newPath + req.body.scripts[i].file.name
+		var attachements = [];
+
+		for(var i = 0; i < req.body.scripts.length; ++i){
+			attachements[i] = {
+				filename: req.body.scripts[i].file.name,
+				path: newPath + req.body.scripts[i].file.name
+			};
+		}
+
+		// send email
+		var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
+		transporter.sendMail({
+			from: config.mailer.from,
+			to: 'scripts@studiocenter.com, william@studiocenter.com',
+			cc: config.mailer.notifications,
+			subject: 'Start a new Audition Project Form Submission',
+			text: emailBody,
+			attachments: attachements
+		});
+
+		var uid = 'N/A';
+		if(typeof req.user !== 'undefined'){
+			uid = req.user._id;
+		}
+
+		// build submission object
+		var sub = {
+			firstName: req.body.firstName,
+			lastName: req.body.lastName,
+			company: req.body.company,
+			phone: req.body.phone,
+			email: req.body.email,
+			describe: req.body.describe
 		};
+
+		// save submission to db for later retrieval
+		var newproject = {
+			project: emailBody,
+			sub: sub,
+			attachements: req.body.scripts
+		};
+		newproject = new Newproject(newproject);
+		newproject.save();
+
+		// write change to log
+		var log = {
+			type: 'system',
+			sharedKey: uid,
+			description: 'new project lead submitted by ' + req.body.firstName + ' ' + req.body.lastName,
+			user: req.user
+		};
+		log = new Log(log);
+		log.save();
+
 	}
-
-	// send email
-	var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
-	transporter.sendMail({
-	    from: config.mailer.from,
-	    to: 'scripts@studiocenter.com, william@studiocenter.com',
-	    cc: config.mailer.notifications,
-	    subject: 'Start a new Audition Project Form Submission',
-	    text: emailBody,
-	    attachments: attachements
-	});
-
-	var uid = 'N/A';
-	if(typeof req.user !== 'undefined'){
-		uid = req.user._id;
-	}
-
-	// build submission object
-	var sub = {
-		firstName: req.body.firstName,
-		lastName: req.body.lastName,
-		company: req.body.company,
-		phone: req.body.phone,
-		email: req.body.email,
-		describe: req.body.describe
-	};
-
-	// save submission to db for later retrieval
-	var newproject = {
-		project: emailBody,
-		sub: sub,
-		attachements: req.body.scripts
-	};
-	newproject = new Newproject(newproject);
-	newproject.save();
-
-	// write change to log
-	var log = {
-		type: 'system',
-		sharedKey: uid,
-		description: 'new project lead submitted by ' + req.body.firstName + ' ' + req.body.lastName,
-		user: req.user
-	};
-	log = new Log(log);
-	log.save();
 
 	return res.status(200).send();
 };
