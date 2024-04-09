@@ -101,11 +101,13 @@ exports.emailMissingAuds = function(req, res){
 							callTalents[project._id].project._id = String(project._id);
 							callTalents[project._id].project.title = project.title;
 							callTalents[project._id].project.estimatedCompletionDate = project.estimatedCompletionDate;
+							callTalents[project._id].talents = [];
+							callTalents[project._id].missingAudsCnt = 0;
 
 							// walk through project found talent
 							async.forEach(project.talent, function (talent, talentCallback) {
 
-								if(talent){
+								if(typeof talent !== 'undefined'){
 
 									async.waterfall([
 										// gather info for selected talent
