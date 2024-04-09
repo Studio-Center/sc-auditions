@@ -39,7 +39,7 @@ exports.emailMissingAuds = function(req, res){
 
 	var searchCriteria = {'estimatedCompletionDate': {$gte: yesterday, $lt: tomorrow}};
 
-	Project.find(searchCriteria).populate('project', 'displayName').sort('-estimatedCompletionDate').then(function (projects) {
+	Project.find(searchCriteria).populate('user', 'displayName').sort('-estimatedCompletionDate').then(function (projects) {
 
 		async.waterfall([
 				function(done) {
@@ -225,7 +225,7 @@ exports.findMissingAuds = function(req, res){
 
 	var searchCriteria = {'estimatedCompletionDate': {$gte: yesterday, $lt: tomorrow}};
 
-	Project.find(searchCriteria).populate('project', 'displayName').sort('-estimatedCompletionDate').then(function (projects) {
+	Project.find(searchCriteria).populate('user', 'displayName').sort('-estimatedCompletionDate').then(function (projects) {
 
 		// walk through found projects
 		async.forEach(projects, function (project, callback) {
@@ -458,7 +458,7 @@ exports.findAuditionsBooked = function(req, res){
 	var searchCriteria = {'estimatedCompletionDate': {$gte: yesterday, $lt: tomorrow}};
 
 	// walk found projects
-	Project.find(searchCriteria).populate('project', 'displayName').sort('-estimatedCompletionDate').then(function (projects) {
+	Project.find(searchCriteria).populate('user', 'displayName').sort('-estimatedCompletionDate').then(function (projects) {
 
 		async.eachSeries(projects, function (project, projectCallback) {
 
