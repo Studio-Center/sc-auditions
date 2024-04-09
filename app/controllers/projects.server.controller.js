@@ -1537,11 +1537,6 @@ exports.create = function(req, res) {
 						email.referenceFiles += 'None';
 					}
 
-					// // append default footer to email
-					// email.footer =  'The ' + config.app.title + ' Support Team' + '<br>';
-					// email.footer += 'To view your StudioCenterAuditions.com Home Page, visit:' + '<br>';
-					// email.footer += 'http://' + req.headers.host;
-
 					done('', email);
 				},
 				// render regular email body
@@ -1583,7 +1578,6 @@ exports.create = function(req, res) {
 						for(var i = 0; i < project.talent.length; ++i){
 							talentIds[i] = project.talent[i].talentId;
 						}
-
 						Talent.where('_id').in(talentIds).sort('-created').then(function (talents) {
 
 							async.eachSeries(talents, function (talent, talentCallback) {
@@ -1677,8 +1671,10 @@ exports.create = function(req, res) {
 						};
 						project.discussion.push(item);
 					}
-					
+
 					// save final project
+					project.markModified("talent");
+					project.markModified("phases");
 					project.save().then(function () {
 						// write change to log
 						var log = {
@@ -1758,7 +1754,6 @@ exports.deleteAudition = function(req, res){
 				});
 			});
 		}).catch(function (err) {
-			console.log(err);
 			return res.status(400).send(err);
 		});
 	}
@@ -2419,7 +2414,6 @@ exports.findLimitWithFilter = function(req, res) {
 		.then(function (projects) {
 			return res.jsonp(projects);
 		}).catch(function (err) {
-			console.log(err);
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err),
 				obj: filterObj,
