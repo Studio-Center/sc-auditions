@@ -55,6 +55,7 @@ module.exports = {
                 css: [
                         'public/modules/**/css/*.css'
                 ],
+                // js: 'public/dist/application.min.js'
                 js: [
                         'public/config.js',
                         'public/application.js',

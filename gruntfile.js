@@ -6,7 +6,18 @@ module.exports = function(grunt) {
 		serverViews: ['app/views/**/*.*'],
 		serverJS: ['gruntfile.js', 'server.js', 'config/**/*.js', '/app/**/*.js'],
 		clientViews: ['/public/modules/**/views/**/*.html'],
-		clientJS: ['public/js/*.js', 'public/modules/**/*.js'],
+		clientJS: ['public/modules/**/*.js', 'public/js/*.js'],
+		clientConcatJS: [
+			'public/config.js', 
+			'public/application.js', 
+			'public/modules/**/*.module.js',
+			'public/modules/**/config/*.js',
+			'public/modules/**/controllers/*.js',
+			'public/modules/**/services/*.js',
+			'public/modules/**/*.js', 
+			'!public/modules/**/*.test.js',
+			'public/js/*.js'
+		],
 		clientCSS: ['public/modules/**/*.css'],
 		mochaTests: ['app/tests/**/*.js']
 	};
@@ -47,6 +58,15 @@ module.exports = function(grunt) {
 				options: {
 					livereload: true
 				}
+			}
+		},
+		concat: {
+			options: {
+			  separator: ';'
+			},
+			dist: {
+			  src: watchFiles.clientConcatJS,
+			  dest: 'public/dist/app.js'
 			}
 		},
 		jshint: {
@@ -112,7 +132,7 @@ module.exports = function(grunt) {
 			},
 			dist: {
 			  files: {
-				'dist/app.js': 'src/app.js'
+				'public/dist/application.js': 'public/dist/app.js'
 			  }
 			}
 		},
@@ -168,7 +188,7 @@ module.exports = function(grunt) {
 	grunt.registerTask('lint', ['jshint', 'csslint']);
 
 	// Build task(s).
-	grunt.registerTask('build', ['lint', 'loadConfig', 'babel', 'uglify', 'cssmin']);
+	grunt.registerTask('build', ['lint', 'loadConfig', 'concat', 'babel', 'uglify', 'cssmin']);
 
 	// Test task.
 	grunt.registerTask('test', ['env:test', 'mochaTest', 'karma:unit']);
