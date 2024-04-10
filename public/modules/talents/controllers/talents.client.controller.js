@@ -26,17 +26,17 @@ angular.module('talents').controller('TalentsController', ['$scope', '$statePara
 		$scope.archived = false;
         $scope.producers = [];
         //$scope.producers = UsersFind.query.where('userLevel').in(["producer/auditions director",'auditions director','audio intern', "admin"]);
-        // UsersFind.query({userLevel: 'producer'}, function(users){
-        //     angular.forEach(users, function(user, key) {
-        //         $scope.producers.push(user);
-        //     });
-        // });
-        // UsersFind.query({userLevel: 'admin'}, function(users){
-        //     angular.forEach(users, function(user, key) {
-        //         $scope.producers.push(user);
-        //     });
+        UsersFind.query({userLevel: 'producer'}, function(users){
+            angular.forEach(users, function(user, key) {
+                $scope.producers.push(user);
+            });
+        });
+        UsersFind.query({userLevel: 'admin'}, function(users){
+            angular.forEach(users, function(user, key) {
+                $scope.producers.push(user);
+            });
 
-        // });
+        });
         $scope.tinymceOptions = {
             plugins: 'link image code',
             toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code'
