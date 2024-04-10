@@ -76,8 +76,9 @@
 				<span data-ng-bind="user.displayName"></span>
 			</small>
 			<h4 class="list-group-item-heading">Username: {{::user.username}}<br> Company: {{::user.company}}<br> Name: {{::user.displayName}}<br> Email: {{::user.email}}<br> Phone: {{::user.phone}}<br> Roles: {{::user.roles}}</h4>
-          <p>Notes: {{::user.notes}}</p>
-        </a>
+      <p>Notes: {{::user.notes}}<br/>
+      Created: <span data-ng-bind="::user.created | amDateFormat:'MM/DD/YY h:mm:ss a'"></span></p>
+    </a>
     </div>
     <div class="row">
       <div class="col-lg-2 col-md-2 col-sm-2">

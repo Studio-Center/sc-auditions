@@ -338,7 +338,7 @@ exports.findLimitWithFilter = function(req, res) {
 		limitVal = 100;
 	}
 
-	User.find(filterObj).sort({'firstName': 1,'lastName': 1,'-created': -1}).skip(startVal).limit(limitVal).then(function (users) {
+	User.find(filterObj).sort({'created': -1,'firstName': 1,'lastName': 1}).skip(startVal).limit(limitVal).then(function (users) {
 		res.jsonp(users);
 	}).catch(function (err) {
 		return res.status(400).send({
