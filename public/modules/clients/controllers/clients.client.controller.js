@@ -178,7 +178,21 @@ angular.module('clients').controller('ClientsController', ['$scope', '$statePara
 		}
 
 	});
+	$scope.permitRoles = function(selRoles){
+		var allowLimit = selRoles.length,
+			roles = Authentication.user.roles,
+			limit = roles.length,
+			i = 0,
+			j = 0;
 
+		for(i = 0; i < limit; ++i){
+			for(j = 0; j < allowLimit; ++j){
+				if(roles[i] === selRoles[j]) {
+					return true;
+				}
+			}
+		}
+	};
     // new project form
 	$scope.lead = function(){
 

@@ -10,8 +10,9 @@
 <section data-ng-controller="ClientsController" data-ng-init="leadFormPop()">
   <div class="page-header">
     <h1 style="text-align:center">Start A New Audition Project</h1>
+    <p>Please log in to submit your project suggestion.</p>
   </div>
-  <div class="col-md-12" style="padding-bottom:75px">
+  <div data-ng-show="::permitRoles(['admin','production coordinator','auditions director','audio intern','talent director','client','client-client','user'])" class="col-md-12" style="padding-bottom:75px">
     <form name="newAuditionProjectForm" data-ng-submit="lead()" class="signin form-horizontal newAuditionProjectForm" autocomplete="off">
       <fieldset>
         <div class="form-group">
