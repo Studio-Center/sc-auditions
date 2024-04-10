@@ -1153,7 +1153,7 @@ exports.sendClientEmail = function(req, res){
 exports.lead = function(req, res){
 
 	// if honey pot empty perform mailer, if not pretend was success anyway
-	if(req.body.acomment.length == 0){
+	if(req.body.acomment.length == 0 && typeof req.user !== 'undefined'){
 
 		// build email
 		var emailBody = 'First Name: ' + req.body.firstName + '\n';
