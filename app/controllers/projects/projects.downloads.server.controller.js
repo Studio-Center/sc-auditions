@@ -6,7 +6,6 @@
 const mongoose = require('mongoose'),
 	Audition = mongoose.model('Audition'),
 	fs = require('fs'),
-	_ = require('lodash'),
 	async = require('async'),
 	archiver = require('archiver');
 

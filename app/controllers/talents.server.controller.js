@@ -11,9 +11,7 @@ const mongoose = require('mongoose'),
 	config = require('../../config/config'),
 	async = require('async'),
 	nodemailer = require('nodemailer'),
-	sgTransport = require('nodemailer-sendgrid-transport'),
-	dateFormat = require('dateformat'),
-	now = new Date();
+	sgTransport = require('nodemailer-sendgrid-transport');
 
 /**
  * Create a Talent

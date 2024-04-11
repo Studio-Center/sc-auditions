@@ -6,7 +6,6 @@
 const _ = require('lodash'),
 	errorHandler = require('../errors'),
 	mongoose = require('mongoose'),
-	passport = require('passport'),
 	User = mongoose.model('User'),
 	Log = mongoose.model('Log'),
 	config = require('../../../config/config'),

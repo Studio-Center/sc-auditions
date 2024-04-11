@@ -8,22 +8,15 @@ const mongoose = require('mongoose'),
 	Project = mongoose.model('Project'),
 	User = mongoose.model('User'),
 	Talent = mongoose.model('Talent'),
-	Typecast = mongoose.model('Typecast'),
 	Log = mongoose.model('Log'),
 	Newproject = mongoose.model('Newproject'),
 	fs = require('fs'),
 	config = require('../../config/config'),
 	_ = require('lodash'),
-	path = require('path'),
 	async = require('async'),
-	mv = require('mv'),
 	nodemailer = require('nodemailer'),
 	sgTransport = require('nodemailer-sendgrid-transport'),
-	archiver = require('archiver'),
-	dateFormat = require('dateformat'),
-	// set date and timezone
-	moment = require('moment-timezone'),
-	now = new Date();
+	dateFormat = require('dateformat');
 
 /* custom tools methods */
 exports.sendTalentEmails = function(req, res){
