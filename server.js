@@ -5,7 +5,6 @@
 const init = require('./config/init')(),
 	config = require('./config/config'),
 	mongoose = require('mongoose'),
-	jwt = require('jwt-simple'),
 	compression = require('compression'),
 	url = require('url');
 
@@ -15,8 +14,7 @@ global.appRoot = path.resolve(__dirname);
 // multithreading
 const cluster = require('cluster'),
 	sio = require('socket.io'),
-	numCPUs = require('os').cpus().length,
-	sioNum = 0;
+	numCPUs = require('os').cpus().length;
 
 /**
  * Main application entry file.
@@ -88,17 +86,17 @@ if (cluster.isMaster) {
 	});
 
 	// override default socket upgrade listener to allow socketio connection
-	let [serverUpgradeListener, socketioUpgradeListener] = server.listeners('upgrade').slice(0);
-	server.removeAllListeners('upgrade');
-	server.on('upgrade', (req, socket, head) => {
-		const pathname = url.parse(req.url).pathname;
-		if (pathname === '/socket.io/'){
-			socketioUpgradeListener(req, socket, head);
-		} else {
-			serverUpgradeListener(req, socket, head);
-			//socket.destroy();
-		}
-	});
+	// let [serverUpgradeListener, socketioUpgradeListener] = server.listeners('upgrade').slice(0);
+	// server.removeAllListeners('upgrade');
+	// server.on('upgrade', (req, socket, head) => {
+	// 	const pathname = url.parse(req.url).pathname;
+	// 	if (pathname === '/socket.io/'){
+	// 		socketioUpgradeListener(req, socket, head);
+	// 	} else {
+	// 		serverUpgradeListener(req, socket, head);
+	// 		//socket.destroy();
+	// 	}
+	// });
 
 	//app.set('socketio', io);
 	app.set('server', server);

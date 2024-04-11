@@ -5,7 +5,6 @@
  */
 const express = require('express'),
 	http = require('http'),
-    socketio = require('socket.io'),
 	morgan = require('morgan'),
 	bodyParser = require('body-parser'),
 	session = require('express-session'),
@@ -165,8 +164,6 @@ module.exports = function(db) {
 	
 	// Attach Socket.io
 	var server = http.createServer(app);
-	var io = new require('socket.io')(server);
-	app.set('socketio', io);
 	app.set('server', server);
 
 	return app;
