@@ -56,7 +56,8 @@ module.exports = {
 				'public/lib/angular-ui-tinymce/src/tinymce.js',
 				'public/lib/textAngular/dist/textAngular.min.js',
 				'public/lib/socket.io-client/dist/socket.io.js',
-				'public/lib/angular-socket-io/socket.min.js'
+				'public/lib/angular-socket-io/socket.min.js',
+				'public/ext/angularjs-google-recaptcha-v3-master/release/angularjs-google-recaptcha-v3.min.js'
 			]
 		},
 		css: [

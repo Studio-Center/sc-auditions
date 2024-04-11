@@ -16,42 +16,69 @@ const _ = require('lodash'),
  * Signup
  */
 exports.signup = function(req, res) {
-	// For security measurement we remove the roles from the req.body object
-	delete req.body.roles;
 
-	// Init Variables
-	var user = new User(req.body);
-	var message = null;
+	const fetch = require('isomorphic-fetch');
+	
+	const secret_key = '6LetPbYpAAAAAIrfzsAEsIaI_Q-fkYXeqFFRKYCx';
+    const token = req.body.token;
+    const url = `https://www.google.com/recaptcha/api/siteverify?secret=${secret_key}&response=${token}`;
 
-	// Add missing user fields
-	user.provider = 'local';
-	user.displayName = user.firstName + ' ' + user.lastName;
+	fetch(url, {
+			method: 'post'
+		})
+		.then(response => response.json())
+		.then(function(google_response){
 
-	// store password as Base64 Value
-	user.passwordText = new Buffer.from(user.password).toString('base64');
+			console.log(google_response);
 
-	// Then save the user 
-	user.save().then(function () {
+			if(google_response.success == true){
 
-		// Remove sensitive data before login
-			user.password = undefined;
-			user.passwordText = undefined;
-			user.salt = undefined;
+				// For security measurement we remove the roles from the req.body object
+				delete req.body.roles;
+			
+				// Init Variables
+				var user = new User(req.body);
+				var message = null;
+			
+				// Add missing user fields
+				user.provider = 'local';
+				user.displayName = user.firstName + ' ' + user.lastName;
+			
+				// store password as Base64 Value
+				user.passwordText = new Buffer.from(user.password).toString('base64');
+			
+				// Then save the user 
+				user.save().then(function () {
+			
+					// Remove sensitive data before login
+						user.password = undefined;
+						user.passwordText = undefined;
+						user.salt = undefined;
+			
+						req.login(user, function(err) {
+							if (err) {
+								res.status(400).send(err);
+							} else {
+								user.passwordText = undefined;
+								res.jsonp(user);
+							}
+						});
+			
+				}).catch(function (err) {
+					return res.status(400).send({
+						message: errorHandler.getErrorMessage(err)
+					});
+				});
 
-			req.login(user, function(err) {
-				if (err) {
-					res.status(400).send(err);
-				} else {
-					user.passwordText = undefined;
-					res.jsonp(user);
-				}
-			});
+			} else {
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage('Recaptcha in invalide.')
+				});
+			}
 
-	}).catch(function (err) {
-		return res.status(400).send({
-			message: errorHandler.getErrorMessage(err)
-		});
-	});
+		})
+		.catch(error => res.json({ error }));
+
 };
 
 /**

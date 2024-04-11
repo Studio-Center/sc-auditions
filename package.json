@@ -61,7 +61,8 @@
     "sanitize-filename": "^1.6.3",
     "socket.io": "^4.7.4",
     "twilio": "^4.23.0",
-    "unzip-wrapper": "^0.1.5"
+    "unzip-wrapper": "^0.1.5",
+    "isomorphic-fetch": "^3.0.0"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.24.4",
