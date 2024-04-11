@@ -29,8 +29,6 @@ exports.signup = function(req, res) {
 		.then(response => response.json())
 		.then(function(google_response){
 
-			console.log(google_response);
-
 			if(google_response.success == true){
 
 				// For security measurement we remove the roles from the req.body object
