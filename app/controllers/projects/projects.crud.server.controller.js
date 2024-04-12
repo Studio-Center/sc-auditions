@@ -20,6 +20,7 @@ const mongoose = require('mongoose'),
 	dateFormat = require('dateformat'),
 	sanitize = require("sanitize-filename"),
 	moment = require('moment-timezone'),
+	mv = require('mv'),
 	emailTalent = require('./classes/email.talent.class'),
 	emailClients = require('./classes/email.clients.class');
 
@@ -710,3 +711,13 @@ exports.deleteById = function(req, res) {
 
 };
 
+var moveFile = function(tempPath, newPath){
+    mv(tempPath, newPath, function(err) {
+        //console.log(err);
+        // if (err){
+        //     res.status(500).end();
+        // }else{
+        //     res.status(200).end();
+        // }
+    });
+};

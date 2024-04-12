@@ -27,7 +27,6 @@ var moveFile = function(tempPath, newPath){
     });
 };
 
-
 // save project audition files
 exports.deleteAudition = function(req, res){
 
