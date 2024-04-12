@@ -213,7 +213,16 @@ var gatherTalentsSearch = function(req, res, filter){
 										'status': filter
 									}
 								},
-						'status': { $nin: ['Closed - Pending Client Decision','Canceled','Dead','Complete','Booked','ReAuditioned']}
+						'status': { $nin: [
+							'Closed - Pending Client Decision',
+							'Canceled',
+							'Dead',
+							'Complete',
+							'Booked',
+							'ReAuditioned',
+							'On Hold',
+							'Not started'
+							]}
 						};
 
 	Project.find(searchCriteria).sort('-estimatedCompletionDate').then(function (projects) {
