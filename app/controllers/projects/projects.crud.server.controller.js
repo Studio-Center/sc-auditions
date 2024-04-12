@@ -19,7 +19,9 @@ const mongoose = require('mongoose'),
 	sgTransport = require('nodemailer-sendgrid-transport'),
 	dateFormat = require('dateformat'),
 	sanitize = require("sanitize-filename"),
-	moment = require('moment-timezone');
+	moment = require('moment-timezone'),
+	emailTalent = require('./classes/email.talent.class'),
+	emailClients = require('./classes/email.clients.class');
 
 
 /**
