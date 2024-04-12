@@ -21,8 +21,8 @@ const mongoose = require('mongoose'),
 	sanitize = require("sanitize-filename"),
 	moment = require('moment-timezone'),
 	mv = require('mv'),
-	emailTalent = require('./classes/email.talent.class'),
-	emailClients = require('./classes/email.clients.class');
+	emailTalent = require('./classes/email.class').talent,
+	emailClients = require('./classes/email.class').clients;
 
 
 /**

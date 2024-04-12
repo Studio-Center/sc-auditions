@@ -16,7 +16,7 @@ const mongoose = require('mongoose'),
 	nodemailer = require('nodemailer'),
 	sgTransport = require('nodemailer-sendgrid-transport'),
 	dateFormat = require('dateformat'),
-	emailTalent = require('./classes/email.talent.class');
+	emailTalent = require('./classes/email.class').talent;
 
 exports.sendEmail = function(req, res){
 
