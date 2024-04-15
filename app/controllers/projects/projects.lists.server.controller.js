@@ -9,6 +9,7 @@ const mongoose = require('mongoose'),
 	Audition = mongoose.model('Audition'),
 	Talent = mongoose.model('Talent'),
 	_ = require('lodash'),
+	radash = require('radash'),
 	async = require('async');
 
 /**
@@ -217,7 +218,7 @@ exports.findLimit = function(req, res) {
 	// permit certain user roles full access
 	var allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern', 'production coordinator','talent director'];
 
-	if (_.intersection(req.user.roles, allowedRoles).length) {
+	if (radash.intersects(req.user.roles, allowedRoles)) {
 
 		Project.find().populate('user', 'displayName').sort('-created').limit(limit).then(function (projects) {
 			return res.jsonp(projects);
@@ -275,7 +276,7 @@ exports.findLimitWithFilter = function(req, res) {
 	// permit certain user roles full access
 	var allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern', 'production coordinator','talent director'];
 
-	if (_.intersection(req.user.roles, allowedRoles).length) {
+	if (radash.intersects(req.user.roles, allowedRoles)) {
 
 		Project.find(filterObj).populate('user', 'displayName').sort(sortOrder).skip(Number(startVal)).limit(Number(limitVal))
 		.then(function (projects) {
@@ -309,7 +310,7 @@ exports.list = function(req, res) {
 	// permit certain user roles full access
 	var allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern', 'production coordinator','talent director'];
 
-	if (_.intersection(req.user.roles, allowedRoles).length) {
+	if (radash.intersects(req.user.roles, allowedRoles)) {
 
 		Project.find().populate('user', 'displayName').sort('-created')
 		.then(function (projects) {

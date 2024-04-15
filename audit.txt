@@ -1,0 +1,193 @@
+# npm audit report
+
+babel-traverse  *
+Severity: critical
+Babel vulnerable to arbitrary code execution when compiling specifically crafted malicious code - https://github.com/advisories/GHSA-67hx-6x53-jw92
+fix available via `npm audit fix`
+node_modules/babel-traverse
+  esdoc  *
+  Depends on vulnerable versions of babel-traverse
+  Depends on vulnerable versions of cheerio
+  Depends on vulnerable versions of ice-cap
+  Depends on vulnerable versions of marked
+  Depends on vulnerable versions of minimist
+  Depends on vulnerable versions of taffydb
+  node_modules/esdoc
+    smtpapi  >=1.4.0
+    Depends on vulnerable versions of esdoc
+    node_modules/smtpapi
+
+flat  <5.0.1
+Severity: critical
+flat vulnerable to Prototype Pollution - https://github.com/advisories/GHSA-2j2x-2gpw-g8fm
+fix available via `npm audit fix --force`
+Will install json2csv@6.0.0-alpha.2, which is a breaking change
+node_modules/flat
+  json2csv  3.1.0 - 4.3.4
+  Depends on vulnerable versions of flat
+  Depends on vulnerable versions of lodash.set
+  node_modules/json2csv
+
+glob-parent  <5.1.2
+Severity: high
+glob-parent vulnerable to Regular Expression Denial of Service in enclosure regex - https://github.com/advisories/GHSA-ww39-953v-wcq6
+fix available via `npm audit fix --force`
+Will install forever@0.10.10, which is a breaking change
+node_modules/forever-monitor/node_modules/glob-parent
+node_modules/nodemon/node_modules/glob-parent
+  chokidar  1.0.0-rc1 - 2.1.8
+  Depends on vulnerable versions of glob-parent
+  node_modules/forever-monitor/node_modules/chokidar
+  node_modules/nodemon/node_modules/chokidar
+    forever-monitor  >=1.6.0
+    Depends on vulnerable versions of chokidar
+    node_modules/forever-monitor
+      forever  >=0.10.11
+      Depends on vulnerable versions of flatiron
+      Depends on vulnerable versions of forever-monitor
+      node_modules/forever
+    nodemon  1.3.5 - 2.0.16 || 2.0.18
+    Depends on vulnerable versions of chokidar
+    Depends on vulnerable versions of update-notifier
+    node_modules/nodemon
+      grunt-nodemon  >=0.4.1
+      Depends on vulnerable versions of nodemon
+      node_modules/grunt-nodemon
+
+got  <11.8.5
+Severity: moderate
+Got allows a redirect to a UNIX socket - https://github.com/advisories/GHSA-pfrx-2q88-qq97
+fix available via `npm audit fix --force`
+Will install grunt-nodemon@0.4.0, which is a breaking change
+node_modules/got
+  package-json  <=6.5.0
+  Depends on vulnerable versions of got
+  node_modules/package-json
+    latest-version  0.2.0 - 5.1.0
+    Depends on vulnerable versions of package-json
+    node_modules/latest-version
+      update-notifier  0.2.0 - 5.1.0
+      Depends on vulnerable versions of latest-version
+      node_modules/update-notifier
+
+jsdom  <=16.5.3
+Severity: moderate
+Insufficient Granularity of Access Control in JSDom - https://github.com/advisories/GHSA-f4c9-cqv8-9v98
+Depends on vulnerable versions of request
+Depends on vulnerable versions of tough-cookie
+fix available via `npm audit fix`
+node_modules/jsdom
+  cheerio  0.19.0 - 1.0.0-rc.3
+  Depends on vulnerable versions of css-select
+  Depends on vulnerable versions of jsdom
+  node_modules/cheerio
+  node_modules/ice-cap/node_modules/cheerio
+    ice-cap  >=0.0.4
+    Depends on vulnerable versions of cheerio
+    node_modules/ice-cap
+
+lodash  <=4.17.20
+Severity: critical
+Regular Expression Denial of Service (ReDoS) in lodash - https://github.com/advisories/GHSA-x5rq-j2xg-h7qm
+Prototype Pollution in lodash - https://github.com/advisories/GHSA-fvqr-27wr-82fm
+Prototype Pollution in lodash - https://github.com/advisories/GHSA-jf85-cpcp-j695
+Prototype Pollution in lodash - https://github.com/advisories/GHSA-4xc9-xhrj-v574
+Regular Expression Denial of Service (ReDoS) in lodash - https://github.com/advisories/GHSA-29mw-wpgm-hmr9
+Prototype Pollution in lodash - https://github.com/advisories/GHSA-p6mc-m468-83gw
+Command Injection in lodash - https://github.com/advisories/GHSA-35jh-r3h4-6jhm
+No fix available
+node_modules/sendgrid/node_modules/lodash
+  sendgrid  0.2.9 - 2.0.0
+  Depends on vulnerable versions of lodash
+  Depends on vulnerable versions of request
+  node_modules/sendgrid
+    nodemailer-sendgrid-transport  *
+    Depends on vulnerable versions of sendgrid
+    node_modules/nodemailer-sendgrid-transport
+
+lodash.set  *
+Severity: high
+Prototype Pollution in lodash - https://github.com/advisories/GHSA-p6mc-m468-83gw
+fix available via `npm audit fix --force`
+Will install json2csv@6.0.0-alpha.2, which is a breaking change
+node_modules/lodash.set
+
+marked  <=4.0.9
+Severity: high
+Marked ReDoS due to email addresses being evaluated in quadratic time - https://github.com/advisories/GHSA-xf5p-87ch-gxw2
+Inefficient Regular Expression Complexity in marked - https://github.com/advisories/GHSA-rrrm-qjm4-v8hf
+Inefficient Regular Expression Complexity in marked - https://github.com/advisories/GHSA-5v2h-r2cx-5xgj
+fix available via `npm audit fix`
+node_modules/marked
+
+minimist  <=0.2.3 || 1.0.0 - 1.2.5
+Severity: critical
+Prototype Pollution in minimist - https://github.com/advisories/GHSA-vh95-rmgr-6w4m
+Prototype Pollution in minimist - https://github.com/advisories/GHSA-vh95-rmgr-6w4m
+Prototype Pollution in minimist - https://github.com/advisories/GHSA-xvch-5gv4-984h
+Prototype Pollution in minimist - https://github.com/advisories/GHSA-xvch-5gv4-984h
+fix available via `npm audit fix --force`
+Will install forever@0.10.10, which is a breaking change
+node_modules/esdoc/node_modules/minimist
+node_modules/optimist/node_modules/minimist
+  optimist  >=0.6.0
+  Depends on vulnerable versions of minimist
+  node_modules/optimist
+    flatiron  >=0.1.3
+    Depends on vulnerable versions of broadway
+    Depends on vulnerable versions of optimist
+    node_modules/flatiron
+    nconf  <=0.11.3
+    Depends on vulnerable versions of optimist
+    node_modules/nconf
+      broadway  <=0.3.6
+      Depends on vulnerable versions of nconf
+      node_modules/broadway
+
+
+nth-check  <2.0.1
+Severity: high
+Inefficient Regular Expression Complexity in nth-check - https://github.com/advisories/GHSA-rp65-9cf3-cjxr
+fix available via `npm audit fix`
+node_modules/nth-check
+  css-select  <=3.1.0
+  Depends on vulnerable versions of nth-check
+  node_modules/css-select
+
+request  *
+Severity: moderate
+Server-Side Request Forgery in Request - https://github.com/advisories/GHSA-p8p7-x288-28g6
+Depends on vulnerable versions of tough-cookie
+fix available via `npm audit fix --force`
+Will install karma-phantomjs-launcher@0.2.3, which is a breaking change
+node_modules/request
+  phantomjs-prebuilt  *
+  Depends on vulnerable versions of request
+  node_modules/phantomjs-prebuilt
+    karma-phantomjs-launcher  >=1.0.0
+    Depends on vulnerable versions of phantomjs-prebuilt
+    node_modules/karma-phantomjs-launcher
+
+taffydb  *
+Severity: high
+TaffyDB can allow access to any data items in the DB - https://github.com/advisories/GHSA-mxhp-79qh-mcx6
+fix available via `npm audit fix`
+node_modules/taffydb
+
+tough-cookie  <4.1.3
+Severity: moderate
+tough-cookie Prototype Pollution vulnerability - https://github.com/advisories/GHSA-72xf-g2v4-qvf3
+fix available via `npm audit fix --force`
+Will install karma-phantomjs-launcher@0.2.3, which is a breaking change
+node_modules/tough-cookie
+
+35 vulnerabilities (11 moderate, 15 high, 9 critical)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues possible (including breaking changes), run:
+  npm audit fix --force
+
+Some issues need review, and may require choosing
+a different dependency.
