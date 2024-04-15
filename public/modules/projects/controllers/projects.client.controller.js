@@ -1236,7 +1236,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				if(redirect === true){
 					//$location.path('projects/' + project._id);
 					Socket.emit('projectUpdateRequest', {id: data._id});
-					window.location.reload();
+					window.location.replace('/#!/projects/'+data._id);
 				}
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
