@@ -7,6 +7,7 @@ const mongoose = require('mongoose'),
 	Project = mongoose.model('Project'),
 	Log = mongoose.model('Log'),
 	_ = require('lodash'),
+	radash = require('radash'),
 	async = require('async');
 
 // update single talent single project status
@@ -87,7 +88,7 @@ exports.updateTalentStatus = function(req, res){
 	var allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern', 'production coordinator','client','client-client'];
 
 	// validate user interaction
-	if (_.intersection(req.user.roles, allowedRoles).length) {
+	if (radash.intersects(req.user.roles, allowedRoles)) {
 
 		var project = req.body.project;
 

@@ -8,7 +8,6 @@ const mongoose = require('mongoose'),
 	Project = mongoose.model('Project'),
 	Audition = mongoose.model('Audition'),
 	Talent = mongoose.model('Talent'),
-	_ = require('lodash'),
 	radash = require('radash'),
 	async = require('async');
 

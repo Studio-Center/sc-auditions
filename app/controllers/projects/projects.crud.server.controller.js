@@ -14,6 +14,7 @@ const mongoose = require('mongoose'),
 	rimraf = require('rimraf'),
 	config = require('../../../config/config'),
 	_ = require('lodash'),
+	radash = require('radash'),
 	async = require('async'),
 	nodemailer = require('nodemailer'),
 	sgTransport = require('nodemailer-sendgrid-transport'),
@@ -32,7 +33,7 @@ exports.hasAuthorization = function(req, res, next) {
 	// recon 2/17/2015 to allow admin and producer level users to edit all projects
 	var allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern', 'production coordinator'];
 
-	if (!_.intersection(req.user.roles, allowedRoles).length) {
+	if (!radash.intersects(req.user.roles, allowedRoles)) {
 		return res.status(403).send('User is not authorized');
 	}
 	next();
@@ -47,7 +48,7 @@ exports.updateNoRefresh = function(req, res){
 
     if(typeof req.body.project != 'undefined' && typeof req.body.project._id  != 'undefined'){
 	// validate user interaction
-        if (_.intersection(req.user.roles, allowedRoles).length && typeof req.body.project != 'undefined' && typeof req.body.project._id != 'undefined') {
+        if (radash.intersects(req.user.roles, allowedRoles) && typeof req.body.project != 'undefined' && typeof req.body.project._id != 'undefined') {
 
             // write change to log
             if (req.body.project._id.match(/^[0-9a-fA-F]{24}$/)) {

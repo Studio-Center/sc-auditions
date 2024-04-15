@@ -3,8 +3,7 @@
 /**
  * Module dependencies.
  */
-const _ = require('lodash'),
-	errorHandler = require('../errors'),
+const errorHandler = require('../errors'),
 	mongoose = require('mongoose'),
 	passport = require('passport'),
 	User = mongoose.model('User'),
