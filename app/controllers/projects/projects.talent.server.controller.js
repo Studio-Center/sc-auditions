@@ -76,7 +76,7 @@ exports.updateSingleTalentStatus = function (req, res){
 			return res.status(400).json(err);
 		} else {
 
-			return res.status(200);
+			return res.status(200).send();
 		}
 	});
 };
@@ -103,7 +103,7 @@ exports.updateTalentStatus = function(req, res){
                 project.markModified('modified');
 
                 project.save().then(function () {
-					res.status(200);
+					return res.status(200).send();
 				}).catch(function (err) {
 					return res.status(400).json(err);
                 });
@@ -159,6 +159,7 @@ exports.updateTalentNote = function (req, res){
 				req.project = project;
 
 				project.save().then(function () {
+					done(null);
 				}).catch(function (err) {
 					done(err);
 				});
@@ -170,8 +171,7 @@ exports.updateTalentNote = function (req, res){
 		if (err) {
 			return res.status(400).json(err);
 		} else {
-
-			return res.status(200);
+			return res.status(200).send();
 		}
 	});
 

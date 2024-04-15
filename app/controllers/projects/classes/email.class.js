@@ -89,7 +89,7 @@ const emailFuncs = {
                 });
             },
             function(owner, done) {
-    
+
                 var emailTmpl = 'templates/projects/new-project-talent-email';
                 // load language specific email templates
                 if(talentInfo.prefLanguage === 'Spanish'){
@@ -173,7 +173,7 @@ const emailFuncs = {
                     subject: emailSubject,
                     html: talentEmailHTML
                 };
-    
+                
                 transporter.sendMail(mailOptions, function(err){
     
                     // write change to log
@@ -185,7 +185,7 @@ const emailFuncs = {
                     };
                     log = new Log(log);
                     log.save();
-    
+
                     done(err);
                 });
             },

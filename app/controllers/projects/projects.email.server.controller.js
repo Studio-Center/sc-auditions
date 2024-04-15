@@ -433,7 +433,7 @@ exports.sendTalentDirectorsEmail = function(req, res){
                 if (err) {
                     return res.status(400).json(err);
                 } else {
-                    return res.status(200);
+                    return res.status(200).send();
                 }
             }
         });
@@ -465,7 +465,7 @@ exports.sendTalentEmailById = function(req, res){
         if (err) {
             return res.status(400).json(err);
         } else {
-            return res.status(200);
+            return res.status(200).send();
         }
     });
 
@@ -836,7 +836,7 @@ var sendTalentEmail = function(req, res, project, talent, override){
             if (err) {
                 return res.status(400).json(err);
             } else {
-                return res.status(200);
+                return res.status(200).send();
             }
         }
     });
