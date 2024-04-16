@@ -32,7 +32,6 @@
     "dateformat": "^4.6.2",
     "express": "^4.18.3",
     "express-session": "~1.18.0",
-    "forever": "~4.0.3",
     "glob": "^10.3.10",
     "grunt": "^1.6.1",
     "grunt-cli": "^1.4.3",
