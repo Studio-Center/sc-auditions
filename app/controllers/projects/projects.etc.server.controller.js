@@ -168,6 +168,7 @@ exports.bookAuditions = function(req, res, next){
 
 			// rem dups
 			clientsEmails = radash.unique(clientsEmails);
+			clientsEmails = radash.diff(clientsEmails, [ownerInfo.email]);
 
 			var mailOptions = {
 				to: clientsEmails,

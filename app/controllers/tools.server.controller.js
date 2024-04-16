@@ -70,6 +70,7 @@ exports.sendTalentEmails = function(req, res){
 								// send email
 								// clear dup emails
 								talentEmails = radash.unique(talentEmails);
+								talentEmails = radash.diff(talentEmails, [req.user.email]);
 
 								var mailOptions = {
 													to: talentEmails,
@@ -173,6 +174,7 @@ exports.sendTalentEmails = function(req, res){
 									// send email
 									// clear dup emails
 									talentEmails = radash.unique(talentEmails);
+									talentEmails = radash.diff(talentEmails, [req.user.email]);
 
 									var mailOptions = {
 														to: talentEmails,

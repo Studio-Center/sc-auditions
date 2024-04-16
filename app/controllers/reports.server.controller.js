@@ -171,6 +171,7 @@ exports.emailMissingAuds = function(req, res){
 
 					// remove address dups
 					to = radash.unique(to);
+					to = radash.diff(to, [config.mailer.from]);
 
 					var mailOptions = {
 						to: to,

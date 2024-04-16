@@ -15,6 +15,9 @@ module.exports = {
                 }
         }
 	},
+	RECAPTCHA:{
+		SECRET: '6LetPbYpAAAAAIrfzsAEsIaI_Q-fkYXeqFFRKYCx'
+	},
 	TWILIO: {
 			ACCOUNT_SID: '',
 			AUTH_TOKEN: '',

@@ -200,9 +200,6 @@ exports.sendTalentCanceledEmail = function(req, res){
                                 var emailSubject = '';
                                 var newDate = new Date(project.estimatedCompletionDate);
                                 newDate = newDate.setHours(newDate.getHours() - 1);
-                                var nameArr = [];
-
-                                nameArr = talentInfo.name.split(' ');
 
                                 // assign email subject line
                                 emailSubject = 'The Audition Project ' + project.title + ' Has Been Cancelled';
@@ -232,7 +229,6 @@ exports.sendTalentCanceledEmail = function(req, res){
 
                                     done();
                                 }, error => {
-                                    console.error(error);
                                     done(error);
                                 });
 
@@ -426,6 +422,7 @@ exports.sendTalentDirectorsEmail = function(req, res){
             if(to.length > 0){
 
                 to = radash.unique(to);
+                to = radash.diff(to, [owner.email]);
 
                 var mailOptions = {
                     to: to,
@@ -689,10 +686,10 @@ exports.lead = function(req, res){
 			emailBody += 'Description: ' + req.body.describe + '\n';
 
 		//var file = req.files.file;
-	var appDir = global.appRoot;
+        var appDir = global.appRoot;
 
-	var relativePath =  'res' + '/' + 'scripts' + '/temp/';
-	var newPath = appDir + '/public/' + relativePath;
+        var relativePath =  'res' + '/' + 'scripts' + '/temp/';
+        var newPath = appDir + '/public/' + relativePath;
 
 		var attachements = [];
 

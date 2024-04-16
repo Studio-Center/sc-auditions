@@ -8,6 +8,7 @@ const errorHandler = require('../errors'),
 	passport = require('passport'),
 	User = mongoose.model('User'),
 	moment = require('moment'),
+	config = require('../../../config/config'),
 	url = require('url'),
 	jwt = require('jwt-simple');
 
@@ -18,7 +19,7 @@ exports.signup = function(req, res) {
 
 	const fetch = require('isomorphic-fetch');
 	
-	const secret_key = '6LetPbYpAAAAAIrfzsAEsIaI_Q-fkYXeqFFRKYCx';
+	const secret_key = config.RECAPTCHA.SECRET;
     const token = req.body.token;
     const url = `https://www.google.com/recaptcha/api/siteverify?secret=${secret_key}&response=${token}`;
 
