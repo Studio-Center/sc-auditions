@@ -6,7 +6,6 @@
 const mongoose = require('mongoose'),
 	Project = mongoose.model('Project'),
 	Log = mongoose.model('Log'),
-	_ = require('lodash'),
 	radash = require('radash'),
 	async = require('async');
 
@@ -60,7 +59,7 @@ exports.updateSingleTalentStatus = function (req, res){
 			Project.findById(project._id).then(function (project) {
 				project.populate('user', 'displayName');
 
-				project = _.extend(project, newProject);
+				project = Object.assign(project, newProject);
 
 				req.project = project;
 
@@ -96,7 +95,7 @@ exports.updateTalentStatus = function(req, res){
             Project.findById(project._id).then(function (project) {
 				project.populate('user', 'displayName');
 
-                project = _.extend(project, req.body.project);
+                project = Object.assign(project, req.body.project);
 
                 req.project = project ;
 
@@ -152,7 +151,7 @@ exports.updateTalentNote = function (req, res){
 			Project.findById(project._id).then(function (projects) {
 				project.populate('user', 'displayName');
 
-				project = _.extend(project, newProject);
+				project = Object.assign(project, newProject);
 
                 project.markModified('talent');
                 project.markModified('modified');

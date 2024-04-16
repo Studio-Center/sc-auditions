@@ -3,8 +3,7 @@
 /**
  * Module dependencies.
  */
-const _ = require('lodash'),
-	errorHandler = require('../errors'),
+const errorHandler = require('../errors'),
 	mongoose = require('mongoose'),
 	User = mongoose.model('User'),
 	Log = mongoose.model('Log'),
@@ -25,7 +24,7 @@ exports.update = function(req, res) {
 
 	if (user) {
 		// Merge existing user
-		user = _.extend(user, req.body);
+		user = Object.assign(user, req.body);
 		user.updated = Date.now();
 		user.displayName = user.firstName + ' ' + user.lastName;
 
@@ -86,7 +85,7 @@ exports.updateAdmin = function(req, res) {
 	User.findById(req.body._id).then(function (user) {
 		if (user) {
 			// Merge existing user
-			user = _.extend(user, req.body);
+			user = Object.assign(user, req.body);
 			user.updated = Date.now();
 			user.displayName = user.firstName + ' ' + user.lastName;
 			//user.edited = '';

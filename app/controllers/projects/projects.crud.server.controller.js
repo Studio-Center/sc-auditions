@@ -13,7 +13,6 @@ const mongoose = require('mongoose'),
 	fs = require('fs'),
 	rimraf = require('rimraf'),
 	config = require('../../../config/config'),
-	_ = require('lodash'),
 	radash = require('radash'),
 	async = require('async'),
 	nodemailer = require('nodemailer'),
@@ -85,7 +84,7 @@ exports.updateNoRefresh = function(req, res){
                     //delete project.__v;
                     //delete req.body.project.__v;
 
-                    project = _.extend(project, req.body.project);
+                    project = Object.assign(project, req.body.project);
 
 					if(project){
 						project.markModified('talent');
@@ -142,7 +141,7 @@ exports.create = function(req, res) {
 
 	var allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern','production coordinator'];
 
-	if (_.intersection(req.user.roles, allowedRoles).length) {
+	if (radash.intersects(req.user.roles, allowedRoles)) {
 
 		// save final project
 		project.save().then(function (project) {
@@ -538,9 +537,9 @@ exports.update = function(req, res) {
 	var allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern', 'production coordinator','client','client-client'];
 
 	// validate user interaction
-	if (_.intersection(req.user.roles, allowedRoles).length) {
+	if (radash.intersects(req.user.roles, allowedRoles)) {
 
-		project = _.extend(project , req.body);
+		project = Object.assign(project , req.body);
 
 		async.waterfall([
 			// rename files as requested

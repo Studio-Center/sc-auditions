@@ -7,7 +7,6 @@ const mongoose = require('mongoose'),
 	errorHandler = require('./errors'),
 	Talent = mongoose.model('Talent'),
 	Log = mongoose.model('Log'),
-	_ = require('lodash'),
 	radash = require('radash'),
 	config = require('../../config/config'),
 	async = require('async'),
@@ -243,7 +242,7 @@ exports.read = function(req, res) {
 exports.update = function(req, res) {
 	var talent = req.talent ;
 
-	talent = _.extend(talent , req.body);
+	talent = Object.assign(talent , req.body);
 
 	talent.save().then(function () {
 

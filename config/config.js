@@ -3,8 +3,8 @@
 /**
  * Module dependencies.
  */
-const _ = require('lodash'),
-	glob = require('glob');
+const glob = require('glob'),
+	radash = require('radash');
 	// set application widen timezone
 	process.env.TZ = 'America/New_York';
 
@@ -12,7 +12,7 @@ const _ = require('lodash'),
  * Load app configurations
  */
 // check for hidden config files
-module.exports = _.extend(
+module.exports = Object.assign(
 	require('./env/all'),
 	require('./env/' + process.env.NODE_ENV) || {}
 );
@@ -30,11 +30,11 @@ module.exports.getGlobbedFiles = function(globPatterns, removeRoot) {
 	var output = [];
 
 	// If glob pattern is array so we use each pattern in a recursive way, otherwise we use glob
-	if (_.isArray(globPatterns)) {
+	if (radash.isArray(globPatterns)) {
 		globPatterns.forEach(function(globPattern) {
-			output = _.union(output, _this.getGlobbedFiles(globPattern, removeRoot));
+			output = [...new Set([...output, ..._this.getGlobbedFiles(globPattern, removeRoot)])];
 		});
-	} else if (_.isString(globPatterns)) {
+	} else if (radash.isString(globPatterns)) {
 		if (urlRegex.test(globPatterns)) {
 			output.push(globPatterns);
 		} else {
@@ -46,7 +46,7 @@ module.exports.getGlobbedFiles = function(globPatterns, removeRoot) {
 				});
 			}
 
-			output = _.union(output, files);
+			output = [...new Set([...output, ...files])];
 		}
 	}
 
@@ -61,7 +61,7 @@ module.exports.getJavaScriptAssets = function(includeTests) {
 
 	// To include tests
 	if (includeTests) {
-		output = _.union(output, this.getGlobbedFiles(this.assets.tests));
+		output = [...new Set([...output, ...this.getGlobbedFiles(this.assets.tests)])];
 	}
 
 	return output;

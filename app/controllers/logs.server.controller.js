@@ -5,8 +5,7 @@
  */
 const mongoose = require('mongoose'),
 	errorHandler = require('./errors'),
-	Log = mongoose.model('Log'),
-	_ = require('lodash');
+	Log = mongoose.model('Log');
 
 /**
  * Create a Log
@@ -37,7 +36,7 @@ exports.read = function(req, res) {
 exports.update = function(req, res) {
 	var log = req.log ;
 
-	log = _.extend(log , req.body);
+	log = Object.assign(log , req.body);
 
 	log.save().then(function (log) {
 		res.jsonp(log);

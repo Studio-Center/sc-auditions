@@ -10,7 +10,6 @@ const mongoose = require('mongoose'),
 	Log = mongoose.model('Log'),
 	fs = require('fs'),
 	rimraf = require('rimraf'),
-	_ = require('lodash'),
 	async = require('async'),
 	mv = require('mv'),
 	moment = require('moment-timezone');
@@ -108,7 +107,7 @@ exports.saveAudition = function(req, res){
 			}
 		}
 
-		audition = _.extend(audition, aud);
+		audition = Object.assign(audition, aud);
 
 		audition.save().then(function (upaud) {
 			return res.jsonp(audition);

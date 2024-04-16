@@ -9,7 +9,6 @@ const mongoose = require('mongoose'),
 	User = mongoose.model('User'),
 	Talent = mongoose.model('Talent'),
 	config = require('../../../config/config'),
-	_ = require('lodash'),
 	async = require('async'),
 	nodemailer = require('nodemailer'),
 	sgTransport = require('nodemailer-sendgrid-transport'),
@@ -70,7 +69,7 @@ exports.bookAuditions = function(req, res, next){
 
 			Project.findById(project._id).then(function (project) {
 
-				project = _.extend(project, newProject);
+				project = Object.assign(project, newProject);
 
 				project.save().then(function () {
 						done(null, selAuds, project);

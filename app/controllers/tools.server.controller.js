@@ -12,7 +12,6 @@ const mongoose = require('mongoose'),
 	Newproject = mongoose.model('Newproject'),
 	fs = require('fs'),
 	config = require('../../config/config'),
-	_ = require('lodash'),
 	async = require('async'),
 	nodemailer = require('nodemailer'),
 	sgTransport = require('nodemailer-sendgrid-transport'),
@@ -764,7 +763,7 @@ exports.sendPreCloseSummary = function(req, res){
 						// update preclose status
 						project.preClose = true;
 
-						project = _.extend(req.project, project);
+						project = Object.assign(req.project, project);
 
 						project.save().then(function () {
 							done(null);
@@ -889,7 +888,7 @@ exports.uploadTalentCSV = function(req, res){
 					if(talent !== null){
 						++updatedTalents;
 						newTalent = newTalent.toObject();
-						talent = _.extend(talent, newTalent);
+						talent = Object.assign(talent, newTalent);
 					} else {
 						++newTalents;
 						talent = newTalent;

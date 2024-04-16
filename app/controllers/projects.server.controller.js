@@ -3,9 +3,8 @@
 /**
  * Module dependencies.
  */
-const _ = require('lodash');
 
-module.exports = _.extend(
+module.exports = Object.assign(
 	require('./projects/projects.files'),
 	require('./projects/projects.crud'),
 	require('./projects/projects.talent'),

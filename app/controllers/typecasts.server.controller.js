@@ -6,7 +6,6 @@
 const mongoose = require('mongoose'),
 	errorHandler = require('./errors'),
 	Typecast = mongoose.model('Typecast'),
-	_ = require('lodash'),
 	radash = require('radash');
 
 /**
@@ -44,7 +43,7 @@ exports.read = function(req, res) {
 exports.update = function(req, res) {
 	var typecast = req.typecast ;
 
-	typecast = _.extend(typecast , req.body);
+	typecast = Object.assign(typecast , req.body);
 
 	typecast.save().then(function () {
 		res.jsonp(typecast);

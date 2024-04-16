@@ -3,7 +3,7 @@
 /**
  * Module dependencies.
  */
-const _ = require('lodash'),
+const radash = require('radash'),
 	mongoose = require('mongoose'),
 	User = mongoose.model('User');
 
@@ -54,12 +54,12 @@ exports.hasAuthorization = function(roles, res, next) {
 
 	var allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern','production coordinator'];
 
-	if (_.intersection(roles.user.roles, allowedRoles).length) {
+	if (radash.intersects(roles.user.roles, allowedRoles)) {
 		return next();
 	} else {
 		return function(req, res, next) {	
 			_this.requiresLogin(req, res, function() {
-				if (_.intersection(req.user.roles, roles).length) {
+				if (radash.intersects(req.user.roles, roles)) {
 					return next();
 				} else {
 					return res.status(403).send({

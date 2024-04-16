@@ -11,7 +11,6 @@ const mongoose = require('mongoose'),
 	Log = mongoose.model('Log'),
 	fs = require('fs'),
 	rimraf = require('rimraf'),
-	_ = require('lodash'),
 	path = require('path'),
 	async = require('async'),
 	mv = require('mv'),
@@ -729,7 +728,7 @@ exports.uploadTalentAudition = function(req, res, next){
 
 			Project.findById(project._id).then(function (project) {
 
-				project = _.extend(project, updatedProject.toObject());
+				project = Object.assign(project, updatedProject.toObject());
 
 				project.save().then(function () {
 

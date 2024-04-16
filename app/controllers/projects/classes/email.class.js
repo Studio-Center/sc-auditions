@@ -12,7 +12,6 @@ const mongoose = require('mongoose'),
     nodemailer = require('nodemailer'),
     sgTransport = require('nodemailer-sendgrid-transport'),
     dateFormat = require('dateformat'),
-    _ = require('lodash'),
     Talent = mongoose.model('Talent');
     
 const emailFuncs = {
@@ -300,7 +299,7 @@ const emailFuncs = {
                 Project.findById(project._id).then(function (project) {
                     project.populate('user', 'displayName');
     
-                    project = _.extend(project, newProject);
+                    project = Object.assign(project, newProject);
     
                     req.project = project;
     

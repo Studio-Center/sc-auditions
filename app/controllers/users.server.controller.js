@@ -3,12 +3,11 @@
 /**
  * Module dependencies.
  */
-const _ = require('lodash');
 
 /**
  * Extend user's controller
  */
-module.exports = _.extend(
+module.exports = Object.assign(
 	require('./users/users.authentication'),
 	require('./users/users.authorization'),
 	require('./users/users.password'),
