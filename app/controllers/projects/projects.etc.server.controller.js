@@ -10,9 +10,12 @@ const mongoose = require('mongoose'),
 	Talent = mongoose.model('Talent'),
 	config = require('../../../config/config'),
 	async = require('async'),
-	nodemailer = require('nodemailer'),
-	sgTransport = require('nodemailer-sendgrid-transport'),
+	sgMail = require('@sendgrid/mail'),
+	radash = require('radash'),
 	dateFormat = require('dateformat');
+
+// set sendgrid api key
+sgMail.setApiKey(config.mailer.options.auth.api_key);
 
 // send email and update project status for selected booked auditions
 exports.bookAuditions = function(req, res, next){
@@ -161,8 +164,10 @@ exports.bookAuditions = function(req, res, next){
 			newDate = newDate.setHours(newDate.getHours() - 1);
 			newDate = dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT');
 
-			var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
 			var emailSubject = 'Auditions Booked - ' + project.title;
+
+			// rem dups
+			clientsEmails = radash.unique(clientsEmails);
 
 			var mailOptions = {
 				to: clientsEmails,
@@ -172,8 +177,12 @@ exports.bookAuditions = function(req, res, next){
 				subject: emailSubject,
 				html: bookedEmailHTML
 			};
-			transporter.sendMail(mailOptions, function(err){
-				done(err);
+			sgMail
+			.send(mailOptions)
+			.then(() => {
+				done(null);
+			}, error => {
+				done(error);
 			});
 		}
 		], function(err) {

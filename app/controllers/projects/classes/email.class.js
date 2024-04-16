@@ -9,11 +9,14 @@ const mongoose = require('mongoose'),
     Log = mongoose.model('Log'),
     config = require('../../../../config/config'),
     async = require('async'),
-    nodemailer = require('nodemailer'),
-    sgTransport = require('nodemailer-sendgrid-transport'),
+    sgMail = require('@sendgrid/mail'),
+    radash = require('radash'),
     dateFormat = require('dateformat'),
     Talent = mongoose.model('Talent');
     
+// set sendgrid api key
+sgMail.setApiKey(config.mailer.options.auth.api_key);
+
 const emailFuncs = {
     clients: function(client, email, project, req, res){
         async.waterfall([
@@ -46,7 +49,6 @@ const emailFuncs = {
                 var emailSubject = 'Your audition project:  ' + project.title + ' Due ' + dateFormat(project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
     
                 // send email
-                var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
     
                 var mailOptions = {
                                     to: client.email,
@@ -56,9 +58,10 @@ const emailFuncs = {
                                     subject: emailSubject,
                                     html: clientEmailHTML
                                 };
-    
-                transporter.sendMail(mailOptions);
-    
+                
+                sgMail
+                .send(mailOptions);
+                    
                 // write change to log
                 var log = {
                     type: 'project',
@@ -144,8 +147,7 @@ const emailFuncs = {
             // send out talent project creation email
             function(talentEmailHTML, owner, done) {
                 // send email
-                var transporter = nodemailer.createTransport(sgTransport(config.mailer.options)),
-                    emailSubject = '',
+                var emailSubject = '',
                     newDate = new Date(project.estimatedCompletionDate),
                     nameArr = [],
                     talentEmails = [talentInfo.email];
@@ -167,6 +169,9 @@ const emailFuncs = {
                 if(typeof subjectAd !== 'undefined'){
                     emailSubject = 'NEW ' + subjectAd + ' FILE ' + emailSubject;
                 }
+
+                // rem dups
+                talentEmails = radash.unique(talentEmails);
     
                 var mailOptions = {
                     to: talentEmails,
@@ -175,9 +180,10 @@ const emailFuncs = {
                     subject: emailSubject,
                     html: talentEmailHTML
                 };
-                
-                transporter.sendMail(mailOptions, function(err){
-    
+
+                sgMail
+                .send(mailOptions)
+                .then(() => {
                     // write change to log
                     var log = {
                         type: 'talent',
@@ -188,8 +194,11 @@ const emailFuncs = {
                     log = new Log(log);
                     log.save();
 
-                    done(err);
+                    done(null);
+                }, error => {
+                    done(error);
                 });
+                
             },
             ], function(err) {
             //return res.status(400).json(err);

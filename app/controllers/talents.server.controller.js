@@ -10,8 +10,10 @@ const mongoose = require('mongoose'),
 	radash = require('radash'),
 	config = require('../../config/config'),
 	async = require('async'),
-	nodemailer = require('nodemailer'),
-	sgTransport = require('nodemailer-sendgrid-transport');
+	sgMail = require('@sendgrid/mail');
+
+// set sendgrid api key
+sgMail.setApiKey(config.mailer.options.auth.api_key);
 
 /**
  * Create a Talent
@@ -137,7 +139,6 @@ exports.create = function(req, res) {
 					var emailSubject = 'NEW TALENT ADDITION TO VO ROSTER:  ' + talent.name + ' ' + talent.lastName;
 
 					// send email
-					var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
 
 					var mailOptions = {
 										to: 'Dave@studiocenter.com',
@@ -148,8 +149,12 @@ exports.create = function(req, res) {
 										html: emailHTML
 									};
 
-					transporter.sendMail(mailOptions, function(err){
-						done(err, talentData, emailSig );
+					sgMail
+					.send(mailOptions)
+					.then(() => {
+						done(null, talentData, emailSig );
+					}, error => {
+						done(error, talentData, emailSig );
 					});
 
 				},
@@ -168,8 +173,6 @@ exports.create = function(req, res) {
 					var emailSubject = 'NEW TALENT ADDITION TO VO ROSTER:  ' + talent.name + ' ' + talent.lastName;
 
 					// send email
-					var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
-
 					var mailOptions = {
 										to: ['Ken@studiocenter.com'],
 										from: req.user.email || config.mailer.from,
@@ -178,9 +181,13 @@ exports.create = function(req, res) {
 										subject: emailSubject,
 										html: emailHTML
 									};
-
-					transporter.sendMail(mailOptions, function(err){
-						done(err, talentData, emailSig );
+					
+					sgMail
+					.send(mailOptions)
+					.then(() => {
+						done(null, talentData, emailSig );
+					}, error => {
+						done(error, talentData, emailSig );
 					});
 
 				},
@@ -199,8 +206,6 @@ exports.create = function(req, res) {
 					var emailSubject = 'NEW TALENT ADDITION TO VO ROSTER:  ' + talent.name + ' ' + talent.lastName;
 
 					// send email
-					var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
-
 					var mailOptions = {
 										to: 'audition-notification@studiocenter.com',
 										from: req.user.email || config.mailer.from,
@@ -210,8 +215,12 @@ exports.create = function(req, res) {
 										html: emailHTML
 									};
 
-					transporter.sendMail(mailOptions, function(err){
-						done(err);
+					sgMail
+					.send(mailOptions)
+					.then(() => {
+						done(null);
+					}, error => {
+						done(error);
 					});
 
 				},
@@ -297,8 +306,6 @@ exports.delete = function(req, res) {
 			var emailSubject = 'TALENT TERMINATED FROM VO ROSTER: ' + talent.name + ' ' + talent.lastName;
 
 			// send email
-			var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
-
 			var mailOptions = {
 								to: 'Dave@studiocenter.com',
 								from: req.user.email || config.mailer.from,
@@ -307,9 +314,13 @@ exports.delete = function(req, res) {
 								subject: emailSubject,
 								html: emailHTML
 							};
-
-			transporter.sendMail(mailOptions, function(err){
-				done(err, emailSig);
+			
+			sgMail
+			.send(mailOptions)
+			.then(() => {
+				done(null, emailSig);
+			}, error => {
+				done(error, emailSig);
 			});
 
 		},
@@ -328,8 +339,6 @@ exports.delete = function(req, res) {
 			var emailSubject = 'TALENT TERMINATED FROM VO ROSTER: ' + talent.name + ' ' + talent.lastName;
 
 			// send email
-			var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
-
 			var mailOptions = {
 								to: 'Ken@studiocenter.com',
 								from: req.user.email || config.mailer.from,
@@ -338,9 +347,13 @@ exports.delete = function(req, res) {
 								subject: emailSubject,
 								html: emailHTML
 							};
-
-			transporter.sendMail(mailOptions, function(err){
-				done(err);
+			
+			sgMail
+			.send(mailOptions)
+			.then(() => {
+				done(null);
+			}, error => {
+				done(error);
 			});
 
 		},

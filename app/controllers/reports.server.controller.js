@@ -11,13 +11,16 @@ const mongoose = require('mongoose'),
 	Talent = mongoose.model('Talent'),
 	Log = mongoose.model('Log'),
 	config = require('../../config/config'),
+	radash = require('radash'),
 	async = require('async'),
-	nodemailer = require('nodemailer'),
-	sgTransport = require('nodemailer-sendgrid-transport'),
+	sgMail = require('@sendgrid/mail'),
 	json2csv = require('json2csv'),
 	dateFormat = require('dateformat'),
 	os = require('os'),
 	njds = require('nodejs-disks');
+
+// set sendgrid api key
+sgMail.setApiKey(config.mailer.options.auth.api_key);
 
 exports.emailMissingAuds = function(req, res){
 
@@ -161,11 +164,13 @@ exports.emailMissingAuds = function(req, res){
 				function(missingAudsEmailHTML, to, done) {
 
 					// send email
-					var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
 					var newDate = new Date();
 
 					// assign email subject line
 					var emailSubject = ' Missing Auditions Report - ' + dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
+
+					// remove address dups
+					to = radash.unique(to);
 
 					var mailOptions = {
 						to: to,
@@ -176,7 +181,9 @@ exports.emailMissingAuds = function(req, res){
 						html: missingAudsEmailHTML
 					};
 
-					transporter.sendMail(mailOptions, function(err){
+					sgMail
+					.send(mailOptions)
+					.then(() => {
 
 						// log event
 						var log = {
@@ -187,7 +194,9 @@ exports.emailMissingAuds = function(req, res){
 						log = new Log(log);
 						log.save();
 
-						done(err);
+						done();
+					}, error => {
+						done(error);
 					});
 
 				}

@@ -13,9 +13,12 @@ const mongoose = require('mongoose'),
 	fs = require('fs'),
 	config = require('../../config/config'),
 	async = require('async'),
-	nodemailer = require('nodemailer'),
-	sgTransport = require('nodemailer-sendgrid-transport'),
+	radash = require('radash'),
+	sgMail = require('@sendgrid/mail'),
 	dateFormat = require('dateformat');
+
+// set sendgrid api key
+sgMail.setApiKey(config.mailer.options.auth.api_key);
 
 /* custom tools methods */
 exports.sendTalentEmails = function(req, res){
@@ -65,7 +68,8 @@ exports.sendTalentEmails = function(req, res){
 								}
 
 								// send email
-								var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
+								// clear dup emails
+								talentEmails = radash.unique(talentEmails);
 
 								var mailOptions = {
 													to: talentEmails,
@@ -75,8 +79,10 @@ exports.sendTalentEmails = function(req, res){
 													subject: email.subject,
 													html: talentEmailHTML
 												};
-
-								transporter.sendMail(mailOptions, function(err){
+								
+								sgMail
+								.send(mailOptions)
+								.then(() => {
 
 									// write change to log
 									var log = {
@@ -88,7 +94,9 @@ exports.sendTalentEmails = function(req, res){
 									log = new Log(log);
 									log.save();
 
-									callback(err);
+									callback(null);
+								}, error => {
+									callback(error);
 								});
 
 							}
@@ -163,7 +171,8 @@ exports.sendTalentEmails = function(req, res){
 									}
 
 									// send email
-									var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
+									// clear dup emails
+									talentEmails = radash.unique(talentEmails);
 
 									var mailOptions = {
 														to: talentEmails,
@@ -173,9 +182,13 @@ exports.sendTalentEmails = function(req, res){
 														subject: email.subject,
 														html: talentEmailHTML
 													};
-
-									transporter.sendMail(mailOptions, function(err){
-										callback(err);
+									
+									sgMail
+									.send(mailOptions)
+									.then(() => {
+										callback(null);
+									}, error => {
+										callback(error);
 									});
 
 								}
@@ -440,9 +453,9 @@ exports.mainClientsCheck = function(req, res){
 				function(owner, producers, summaryEmailHTML, done) {
 					var log;
 					// send email
-					var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
-
 					var emailSubject = project.title + ' is due in 30 minutes and still needs a client added';
+					// remove dups
+					producers = radash.unique(producers);
 
 					var mailOptions = {
 						to: owner.email,
@@ -453,8 +466,9 @@ exports.mainClientsCheck = function(req, res){
 						html: summaryEmailHTML
 					};
 
-					transporter.sendMail(mailOptions, function(err){
-
+					sgMail
+					.send(mailOptions)
+					.then(() => {
 						// log event
 						log = {
 							type: 'system',
@@ -476,8 +490,11 @@ exports.mainClientsCheck = function(req, res){
 						log.save();
 
 						++emailCnt;
-						done(err);
+						done();
+					}, error => {
+						done(error);
 					});
+
 				}
 				], function(err) {
 				if (err) {
@@ -715,9 +732,10 @@ exports.sendPreCloseSummary = function(req, res){
 					newDate = newDate.setHours(newDate.getHours());
 					newDate = dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT');
 
-					var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
-
 					var emailSubject = project.title + ' - Pre-Close Summary (Due in 2 hrs)' + ' - Due ' + newDate + ' EST';
+
+					// rem dups
+					producers = radash.unique(producers);
 
 					var mailOptions = {
 						to: owner.email,
@@ -728,8 +746,9 @@ exports.sendPreCloseSummary = function(req, res){
 						html: summaryEmailHTML
 					};
 
-					transporter.sendMail(mailOptions, function(err){
-
+					sgMail
+					.send(mailOptions)
+					.then(() => {
 						// log event
 						log = {
 							type: 'system',
@@ -751,8 +770,11 @@ exports.sendPreCloseSummary = function(req, res){
 						log.save();
 
 						++emailCnt;
-						done(err);
+						done();
+					}, error => {
+						done(error);
 					});
+
 				},
 				// update project to prevent resending of email
 				function(done){

@@ -12,11 +12,14 @@ const mongoose = require('mongoose'),
 	Newproject = mongoose.model('Newproject'),
 	config = require('../../../config/config'),
 	async = require('async'),
-	nodemailer = require('nodemailer'),
-	sgTransport = require('nodemailer-sendgrid-transport'),
+    sgMail = require('@sendgrid/mail'),
+    radash = require('radash'),
 	dateFormat = require('dateformat'),
 	emailTalent = require('./classes/email.class').talent,
     talentStartEmail = require('./classes/email.class').talentStartEmail;
+
+// set sendgrid api key
+sgMail.setApiKey(config.mailer.options.auth.api_key);
 
 exports.sendEmail = function(req, res){
 
@@ -78,19 +81,37 @@ exports.sendEmail = function(req, res){
                 });
             },
             function(emailHTML, email, bcc, done) {
-                // send email
-                var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
+
+                // remove email dups
+                if(!radash.isArray(config.mailer.notifications)){
+                    var ccArr = [config.mailer.notifications];
+                }
+                if(radash.isArray(email.to)){
+                    email.to = radash.unique(email.to);
+                    email.to = radash.diff(email.to, ccArr);
+                }
+                if(radash.isArray(bcc)){
+                    bcc = radash.unique(bcc);
+                    bcc = radash.diff(bcc, email.to);
+                    bcc = radash.diff(bcc, ccArr);
+                }
+
+                // send email                
                 var mailOptions = {
                     to: email.to,
-                    cc: config.mailer.notifications,
+                    cc: ccArr,
                     bcc: bcc,
                     from: config.mailer.from,
                     subject: email.subject,
                     html: emailHTML
                 };
 
-                transporter.sendMail(mailOptions , function(err) {
-                    done(err);
+                sgMail
+                .send(mailOptions)
+                .then(() => {
+                    done();
+                }, error => {
+                    done(error);
                 });
             },
             ], function(err) {
@@ -176,7 +197,6 @@ exports.sendTalentCanceledEmail = function(req, res){
                             // send out talent project creation email
                             function(talentEmailHTML, owner, done) {
                                 // send email
-                                var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
                                 var emailSubject = '';
                                 var newDate = new Date(project.estimatedCompletionDate);
                                 newDate = newDate.setHours(newDate.getHours() - 1);
@@ -196,7 +216,9 @@ exports.sendTalentCanceledEmail = function(req, res){
                                     html: talentEmailHTML
                                 };
 
-                                transporter.sendMail(mailOptions, function(err){
+                                sgMail
+                                .send(mailOptions)
+                                .then(() => {
 
                                     // write change to log
                                     var log = {
@@ -208,7 +230,10 @@ exports.sendTalentCanceledEmail = function(req, res){
                                     log = new Log(log);
                                     log.save();
 
-                                    done(err);
+                                    done();
+                                }, error => {
+                                    console.error(error);
+                                    done(error);
                                 });
 
                             }
@@ -391,7 +416,6 @@ exports.sendTalentDirectorsEmail = function(req, res){
         // send out talent project creation email
         function(owner, to, talentEmailHTML, done) {
             // send email
-            var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
             var emailSubject = '';
             var newDate = new Date(project.estimatedCompletionDate);
             newDate = newDate.setHours(newDate.getHours() - 1);
@@ -400,6 +424,9 @@ exports.sendTalentDirectorsEmail = function(req, res){
             emailSubject = project.title + ' - Additional Talent Added';
 
             if(to.length > 0){
+
+                to = radash.unique(to);
+
                 var mailOptions = {
                     to: to,
                     from: owner.email || config.mailer.from,
@@ -408,9 +435,11 @@ exports.sendTalentDirectorsEmail = function(req, res){
                     subject: emailSubject,
                     html: talentEmailHTML
                 };
-    
-                transporter.sendMail(mailOptions, function(err){
-    
+                
+                sgMail
+                .send(mailOptions)
+                .then(() => {
+
                     // write change to log
                     var log = {
                         type: 'project',
@@ -420,9 +449,13 @@ exports.sendTalentDirectorsEmail = function(req, res){
                     };
                     log = new Log(log);
                     log.save();
-    
-                    done(err);
+
+                    done();
+                }, error => {
+                    console.error(error);
+                    done(error);
                 });
+
             } else {
                 done();
             }
@@ -592,8 +625,6 @@ exports.sendClientEmail = function(req, res){
 					}
 
 					// send email
-					var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
-
 					var mailOptions = {
 										to: curClient.email,
 										from: owner.email || req.user.email || config.mailer.from,
@@ -604,9 +635,12 @@ exports.sendClientEmail = function(req, res){
 										html: clientEmailHTML
 									};
 
-					transporter.sendMail(mailOptions, function(err){
-						// write change to log
-						var log = {
+                    sgMail
+                    .send(mailOptions)
+                    .then(() => {
+
+                        // write change to log
+                        var log = {
 							type: 'project',
 							sharedKey: String(req.body.project._id),
 							description: 'client ' + curClient.displayName + ' sent ' + type + ' email ' + req.body.project.title,
@@ -614,9 +648,13 @@ exports.sendClientEmail = function(req, res){
 						};
 						log = new Log(log);
 						log.save();
+    
+                        done();
+                    }, error => {
+                        console.error(error);
+                        done(error);
+                    });
 
-						done(err);
-					});
 				}
 				], function(err) {
 				callback(err);
@@ -666,15 +704,20 @@ exports.lead = function(req, res){
 		}
 
 		// send email
-		var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
-		transporter.sendMail({
+		mailOptions = {
 			from: config.mailer.from,
 			to: 'scripts@studiocenter.com, william@studiocenter.com',
 			cc: config.mailer.notifications,
 			subject: 'Start a new Audition Project Form Submission',
 			text: emailBody,
 			attachments: attachements
-		});
+		};
+
+        sgMail
+        .send(mailOptions)
+        .then(() => {}, error => {
+            console.error(error);
+        });
 
 		var uid = 'N/A';
 		if(typeof req.user !== 'undefined'){

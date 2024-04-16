@@ -7,10 +7,12 @@ const errorHandler = require('../errors'),
 	mongoose = require('mongoose'),
 	User = mongoose.model('User'),
 	config = require('../../../config/config'),
-	nodemailer = require('nodemailer'),
-	sgTransport = require('nodemailer-sendgrid-transport'),
+	sgMail = require('@sendgrid/mail'),
 	async = require('async'),
 	crypto = require('crypto');
+
+// set sendgrid api key
+sgMail.setApiKey(config.mailer.options.auth.api_key);
 
 /**
  * Forgot for reset password (forgot POST)
@@ -64,7 +66,6 @@ exports.forgot = function(req, res, next) {
 		},
 		// If valid email, send reset email using service
 		function(emailHTML, user, done) {
-			var smtpTransport = nodemailer.createTransport(sgTransport(config.mailer.options));
 			var mailOptions = {
 				to: user.email,
 				from: config.mailer.from,
@@ -72,15 +73,18 @@ exports.forgot = function(req, res, next) {
 				subject: 'Password Reset',
 				html: emailHTML
 			};
-			smtpTransport.sendMail(mailOptions, function(err) {
-				if (!err) {
-					res.send({
-						message: 'An email has been sent to ' + user.email + ' with further instructions.'
-					});
-				}
 
-				done(err);
+			sgMail
+			.send(mailOptions)
+			.then(() => {
+				done();
+			}, error => {
+				res.send({
+					message: 'An email has been sent to ' + user.email + ' with further instructions.'
+				});
+				done(error);
 			});
+
 		}
 	], function(err) {
 		if (err) return next(err);
@@ -176,7 +180,6 @@ exports.reset = function(req, res, next) {
 			},
 			// If valid email, send reset email using service
 			function(emailHTML, user, done) {
-				var smtpTransport = nodemailer.createTransport(sgTransport(config.mailer.options));
 				var mailOptions = {
 					to: user.email,
 					from: config.mailer.from,
@@ -185,9 +188,14 @@ exports.reset = function(req, res, next) {
 					html: emailHTML
 				};
 
-				smtpTransport.sendMail(mailOptions, function(err) {
-					done(err, 'done');
+				sgMail
+				.send(mailOptions)
+				.then(() => {
+					done(null, 'done');
+				}, error => {
+					done(error, 'done');
 				});
+
 			}
 		], function(err) {
 			if (err) return next(err);

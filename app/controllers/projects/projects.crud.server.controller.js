@@ -15,8 +15,7 @@ const mongoose = require('mongoose'),
 	config = require('../../../config/config'),
 	radash = require('radash'),
 	async = require('async'),
-	nodemailer = require('nodemailer'),
-	sgTransport = require('nodemailer-sendgrid-transport'),
+	sgMail = require('@sendgrid/mail'),
 	dateFormat = require('dateformat'),
 	sanitize = require("sanitize-filename"),
 	moment = require('moment-timezone'),
@@ -24,6 +23,8 @@ const mongoose = require('mongoose'),
 	emailTalent = require('./classes/email.class').talent,
 	emailClients = require('./classes/email.class').clients;
 
+// set sendgrid api key
+sgMail.setApiKey(config.mailer.options.auth.api_key);
 
 /**
  * Project authorization middleware
@@ -368,8 +369,6 @@ exports.create = function(req, res) {
 				// send out regular project creation email
 				function(emailHTML, email, done) {
 					// send email
-					var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
-
 					var mailOptions = {
 						to: email.bcc,
 						cc: config.mailer.notifications,
@@ -380,9 +379,15 @@ exports.create = function(req, res) {
 					};
 
 					if(email.bcc.length > 0){
-						transporter.sendMail(mailOptions , function(err) {
-							done(err, email);
+						sgMail
+						.send(mailOptions)
+						.then(() => {
+							done(null, email);
+						}, error => {
+							done(error, email);
 						});
+					} else {
+						done(null, email);
 					}
 					
 				},

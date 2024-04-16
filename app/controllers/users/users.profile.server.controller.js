@@ -8,8 +8,10 @@ const errorHandler = require('../errors'),
 	User = mongoose.model('User'),
 	Log = mongoose.model('Log'),
 	config = require('../../../config/config'),
-	nodemailer = require('nodemailer'),
-	sgTransport = require('nodemailer-sendgrid-transport');
+	sgMail = require('@sendgrid/mail');
+
+// set sendgrid api key
+sgMail.setApiKey(config.mailer.options.auth.api_key);
 
 /**
  * Update user details
@@ -113,19 +115,21 @@ exports.updateAdmin = function(req, res) {
 					audURL: 'http://' + req.headers.host,
 				}, function(err, clientEmailHTML) {
 
-					var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
-
 					var ccAddr = [config.mailer.notifications, adminEmail];
 
 					// send email notification of update
-					transporter.sendMail({
+					mailOptions = {
 						to: user.email,
 						from: adminEmail || config.mailer.from,
 						cc: ccAddr,
 						replyTo: adminEmail || config.mailer.from,
 						subject: 'Studio Center Auditions - Client Information Updated',
 						html: clientEmailHTML
-					});
+					};
+
+					sgMail
+					.send(mailOptions)
+					.then(() => {}, error => {});
 
 				});
 
@@ -242,8 +246,6 @@ exports.create = function(req, res) {
 
 			var emailSubject = 'Studio Center Auditions - Client Login Information';
 
-			var transporter = nodemailer.createTransport(sgTransport(config.mailer.options));
-
 			var mailOptions = {
 				to: user.email,
 				from: adminEmail || config.mailer.from,
@@ -253,8 +255,9 @@ exports.create = function(req, res) {
 				html: clientEmailHTML
 			};
 
-			transporter.sendMail(mailOptions, function(){
-
+			sgMail
+			.send(mailOptions)
+			.then(() => {
 				// write change to log
 				var log = {
 					type: 'system',
@@ -266,6 +269,8 @@ exports.create = function(req, res) {
 				log.save();
 
 				res.jsonp(user);
+
+			}, error => {
 
 			});
 
