@@ -207,10 +207,9 @@ exports.create = function(req, res) {
 
 					// send email
 					var mailOptions = {
-										to: 'audition-notification@studiocenter.com',
+										to: config.mailer.notifications,
 										from: req.user.email || config.mailer.from,
 										replyTo: req.user.email || config.mailer.from,
-										cc: config.mailer.notifications,
 										subject: emailSubject,
 										html: emailHTML
 									};

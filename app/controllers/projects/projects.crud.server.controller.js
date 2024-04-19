@@ -369,6 +369,9 @@ exports.create = function(req, res) {
 				// send out regular project creation email
 				function(emailHTML, email, done) {
 					// send email
+					email.bcc = radash.unique(email.bcc);
+					email.bcc = radash.diff(email.bcc, [req.user.email]);
+
 					var mailOptions = {
 						to: email.bcc,
 						cc: config.mailer.notifications,

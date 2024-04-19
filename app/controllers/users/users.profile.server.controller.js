@@ -115,7 +115,7 @@ exports.updateAdmin = function(req, res) {
 					audURL: 'http://' + req.headers.host,
 				}, function(err, clientEmailHTML) {
 
-					var ccAddr = [config.mailer.notifications, adminEmail];
+					var ccAddr = [config.mailer.notifications];
 
 					// send email notification of update
 					mailOptions = {

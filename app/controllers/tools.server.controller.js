@@ -458,6 +458,7 @@ exports.mainClientsCheck = function(req, res){
 					var emailSubject = project.title + ' is due in 30 minutes and still needs a client added';
 					// remove dups
 					producers = radash.unique(producers);
+					producers = radash.diff(producers, [owner.email]);
 
 					var mailOptions = {
 						to: owner.email,
@@ -738,6 +739,7 @@ exports.sendPreCloseSummary = function(req, res){
 
 					// rem dups
 					producers = radash.unique(producers);
+					producers = radash.diff(producers, [owner.email]);
 
 					var mailOptions = {
 						to: owner.email,

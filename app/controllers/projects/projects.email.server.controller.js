@@ -621,6 +621,9 @@ exports.sendClientEmail = function(req, res){
 						break;
 					}
 
+                    bccList = radash.unique(bccList);
+					bccList = radash.diff(bccList, [owner.email, curClient.email]);
+
 					// send email
 					var mailOptions = {
 										to: curClient.email,

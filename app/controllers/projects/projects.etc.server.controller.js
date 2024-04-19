@@ -178,6 +178,7 @@ exports.bookAuditions = function(req, res, next){
 				subject: emailSubject,
 				html: bookedEmailHTML
 			};
+			
 			sgMail
 			.send(mailOptions)
 			.then(() => {
