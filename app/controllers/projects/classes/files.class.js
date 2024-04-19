@@ -1,14 +1,9 @@
 
 const mongoose = require('mongoose'),
-	errorHandler = require('../../errors'),
-	Project = mongoose.model('Project'),
-	Audition = mongoose.model('Audition'),
 	Log = mongoose.model('Log'),
 	fs = require('fs'),
-	rimraf = require('rimraf'),
 	async = require('async'),
-	mv = require('mv'),
-	moment = require('moment-timezone');
+	mv = require('mv');
     
 const fileFuncs = {
     moveFile: function(tempPath, newPath){
