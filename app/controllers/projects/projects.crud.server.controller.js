@@ -43,8 +43,7 @@ exports.hasAuthorization = function(req, res, next) {
 exports.updateNoRefresh = function(req, res){
 
 	var allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern', 'production coordinator','client','client-client'],
-      	log = '',
-		project = '';
+      	log = '';
 
     if(typeof req.body.project != 'undefined' && typeof req.body.project._id  != 'undefined'){
 	// validate user interaction
@@ -73,17 +72,8 @@ exports.updateNoRefresh = function(req, res){
                     }
                 }
 
-                //project = req.body.project;
-
                 Project.findById(req.body.project._id).then(function (project) {
 					project.populate('user', 'displayName');
-
-                    // if(typeof req.body.project.__v !== 'undefined'){
-                    // 	delete req.body.project.__v;
-                    // }
-
-                    //delete project.__v;
-                    //delete req.body.project.__v;
 
                     project = Object.assign(project, req.body.project);
 
@@ -132,7 +122,8 @@ exports.create = function(req, res) {
 	var i, j;
 	var project = new Project(req.body.project),
 		copiedScripts = req.body.copiedScripts,
-		copiedReferenceFiles = req.body.copiedReferenceFiles;
+		
+	copiedReferenceFiles = req.body.copiedReferenceFiles;
 	project.user = req.user;
 
 	var appDir = '';

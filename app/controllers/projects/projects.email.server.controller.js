@@ -66,11 +66,6 @@ exports.sendEmail = function(req, res){
                     bcc.push(talentdirectors[i].email);
                 }
 
-                // // append default footer to email
-                // email.message += '<br>' + 'The ' + config.app.title + ' Support Team' + '<br>';
-                // email.message += '<br>' + 'To view your StudioCenterAuditions.com Home Page, visit:' + '<br>';
-                // email.message += 'http://' + req.headers.host + '<br>';
-
                 done('', email, bcc);
             },
             function(email, bcc, done) {
@@ -127,7 +122,6 @@ exports.sendEmail = function(req, res){
 
 exports.sendTalentCanceledEmail = function(req, res){
 
-    var project;
     var projectId = req.body.projectId;
     var talents = req.body.talents;
     var override = req.body.override || false;
@@ -268,7 +262,7 @@ exports.sendTalentScriptUpdateEmail = function(req, res){
     // pause execution for project save
     setTimeout(function() {
 
-    var project, i;
+    var i;
     var projectId = req.body.projectId;
     var talents = req.body.talents;
     var chgMade = req.body.chgMade;
@@ -369,10 +363,7 @@ exports.sendTalentEmail = function(req, res){
 // send talent director talent add email
 exports.sendTalentDirectorsEmail = function(req, res){
 
-    var project, i;
     var projectId = req.body.projectId;
-    var talent = req.body.talent;
-    var chgMade = req.body.chgMade;
 
     // reload project
     Project.findOne({'_id':projectId}).sort('-created').then(function (project) {

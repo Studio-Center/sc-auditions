@@ -19,7 +19,6 @@ sgMail.setApiKey(config.mailer.options.auth.api_key);
 exports.update = function(req, res) {
 	// Init Variables
 	var user = req.user;
-	var message = null;
 
 	// For security measurement we remove the roles from the req.body object
 	delete req.body.roles;
@@ -63,13 +62,7 @@ exports.update = function(req, res) {
 };
 
 exports.updateAdmin = function(req, res) {
-	// Init Variables
-	//var message = null;
-	//var user = req.user;
-	// For security measurement we remove the roles from the req.body object
-	//delete req.body.roles;
-	//console.log(user);
-	//console.log(req.body);
+
 	var adminUserId = req.user._id;
 
 	// define email signature
@@ -204,9 +197,6 @@ exports.delete = function(req, res) {
 // allow admin user to create account
 exports.create = function(req, res) {
 	// For security measurement we remove the roles from the req.body object
-
-	var adminUserId = req.user._id;
-
 	// define email signature
 	var emailSig = '';
 	if(req.user.emailSignature){
@@ -222,7 +212,6 @@ exports.create = function(req, res) {
 
 	// Init Variables
 	var user = new User(req.body);
-	var message = null;
 
 	// store password as Base64 Value
 	user.passwordText = new Buffer.from(savedPassword).toString('base64');

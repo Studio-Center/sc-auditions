@@ -455,10 +455,6 @@ exports.getTalentsCnt = function(req, res){
 	// set filter vars
 	var filterObj = getTalentsFilters(req);
 
-//	if(typeof filterObj.producerOptional != 'undefined' && filterObj.producerOptional.length == ''){
-//		filterObj.$where = "this.producerOptional.length = 0";
-//	}
-
 	Talent.find(filterObj).count({}).then(function (count) {
 		res.jsonp(count);
 	}).catch(function (err) {

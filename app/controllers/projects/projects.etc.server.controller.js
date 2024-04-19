@@ -198,10 +198,8 @@ exports.bookAuditions = function(req, res, next){
 
 exports.test = function(req, res, next){
     // method vars
-	var audTalent = '',
-		firstName = '',
-		lastNameCode = '',
-		curUser = Object.create(req.user);
+	var firstName = '',
+		lastNameCode = '';
 
     var file = '120-AlanS.mp3';
 

@@ -409,17 +409,6 @@ exports.convertToCSV = function(req, res){
 
 exports.findAuditionsBooked = function(req, res){
 
-	// method vars
-	var statusOpts = [
-						'In Progress',
-						'On Hold',
-						'Booked',
-						'Canceled',
-						'ReAuditioned',
-						'Dead',
-						'Closed - Pending Client Decision',
-						'Complete'
-					];
 	// projects
 	var projectsStats = [];
 	var projectData = {
@@ -449,10 +438,6 @@ exports.findAuditionsBooked = function(req, res){
 	};
 
 	// generate start dates
-	//var yesterday = new Date(req.body.dateFilterStart);
-	//	yesterday.setDate(yesterday.getDate() - 1);
-	//	var tomorrow = new Date(req.body.dateFilterEnd);
-	//	tomorrow.setDate(tomorrow.getDate() + 1);
 	var yesterday = new Date(req.body.dateFilterStart);
 	yesterday.setDate(yesterday.getDate());
 	yesterday.setHours(0, 0, 0);
@@ -635,16 +620,11 @@ exports.systemStats = function(req, res, next){
 
 exports.findAudsPerProducer = function(req, res, next){
     
-//    // generate start dates
-//	var yesterday = new Date(req.body.dateFilter);
-//	//yesterday.setDate(yesterday.getDate() - 1);
-//	var tomorrow = new Date(req.body.dateFilter);
-//	tomorrow.setDate(tomorrow.getDate() + 1);
 // generate start dates
 var yesterday = new Date(req.body.dateFilterStart);
 	yesterday.setDate(yesterday.getDate());
     yesterday.setHours(0, 0, 0);
-	var tomorrow = new Date(req.body.dateFilterEnd);
+var tomorrow = new Date(req.body.dateFilterEnd);
 	tomorrow.setDate(tomorrow.getDate());
     tomorrow.setHours(23, 59, 59);
     

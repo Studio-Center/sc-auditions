@@ -192,7 +192,6 @@ var getProjectsFilters = function(req){
 exports.getProjectsCnt = function(req, res){
 
 	// set filter vars
-	var projectName, entireProject, myProjects, inProgress;
 	var filterObj = getProjectsFilters(req);
 
 	Project.find(filterObj).count({}).then(function (count) {
@@ -246,7 +245,6 @@ exports.findLimitWithFilter = function(req, res) {
 
 	// set filter vars
 	var sortOrder = {};
-	var projectName, entireProject, myProjects, ascDesc, inProgress;
 	var filterObj = getProjectsFilters(req);
 
 	// set collection sort order
