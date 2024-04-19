@@ -67,7 +67,7 @@ exports.loadAuditions = function(req, res){
 	// set vars
 	var projId = req.body.projectId;
 
-	Audition.find({'project': Object(projId)}).sort('-created').then(function (auditions) {
+	Audition.find({'project': Object(projId)}).sort('-estimatedCompletionDate').then(function (auditions) {
 		return res.jsonp(auditions);
 	}).catch(function (err) {
 		return res.status(400).send(err);
@@ -87,7 +87,7 @@ var performLoadList = function(req, res, allowedRoles, i, j, limit){
 
 		switch(allowedRoles[j]){
 			case 'user':
-				Project.find({'user._id': curUserId}).sort('-created').limit(selLimit).then(function (projects) {
+				Project.find({'user._id': curUserId}).sort('-estimatedCompletionDate').limit(selLimit).then(function (projects) {
 					return res.jsonp(projects);
 				}).catch(function (err) {
 					return res.status(400).send({
@@ -97,7 +97,7 @@ var performLoadList = function(req, res, allowedRoles, i, j, limit){
 			break;
 			case 'talent':
 			// talent does not currently have access, added to permit later access
-				Project.find({'talent': { $elemMatch: { 'talentId': curUserId}}}).sort('-created').limit(selLimit).then(function (projects) {
+				Project.find({'talent': { $elemMatch: { 'talentId': curUserId}}}).sort('-estimatedCompletionDate').limit(selLimit).then(function (projects) {
 					return res.jsonp(projects);
 				}).catch(function (err) {
 					return res.status(400).send({
@@ -106,7 +106,7 @@ var performLoadList = function(req, res, allowedRoles, i, j, limit){
 				});
 			break;
 			case 'client':
-				Project.find({'client': { $elemMatch: { 'userId': curUserId}}}).sort('-created').limit(selLimit).then(function (projects) {
+				Project.find({'client': { $elemMatch: { 'userId': curUserId}}}).sort('-estimatedCompletionDate').limit(selLimit).then(function (projects) {
 					return res.jsonp(projects);
 				}).catch(function (err) {
 					return res.status(400).send({
@@ -115,7 +115,7 @@ var performLoadList = function(req, res, allowedRoles, i, j, limit){
 				});
 			break;
 			case 'client-client':
-				Project.find({'clientClient': { $elemMatch: { 'userId': curUserId}}}).sort('-created').limit(selLimit).then(function (projects) {
+				Project.find({'clientClient': { $elemMatch: { 'userId': curUserId}}}).sort('-estimatedCompletionDate').limit(selLimit).then(function (projects) {
 					return res.jsonp(projects);
 				}).catch(function (err) {
 					return res.status(400).send({
@@ -143,7 +143,7 @@ exports.getTalentFilteredProjects = function(req, res){
 	};
 
 	if(req.body.archived === true){
-		Project.find(searchCriteria).sort('-created').then(function (projects) {
+		Project.find(searchCriteria).sort('-estimatedCompletionDate').then(function (projects) {
 			return res.jsonp(projects);
 		}).catch(function (err) {
 			return res.status(400).send({
@@ -151,7 +151,7 @@ exports.getTalentFilteredProjects = function(req, res){
 			});
 		});
 	} else {
-		Project.find(searchCriteria).where('estimatedCompletionDate').gt(dayAgo).sort('-created').then(function (projects) {
+		Project.find(searchCriteria).where('estimatedCompletionDate').gt(dayAgo).sort('-estimatedCompletionDate').then(function (projects) {
 			return res.jsonp(projects);
 		}).catch(function (err) {
 			return res.status(400).send({
@@ -218,7 +218,7 @@ exports.findLimit = function(req, res) {
 
 	if (radash.intersects(req.user.roles, allowedRoles)) {
 
-		Project.find().populate('user', 'displayName').sort('-created').limit(limit).then(function (projects) {
+		Project.find().populate('user', 'displayName').sort('-estimatedCompletionDate').limit(limit).then(function (projects) {
 			return res.jsonp(projects);
 		}).catch(function (err) {
 			return res.status(400).send({
@@ -256,6 +256,8 @@ exports.findLimitWithFilter = function(req, res) {
 			sortOrder[selSort] = 1;
 		}
 		//sortOrder = sortOrder[selSort];
+	} else {
+		sortOrder = '-estimatedCompletionDate';
 	}
 	// set and store limits
 	var startVal, limitVal;
