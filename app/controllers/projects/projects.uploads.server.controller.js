@@ -16,7 +16,8 @@ const mongoose = require('mongoose'),
 	mv = require('mv'),
 	unzip = require('unzip-wrapper'),
 	sanitize = require("sanitize-filename"),
-	moment = require('moment-timezone');
+	moment = require('moment-timezone'),
+    fileFuncs = require('./classes/files.class');
 
 
 // file upload
@@ -750,45 +751,6 @@ exports.uploadTalentAudition = function(req, res, next){
 	});
 
 };
-
-var walk = function(dir, done) {
-    var results = [], fileData = {}, fileInfo, fileName, fileExt;
-    fs.readdir(dir, function(err, list) {
-      if (err) return done(err);
-      var pending = list.length;
-      if (!pending) return done(null, results);
-      list.forEach(function(file) {
-        file = path.resolve(dir, file);
-        fs.stat(file, function(err, stat) {
-          if (stat && stat.isDirectory()) {
-            walk(file, function(err, res) {
-              results = results.concat(res);
-              if (!--pending) done(null, results);
-            });
-          } else {
-            fileInfo = file.split('/');
-            fileName = fileInfo[fileInfo.length-1];
-            fileExt = fileName.split('.');
-            fileExt = fileExt[fileExt.length-1];
-  
-            fileInfo.pop();
-  
-            // only push JSON.txt documents
-            if(fileName === 'JSON.txt'){
-                fileData = {
-                    path: file,
-                    parentPath: fileInfo.join('/'),
-                    name: fileName,
-                    ext: fileExt
-                };
-                results.push(fileData);
-              }
-            if (!--pending) done(null, results);
-          }
-        });
-      });
-    });
-};
   
 exports.uploadBackup = function(req, res, next){
     // We are able to access req.files.file thanks to
@@ -831,7 +793,7 @@ exports.uploadBackup = function(req, res, next){
                 // perform tasks after archive has been decompressed
                 unzip(savePath, {fix: true}, function(err) {
     
-                    walk(backupPath, function(err, results){
+                    fileFuncs.walk(backupPath, function(err, results){
     
                         async.eachSeries(results, function (curSelproject, projectCallback) {
     

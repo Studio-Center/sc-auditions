@@ -12,19 +12,8 @@ const mongoose = require('mongoose'),
 	rimraf = require('rimraf'),
 	async = require('async'),
 	mv = require('mv'),
-	moment = require('moment-timezone');
-
-
-var moveFile = function(tempPath, newPath){
-    mv(tempPath, newPath, function(err) {
-        //console.log(err);
-        // if (err){
-        //     res.status(500).end();
-        // }else{
-        //     res.status(200).end();
-        // }
-    });
-};
+	moment = require('moment-timezone'),
+	fileFuncs = require('./classes/files.class');
 
 // save project audition files
 exports.deleteAudition = function(req, res){
@@ -98,7 +87,7 @@ exports.saveAudition = function(req, res){
 			// move file if exists
 			if (fs.existsSync(file)){
 
-				moveFile(file, newFile);
+				fileFuncs.moveFile(file, newFile);
 
 				// change stored file name
 				aud.file.name = aud.rename;
@@ -118,39 +107,6 @@ exports.saveAudition = function(req, res){
 	}).catch(function (err) {
 		return res.status(400).send(err);
 	});
-
-};
-
-// remove file from local file system
-var deleteFiles = function(project, req, user){
-
-	var appDir = global.appRoot;
-
-	for(var i = 0; i < project.deleteFiles.length; ++i){
-		var file = appDir + '/public' + project.deleteFiles[i];
-
-		// remove file if exists
-		if (fs.existsSync(file)) {
-			fs.unlinkSync(file, (err) => {
-				if (err) {
-					return res.status(400).send(err);
-				}
-			});
-
-			// write change to log
-			var log = {
-				type: 'project',
-				sharedKey: String(project._id),
-				description: project.title + ' project file ' + project.deleteFiles[i] + ' deleted',
-				user: req.user
-			};
-			log = new Log(log);
-			log.save();
-		}
-
-		// remove file from delete queue
-		project.deleteFiles.splice(i, 1);
-	}
 
 };
 
@@ -231,64 +187,6 @@ exports.deleteTempScript = function(req, res){
 		return res.status(200).send();
 	}
 };
-
-// rename file from local file system
-var renameFiles = function(project, res, req){
-
-	var appDir = global.appRoot;
-
-	for(var i = 0; i < project.auditions.length; ++i){
-		var file = appDir + '/public/res/auditions/' + project._id + '/' + project.auditions[i].file.name;
-		var newFile = appDir + '/public/res/auditions/' + project._id + '/' + project.auditions[i].rename;
-
-		// move file if exists
-		if (fs.existsSync(file) && project.auditions[i].rename !== '') {
-			moveFile(file, newFile);
-
-			// write change to log
-			var log = {
-				type: 'project',
-				sharedKey: String(project._id),
-				description: project.title + ' project file ' + project.auditions[i].file.name + ' renamed to ' + project.auditions[i].rename,
-				user: req.user
-			};
-			log = new Log(log);
-			log.save();
-
-			// change stored file name
-			project.auditions[i].file.name = project.auditions[i].rename;
-			project.auditions[i].rename = '';
-
-		}
-	}
-
-};
-
-var removeFolder = function(location) {
-    fs.readdir(location, function (err, files) {
-        async.each(files, function (file, cb) {
-            file = location + '/' + file;
-            fs.stat(file, function (err, stat) {
-                if (err) {
-                    return cb(err);
-                }
-                if (stat.isDirectory()) {
-                    removeFolder(file, cb);
-                } else {
-                    if (fs.existsSync(file)) {
-		    fs.unlink(file, function (err) {
-				if (err) {
-					return cb(err);
-				}
-				return cb();
-			});
-		    }
-                }
-            });
-        });
-    });
-};
-
 
 exports.backupProjectsById = function(req, res, next){
 

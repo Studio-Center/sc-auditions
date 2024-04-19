@@ -21,7 +21,8 @@ const mongoose = require('mongoose'),
 	moment = require('moment-timezone'),
 	mv = require('mv'),
 	emailTalent = require('./classes/email.class').talent,
-	emailClients = require('./classes/email.class').clients;
+	emailClients = require('./classes/email.class').clients,
+	fileFuncs = require('./classes/files.class');
 
 // set sendgrid api key
 sgMail.setApiKey(config.mailer.options.auth.api_key);
@@ -164,7 +165,7 @@ exports.create = function(req, res) {
 						// add file path
 						newPath += sanitize(project.scripts[i].file.name);
 
-						moveFile(tempPath, newPath);
+						fileFuncs.moveFile(tempPath, newPath);
 					}
 				}
 			}
@@ -184,7 +185,7 @@ exports.create = function(req, res) {
 						// add file path
 						newPath += sanitize(project.referenceFiles[j].file.name);
 
-						moveFile(tempPath, newPath);
+						fileFuncs.moveFile(tempPath, newPath);
 					}
 				}
 			}
@@ -558,7 +559,7 @@ exports.update = function(req, res) {
 							project.auditions[i].file.name = project.auditions[i].rename;
 							project.auditions[i].rename = '';
 
-							moveFile(file, newFile);
+							fileFuncs.moveFile(file, newFile);
 
 							project.markModified('auditions');
 
@@ -708,15 +709,4 @@ exports.deleteById = function(req, res) {
 		});
 	});
 
-};
-
-var moveFile = function(tempPath, newPath){
-    mv(tempPath, newPath, function(err) {
-        //console.log(err);
-        // if (err){
-        //     res.status(500).end();
-        // }else{
-        //     res.status(200).end();
-        // }
-    });
 };
