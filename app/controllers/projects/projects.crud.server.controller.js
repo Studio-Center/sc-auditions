@@ -166,6 +166,9 @@ exports.create = function(req, res) {
 						newPath += sanitize(project.scripts[i].file.name);
 
 						fileFuncs.moveFile(tempPath, newPath);
+
+						// update file name with sanitized version
+						project.scripts[i].file.name = sanitize(project.scripts[i].file.name);
 					}
 				}
 			}
@@ -186,6 +189,9 @@ exports.create = function(req, res) {
 						newPath += sanitize(project.referenceFiles[j].file.name);
 
 						fileFuncs.moveFile(tempPath, newPath);
+
+						// update file name with sanitized version
+						project.referenceFiles[j].file.name = sanitize(project.referenceFiles[j].file.name);
 					}
 				}
 			}
@@ -214,6 +220,9 @@ exports.create = function(req, res) {
 								}
 							});
 
+							// update file name with sanitized version
+							copiedScripts[i].file.name = sanitize(copiedScripts[i].file.name);
+
 							// add script file to project ref list
 							project.scripts.push(copiedScripts[i]);
 						}
@@ -241,6 +250,9 @@ exports.create = function(req, res) {
 									console.log("Error Found:", err);
 								}
 							});
+
+							// update file name with sanitized version
+							copiedReferenceFiles[j].file.name = sanitize(copiedReferenceFiles[j].file.name);
 
 							// add ref file to project ref list
 							project.referenceFiles.push(copiedReferenceFiles[j]);
