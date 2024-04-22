@@ -1,15 +1,18 @@
 [Unit]
 Description=Studio Center Auditions
 
-ExecStart=/var/www/html/service.sh start
+[Service]
+RemainAfterExit=yes
+
+ExecStart=/var/www/html/sc-auditions/service.sh start
 # ExecStart=/usr/local/bin/node /var/www/html/server.js
 # ExecStart=/usr/bin/sudo /usr/bin/node /var/www/html/server.js
 # ExecStart=/usr/local/bin/node /var/www/html/server.js
 
 # Options Stop and Restart
-# ExecStop=
-# ExecReload=# Required on some systems
-# WorkingDirectory=/var/www/html
+ExecStop=/var/www/html/sc-auditions/service.sh stop
+ExecReload=/var/www/html/sc-auditions/service.sh restart
+WorkingDirectory=/var/www/html
 
 # Restart service after 10 seconds if node service crashes
 RestartSec=10
@@ -23,12 +26,12 @@ SyslogIdentifier=nodejs-sc-auditions
 
 # #### please, not root users
 # RHEL/Fedora uses 'nobody'
-User=nouser
+User=scauditions
 # Debian/Ubuntu uses 'nogroup', RHEL/Fedora uses 'nobody'
-Group=nogroup
+Group=scauditions
 
 # variables
-Environment=PATH=/usr/bin:/usr/local/bin
+Environment=PATH=/usr/bin:/usr/local/bin:/home/scauditions/.nvm/versions/node/v16.20.1/bin
 
 [Install]
 WantedBy=multi-user.target
