@@ -4,20 +4,21 @@ Description=Studio Center Auditions
 [Service]
 RemainAfterExit=yes
 
+# change to correct path as needed
 ExecStart=/var/www/html/sc-auditions/service.sh start
 # ExecStart=/usr/local/bin/node /var/www/html/server.js
 # ExecStart=/usr/bin/sudo /usr/bin/node /var/www/html/server.js
 # ExecStart=/usr/local/bin/node /var/www/html/server.js
 
-# Options Stop and Restart
+# Options Stop and Restart - update execstop and execreload path as needed
 ExecStop=/var/www/html/sc-auditions/service.sh stop
 ExecReload=/var/www/html/sc-auditions/service.sh restart
-WorkingDirectory=/var/www/html
+WorkingDirectory=/var/www/html/sc-auditions
 
 # Restart service after 10 seconds if node service crashes
 RestartSec=10
 Restart=always
-# Restart=on-failure
+Restart=on-failure
 
 # Output to syslog
 StandardOutput=syslog
@@ -30,7 +31,7 @@ User=scauditions
 # Debian/Ubuntu uses 'nogroup', RHEL/Fedora uses 'nobody'
 Group=scauditions
 
-# variables
+# variables - update node path as needed
 Environment=PATH=/usr/bin:/usr/local/bin:/home/scauditions/.nvm/versions/node/v16.20.1/bin
 
 [Install]
