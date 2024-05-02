@@ -37,9 +37,13 @@
               <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.unionStatus" uib-btn-radio="">All</label>
           </div>
         </div>
-        <div class="col-lg-2 col-md-2 col-sm-2">
+        <div class="col-lg-1 col-md-1 col-sm-1">
             <label>Emailer</label>
             <input ng-change="findLimitWithFilter()" type="checkbox" ng-model="filter.type" ng-true-value="'email'" ng-false-value="''" class="form-control">
+        </div>
+        <div class="col-lg-1 col-md-1 col-sm-1">
+            <label>VOA</label>
+            <input ng-change="findLimitWithFilter()" type="checkbox" ng-model="filter.voa" ng-true-value="true" ng-false-value="''" class="form-control">
         </div>
     </div>
     <div class="row" style="padding-bottom:10px">
@@ -59,7 +63,6 @@
         </div>
         <div class="col-lg-6 col-md-6 col-sm-6">
             <div class="btn-group" data-toggle="buttons" style="padding-top:15px">
-                <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.voa" uib-btn-radio="'true'">VOA</label>
                 <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.typeCasts" uib-btn-radio="'African-American'">African-American</label>
                 <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.typeCasts" uib-btn-radio="'British'">British</label>
                 <label ng-change="findLimitWithFilter()" class="btn btn-primary" ng-model="filter.typeCasts" uib-btn-radio="'Spanish'">Spanish</label>
