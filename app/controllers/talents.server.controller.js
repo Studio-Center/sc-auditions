@@ -420,7 +420,7 @@ var getTalentsFilters = function(req){
 	}
 	// VOA
 	if(req.body.filter.voa){
-		filterObj.voa = req.body.filter.voa;
+		filterObj.voa = true;
 	}
 	// producer
 	if(typeof req.body.filter.producerOptional != 'undefined'){
@@ -430,12 +430,12 @@ var getTalentsFilters = function(req){
 	if(req.body.filter.ISDNLine1){
 		orQry.push({ISDNLine1: req.body.filter.ISDNLine1});
 	}
-  if(req.body.filter.sourceConnectUsername){
-      orQry.push({sourceConnectUsername: req.body.filter.sourceConnectUsername});
-  }
-  if(orQry.length > 0){
-      filterObj.$or = orQry;
-  }
+	if(req.body.filter.sourceConnectUsername){
+		orQry.push({sourceConnectUsername: req.body.filter.sourceConnectUsername});
+	}
+	if(orQry.length > 0){
+		filterObj.$or = orQry;
+	}
 
 	// locationISDN
 	if(req.body.filter.typeCasts){
@@ -454,7 +454,6 @@ exports.getTalentsCnt = function(req, res){
 
 	// set filter vars
 	var filterObj = getTalentsFilters(req);
-
 	Talent.find(filterObj).count({}).then(function (count) {
 		res.jsonp(count);
 	}).catch(function (err) {
@@ -482,7 +481,7 @@ exports.findLimitWithFilter = function(req, res) {
 		limitVal = 100;
 	}
 
-	Talent.find(filterObj).sort({'firstName': 1,'lastName': 1,'locationISDN': 1,'-created': -1}).skip(startVal).limit(limitVal).then(function (talents) {
+	Talent.find(filterObj).sort({'firstName': 1,'lastName': 1,'locationISDN': 1,'created': -1}).skip(startVal).limit(limitVal).then(function (talents) {
 		res.jsonp(talents);
 	}).catch(function (err) {
 		return res.status(400).send({
@@ -494,7 +493,7 @@ exports.findLimitWithFilter = function(req, res) {
 /**
  * List of Talents
  */
-exports.list = function(req, res) { Talent.find().sort({'locationISDN': 1,'lastName': 1,'-created': -1}).then(function (talents) {
+exports.list = function(req, res) { Talent.find().sort({'locationISDN': 1,'lastName': 1,'created': -1}).then(function (talents) {
 		res.jsonp(talents);
 	}).catch(function (err) {
 		return res.status(400).send({
