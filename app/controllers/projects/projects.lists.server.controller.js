@@ -67,7 +67,7 @@ exports.loadAuditions = function(req, res){
 	// set vars
 	var projId = req.body.projectId;
 
-	Audition.find({'project': Object(projId)}).sort('-estimatedCompletionDate').then(function (auditions) {
+	Audition.find({'project': Object(projId)}).sort('-created').then(function (auditions) {
 		return res.jsonp(auditions);
 	}).catch(function (err) {
 		return res.status(400).send(err);
