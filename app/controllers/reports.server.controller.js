@@ -170,6 +170,7 @@ exports.emailMissingAuds = function(req, res){
 					var emailSubject = ' Missing Auditions Report - ' + dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
 
 					// remove address dups
+					to = to.map(v => v.toLowerCase());
 					to = radash.unique(to);
 					to = radash.diff(to, [config.mailer.from]);
 

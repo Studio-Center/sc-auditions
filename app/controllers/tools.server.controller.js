@@ -69,6 +69,7 @@ exports.sendTalentEmails = function(req, res){
 
 								// send email
 								// clear dup emails
+								talentEmails = talentEmails.map(v => v.toLowerCase());
 								talentEmails = radash.unique(talentEmails);
 								talentEmails = radash.diff(talentEmails, [req.user.email]);
 
@@ -173,6 +174,7 @@ exports.sendTalentEmails = function(req, res){
 
 									// send email
 									// clear dup emails
+									talentEmails = talentEmails.map(v => v.toLowerCase());
 									talentEmails = radash.unique(talentEmails);
 									talentEmails = radash.diff(talentEmails, [req.user.email]);
 
@@ -457,6 +459,7 @@ exports.mainClientsCheck = function(req, res){
 					// send email
 					var emailSubject = project.title + ' is due in 30 minutes and still needs a client added';
 					// remove dups
+					producers = producers.map(v => v.toLowerCase());
 					producers = radash.unique(producers);
 					producers = radash.diff(producers, [owner.email]);
 
@@ -738,6 +741,7 @@ exports.sendPreCloseSummary = function(req, res){
 					var emailSubject = project.title + ' - Pre-Close Summary (Due in 2 hrs)' + ' - Due ' + newDate + ' EST';
 
 					// rem dups
+					producers = producers.map(v => v.toLowerCase());
 					producers = radash.unique(producers);
 					producers = radash.diff(producers, [owner.email]);
 
