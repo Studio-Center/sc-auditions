@@ -281,26 +281,6 @@ exports.create = function(req, res) {
 			// send project creation email
 			async.waterfall([
 				function(done) {
-					User.find({'roles':'admin','noemail':{ $ne: true }}).sort('-created').then(function (admins) {
-						done(null, admins);
-					});
-				},
-				function(admins, done) {
-					User.find({'roles': { $in: ['producer/auditions director', 'auditions director', 'audio intern']},'noemail':{ $ne: true }}).sort('-created').then(function (directors) {
-						done(null, admins, directors);
-					});
-				},
-				function(admins, directors, done) {
-					User.find({'roles':'production coordinator','noemail':{ $ne: true }}).sort('-created').then(function (coordinators) {
-						done(null, admins, directors, coordinators);
-					});
-				},
-				function(admins, directors, coordinators, done) {
-					User.find({'roles':'talent director','noemail':{ $ne: true }}).sort('-created').then(function (talentdirectors) {
-						done(null, admins, directors, coordinators, talentdirectors);
-					});
-				},
-				function(admins, directors, coordinators, talentdirectors, done) {
 
 					var i, email =  {
 									projectId: '',
@@ -312,20 +292,6 @@ exports.create = function(req, res) {
 									scripts: '',
 									referenceFiles: ''
 								};
-
-					// add previously queried roles to email list
-					for(i = 0; i < admins.length; ++i){
-						email.bcc.push(admins[i].email);
-					}
-					for(i = 0; i < directors.length; ++i){
-						email.bcc.push(directors[i].email);
-					}
-					// for(i = 0; i < coordinators.length; ++i){
-					// 	email.bcc.push(coordinators[i].email);
-					// }
-					for(i = 0; i < talentdirectors.length; ++i){
-						email.bcc.push(talentdirectors[i].email);
-					}
 
 					email.subject = 'Audition Project Created - ' + project.title + ' - Due ' + dateFormat(project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
 
@@ -374,14 +340,9 @@ exports.create = function(req, res) {
 				function(emailHTML, email, done) {
 					// send email
 					var fromEmail = req.user.email || config.mailer.from;
-					// reduce to lowercase to better prevent dups
-					email.bcc = email.bcc.map(v => v.toLowerCase());
-					email.bcc = radash.unique(email.bcc);
-					email.bcc = radash.diff(email.bcc, [fromEmail, config.mailer.notifications]);
 
 					var mailOptions = {
-						to: email.bcc,
-						cc: config.mailer.notifications,
+						to: config.mailer.notifications,
 						from: fromEmail,
 						subject: email.subject,
 						html: emailHTML

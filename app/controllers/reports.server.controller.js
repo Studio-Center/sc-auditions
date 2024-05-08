@@ -38,45 +38,6 @@ exports.emailMissingAuds = function(req, res){
 
 		async.waterfall([
 				function(done) {
-					User.find({'roles':'admin','noemail':{ $ne: true }}).sort('-created').then(function (admins) {
-						done(null, admins);
-					});
-				},
-				function(admins, done) {
-					User.find({'roles':{ $in: ['producer/auditions director', 'auditions director', 'audio intern']},'noemail':{ $ne: true }}).sort('-created').then(function (directors) {
-						done(null, admins, directors);
-					});
-				},
-				function(admins, directors, done) {
-					User.find({'roles':'production coordinator','noemail':{ $ne: true }}).sort('-created').then(function (coordinators) {
-						done(null, admins, directors, coordinators);
-					});
-				},
-				function(admins, directors, coordinators, done) {
-					User.find({'roles':'talent director','noemail':{ $ne: true }}).sort('-created').then(function (talentdirectors) {
-						done(null, admins, directors, coordinators, talentdirectors);
-					});
-				},
-				function(admins, directors, coordinators, talentdirectors, done) {
-
-					// add previously queried roles to email list
-					var i, to = [];
-					for(i = 0; i < admins.length; ++i){
-						to.push(admins[i].email);
-					}
-					for(i = 0; i < directors.length; ++i){
-						to.push(directors[i].email);
-					}
-					for(i = 0; i < coordinators.length; ++i){
-						to.push(coordinators[i].email);
-					}
-					for(i = 0; i < talentdirectors.length; ++i){
-						to.push(talentdirectors[i].email);
-					}
-
-					done('', to);
-				},
-				function(to, done) {
 
 					// walk through found projects
 					async.forEach(projects, function (project, callback) {
@@ -161,7 +122,7 @@ exports.emailMissingAuds = function(req, res){
 
 				},
 				// generate email
-				function(missingAudsEmailHTML, to, done) {
+				function(missingAudsEmailHTML, done) {
 
 					// send email
 					var newDate = new Date();
@@ -169,13 +130,8 @@ exports.emailMissingAuds = function(req, res){
 					// assign email subject line
 					var emailSubject = ' Missing Auditions Report - ' + dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
 
-					// remove address dups
-					to = to.map(v => v.toLowerCase());
-					to = radash.unique(to);
-					to = radash.diff(to, [config.mailer.from]);
-
 					var mailOptions = {
-						to: to,
+						to: config.mailer.notifications,
 						from: config.mailer.from,
 						replyTo: config.mailer.from,
 						cc: config.mailer.notifications,
