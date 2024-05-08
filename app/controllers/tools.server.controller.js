@@ -390,44 +390,7 @@ exports.mainClientsCheck = function(req, res){
 						done(null, owner);
 					});
 				},
-				// gather all producers and the talent directors
 				function(owner, done){
-
-					var searchGroups = [
-										'admin',
-										'producer/auditions director',
-                                        'auditions director',
-                                        'audio intern',
-										'production coordinator',
-										'talent director'
-										];
-
-					User.find({'roles':{ $in: searchGroups },'noemail':{ $ne: true }}).sort('-created').then(function (producers) {
-						done(null, owner, producers);
-					});
-				},
-				// gather producers emails
-				function(owner, producers, done){
-
-					var producersEmails = [];
-
-					async.eachSeries(producers, function (producer, producerCallback) {
-
-						producersEmails.push(producer.email);
-
-						producerCallback();
-
-					}, function (err) {
-						if( err ) {
-							return res.status(400).send({
-								message: errorHandler.getErrorMessage(err)
-							});
-						} else {
-							done(err, owner, producersEmails);
-						}
-			       	});
-				},
-				function(owner, producers, done){
 
 					// generate email signature
 					var newDate = new Date(project.estimatedCompletionDate);
@@ -449,23 +412,19 @@ exports.mainClientsCheck = function(req, res){
 						dueDate: newDate,
 						emailSignature: emailSig,
 					}, function(err, summaryEmailHTML) {
-						done(err, owner, producers, summaryEmailHTML);
+						done(err, owner, summaryEmailHTML);
 					});
 
 				},
 				// send out project email
-				function(owner, producers, summaryEmailHTML, done) {
+				function(owner, summaryEmailHTML, done) {
 					var log;
 					// send email
 					var emailSubject = project.title + ' is due in 30 minutes and still needs a client added';
-					// remove dups
-					producers = producers.map(v => v.toLowerCase());
-					producers = radash.unique(producers);
-					producers = radash.diff(producers, [owner.email]);
 
 					var mailOptions = {
 						to: owner.email,
-						cc: [producers, config.mailer.notifications],
+						cc: [config.mailer.notifications],
 						from: owner.email || config.mailer.from,
 						replyTo: owner.email || config.mailer.from,
 						subject: emailSubject,
@@ -566,49 +525,8 @@ exports.sendPreCloseSummary = function(req, res){
 						done(null, owner);
 					});
 				},
-				// gather all producers and the talent directors
-				function(owner, done){
-
-					var searchGroups = [
-										'admin',
-										'producer/auditions director',
-                                        'auditions director',
-                                        'audio intern',
-										'production coordinator',
-										'talent director'
-										];
-
-//					User.where('roles').in(searchGroups).sort('-created').exec(function(err, producers) {
-//						done(err, owner, producers);
-//					});
-                    User.find({'roles':{ $in: searchGroups },'noemail':{ $ne: true }}).sort('-created').then(function (producers) {
-						done(null, owner, producers);
-					});
-
-				},
-				// gather producers emails
-				function(owner, producers, done){
-
-					var producersEmails = [];
-
-					async.eachSeries(producers, function (producer, producerCallback) {
-
-						producersEmails.push(producer.email);
-
-						producerCallback();
-
-					}, function (err) {
-						if( err ) {
-							return res.status(400).send({
-								message: errorHandler.getErrorMessage(err)
-							});
-						} else {
-							done(err, owner, producersEmails);
-						}
-			       	});
-				},
 				// gather talent info
-				function(owner, producers, done){
+				function(owner, done){
 
 					// walk through all current talents assigned to project then query talent data
 					var talentIds = [];
@@ -617,12 +535,12 @@ exports.sendPreCloseSummary = function(req, res){
 					}
 
 					Talent.where('_id').in(talentIds).sort('-created').then(function (talents) {
-						done(null, talents, owner, producers);
+						done(null, talents, owner);
 					});
 
 				},
 				// filter selected talents
-				function(talents, owner, producers, done){
+				function(talents, owner, done){
 					var shortTblHeader = '<table><tr><th>First Name</th><th>Last Name</th></tr>';
 					var longTblHeader = '<table><tr><th>Name</th><th>Parent Name</th><th>Phone #</th><th>Alt Phone #</th><th>Location</th><th>Email</th></tr>';
 					var talentPosted = '<p>Talent Posted:</p>' + shortTblHeader,
@@ -695,11 +613,11 @@ exports.sendPreCloseSummary = function(req, res){
 							talentNotPosted += '</table>';
 							talentOut += '</table>';
 
-							done(err, talentPosted, talentNotCalled, talentNotPosted, talentOut, owner, producers);
+							done(err, talentPosted, talentNotCalled, talentNotPosted, talentOut, owner);
 						}
 			       	});
 				},
-				function(talentPosted, talentNotCalled, talentNotPosted, talentOut, owner, producers, done){
+				function(talentPosted, talentNotCalled, talentNotPosted, talentOut, owner, done){
 
 					// generate email signature
 					var newDate = new Date(project.estimatedCompletionDate);
@@ -725,12 +643,12 @@ exports.sendPreCloseSummary = function(req, res){
 						dueDate: newDate,
 						emailSignature: emailSig,
 					}, function(err, summaryEmailHTML) {
-						done(err, owner, producers, summaryEmailHTML);
+						done(err, owner, summaryEmailHTML);
 					});
 
 				},
 				// send out talent project creation email
-				function(owner, producers, summaryEmailHTML, done) {
+				function(owner, summaryEmailHTML, done) {
 					var log;
 					// send email
 					// generate email signature
@@ -740,14 +658,9 @@ exports.sendPreCloseSummary = function(req, res){
 
 					var emailSubject = project.title + ' - Pre-Close Summary (Due in 2 hrs)' + ' - Due ' + newDate + ' EST';
 
-					// rem dups
-					producers = producers.map(v => v.toLowerCase());
-					producers = radash.unique(producers);
-					producers = radash.diff(producers, [owner.email]);
-
 					var mailOptions = {
 						to: owner.email,
-						cc: [producers, config.mailer.notifications],
+						cc: [config.mailer.notifications],
 						from: owner.email || config.mailer.from,
 						replyTo: owner.email || config.mailer.from,
 						subject: emailSubject,
