@@ -78,6 +78,7 @@ const emailFuncs = {
                     });
                 }catch (error) {
                     console.error("Email could not be sent: ", error);
+                    done(error);
                 }
                     
             }
@@ -210,6 +211,7 @@ const emailFuncs = {
                     });
                 }catch (error) {
                     console.error("Email could not be sent: ", error);
+                    done(error);
                 }
                 
                 

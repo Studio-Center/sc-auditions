@@ -101,13 +101,18 @@ exports.sendEmail = function(req, res){
                     html: emailHTML
                 };
 
-                sgMail
-                .send(mailOptions)
-                .then(() => {
-                    done();
-                }, error => {
+                try{
+                    sgMail
+                    .send(mailOptions)
+                    .then(() => {
+                        done();
+                    }, error => {
+                        done(error);
+                    });
+                }catch (error) {
+                    console.error("Email could not be sent: ", error);
                     done(error);
-                });
+                }
             },
             ], function(err) {
                 if (err) {
@@ -207,24 +212,29 @@ exports.sendTalentCanceledEmail = function(req, res){
                                     html: talentEmailHTML
                                 };
 
-                                sgMail
-                                .send(mailOptions)
-                                .then(() => {
+                                try{
+                                    sgMail
+                                    .send(mailOptions)
+                                    .then(() => {
 
-                                    // write change to log
-                                    var log = {
-                                        type: 'talent',
-                                        sharedKey: selTalent.talentId,
-                                        description: 'sent cancelled email for ' + project.title,
-                                        user: req.user
-                                    };
-                                    log = new Log(log);
-                                    log.save();
+                                        // write change to log
+                                        var log = {
+                                            type: 'talent',
+                                            sharedKey: selTalent.talentId,
+                                            description: 'sent cancelled email for ' + project.title,
+                                            user: req.user
+                                        };
+                                        log = new Log(log);
+                                        log.save();
 
-                                    done();
-                                }, error => {
+                                        done();
+                                    }, error => {
+                                        done(error);
+                                    });
+                                }catch (error) {
+                                    console.error("Email could not be sent: ", error);
                                     done(error);
-                                });
+                                }
 
                             }
                             ], function(err) {
@@ -424,25 +434,30 @@ exports.sendTalentDirectorsEmail = function(req, res){
                     html: talentEmailHTML
                 };
                 
-                sgMail
-                .send(mailOptions)
-                .then(() => {
+                try{
+                    sgMail
+                    .send(mailOptions)
+                    .then(() => {
 
-                    // write change to log
-                    var log = {
-                        type: 'project',
-                        sharedKey: project._id,
-                        description: 'sent talent added email for ' + project.title,
-                        user: req.user
-                    };
-                    log = new Log(log);
-                    log.save();
+                        // write change to log
+                        var log = {
+                            type: 'project',
+                            sharedKey: project._id,
+                            description: 'sent talent added email for ' + project.title,
+                            user: req.user
+                        };
+                        log = new Log(log);
+                        log.save();
 
-                    done();
-                }, error => {
-                    console.error(error);
+                        done();
+                    }, error => {
+                        console.error(error);
+                        done(error);
+                    });
+                }catch (error) {
+                    console.error("Email could not be sent: ", error);
                     done(error);
-                });
+                }
 
             } else {
                 done();
@@ -626,25 +641,30 @@ exports.sendClientEmail = function(req, res){
 										html: clientEmailHTML
 									};
 
-                    sgMail
-                    .send(mailOptions)
-                    .then(() => {
+                    try{
+                        sgMail
+                        .send(mailOptions)
+                        .then(() => {
 
-                        // write change to log
-                        var log = {
-							type: 'project',
-							sharedKey: String(req.body.project._id),
-							description: 'client ' + curClient.displayName + ' sent ' + type + ' email ' + req.body.project.title,
-							user: req.user
-						};
-						log = new Log(log);
-						log.save();
-    
-                        done();
-                    }, error => {
-                        console.error(error);
+                            // write change to log
+                            var log = {
+                                type: 'project',
+                                sharedKey: String(req.body.project._id),
+                                description: 'client ' + curClient.displayName + ' sent ' + type + ' email ' + req.body.project.title,
+                                user: req.user
+                            };
+                            log = new Log(log);
+                            log.save();
+        
+                            done();
+                        }, error => {
+                            console.error(error);
+                            done(error);
+                        });
+                    }catch (error) {
+                        console.error("Email could not be sent: ", error);
                         done(error);
-                    });
+                    }
 
 				}
 				], function(err) {

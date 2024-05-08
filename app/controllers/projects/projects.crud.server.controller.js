@@ -373,26 +373,31 @@ exports.create = function(req, res) {
 				// send out regular project creation email
 				function(emailHTML, email, done) {
 					// send email
+					var fromEmail = req.user.email || config.mailer.from;
 					email.bcc = radash.unique(email.bcc);
-					email.bcc = radash.diff(email.bcc, [req.user.email]);
+					email.bcc = radash.diff(email.bcc, [fromEmail, config.mailer.notifications]);
 
 					var mailOptions = {
 						to: email.bcc,
 						cc: config.mailer.notifications,
-						from: req.user.email || config.mailer.from,
-						replyTo: req.user.email || config.mailer.from,
+						from: fromEmail,
 						subject: email.subject,
 						html: emailHTML
 					};
 
 					if(email.bcc.length > 0){
-						sgMail
-						.send(mailOptions)
-						.then(() => {
-							done(null, email);
-						}, error => {
+						try{
+							sgMail
+							.send(mailOptions)
+							.then(() => {
+								done(null, email);
+							}, error => {
+								done(error, email);
+							});
+						}catch (error) {
+							console.error("Email could not be sent: ", error);
 							done(error, email);
-						});
+						}
 					} else {
 						done(null, email);
 					}
