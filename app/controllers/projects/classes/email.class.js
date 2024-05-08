@@ -165,7 +165,7 @@ const emailFuncs = {
                 newDate = newDate.setHours(newDate.getHours() - 1);
                 nameArr = talentInfo.name.split(' ');
                 // add second email contact is available
-                if(typeof talentInfo.email2 !== 'undefined'){
+                if(typeof talentInfo.email2 !== 'undefined' && talentInfo.email2 != ''){
                     talentEmails.push(talentInfo.email2);
                 }
     
