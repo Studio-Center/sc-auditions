@@ -59,19 +59,27 @@ const emailFuncs = {
                                     html: clientEmailHTML
                                 };
                 
-                sgMail
-                .send(mailOptions);
+                try{
+                    sgMail
+                    .send(mailOptions).then(() => {
+                        // write change to log
+                        var log = {
+                            type: 'project',
+                            sharedKey: String(project._id),
+                            description: 'client ' + clientInfo.displayName + ' sent project created email ' + project.title,
+                            user: req.user
+                        };
+                        log = new Log(log);
+                        log.save();
+
+                        done(null);
+                    }, error => {
+                        done(error);
+                    });
+                }catch (error) {
+                    console.error("Email could not be sent: ", error);
+                }
                     
-                // write change to log
-                var log = {
-                    type: 'project',
-                    sharedKey: String(project._id),
-                    description: 'client ' + clientInfo.displayName + ' sent project created email ' + project.title,
-                    user: req.user
-                };
-                log = new Log(log);
-                log.save();
-    
             }
         ], function(err) {
             if (err) {
@@ -182,23 +190,28 @@ const emailFuncs = {
                     html: talentEmailHTML
                 };
 
-                sgMail
-                .send(mailOptions)
-                .then(() => {
-                    // write change to log
-                    var log = {
-                        type: 'talent',
-                        sharedKey: selTalent.talentId,
-                        description: 'sent new project email to talent ' + selTalent.name + ' for ' + project.title,
-                        user: req.user
-                    };
-                    log = new Log(log);
-                    log.save();
-
-                    done(null);
-                }, error => {
-                    done(error);
-                });
+                try{
+                    sgMail
+                    .send(mailOptions)
+                    .then(() => {
+                        // write change to log
+                        var log = {
+                            type: 'talent',
+                            sharedKey: selTalent.talentId,
+                            description: 'sent new project email to talent ' + selTalent.name + ' for ' + project.title,
+                            user: req.user
+                        };
+                        log = new Log(log);
+                        log.save();
+    
+                        done(null);
+                    }, error => {
+                        done(error);
+                    });
+                }catch (error) {
+                    console.error("Email could not be sent: ", error);
+                }
+                
                 
             },
             ], function(err) {
