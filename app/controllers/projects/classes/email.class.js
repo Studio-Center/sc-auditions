@@ -181,6 +181,7 @@ const emailFuncs = {
 
                 // rem dups
                 var fromEmail = owner.email || config.mailer.from;
+                talentEmails.map(v => v.toLowerCase());
                 talentEmails = radash.unique(talentEmails);
                 talentEmails = radash.diff(talentEmails, [fromEmail]);
 
