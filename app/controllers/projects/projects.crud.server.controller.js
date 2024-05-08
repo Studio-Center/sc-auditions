@@ -375,7 +375,7 @@ exports.create = function(req, res) {
 					// send email
 					var fromEmail = req.user.email || config.mailer.from;
 					// reduce to lowercase to better prevent dups
-					email.bcc.map(v => v.toLowerCase());
+					email.bcc = email.bcc.map(v => v.toLowerCase());
 					email.bcc = radash.unique(email.bcc);
 					email.bcc = radash.diff(email.bcc, [fromEmail, config.mailer.notifications]);
 

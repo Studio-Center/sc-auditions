@@ -82,12 +82,12 @@ exports.sendEmail = function(req, res){
                     var ccArr = [config.mailer.notifications];
                 }
                 if(radash.isArray(email.to)){
-                    email.to.map(v => v.toLowerCase());
+                    email.to = email.to.map(v => v.toLowerCase());
                     email.to = radash.unique(email.to);
                     email.to = radash.diff(email.to, ccArr);
                 }
                 if(radash.isArray(bcc)){
-                    bcc.to.map(v => v.toLowerCase());
+                    bcc = bcc.map(v => v.toLowerCase());
                     bcc = radash.unique(bcc);
                     bcc = radash.diff(bcc, email.to);
                     bcc = radash.diff(bcc, ccArr);
