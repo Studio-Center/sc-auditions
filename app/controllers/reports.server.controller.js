@@ -133,8 +133,6 @@ exports.emailMissingAuds = function(req, res){
 					var mailOptions = {
 						to: config.mailer.notifications,
 						from: config.mailer.from,
-						replyTo: config.mailer.from,
-						cc: config.mailer.notifications,
 						subject: emailSubject,
 						html: missingAudsEmailHTML
 					};
