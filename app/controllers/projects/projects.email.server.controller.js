@@ -40,20 +40,16 @@ exports.sendEmail = function(req, res){
             function(emailHTML, email, done) {
 
                 // remove email dups
-                if(!radash.isArray(config.mailer.notifications)){
-                    var ccArr = [config.mailer.notifications];
-                }
                 if(radash.isArray(email.to)){
                     email.to = email.to.map(v => v.toLowerCase());
                     email.to = radash.unique(email.to);
-                    email.to = radash.diff(email.to, ccArr);
+                    email.to = radash.diff(email.to, config.mailer.notifications);
                 }
 
                 // send email                
                 var mailOptions = {
                     to: email.to,
-                    cc: ccArr,
-                    bcc: config.mailer.notifications,
+                    cc: config.mailer.notifications,
                     from: config.mailer.from,
                     subject: email.subject,
                     html: emailHTML
@@ -164,7 +160,6 @@ exports.sendTalentCanceledEmail = function(req, res){
                                 var mailOptions = {
                                     to: talentInfo.email,
                                     from: owner.email || config.mailer.from,
-                                    replyTo: owner.email || config.mailer.from,
                                     cc: config.mailer.notifications,
                                     subject: emailSubject,
                                     html: talentEmailHTML
@@ -386,7 +381,6 @@ exports.sendTalentDirectorsEmail = function(req, res){
                 var mailOptions = {
                     to: to,
                     from: owner.email || config.mailer.from,
-                    replyTo: owner.email || config.mailer.from,
                     cc: config.mailer.notifications,
                     subject: emailSubject,
                     html: talentEmailHTML
@@ -574,7 +568,6 @@ exports.sendClientEmail = function(req, res){
 					var mailOptions = {
 										to: curClient.email,
 										from: owner.email || req.user.email || config.mailer.from,
-										replyTo: owner.email || req.user.email || config.mailer.from,
 										cc: config.mailer.notifications,
 										subject: emailSubject,
 										html: clientEmailHTML

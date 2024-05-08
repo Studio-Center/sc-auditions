@@ -143,7 +143,6 @@ exports.create = function(req, res) {
 					var mailOptions = {
 										to: 'Dave@studiocenter.com',
 										from: req.user.email || config.mailer.from,
-										replyTo: req.user.email || config.mailer.from,
 										cc: config.mailer.notifications,
 										subject: emailSubject,
 										html: emailHTML
@@ -176,7 +175,6 @@ exports.create = function(req, res) {
 					var mailOptions = {
 										to: ['Ken@studiocenter.com'],
 										from: req.user.email || config.mailer.from,
-										replyTo: req.user.email || config.mailer.from,
 										cc: config.mailer.notifications,
 										subject: emailSubject,
 										html: emailHTML
@@ -209,7 +207,6 @@ exports.create = function(req, res) {
 					var mailOptions = {
 										to: config.mailer.notifications,
 										from: req.user.email || config.mailer.from,
-										replyTo: req.user.email || config.mailer.from,
 										subject: emailSubject,
 										html: emailHTML
 									};
@@ -308,7 +305,6 @@ exports.delete = function(req, res) {
 			var mailOptions = {
 								to: 'Dave@studiocenter.com',
 								from: req.user.email || config.mailer.from,
-								replyTo: req.user.email || config.mailer.from,
 								cc: config.mailer.notifications,
 								subject: emailSubject,
 								html: emailHTML
@@ -341,7 +337,6 @@ exports.delete = function(req, res) {
 			var mailOptions = {
 								to: 'Ken@studiocenter.com',
 								from: req.user.email || config.mailer.from,
-								replyTo: req.user.email || config.mailer.from,
 								cc: config.mailer.notifications,
 								subject: emailSubject,
 								html: emailHTML

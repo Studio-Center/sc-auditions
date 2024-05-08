@@ -115,7 +115,6 @@ exports.updateAdmin = function(req, res) {
 						to: user.email,
 						from: adminEmail || config.mailer.from,
 						cc: ccAddr,
-						replyTo: adminEmail || config.mailer.from,
 						subject: 'Studio Center Auditions - Client Information Updated',
 						html: clientEmailHTML
 					};
@@ -238,7 +237,6 @@ exports.create = function(req, res) {
 			var mailOptions = {
 				to: user.email,
 				from: adminEmail || config.mailer.from,
-				replyTo: adminEmail || config.mailer.from,
 				cc: config.mailer.notifications,
 				subject: emailSubject,
 				html: clientEmailHTML

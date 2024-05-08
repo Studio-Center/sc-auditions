@@ -76,7 +76,6 @@ exports.sendTalentEmails = function(req, res){
 								var mailOptions = {
 													to: talentEmails,
 													from: req.user.email || config.mailer.from,
-													replyTo: req.user.email || config.mailer.from,
 													cc: config.mailer.notifications,
 													subject: email.subject,
 													html: talentEmailHTML
@@ -181,7 +180,6 @@ exports.sendTalentEmails = function(req, res){
 									var mailOptions = {
 														to: talentEmails,
 														from: req.user.email || config.mailer.from,
-														replyTo: req.user.email || config.mailer.from,
 														cc: config.mailer.notifications,
 														subject: email.subject,
 														html: talentEmailHTML
@@ -426,7 +424,6 @@ exports.mainClientsCheck = function(req, res){
 						to: owner.email,
 						cc: [config.mailer.notifications],
 						from: owner.email || config.mailer.from,
-						replyTo: owner.email || config.mailer.from,
 						subject: emailSubject,
 						html: summaryEmailHTML
 					};
@@ -662,7 +659,6 @@ exports.sendPreCloseSummary = function(req, res){
 						to: owner.email,
 						cc: [config.mailer.notifications],
 						from: owner.email || config.mailer.from,
-						replyTo: owner.email || config.mailer.from,
 						subject: emailSubject,
 						html: summaryEmailHTML
 					};

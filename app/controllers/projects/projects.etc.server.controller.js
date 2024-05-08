@@ -175,7 +175,6 @@ exports.bookAuditions = function(req, res, next){
 				to: clientsEmails,
 				cc: [ownerInfo.email, config.mailer.notifications],
 				from: ownerInfo.email || config.mailer.from,
-				replyTo: ownerInfo.email || config.mailer.from,
 				subject: emailSubject,
 				html: bookedEmailHTML
 			};
