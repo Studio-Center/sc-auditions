@@ -115,7 +115,7 @@ exports.emailMissingAuds = function(req, res){
 							count: missingCnt,
 							results:callTalents
 						}, function(err, missingAudsEmailHTML) {
-							done(err, missingAudsEmailHTML, to);
+							done(err, missingAudsEmailHTML);
 						});
 
 		           	});
