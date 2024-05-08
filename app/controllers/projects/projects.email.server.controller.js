@@ -29,53 +29,15 @@ exports.sendEmail = function(req, res){
         // gather admin and producers emails to include in send
         async.waterfall([
             function(done) {
-                User.find({'roles':'admin','noemail':{ $ne: true }}).sort('-created').then(function (admins) {
-                    done(null, admins);
-                });
-            },
-            function(admins, done) {
-                User.find({'roles':{ $in: ['producer/auditions director', 'auditions director', 'audio intern']},'noemail':{ $ne: true }}).sort('-created').then(function (directors) {
-                    done(null, admins, directors);
-                });
-            },
-            function(admins, directors, done) {
-                User.find({'roles':'production coordinator','noemail':{ $ne: true }}).sort('-created').then(function (coordinators) {
-                    done(null, admins, directors, coordinators);
-                });
-            },
-            function(admins, directors, coordinators, done) {
-                User.find({'roles':'talent director','noemail':{ $ne: true }}).sort('-created').then(function (talentdirectors) {
-                    done(null, admins, directors, coordinators, talentdirectors);
-                });
-            },
-            function(admins, directors, coordinators, talentdirectors, done) {
                 var email = req.body.email;
 
-                // add previously queried roles to email list
-                var i, bcc = [];
-                for(i = 0; i < admins.length; ++i){
-                    bcc.push(admins[i].email);
-                }
-                for(i = 0; i < directors.length; ++i){
-                    bcc.push(directors[i].email);
-                }
-                for(i = 0; i < coordinators.length; ++i){
-                    bcc.push(coordinators[i].email);
-                }
-                for(i = 0; i < talentdirectors.length; ++i){
-                    bcc.push(talentdirectors[i].email);
-                }
-
-                done('', email, bcc);
-            },
-            function(email, bcc, done) {
                 res.render('templates/email-message', {
                     email: email
                 }, function(err, emailHTML) {
                     done(err, emailHTML, email, bcc);
                 });
             },
-            function(emailHTML, email, bcc, done) {
+            function(emailHTML, email, done) {
 
                 // remove email dups
                 if(!radash.isArray(config.mailer.notifications)){
@@ -86,18 +48,12 @@ exports.sendEmail = function(req, res){
                     email.to = radash.unique(email.to);
                     email.to = radash.diff(email.to, ccArr);
                 }
-                if(radash.isArray(bcc)){
-                    bcc = bcc.map(v => v.toLowerCase());
-                    bcc = radash.unique(bcc);
-                    bcc = radash.diff(bcc, email.to);
-                    bcc = radash.diff(bcc, ccArr);
-                }
 
                 // send email                
                 var mailOptions = {
                     to: email.to,
                     cc: ccArr,
-                    bcc: bcc,
+                    bcc: config.mailer.notifications,
                     from: config.mailer.from,
                     subject: email.subject,
                     html: emailHTML
@@ -575,11 +531,6 @@ exports.sendClientEmail = function(req, res){
 					});
 				},
 				function(owner, done) {
-					User.find({'roles':{ $in: ['producer/auditions director', 'auditions director', 'audio intern']}}).sort('-created').then(function (directors) {
-						done(null, owner, directors);
-					});
-				},
-				function(owner, directors, done) {
 
 					var emailSig = '';
 					if(owner.emailSignature){
@@ -599,21 +550,11 @@ exports.sendClientEmail = function(req, res){
 						dueDate: dateFormat(req.body.project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT'),
 						dueDateDay: dateFormat(req.body.project.estimatedCompletionDate, 'dddd')
 					}, function(err, clientEmailHTML) {
-						done(err, clientEmailHTML, owner, directors);
+						done(err, clientEmailHTML, owner);
 					});
 
 				},
-				function(clientEmailHTML, owner, directors, done){
-
-					var bccList = [];
-					for(i = 0; i < directors.length; ++i){
-						if(req.user.email !== directors[i].email && owner.email !== directors[i].email) {
-							bccList.push(directors[i].email);
-						}
-					}
-					// inject user and owner into bcc list
-					bccList.push(req.user.email);
-					bccList.push(owner.email);
+				function(clientEmailHTML, owner, done){
 
 					var emailSubject;
 
@@ -629,16 +570,12 @@ exports.sendClientEmail = function(req, res){
 						break;
 					}
 
-                    bccList = radash.unique(bccList);
-					bccList = radash.diff(bccList, [owner.email, curClient.email]);
-
 					// send email
 					var mailOptions = {
 										to: curClient.email,
 										from: owner.email || req.user.email || config.mailer.from,
 										replyTo: owner.email || req.user.email || config.mailer.from,
 										cc: config.mailer.notifications,
-										bcc: bccList || config.mailer.from,
 										subject: emailSubject,
 										html: clientEmailHTML
 									};

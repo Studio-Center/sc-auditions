@@ -167,6 +167,7 @@ exports.bookAuditions = function(req, res, next){
 			var emailSubject = 'Auditions Booked - ' + project.title;
 
 			// rem dups
+			clientsEmails = clientsEmails.map(v => v.toLowerCase());
 			clientsEmails = radash.unique(clientsEmails);
 			clientsEmails = radash.diff(clientsEmails, [ownerInfo.email]);
 
