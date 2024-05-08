@@ -49,11 +49,11 @@ const emailFuncs = {
                 var emailSubject = 'Your audition project:  ' + project.title + ' Due ' + dateFormat(project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
     
                 // send email
-    
+                var fromEmail = req.user.email || config.mailer.from;
+
                 var mailOptions = {
                                     to: client.email,
-                                    from: req.user.email || config.mailer.from,
-                                    replyTo: req.user.email || config.mailer.from,
+                                    from: fromEmail,
                                     cc: config.mailer.notifications,
                                     subject: emailSubject,
                                     html: clientEmailHTML
@@ -171,13 +171,13 @@ const emailFuncs = {
                 }
 
                 // rem dups
+                var fromEmail = owner.email || config.mailer.from;
                 talentEmails = radash.unique(talentEmails);
-                talentEmails = radash.diff(talentEmails, [owner.email]);
+                talentEmails = radash.diff(talentEmails, [fromEmail]);
 
                 var mailOptions = {
                     to: talentEmails,
-                    from: owner.email || config.mailer.from,
-                    replyTo: owner.email || config.mailer.from,
+                    from: fromEmail,
                     subject: emailSubject,
                     html: talentEmailHTML
                 };
@@ -214,7 +214,6 @@ const emailFuncs = {
                 Talent.findOne({'_id':talent.talentId}).sort('-created').then(function (talentInfo) {
                     done(null, talentInfo);
                 }).catch(function (err) {
-                    console.log(err);
                     done(err, null);
                 });
             },
