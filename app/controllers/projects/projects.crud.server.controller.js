@@ -348,21 +348,17 @@ exports.create = function(req, res) {
 						html: emailHTML
 					};
 
-					if(email.bcc.length > 0){
-						try{
-							sgMail
-							.send(mailOptions)
-							.then(() => {
-								done(null, email);
-							}, error => {
-								done(error, email);
-							});
-						}catch (error) {
-							console.error("Email could not be sent: ", error);
+					try{
+						sgMail
+						.send(mailOptions)
+						.then(() => {
+							done(null, email);
+						}, error => {
 							done(error, email);
-						}
-					} else {
-						done(null, email);
+						});
+					}catch (error) {
+						console.error("Email could not be sent: ", error);
+						done(error, email);
 					}
 					
 				},
