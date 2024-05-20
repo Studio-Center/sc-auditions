@@ -20,7 +20,7 @@ sgMail.setApiKey(config.mailer.options.auth.api_key);
 // send email and update project status for selected booked auditions
 exports.bookAuditions = function(req, res, next){
 
-	var projectId = req.body.data.project;
+	let projectId = req.body.data.project;
 
 	async.waterfall([
 		// gather info for selected project
@@ -32,7 +32,7 @@ exports.bookAuditions = function(req, res, next){
 		// update status for selected booked auditions
 		function(project, done) {
 
-			var selAuds = [];
+			let selAuds = [];
 
 			async.eachSeries(project.auditions, function (audition, next) {
 				if(audition.selected === true && (typeof audition.booked === 'undefined' || audition.booked === false)){
@@ -66,7 +66,7 @@ exports.bookAuditions = function(req, res, next){
 		// update project
 		function(selAuds, project, done) {
 
-			var newProject = project.toObject();
+			let newProject = project.toObject();
 
 			newProject.status = 'Booked';
 
@@ -83,7 +83,7 @@ exports.bookAuditions = function(req, res, next){
 		// gather client email, send out emails
 		function(selAuds, project, done){
 
-			var clients = [];
+			let clients = [];
 
 			async.eachSeries(project.client, function (client, clientCallback) {
 
@@ -98,7 +98,7 @@ exports.bookAuditions = function(req, res, next){
 		},
 		function(clients, selAuds, project, done){
 
-			var clientsEmails = [];
+			let clientsEmails = [];
 
 			async.eachSeries(clients, function (client, clientCallback) {
 
@@ -113,7 +113,7 @@ exports.bookAuditions = function(req, res, next){
 		function(clientsEmails, selAuds, project, done) {
 
 			// gather project owner data
-			var ownerId;
+			let ownerId;
 			if(!project.owner){
 				ownerId = project.user;
 			} else{
@@ -127,11 +127,11 @@ exports.bookAuditions = function(req, res, next){
 		function(ownerInfo, clientsEmails, selAuds, project, done){
 
 			// generate email signature
-			var newDate = new Date(project.estimatedCompletionDate);
+			let newDate = new Date(project.estimatedCompletionDate);
 			newDate = newDate.setHours(newDate.getHours() - 1);
 			newDate = dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT');
 
-			var emailSig = '';
+			let emailSig = '';
 			if(ownerInfo.emailSignature){
 				emailSig = ownerInfo.emailSignature;
 			} else {
@@ -139,7 +139,7 @@ exports.bookAuditions = function(req, res, next){
 			}
 
 			// assign booked list
-			var bookedText = '<p>';
+			let bookedText = '<p>';
 			for(var i = 0; i < selAuds.length; ++i){
 				bookedText += '<a href="http://' + req.headers.host + '/res/auditions/' + project._id + '/' + selAuds[i].file.name + '">' + selAuds[i].file.name + '</a><br>';
 			}
@@ -160,18 +160,18 @@ exports.bookAuditions = function(req, res, next){
 		function(ownerInfo, clientsEmails, selAuds, project, bookedEmailHTML, done) {
 			// send email
 			// generate email signature
-			var newDate = new Date(project.estimatedCompletionDate);
+			let newDate = new Date(project.estimatedCompletionDate);
 			newDate = newDate.setHours(newDate.getHours() - 1);
 			newDate = dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT');
 
-			var emailSubject = 'Auditions Booked - ' + project.title;
+			let emailSubject = 'Auditions Booked - ' + project.title;
 
 			// rem dups
 			clientsEmails = clientsEmails.map(v => v.toLowerCase());
 			clientsEmails = radash.unique(clientsEmails);
 			clientsEmails = radash.diff(clientsEmails, [ownerInfo.email]);
 
-			var mailOptions = {
+			let mailOptions = {
 				to: clientsEmails,
 				cc: [ownerInfo.email, config.mailer.notifications],
 				from: ownerInfo.email || config.mailer.from,
@@ -198,18 +198,17 @@ exports.bookAuditions = function(req, res, next){
 
 exports.test = function(req, res, next){
     // method vars
-	var firstName = '',
-		lastNameCode = '';
+	let firstName = '',
+		lastNameCode = '',
+		file = '120-AlanS.mp3',
+		regStr = /([a-zA-Z]+)\.\w{3}$/i.exec(file);
 
-    var file = '120-AlanS.mp3';
-
-    var regStr = /([a-zA-Z]+)\.\w{3}$/i.exec(file);
 	if(regStr !== null){
-		var regStrOP = regStr[1],
+		let regStrOP = regStr[1],
 			   lastNm = /([A-Z])[a-z]*$/.exec(regStrOP);
 
 		if(lastNm !== null){
-			var lastNmPos = lastNm.index;
+			let lastNmPos = lastNm.index;
 
 			firstName = regStrOP.slice(0,lastNmPos);
 			lastNameCode = regStrOP.slice(lastNmPos, regStrOP.length);

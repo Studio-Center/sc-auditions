@@ -19,18 +19,18 @@ const fileFuncs = {
     // rename file from local file system
     renameFiles: function(project, res, req){
 
-        var appDir = global.appRoot;
+        let appDir = global.appRoot;
 
         for(var i = 0; i < project.auditions.length; ++i){
-            var file = appDir + '/public/res/auditions/' + project._id + '/' + project.auditions[i].file.name;
-            var newFile = appDir + '/public/res/auditions/' + project._id + '/' + project.auditions[i].rename;
+            let file = appDir + '/public/res/auditions/' + project._id + '/' + project.auditions[i].file.name;
+            let newFile = appDir + '/public/res/auditions/' + project._id + '/' + project.auditions[i].rename;
 
             // move file if exists
             if (fs.existsSync(file) && project.auditions[i].rename !== '') {
                 moveFile(file, newFile);
 
                 // write change to log
-                var log = {
+                let log = {
                     type: 'project',
                     sharedKey: String(project._id),
                     description: project.title + ' project file ' + project.auditions[i].file.name + ' renamed to ' + project.auditions[i].rename,
@@ -50,10 +50,10 @@ const fileFuncs = {
     // remove file from local file system
     deleteFiles: function(project, req, user){
 
-        var appDir = global.appRoot;
+        let appDir = global.appRoot;
 
         for(var i = 0; i < project.deleteFiles.length; ++i){
-            var file = appDir + '/public' + project.deleteFiles[i];
+            let file = appDir + '/public' + project.deleteFiles[i];
 
             // remove file if exists
             if (fs.existsSync(file)) {
@@ -64,7 +64,7 @@ const fileFuncs = {
                 });
 
                 // write change to log
-                var log = {
+                let log = {
                     type: 'project',
                     sharedKey: String(project._id),
                     description: project.title + ' project file ' + project.deleteFiles[i] + ' deleted',
@@ -104,10 +104,10 @@ const fileFuncs = {
         });
     },
     walk: function(dir, done) {
-        var results = [], fileData = {}, fileInfo, fileName, fileExt;
+        let results = [], fileData = {}, fileInfo, fileName, fileExt;
         fs.readdir(dir, function(err, list) {
           if (err) return done(err);
-          var pending = list.length;
+          let pending = list.length;
           if (!pending) return done(null, results);
           list.forEach(function(file) {
             file = path.resolve(dir, file);

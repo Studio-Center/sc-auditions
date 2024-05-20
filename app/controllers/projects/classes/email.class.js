@@ -26,7 +26,7 @@ const emailFuncs = {
                 });
             },
             function(clientInfo, done) {
-                var emailSig = '';
+                let emailSig = '';
                 if(req.user.emailSignature){
                     emailSig = req.user.emailSignature;
                 } else {
@@ -46,12 +46,12 @@ const emailFuncs = {
             },
             function(clientInfo, clientEmailHTML, done){
     
-                var emailSubject = 'Your audition project:  ' + project.title + ' Due ' + dateFormat(project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
+                let emailSubject = 'Your audition project:  ' + project.title + ' Due ' + dateFormat(project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
     
                 // send email
-                var fromEmail = req.user.email || config.mailer.from;
+                let fromEmail = req.user.email || config.mailer.from;
 
-                var mailOptions = {
+                let mailOptions = {
                                     to: client.email,
                                     from: fromEmail,
                                     cc: config.mailer.notifications,
@@ -63,7 +63,7 @@ const emailFuncs = {
                     sgMail
                     .send(mailOptions).then(() => {
                         // write change to log
-                        var log = {
+                        let log = {
                             type: 'project',
                             sharedKey: String(project._id),
                             description: 'client ' + clientInfo.displayName + ' sent project created email ' + project.title,
@@ -94,7 +94,7 @@ const emailFuncs = {
 
         async.waterfall([
             function(done) {
-                var ownerId = project.owner || project.user._id;
+                let ownerId = project.owner || project.user._id;
                 User.findOne({'_id':ownerId}).sort('-created').then(function (owner) {
                     owner = owner || req.user;
                     done(null, owner);
@@ -104,19 +104,19 @@ const emailFuncs = {
             },
             function(owner, done) {
 
-                var emailTmpl = 'templates/projects/new-project-talent-email';
+                let emailTmpl = 'templates/projects/new-project-talent-email';
                 // load language specific email templates
                 if(talentInfo.prefLanguage === 'Spanish'){
                     emailTmpl = 'templates/projects/new-project-talent-email-spanish';
                 }
     
-                var newDate = new Date(project.estimatedCompletionDate);
+                let newDate = new Date(project.estimatedCompletionDate);
                 newDate = newDate.setHours(newDate.getHours() - 1);
                 newDate = dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT');
-                var part = '';
+                let part = '';
     
                 // generate email signature
-                var emailSig = '';
+                let emailSig = '';
                 if(owner.emailSignature){
                     emailSig = owner.emailSignature;
                 } else {
@@ -137,7 +137,7 @@ const emailFuncs = {
                 }
     
                 // add requested text if needed
-                var requestedTxt = '';
+                let requestedTxt = '';
                 if(selTalent.requested === true){
                     requestedTxt = 'REQUESTED ';
                 }
@@ -156,7 +156,7 @@ const emailFuncs = {
             // send out talent project creation email
             function(talentEmailHTML, owner, done) {
                 // send email
-                var emailSubject = '',
+                let emailSubject = '',
                     newDate = new Date(project.estimatedCompletionDate),
                     nameArr = [],
                     talentEmails = [talentInfo.email];
@@ -180,12 +180,12 @@ const emailFuncs = {
                 }
 
                 // rem dups
-                var fromEmail = owner.email || config.mailer.from;
+                let fromEmail = owner.email || config.mailer.from;
                 talentEmails = talentEmails.map(v => v.toLowerCase());
                 talentEmails = radash.unique(talentEmails);
                 talentEmails = radash.diff(talentEmails, [fromEmail]);
 
-                var mailOptions = {
+                let mailOptions = {
                     to: talentEmails,
                     from: fromEmail,
                     subject: emailSubject,
@@ -197,7 +197,7 @@ const emailFuncs = {
                     .send(mailOptions)
                     .then(() => {
                         // write change to log
-                        var log = {
+                        let log = {
                             type: 'talent',
                             sharedKey: selTalent.talentId,
                             description: 'sent new project email to talent ' + selTalent.name + ' for ' + project.title,
@@ -235,7 +235,7 @@ const emailFuncs = {
             },
             // generate email body
             function(talentInfo, done) {
-                var email =  {
+                let email =  {
                                 projectId: '',
                                 to: [],
                                 bcc: [],
@@ -246,7 +246,7 @@ const emailFuncs = {
                                 referenceFiles: ''
                             };
                 if(talentInfo.type.toLowerCase() === 'email' || override === true){
-                    var i;
+                    let i;
     
                     // add scripts and assets to email body
                     email.scripts = '\n' + '<strong>Scripts:</strong>' + '<br>';
@@ -298,11 +298,11 @@ const emailFuncs = {
                     emailFuncs.talent(talent, talentInfo, email, project, req, res);
                 }
     
-                var newProject = project;
+                let newProject = project;
     
                 // write change to log
                 if(typeof project.log !== 'undefined'){
-                    var log = project.log;
+                    let log = project.log;
                     log.user = req.user;
     
                     log = new Log(log);

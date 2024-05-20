@@ -29,7 +29,7 @@ exports.sendEmail = function(req, res){
         // gather admin and producers emails to include in send
         async.waterfall([
             function(done) {
-                var email = req.body.email;
+                let email = req.body.email;
 
                 res.render('templates/email-message', {
                     email: email
@@ -47,7 +47,7 @@ exports.sendEmail = function(req, res){
                 }
 
                 // send email                
-                var mailOptions = {
+                let mailOptions = {
                     to: email.to,
                     cc: config.mailer.notifications,
                     from: config.mailer.from,
@@ -81,9 +81,9 @@ exports.sendEmail = function(req, res){
 
 exports.sendTalentCanceledEmail = function(req, res){
 
-    var projectId = req.body.projectId;
-    var talents = req.body.talents;
-    var override = req.body.override || false;
+    let projectId = req.body.projectId,
+        talents = req.body.talents,
+        override = req.body.override || false;
 
     // reload project
     Project.findOne({'_id':projectId}).sort('-created').then(function (project) {
@@ -115,7 +115,7 @@ exports.sendTalentCanceledEmail = function(req, res){
 
                             },
                             function(done) {
-                                var ownerId = project.owner || project.user._id;
+                                let ownerId = project.owner || project.user._id;
                                 User.findOne({'_id':ownerId}).sort('-created').then(function (owner) {
                                     owner = owner || req.user;
                                     done(null, owner);
@@ -125,13 +125,13 @@ exports.sendTalentCanceledEmail = function(req, res){
                             },
                             function(owner, done) {
 
-                                var newDate = new Date(project.estimatedCompletionDate);
+                                let newDate = new Date(project.estimatedCompletionDate);
                                 newDate = newDate.setHours(newDate.getHours() - 1);
                                 newDate = dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT');
-                                var part = '';
+                                let part = '';
 
                                 // generate email signature
-                                var emailSig = '';
+                                let emailSig = '';
                                 if(owner.emailSignature){
                                     emailSig = owner.emailSignature;
                                 } else {
@@ -150,14 +150,14 @@ exports.sendTalentCanceledEmail = function(req, res){
                             // send out talent project creation email
                             function(talentEmailHTML, owner, done) {
                                 // send email
-                                var emailSubject = '';
-                                var newDate = new Date(project.estimatedCompletionDate);
+                                let emailSubject = '',
+                                    newDate = new Date(project.estimatedCompletionDate);
                                 newDate = newDate.setHours(newDate.getHours() - 1);
 
                                 // assign email subject line
                                 emailSubject = 'The Audition Project ' + project.title + ' Has Been Cancelled';
 
-                                var mailOptions = {
+                                let mailOptions = {
                                     to: talentInfo.email,
                                     from: owner.email || config.mailer.from,
                                     cc: config.mailer.notifications,
@@ -171,7 +171,7 @@ exports.sendTalentCanceledEmail = function(req, res){
                                     .then(() => {
 
                                         // write change to log
-                                        var log = {
+                                        let log = {
                                             type: 'talent',
                                             sharedKey: selTalent.talentId,
                                             description: 'sent cancelled email for ' + project.title,
@@ -225,15 +225,15 @@ exports.sendTalentScriptUpdateEmail = function(req, res){
     // pause execution for project save
     setTimeout(function() {
 
-    var i;
-    var projectId = req.body.projectId;
-    var talents = req.body.talents;
-    var chgMade = req.body.chgMade;
+    let i,
+        projectId = req.body.projectId,
+        talents = req.body.talents,
+        chgMade = req.body.chgMade;
 
     // reload project
     Project.findOne({'_id':projectId}).sort('-created').then(function (project) {
 
-        var email =  {
+        let email =  {
                             projectId: '',
                             to: [],
                             bcc: [],
@@ -315,9 +315,9 @@ exports.sendTalentScriptUpdateEmail = function(req, res){
 // send talent project start email
 exports.sendTalentEmail = function(req, res){
 
-    var project = req.body.project;
-    var talent = req.body.talent;
-    var override = req.body.override || false;
+    let project = req.body.project,
+        talent = req.body.talent,
+        override = req.body.override || false;
 
     talentStartEmail(req, res, project, talent, override);
 
@@ -326,7 +326,7 @@ exports.sendTalentEmail = function(req, res){
 // send talent director talent add email
 exports.sendTalentDirectorsEmail = function(req, res){
 
-    var projectId = req.body.projectId;
+    let projectId = req.body.projectId;
 
     // reload project
     Project.findOne({'_id':projectId}).sort('-created').then(function (project) {
@@ -334,7 +334,7 @@ exports.sendTalentDirectorsEmail = function(req, res){
         // walk through and email all selected clients
         async.waterfall([
         function(done) {
-            var ownerId = project.owner || project.user._id;
+            let ownerId = project.owner || project.user._id;
             User.findOne({'_id':ownerId}).sort('-created').then(function (owner) {
                 owner = owner || req.user;
                 done(null, owner);
@@ -349,7 +349,7 @@ exports.sendTalentDirectorsEmail = function(req, res){
         },
         function(owner, talentdirectors, done) {
 
-            var i = 0,
+            let i = 0,
                 to = [];
 
             for(i = 0; i < talentdirectors.length; ++i){
@@ -366,8 +366,8 @@ exports.sendTalentDirectorsEmail = function(req, res){
         // send out talent project creation email
         function(owner, to, talentEmailHTML, done) {
             // send email
-            var emailSubject = '';
-            var newDate = new Date(project.estimatedCompletionDate);
+            let emailSubject = '',
+                newDate = new Date(project.estimatedCompletionDate);
             newDate = newDate.setHours(newDate.getHours() - 1);
 
             // assign email subject line
@@ -378,7 +378,7 @@ exports.sendTalentDirectorsEmail = function(req, res){
                 to = radash.unique(to);
                 to = radash.diff(to, [owner.email]);
 
-                var mailOptions = {
+                let mailOptions = {
                     to: to,
                     from: owner.email || config.mailer.from,
                     cc: config.mailer.notifications,
@@ -392,7 +392,7 @@ exports.sendTalentDirectorsEmail = function(req, res){
                     .then(() => {
 
                         // write change to log
-                        var log = {
+                        let log = {
                             type: 'project',
                             sharedKey: project._id,
                             description: 'sent talent added email for ' + project.title,
@@ -430,9 +430,9 @@ exports.sendTalentDirectorsEmail = function(req, res){
 
 exports.sendTalentEmailById = function(req, res){
 
-    var projectId = req.body.projectId;
-    var talent = req.body.talent;
-    var override = req.body.override || false;
+    let projectId = req.body.projectId,
+        talent = req.body.talent,
+        override = req.body.override || false;
 
     async.waterfall([
         // gather info for selected talent
@@ -477,9 +477,9 @@ function inWords (num) {
 exports.sendClientEmail = function(req, res){
 
 	// determine email type
-	var template;
-	var type = req.body.type;
-	var emlCnt = req.body.count;
+	let template,
+        type = req.body.type,
+        emlCnt = req.body.count;
 
 	switch(type){
 		case 'opening':
@@ -495,7 +495,7 @@ exports.sendClientEmail = function(req, res){
 
 
 	// gather clients ids
-	var clientIds = [];
+	let clientIds = [];
 	for(var i = 0; i < req.body.clients.length; ++i){
 		if(typeof req.body.clients[i] !== 'undefined' && req.body.clients[i] !== null && req.body.clients[i] !== false){
 			clientIds.push(req.body.clients[i]);
@@ -509,13 +509,12 @@ exports.sendClientEmail = function(req, res){
 		async.eachSeries(foundClients, function (foundClient, callback) {
 
 			// wrap in anonymous function to preserve client values per iteration
-			var curClient = foundClient;
-
-			var client = {name: curClient.displayName};
+			let curClient = foundClient,
+                client = {name: curClient.displayName};
 
 			async.waterfall([
 				function(done) {
-					var ownerId = req.body.project.owner || req.body.project.user._id;
+					let ownerId = req.body.project.owner || req.body.project.user._id;
 					User.findOne({'_id':ownerId}).sort('-created').then(function (owner) {
 						done(null, owner);
 					}).catch(function (err) {
@@ -524,7 +523,7 @@ exports.sendClientEmail = function(req, res){
 				},
 				function(owner, done) {
 
-					var emailSig = '';
+					let emailSig = '';
 					if(owner.emailSignature){
 						emailSig = owner.emailSignature;
 					} else if(req.user.emailSignature){
@@ -548,7 +547,7 @@ exports.sendClientEmail = function(req, res){
 				},
 				function(clientEmailHTML, owner, done){
 
-					var emailSubject;
+					let emailSubject;
 
 					switch(type){
 						case 'opening':
@@ -563,7 +562,7 @@ exports.sendClientEmail = function(req, res){
 					}
 
 					// send email
-					var mailOptions = {
+					let mailOptions = {
 										to: curClient.email,
 										from: owner.email || req.user.email || config.mailer.from,
 										cc: config.mailer.notifications,
@@ -577,7 +576,7 @@ exports.sendClientEmail = function(req, res){
                         .then(() => {
 
                             // write change to log
-                            var log = {
+                            let log = {
                                 type: 'project',
                                 sharedKey: String(req.body.project._id),
                                 description: 'client ' + curClient.displayName + ' sent ' + type + ' email ' + req.body.project.title,
@@ -622,7 +621,7 @@ exports.lead = function(req, res){
 	if(req.body.acomment.length == 0 && typeof req.user !== 'undefined' && req.user.roles[0] !== 'user'){
 
 		// build email
-		var emailBody = 'First Name: ' + req.body.firstName + '\n';
+		let emailBody = 'First Name: ' + req.body.firstName + '\n';
 			emailBody += 'Last Name: ' + req.body.lastName + '\n';
 			emailBody += 'Company: ' + req.body.company + '\n';
 			emailBody += 'Phone: ' + req.body.phone + '\n';
@@ -630,12 +629,10 @@ exports.lead = function(req, res){
 			emailBody += 'Description: ' + req.body.describe + '\n';
 
 		//var file = req.files.file;
-        var appDir = global.appRoot;
-
-        var relativePath =  'res' + '/' + 'scripts' + '/temp/';
-        var newPath = appDir + '/public/' + relativePath;
-
-		var attachements = [];
+        let appDir = global.appRoot,
+            relativePath =  'res' + '/' + 'scripts' + '/temp/',
+            newPath = appDir + '/public/' + relativePath,
+            attachements = [];
 
 		for(var i = 0; i < req.body.scripts.length; ++i){
 			attachements[i] = {
@@ -660,13 +657,13 @@ exports.lead = function(req, res){
             console.error(error);
         });
 
-		var uid = 'N/A';
+		let uid = 'N/A';
 		if(typeof req.user !== 'undefined'){
 			uid = req.user._id;
 		}
 
 		// build submission object
-		var sub = {
+		let sub = {
 			firstName: req.body.firstName,
 			lastName: req.body.lastName,
 			company: req.body.company,
@@ -676,7 +673,7 @@ exports.lead = function(req, res){
 		};
 
 		// save submission to db for later retrieval
-		var newproject = {
+		let newproject = {
 			project: emailBody,
 			sub: sub,
 			attachements: req.body.scripts
@@ -685,7 +682,7 @@ exports.lead = function(req, res){
 		newproject.save();
 
 		// write change to log
-		var log = {
+		let log = {
 			type: 'system',
 			sharedKey: uid,
 			description: 'new project lead submitted by ' + req.body.firstName + ' ' + req.body.lastName,
