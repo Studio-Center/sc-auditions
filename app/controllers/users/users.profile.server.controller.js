@@ -111,7 +111,7 @@ exports.updateAdmin = function(req, res) {
 					var ccAddr = [config.mailer.notifications];
 
 					// send email notification of update
-					mailOptions = {
+					var mailOptions = {
 						to: user.email,
 						from: adminEmail || config.mailer.from,
 						cc: ccAddr,

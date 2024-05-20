@@ -7,6 +7,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.authentication = Authentication;
 		$scope.projectsTotalCnt = 0;
 		$scope.project = {};
+		$scope.uploadProd = true;
 		$scope.discussion = '';
 		$scope.watchersObj = {};
 		// rating
@@ -23,7 +24,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		$scope.showDateEdit = false;
 		$scope.showRename = false;
         $scope.serverUpdate = false;
-		$scope.addTalent = true;
 		$scope.newProjTalentLink = 'createProject.talent';
 		$scope.newProjLink = 'createProject.project';
 		//ngAudioGlobals.unlock = false;
@@ -702,8 +702,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 							'added': moment((new Date()).toUTCString()).tz('America/New_York').format()
 						};
 
-			$scope.addTalent = false;
-
 			// check for existing item
 			for(i = 0; i < limit; ++i){
 				if(talents[i].talentId === talentId){
@@ -732,8 +730,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 						$scope.updateNoRefresh();
 
-						$scope.addTalent = true;
-
 						return;
 					}
 					found = 1;
@@ -755,18 +751,20 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				$http.post('/projects/sendTalentDirectorsEmail', {
 					talent: talent,
 					projectId: $scope.project._id
+				}).
+				success(function(data, status, headers, config) {
+
+					$http.post('/projects/sendTalentEmail', {
+						talent: talent,
+						project: $scope.project
+					}).
+					success(function(data, status, headers, config) {
+						$scope.project = angular.extend($scope.project, data);
+					});
+					
 				});
 
 			}
-
-			$http.post('/projects/sendTalentEmail', {
-				talent: talent,
-				project: $scope.project
-			}).
-			success(function(data, status, headers, config) {
-				$scope.project = angular.extend($scope.project, data);
-				$scope.addTalent = true;
-			});
 
 			// update project store
 			//$scope.update();
@@ -793,8 +791,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 							'requested': true,
 							'added': moment((new Date()).toUTCString()).tz('America/New_York').format()
 						};
-
-			$scope.addTalent = false;
 
 			// check for existing item
 			for(i = 0; i < limit; ++i){
@@ -824,8 +820,6 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 						$scope.updateNoRefresh();
 
-						$scope.addTalent = true;
-
 						return;
 					}
 					found = 1;
@@ -842,17 +836,16 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 						};
 
 				$scope.project.log = log;
+
+				$http.post('/projects/sendTalentEmail', {
+					talent: talent,
+					project: $scope.project
+				}).
+				success(function(data, status, headers, config) {
+					$scope.project = angular.extend($scope.project, data);
+				});
+
 			}
-
-			$http.post('/projects/sendTalentEmail', {
-	        talent: talent,
-	        project: $scope.project
-	    }).
-			success(function(data, status, headers, config) {
-				$scope.project = angular.extend($scope.project, data);
-
-				$scope.addTalent = true;
-			});
 
 			// update project store
 			//$scope.update();
@@ -2239,6 +2232,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		var project = $scope.project;
 
+		$scope.uploadProd = false; 
+
 		$scope.upload = $upload.upload({
 			url: 'projects/uploads/script', //upload.php script, node.js route, or servlet url
 			//method: 'POST' or 'PUT',
@@ -2294,6 +2289,8 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					});
 
 				}
+
+				$scope.uploadProd = true;
 
 			});
   	};

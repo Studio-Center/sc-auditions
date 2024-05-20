@@ -6,6 +6,7 @@ const init = require('./config/init')(),
 	config = require('./config/config'),
 	mongoose = require('mongoose'),
 	compression = require('compression'),
+	sio = require('socket.io'),
 	url = require('url');
 
 const path = require('path');
@@ -13,8 +14,14 @@ global.appRoot = path.resolve(__dirname);
 
 // multithreading
 const cluster = require('cluster'),
-	sio = require('socket.io'),
 	numCPUs = require('os').cpus().length;
+
+const mongooseOptions = {
+	maxPoolSize: 2
+	};
+
+// Bootstrap db connection
+mongoose.connect(config.db, mongooseOptions);
 
 /**
  * Main application entry file.
@@ -37,9 +44,6 @@ if (cluster.isMaster) {
   });
 
 } else {
-
-	// Bootstrap db connection
-	mongoose.connect(config.db);
 
 	// Init the express application
 	var app = require('./config/express')(mongoose);
@@ -118,6 +122,13 @@ if (cluster.isMaster) {
 	exports = module.exports = app;
 
 }
+
+process.on('SIGINT', () => {
+	mongoose.connection.close().then(() => {
+	  console.log('MongoDB connection closed');
+	  process.exit(0);
+	});
+});
 
 // Logging initialization
 console.log('MEAN.JS application started on port ' + config.port);

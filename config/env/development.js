@@ -66,7 +66,7 @@ module.exports = {
         },
         mailer: {
                 from: process.env.MAILER_FROM || 'no-reply@studiocenter.com',
-                notifications: 'audition-notification@studiocenter.com',
+                notifications: 'rob@studiocenter.com',
                 options: {
                         auth: {
                                 api_key: ''

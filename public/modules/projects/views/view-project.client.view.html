@@ -441,8 +441,8 @@
                         <th><b>Info</b></th>
                       </tr>
                       <tr ng-repeat="(key, talent) in talents">
-                        <td><input style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin:10px" ng-if="addTalent" type="checkbox" value="{{::talent._id}}" ng-click="updateTalent(talent._id, talent.name + ' ' + talent.lastName, talent.email, talent.locationISDN, talent.name + ' ' + talent.lastNameCode)" ng-checked="checkTalent(talent._id)"></td>
-                        <td><input style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin:10px" ng-if="addTalent" type="checkbox" value="{{::talent._id}}" ng-click="updateRequestTalent(talent._id, talent.name + ' ' + talent.lastName, talent.email, talent.locationISDN, talent.name + ' ' + talent.lastNameCode)" ng-checked="checkRequestedTalent(talent._id)"></td>
+                        <td><input style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin:10px" type="checkbox" value="{{::talent._id}}" ng-click="updateTalent(talent._id, talent.name + ' ' + talent.lastName, talent.email, talent.locationISDN, talent.name + ' ' + talent.lastNameCode)" ng-checked="checkTalent(talent._id)"></td>
+                        <td><input style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin:10px" type="checkbox" value="{{::talent._id}}" ng-click="updateRequestTalent(talent._id, talent.name + ' ' + talent.lastName, talent.email, talent.locationISDN, talent.name + ' ' + talent.lastNameCode)" ng-checked="checkRequestedTalent(talent._id)"></td>
                         <td><input type="text" class="form-control" ng-model="parts[talent._id]" ng-if="showPartFld(talent._id)">
                           <div ng-if="showPartFld(talent._id) == false" ng-bind="::showPartString(talent._id)"></div></td>
                         <td><a target="_blank" href="/#!/talents/{{::talent._id}}" ng-bind="::talent.name + ' ' + talent.lastName"></a> {{::talent.birthYear}} - <span ng-bind="::talent.locationISDN"></span> - Outage <span ng-if="!talent.outageTimes">None</span><span ng-if="::talent.outageTimes != ''" ng-bind="::talent.outageTimes"></span><br>
@@ -704,7 +704,7 @@
   </div>
   </div>
   <div class="pull-right" data-ng-if="::permitRoles(['admin','production coordinator'])" style="padding-bottom:75px"> <a class="btn btn-primary" ng-href="/#!/projects/{{::project._id}}/edit"> <i class="glyphicon glyphicon-edit"></i> </a> <a class="btn btn-primary" data-ng-click="remove();"> <i class="glyphicon glyphicon-trash"></i> </a> </div>
-  <div class="container" style="position:fixed;bottom:0;background:#fff;z-index:999;padding-top:5px">
+  <div ng-hide="uploadProd" class="container" style="position:fixed;bottom:0;background:#fff;z-index:999;padding-top:5px">
     <div class="row" data-ng-if="::permitRoles(['admin', 'producer/auditions director','auditions director','audio intern','production coordinator']) || isOwner()">
       <div class="col-lg-12 col-md-12 col-sm-12">
         <ul style="clear:both" ng-if="rejFiles.length > 0" class="response">

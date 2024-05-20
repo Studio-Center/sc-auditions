@@ -418,11 +418,9 @@ exports.sendTalentDirectorsEmail = function(req, res){
         }
         ], function(err) {
             if (err) {
-                if (err) {
-                    return res.status(400).json(err);
-                } else {
-                    return res.status(200).send();
-                }
+                return res.status(400).json(err);
+            } else {
+                return res.status(200).jsonp();
             }
         });
 
