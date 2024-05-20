@@ -50,7 +50,7 @@ exports.requiresLogin = function(req, res, next) {
  * User authorizations routing middleware
  */
 exports.hasAuthorization = function(roles, res, next) {
-	var _this = this;
+	let _this = this;
 
 	const allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern','production coordinator'];
 

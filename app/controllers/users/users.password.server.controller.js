@@ -22,7 +22,7 @@ exports.forgot = function(req, res, next) {
 		// Generate random token
 		function(done) {
 			crypto.randomBytes(20, function(err, buffer) {
-				var token = buffer.toString('hex');
+				let token = buffer.toString('hex');
 				done(err, token);
 			});
 		},
@@ -66,7 +66,7 @@ exports.forgot = function(req, res, next) {
 		},
 		// If valid email, send reset email using service
 		function(emailHTML, user, done) {
-			var mailOptions = {
+			let mailOptions = {
 				to: user.email,
 				from: config.mailer.from,
 				subject: 'Password Reset',
@@ -115,7 +115,7 @@ exports.validateResetToken = function(req, res) {
  */
 exports.reset = function(req, res, next) {
 	// Init Variables
-	var passwordDetails = req.body;
+	let passwordDetails = req.body;
 
 	if(passwordDetails.newPassword != '' && passwordDetails.newPassword != null){
 
@@ -179,7 +179,7 @@ exports.reset = function(req, res, next) {
 			},
 			// If valid email, send reset email using service
 			function(emailHTML, user, done) {
-				var mailOptions = {
+				let mailOptions = {
 					to: user.email,
 					from: config.mailer.from,
 					subject: 'Your password has been changed',
@@ -209,7 +209,7 @@ exports.reset = function(req, res, next) {
  */
 exports.changePassword = function(req, res) {
 	// Init Variables
-	var passwordDetails = req.body;
+	let passwordDetails = req.body;
 
 	if (req.user) {
 		if (passwordDetails.newPassword) {

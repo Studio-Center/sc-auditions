@@ -11,7 +11,7 @@ const mongoose = require('mongoose'),
  * Create a Log
  */
 exports.create = function(req, res) {
-	var log = new Log(req.body);
+	let log = new Log(req.body);
 	log.user = req.user;
 
 	log.save().then(function () {
@@ -34,7 +34,7 @@ exports.read = function(req, res) {
  * Update a Log
  */
 exports.update = function(req, res) {
-	var log = req.log ;
+	let log = req.log ;
 
 	log = Object.assign(log , req.body);
 
@@ -51,7 +51,7 @@ exports.update = function(req, res) {
  * Delete an Log
  */
 exports.delete = function(req, res) {
-	var log = req.log ;
+	let log = req.log ;
 
 	log.deleteOne().then(function(log) {
 		res.jsonp(log);
@@ -65,7 +65,7 @@ exports.delete = function(req, res) {
 // get logs record cound
 exports.recCount = function(req, res){
 
-	var filter = req.body.filter,
+	let filter = req.body.filter,
 			searchTxt = req.body.searchTxt,
 			filterObj = {};
 
@@ -92,7 +92,7 @@ exports.recCount = function(req, res){
 exports.list = function(req, res) {
 
 	// set and store limits
-	var startVal, limitVal;
+	let startVal, limitVal;
 	if(req.body.startVal){
 		startVal = req.body.startVal;
 	} else {
@@ -117,7 +117,7 @@ exports.list = function(req, res) {
 exports.listFilter = function(req, res){
 
 	// set and store limits
-	var startVal, limitVal;
+	let startVal, limitVal;
 	if(req.body.startVal){
 		startVal = req.body.startVal;
 	} else {
@@ -129,7 +129,7 @@ exports.listFilter = function(req, res){
 		limitVal = 100;
 	}
 
-	var filter = req.body.filter;
+	let filter = req.body.filter;
 
 	Log.find(filter).sort('-created').skip(startVal).limit(limitVal).then(function (logs) {
 		res.jsonp(logs);
@@ -145,7 +145,7 @@ exports.listFilter = function(req, res){
 exports.listTypeFilter = function(req, res){
 
 	// set and store limits
-	var startVal, limitVal;
+	let startVal, limitVal;
 	if(req.body.startVal){
 		startVal = req.body.startVal;
 	} else {
@@ -157,9 +157,9 @@ exports.listTypeFilter = function(req, res){
 		limitVal = 100;
 	}
 
-	var filter = req.body.filter,
-			searchTxt = req.body.searchTxt,
-			filterObj = {};
+	let filter = req.body.filter,
+		searchTxt = req.body.searchTxt,
+		filterObj = {};
 
 	if(filter){
 		filterObj.type = filter;

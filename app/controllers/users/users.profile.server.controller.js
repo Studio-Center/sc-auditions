@@ -18,7 +18,7 @@ sgMail.setApiKey(config.mailer.options.auth.api_key);
  */
 exports.update = function(req, res) {
 	// Init Variables
-	var user = req.user;
+	let user = req.user;
 
 	// For security measurement we remove the roles from the req.body object
 	delete req.body.roles;
@@ -32,7 +32,7 @@ exports.update = function(req, res) {
 		user.save().then(function () {
 
 			// write change to log
-			var log = {
+			let log = {
 				type: 'system',
 				sharedKey: String(user._id),
 				description: 'user ' + user.displayName + ' updated ',
@@ -63,10 +63,10 @@ exports.update = function(req, res) {
 
 exports.updateAdmin = function(req, res) {
 
-	var adminUserId = req.user._id;
+	let adminUserId = req.user._id;
 
 	// define email signature
-	var emailSig = '';
+	let emailSig = '';
 	if(req.user.emailSignature){
 		emailSig = req.user.emailSignature;
 	} else {
@@ -74,7 +74,7 @@ exports.updateAdmin = function(req, res) {
 	}
 
 	// store admins email address
-	var adminEmail = req.user.email;
+	let adminEmail = req.user.email;
 
 	// load edited user data
 	User.findById(req.body._id).then(function (user) {
@@ -90,7 +90,7 @@ exports.updateAdmin = function(req, res) {
 
 			user.save().then(function () {
 				// write change to log
-				var log = {
+				let log = {
 					type: 'system',
 					sharedKey: String(user._id),
 					description: 'user ' + user.displayName + ' updated ',
@@ -99,7 +99,7 @@ exports.updateAdmin = function(req, res) {
 				log = new Log(log);
 				log.save();
 
-				var template = 'templates/users/client-updated-email';
+				let template = 'templates/users/client-updated-email';
 
 				// send new user email
 				res.render(template, {
@@ -108,10 +108,10 @@ exports.updateAdmin = function(req, res) {
 					audURL: 'http://' + req.headers.host,
 				}, function(err, clientEmailHTML) {
 
-					var ccAddr = [config.mailer.notifications];
+					let ccAddr = [config.mailer.notifications];
 
 					// send email notification of update
-					var mailOptions = {
+					let mailOptions = {
 						to: user.email,
 						from: adminEmail || config.mailer.from,
 						cc: ccAddr,
@@ -182,7 +182,7 @@ exports.readAdmin = function(req, res) {
 };
 
 exports.delete = function(req, res) {
-	var user = req.useredit ;
+	let user = req.useredit ;
 
 	user.deleteOne().then(function(err) {
 		res.jsonp(user);
@@ -197,7 +197,7 @@ exports.delete = function(req, res) {
 exports.create = function(req, res) {
 	// For security measurement we remove the roles from the req.body object
 	// define email signature
-	var emailSig = '';
+	let emailSig = '';
 	if(req.user.emailSignature){
 		emailSig = req.user.emailSignature;
 	} else {
@@ -205,12 +205,11 @@ exports.create = function(req, res) {
 	}
 
 	// store admins email address
-	var adminEmail = req.user.email;
-
-	var savedPassword = req.body.password;
+	let adminEmail = req.user.email,
+		savedPassword = req.body.password;
 
 	// Init Variables
-	var user = new User(req.body);
+	let user = new User(req.body);
 
 	// store password as Base64 Value
 	user.passwordText = new Buffer.from(savedPassword).toString('base64');
@@ -222,7 +221,7 @@ exports.create = function(req, res) {
 	// Then save the user
 	user.save().then(function (user) {
 
-		var template = 'templates/users/client-welcome-email';
+		let template = 'templates/users/client-welcome-email';
 
 		// send new user email
 		res.render(template, {
@@ -232,9 +231,9 @@ exports.create = function(req, res) {
 			audURL: 'http://' + req.headers.host,
 		}, function(err, clientEmailHTML) {
 
-			var emailSubject = 'Studio Center Auditions - Client Login Information';
+			let emailSubject = 'Studio Center Auditions - Client Login Information';
 
-			var mailOptions = {
+			let mailOptions = {
 				to: user.email,
 				from: adminEmail || config.mailer.from,
 				cc: config.mailer.notifications,
@@ -246,7 +245,7 @@ exports.create = function(req, res) {
 			.send(mailOptions)
 			.then(() => {
 				// write change to log
-				var log = {
+				let log = {
 					type: 'system',
 					sharedKey: String(user._id),
 					description: 'user ' + user.displayName + ' added and emailed ',
@@ -274,7 +273,7 @@ exports.create = function(req, res) {
 var getUsersFilters = function(req){
 
 	// gen filter object
-	var filterObj = {};
+	let filterObj = {};
 	// filter by project title
 	if(req.body.filter.fName){
 		filterObj.firstName = new RegExp(req.body.filter.fName, 'i');
@@ -299,7 +298,7 @@ var getUsersFilters = function(req){
 exports.getUsersCnt = function(req, res){
 
 	// set filter vars
-	var filterObj = getUsersFilters(req);
+	let filterObj = getUsersFilters(req);
 
 	User.find(filterObj).count({}).then(function (count) {
 		res.jsonp(count);
@@ -314,9 +313,9 @@ exports.getUsersCnt = function(req, res){
 exports.findLimitWithFilter = function(req, res) {
 
 	// set filter vars
-	var filterObj = getUsersFilters(req);
+	let filterObj = getUsersFilters(req);
 	// set and store limits
-	var startVal, limitVal;
+	let startVal, limitVal;
 	if(req.body.startVal){
 		startVal = req.body.startVal;
 	} else {
