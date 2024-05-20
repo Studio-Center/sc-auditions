@@ -12,9 +12,9 @@ const mongoose = require('mongoose'),
 // update single talent single project status
 exports.updateSingleTalentStatus = function (req, res){
 
-	var projectId = req.body.projectId;
-	var talentId = req.body.talentId;
-	var talentStatus = req.body.talentStatus;
+	let projectId = req.body.projectId,
+		talentId = req.body.talentId,
+		talentStatus = req.body.talentStatus;
 
 	async.waterfall([
 		// gather info for selected talent
@@ -34,7 +34,7 @@ exports.updateSingleTalentStatus = function (req, res){
 					project.talent[i].status = talentStatus;
 
 					// write change to log
-					var log = {
+					let log = {
 						type: 'talent',
 						sharedKey: talentId,
 						description: project.title + ' status updated to ' + project.talent[i].status,
@@ -54,7 +54,7 @@ exports.updateSingleTalentStatus = function (req, res){
             project.markModified('talent');
             project.markModified('modified');
 
-			var newProject = project.toObject();
+			let newProject = project.toObject();
 
 			Project.findById(project._id).then(function (project) {
 				project.populate('user', 'displayName');
@@ -89,7 +89,7 @@ exports.updateTalentStatus = function(req, res){
 	// validate user interaction
 	if (radash.intersects(req.user.roles, allowedRoles)) {
 
-		var project = req.body.project;
+		let project = req.body.project;
 
         if (project._id.match(/^[0-9a-fA-F]{24}$/)) {
             Project.findById(project._id).then(function (project) {
@@ -118,9 +118,9 @@ exports.updateTalentStatus = function(req, res){
 // update talent note
 exports.updateTalentNote = function (req, res){
 
-	var projectId = req.body.projectId;
-	var talentId = req.body.talentId;
-	var newNote = req.body.note;
+	let projectId = req.body.projectId,
+		talentId = req.body.talentId,
+		newNote = req.body.note;
 
 	async.waterfall([
 		// gather info for selected talent
@@ -146,7 +146,7 @@ exports.updateTalentNote = function (req, res){
 		// email selected talent
 		function(project, done){
 
-			var newProject = project.toObject();
+			let newProject = project.toObject();
 
 			Project.findById(project._id).then(function (projects) {
 				project.populate('user', 'displayName');

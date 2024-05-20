@@ -22,7 +22,7 @@ exports.read = function(req, res) {
 exports.loadProject = function(req, res){
 
 	// set vars
-	var projId = req.body.projectId;
+	let projId = req.body.projectId;
 	// load project
 	Project.findById(projId).then(function (project) {
 		project.populate('user', 'displayName');
@@ -65,7 +65,7 @@ exports.getproject = function(req, res){
 exports.loadAuditions = function(req, res){
 
 	// set vars
-	var projId = req.body.projectId;
+	let projId = req.body.projectId;
 
 	Audition.find({'project': Object(projId)}).sort('-created').then(function (auditions) {
 		return res.jsonp(auditions);
@@ -80,8 +80,8 @@ exports.loadAuditions = function(req, res){
  */
 var performLoadList = function(req, res, allowedRoles, i, j, limit){
 
-	var curUserId = String(req.user._id);
-	var selLimit = limit || 50;
+	let curUserId = String(req.user._id),
+		selLimit = limit || 50;
 
 	if(req.user.roles[i] === allowedRoles[j]){
 
@@ -131,10 +131,10 @@ var performLoadList = function(req, res, allowedRoles, i, j, limit){
 // list projects assigned to talent
 exports.getTalentFilteredProjects = function(req, res){
 
-	var dayAgo = new Date();
+	let dayAgo = new Date();
 	dayAgo.setDate(dayAgo.getDay() - 14);
 
-	var searchCriteria = {
+	let searchCriteria = {
 		'talent': {
 					$elemMatch: {
 						'talentId': req.body.talentId
@@ -165,7 +165,7 @@ exports.getTalentFilteredProjects = function(req, res){
 var getProjectsFilters = function(req){
 
 	// gen filter object
-	var filterObj = {};
+	let filterObj = {};
 	// filter by project title
 	if(req.body.filter.title){
 		filterObj.title = new RegExp(req.body.filter.title, 'i');
@@ -192,7 +192,7 @@ var getProjectsFilters = function(req){
 exports.getProjectsCnt = function(req, res){
 
 	// set filter vars
-	var filterObj = getProjectsFilters(req);
+	let filterObj = getProjectsFilters(req);
 
 	Project.find(filterObj).count({}).then(function (count) {
 		res.jsonp(count);
@@ -207,7 +207,7 @@ exports.getProjectsCnt = function(req, res){
 // retrieve only a set amount of projects
 exports.findLimit = function(req, res) {
 
-	var limit = req.body.queryLimit || 50;
+	let limit = req.body.queryLimit || 50;
 
 	if(req.body.queryLimit === 'all') {
 		limit = 0;
@@ -244,12 +244,12 @@ exports.findLimit = function(req, res) {
 exports.findLimitWithFilter = function(req, res) {
 
 	// set filter vars
-	var sortOrder = {};
-	var filterObj = getProjectsFilters(req);
+	let sortOrder = {},
+		filterObj = getProjectsFilters(req);
 
 	// set collection sort order
 	if(req.body.filter.sortOrder){
-		var selSort = req.body.filter.sortOrder;
+		let selSort = req.body.filter.sortOrder;
 		if(req.body.filter.ascDesc === 'desc'){
 			sortOrder[selSort] = -1;
 		} else {
@@ -260,7 +260,7 @@ exports.findLimitWithFilter = function(req, res) {
 		sortOrder = '-estimatedCompletionDate';
 	}
 	// set and store limits
-	var startVal, limitVal;
+	let startVal, limitVal;
 	if(req.body.startVal){
 		startVal = req.body.startVal;
 	} else {

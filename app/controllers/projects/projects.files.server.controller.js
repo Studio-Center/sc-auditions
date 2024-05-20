@@ -18,7 +18,7 @@ const mongoose = require('mongoose'),
 // save project audition files
 exports.deleteAudition = function(req, res){
 
-	var aud = req.body.audition,
+	let aud = req.body.audition,
         appDir = global.appRoot,
         audFile = '';
 
@@ -53,7 +53,7 @@ exports.deleteAudition = function(req, res){
 // save project audition files
 exports.deleteAllAuditions = function(req, res){
 
-    var prodId = req.body.project_ID,
+    let prodId = req.body.project_ID,
         appDir = global.appRoot + '/public',
         auditionsDir = appDir + '/res/auditions/' + prodId + '/';
 
@@ -73,7 +73,7 @@ exports.deleteAllAuditions = function(req, res){
 exports.saveAudition = function(req, res){
 
 	// set vars
-	var aud = req.body.audition,
+	let aud = req.body.audition,
 		appDir = global.appRoot;
 
 	Audition.findById(aud._id).sort('-created').then(function (audition) {
@@ -81,8 +81,8 @@ exports.saveAudition = function(req, res){
 		// check for aud rename
 		if (aud.rename !== '') {
 
-			var file = appDir + '/public/res/auditions/' + String(aud.project) + '/' + aud.file.name;
-			var newFile = appDir + '/public/res/auditions/' + String(aud.project) + '/' + aud.rename;
+			let file = appDir + '/public/res/auditions/' + String(aud.project) + '/' + aud.file.name,
+				newFile = appDir + '/public/res/auditions/' + String(aud.project) + '/' + aud.rename;
 
 			// move file if exists
 			if (fs.existsSync(file)){
@@ -114,7 +114,7 @@ exports.saveAudition = function(req, res){
 exports.fileExists = function(req, res){
 
 	// method vars
-	var appDir = global.appRoot,
+	let appDir = global.appRoot,
 		file = appDir + '/public' + req.body.file;
 
 	// check if file exists
@@ -129,7 +129,7 @@ exports.fileExists = function(req, res){
 // handle remote file delete requests
 exports.deleteFileByName = function(req, res){
 
-	var appDir = global.appRoot,
+	let appDir = global.appRoot,
 		fileLocation = req.body.fileLocation,
 		file = appDir + '/public' + fileLocation,
 		projectId = req.body.projectId;
@@ -150,7 +150,7 @@ exports.deleteFileByName = function(req, res){
 				if(project){
 
 					// write change to log
-					var log = {
+					let log = {
 						type: 'project',
 						sharedKey: String(project._id),
 						description: 'file ' + fileLocation + ' removed from ' + project.title,
@@ -172,8 +172,8 @@ exports.deleteFileByName = function(req, res){
 // handle remote file delete requests
 exports.deleteTempScript = function(req, res){
 
-	var appDir = global.appRoot;
-	var file = appDir + '/public/res/scripts/temp/' + req.body.fileLocation;
+	let appDir = global.appRoot,
+		file = appDir + '/public/res/scripts/temp/' + req.body.fileLocation;
 
 	// remove file is exists
 	if (fs.existsSync(file)) {
@@ -191,13 +191,13 @@ exports.deleteTempScript = function(req, res){
 exports.backupProjectsById = function(req, res, next){
 
 	// get app dir
-	var appDir = global.appRoot;
-	var archivesPath = appDir + '/public/' + 'res' + '/' + 'archives' + '/';
-	var curDate = moment().format('MMM Do YY');
-	var zippedFilename = 'Auditions Project Backup Bundle - ' + curDate + '.zip';
-	var newZip = archivesPath + zippedFilename;
-	var backupDir = archivesPath + req.user._id + '_backup';
-	var auditionsDir, scriptsDir, referenceFilesDir, projectBuDir;
+	let appDir = global.appRoot,
+		archivesPath = appDir + '/public/' + 'res' + '/' + 'archives' + '/',
+		curDate = moment().format('MMM Do YY'),
+		zippedFilename = 'Auditions Project Backup Bundle - ' + curDate + '.zip',
+		newZip = archivesPath + zippedFilename,
+		backupDir = archivesPath + req.user._id + '_backup',
+		auditionsDir, scriptsDir, referenceFilesDir, projectBuDir;
 
 	// check for existing parent directory, create if needed
 	if (!fs.existsSync(archivesPath)) {
@@ -210,8 +210,8 @@ exports.backupProjectsById = function(req, res, next){
     }
 
     // archiver settings
-    var output = fs.createWriteStream(newZip);
-	var archive = archiver('zip');
+    let output = fs.createWriteStream(newZip),
+		archive = archiver('zip');
 
 	output.on('close', function() {
 	  // delete temp files
@@ -247,7 +247,7 @@ exports.backupProjectsById = function(req, res, next){
 			    }
 
 				// create text file containing json object
-				var file = fs.createWriteStream(backupDir + '/' + project._id + '/JSON.txt');
+				let file = fs.createWriteStream(backupDir + '/' + project._id + '/JSON.txt');
 				file.end(JSON.stringify(project));
 
 				archive.file(backupDir + '/' + project._id + '/JSON.txt', { name:projectBuDir + '/JSON.txt' });
@@ -286,7 +286,7 @@ exports.backupProjectsById = function(req, res, next){
 
 		    archive.finalize();
 
-			//res.jsonp({count: missingCnt, results:callTalents});
+			res.jsonp({count: missingCnt, results:callTalents});
 		}
    	});
 

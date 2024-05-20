@@ -24,21 +24,20 @@ const mongoose = require('mongoose'),
 exports.uploadFile = function(req, res, next){
 	// We are able to access req.files.file thanks to
     // the multiparty middleware
-    var file = req.files.file;
-
-	var project = JSON.parse(req.body.data);
+    let file = req.files.file,
+        project = JSON.parse(req.body.data);
 
     //var file = req.files.file;
-    var appDir = global.appRoot;
-    var tempPath = file.path;
+    let appDir = global.appRoot,
+        tempPath = file.path;
     // check for passenger buffer file location
-    var passDir = '/usr/share/passenger/helper-scripts/public/res/' + project.project._id + '/' + sanitize(file.name);
+    let passDir = '/usr/share/passenger/helper-scripts/public/res/' + project.project._id + '/' + sanitize(file.name);
     if(fs.existsSync(passDir)){
       tempPath = passDir;
     }
 
-    var relativePath =  'res' + '/' + project.project._id + '/';
-    var newPath = appDir + '/public/' + relativePath;
+    let relativePath =  'res' + '/' + project.project._id + '/',
+        newPath = appDir + '/public/' + relativePath;
 
     // create project directory if not found
     if (!fs.existsSync(newPath)) {
@@ -55,7 +54,7 @@ exports.uploadFile = function(req, res, next){
         }else{
 
         	// write change to log
-			var log = {
+			let log = {
 				type: 'project',
 				sharedKey: String(project._id),
 				description: project.title + ' file uploaded ' + sanitize(file.name),
@@ -74,24 +73,24 @@ exports.uploadFile = function(req, res, next){
 exports.uploadScript = function(req, res, next){
 	// We are able to access req.files.file thanks to
     // the multiparty middleware
-    var file = req.files.file;
+    let file = req.files.file;
 
     // var project = JSON.parse(req.body.data);
     // project = project.project;
-	var recBody = JSON.parse(req.body.data);
-	var projectId = recBody.projectId;
+	let recBody = JSON.parse(req.body.data),
+        projectId = recBody.projectId;
 
     //var file = req.files.file;
-    var appDir = global.appRoot;
-    var tempPath = file.path;
+    let appDir = global.appRoot,
+        tempPath = file.path;
     // check for passenger buffer file location
-    var passDir = '/usr/share/passenger/helper-scripts/public/res/' + 'scripts/' + projectId + '/' + sanitize(file.name);
+    let passDir = '/usr/share/passenger/helper-scripts/public/res/' + 'scripts/' + projectId + '/' + sanitize(file.name);
     if(fs.existsSync(passDir)){
       tempPath = passDir;
     }
-	var scriptPath =  'res' + '/' + 'scripts/';
-    var relativePath =  scriptPath + projectId + '/';
-    var newPath = appDir + '/public/' + relativePath;
+	let scriptPath =  'res' + '/' + 'scripts/',
+        relativePath =  scriptPath + projectId + '/',
+        newPath = appDir + '/public/' + relativePath;
 
 	// check for existing parent directory, create if needed
 	if (!fs.existsSync(appDir + '/public/' + scriptPath)) {
@@ -123,7 +122,7 @@ exports.uploadScript = function(req, res, next){
 					req.files.file.name = sanitize(req.files.file.name);
 					
 					// generate new script object
-					var script = {
+					let script = {
 									file: req.files.file,
 									by: {
 										userId: req.user._id,
@@ -133,7 +132,7 @@ exports.uploadScript = function(req, res, next){
 								};
 
 					// write change to log
-					var log = {
+					let log = {
 						type: 'project',
 						sharedKey: String(projectId),
 						description: project.title + ' script uploaded ' + file.name,
@@ -158,24 +157,25 @@ exports.uploadReferenceFile = function(req, res, next){
 	// We are able to access req.files.file thanks to
     // the multiparty middleware
 	
-    var file = req.files.file;
+    let file = req.files.file;
 
     // var project = JSON.parse(req.body.data);
     // project = project.project;
-	var recBody = JSON.parse(req.body.data);
-	var projectId = recBody.projectId;
+	let recBody = JSON.parse(req.body.data),
+        projectId = recBody.projectId;
 
     //var file = req.files.file;
-    var appDir = global.appRoot;
-    var tempPath = file.path;
+    let appDir = global.appRoot,
+        tempPath = file.path;
     // check for passenger buffer file location
-    var passDir = '/usr/share/passenger/helper-scripts/public/res/' + 'referenceFiles/' + projectId + '/' + sanitize(file.name);
+    let passDir = '/usr/share/passenger/helper-scripts/public/res/' + 'referenceFiles/' + projectId + '/' + sanitize(file.name);
     if(fs.existsSync(passDir)){
       tempPath = passDir;
     }
-		var refsPath =  'res' + '/' + 'referenceFiles/';
-    var relativePath =  refsPath + projectId + '/';
-    var newPath = appDir + '/public/' + relativePath;
+	
+    let refsPath =  'res' + '/' + 'referenceFiles/',
+        relativePath =  refsPath + projectId + '/',
+        newPath = appDir + '/public/' + relativePath;
 
 	// check for existing parent directory, create if needed
 	if (!fs.existsSync(appDir + '/public/' + refsPath)) {
@@ -200,7 +200,7 @@ exports.uploadReferenceFile = function(req, res, next){
 
 					req.files.file.name = sanitize(req.files.file.name);
 					
-					var referenceFile = {
+					let referenceFile = {
 								file: req.files.file,
 								by: {
 									userId: req.user._id,
@@ -210,7 +210,7 @@ exports.uploadReferenceFile = function(req, res, next){
 								};
 
 					// write change to log
-					var log = {
+					let log = {
 						type: 'project',
 						sharedKey: String(projectId),
 						description: project.title + ' reference file uploaded ' + sanitize(file.name),
@@ -231,21 +231,20 @@ exports.uploadReferenceFile = function(req, res, next){
 exports.uploadTempReferenceFile = function(req, res, next){
 	// We are able to access req.files.file thanks to
     // the multiparty middleware
-    var file = req.files.file;
-
-	var referenceFiles = [];
+    let file = req.files.file,
+        referenceFiles = [];
 
     //var file = req.files.file;
-    var appDir = global.appRoot;
-    var tempPath = file.path;
+    let appDir = global.appRoot,
+        tempPath = file.path;
     // check for passenger buffer file location
-    var passDir = '/usr/share/passenger/helper-scripts/public/res/' + 'referenceFiles/' + 'temp/' + sanitize(file.name);
+    let passDir = '/usr/share/passenger/helper-scripts/public/res/' + 'referenceFiles/' + 'temp/' + sanitize(file.name);
     if(fs.existsSync(passDir)){
       tempPath = passDir;
     }
-	var refsPath =  'res' + '/' + 'referenceFiles/';
-    var relativePath =  refsPath + 'temp/';
-    var newPath = appDir + '/public/' + relativePath;
+	let refsPath =  'res' + '/' + 'referenceFiles/',
+        relativePath =  refsPath + 'temp/',
+        newPath = appDir + '/public/' + relativePath;
 
 	// check for existing parent directory, create if needed
 	if (!fs.existsSync(appDir + '/public/' + refsPath)) {
@@ -261,7 +260,7 @@ exports.uploadTempReferenceFile = function(req, res, next){
     newPath += sanitize(file.name);
 
 	req.files.file.name = sanitize(req.files.file.name);
-    var referenceFile = {
+    let referenceFile = {
 		file: req.files.file,
 		by: {
 				userId: req.user._id,
@@ -285,21 +284,20 @@ exports.uploadTempReferenceFile = function(req, res, next){
 exports.uploadTempScript = function(req, res, next){
 	// We are able to access req.files.file thanks to
 	// the multiparty middleware
-	var file = req.files.file;
-
-	var scripts = [];
+	let file = req.files.file,
+        scripts = [];
 
 	//var file = req.files.file;
-	var appDir = global.appRoot;
-	var tempPath = file.path;
+	let appDir = global.appRoot,
+        tempPath = file.path;
 	// check for passenger buffer file location
-	var passDir = '/usr/share/passenger/helper-scripts/public/res/' + 'scripts/' + 'temp/' + file.name;
+	let passDir = '/usr/share/passenger/helper-scripts/public/res/' + 'scripts/' + 'temp/' + file.name;
 	if(fs.existsSync(passDir)){
 	  tempPath = passDir;
 	}
-	var scriptPath =  'res' + '/' + 'scripts/';
-	var relativePath =  scriptPath + 'temp/';
-	var newPath = appDir + '/public/' + relativePath;
+	let scriptPath =  'res' + '/' + 'scripts/',
+        relativePath =  scriptPath + 'temp/',
+        newPath = appDir + '/public/' + relativePath;
 
 	// check for existing parent directory, create if needed
 	if (!fs.existsSync(appDir + '/public/' + scriptPath)) {
@@ -320,7 +318,7 @@ exports.uploadTempScript = function(req, res, next){
 	} else {
 
 		// assign user data
-		var uid = '', uname = '';
+		let uid = '', uname = '';
 		if(typeof req.user !== 'undefined'){
 			uid = req.user._id;
 			uname = req.user.displayName;
@@ -328,7 +326,7 @@ exports.uploadTempScript = function(req, res, next){
 
 		req.files.file.name = sanitize(req.files.file.name);
 
-		var script = {
+		let script = {
 						file: req.files.file,
 						by: {
 							userId: uid,
@@ -357,12 +355,11 @@ exports.uploadTempScript = function(req, res, next){
 exports.uploadAudition = function(req, res, next){
 
 	// method vars
-	var audTalent = '',
+	let audTalent = '',
 		firstName = '',
 		lastNameCode = '',
-		curUser = Object.create(req.user);
-
-    var uploadedFiles = (Array.isArray(req.files.file) ? req.files.file : [req.files.file] );
+		curUser = Object.create(req.user),
+        uploadedFiles = (Array.isArray(req.files.file) ? req.files.file : [req.files.file] );
 
     //return res.jsonp(req.files);
     // upload all files from files array
@@ -370,22 +367,22 @@ exports.uploadAudition = function(req, res, next){
 
         // We are able to access req.files.file thanks to
         // the multiparty middleware
-        var file = curFile;
+        let file = curFile;
 
         // read in project document
         //var project = JSON.parse(req.body.data);
-        var recBody = JSON.parse(req.body.data),
+        let recBody = JSON.parse(req.body.data),
             projectId = recBody.projectId;
 
         //var file = req.files.file;
-        var appDir = global.appRoot,
+        let appDir = global.appRoot,
             tempPath = file.path;
         // check for passenger buffer file location
-        var passDir = '/usr/share/passenger/helper-scripts/public/res/auditions/' + projectId + '/' + sanitize(file.name);
+        let passDir = '/usr/share/passenger/helper-scripts/public/res/auditions/' + projectId + '/' + sanitize(file.name);
         if(fs.existsSync(passDir)){
             tempPath = passDir;
         }
-        var audPath =  'res' + '/' + 'auditions/',
+        let audPath =  'res' + '/' + 'auditions/',
             relativePath =  audPath + projectId + '/',
             newPath = appDir + '/public/' + relativePath;
 
@@ -403,15 +400,15 @@ exports.uploadAudition = function(req, res, next){
         newPath += sanitize(file.name);
 
         // strip talent name and last name code from audition
-        var regStr = /([a-z_A-Z]+)\.\w{3}$/i.exec(file.name.trim());
+        let regStr = /([a-z_A-Z]+)\.\w{3}$/i.exec(file.name.trim());
 		firstName = '';
 		lastNameCode = '';
         if(regStr !== null){
-            var regStrOP = regStr[1],
+            let regStrOP = regStr[1],
                 lastNm = /([A-Z])[a-z]*$/.exec(regStrOP);
 
             if(lastNm !== null){
-                var lastNmPos = lastNm.index;
+                let lastNmPos = lastNm.index;
 
                 firstName = regStrOP.slice(0,lastNmPos).split('_').join(' ');
                 lastNameCode = regStrOP.slice(lastNmPos, regStrOP.length);
@@ -465,7 +462,7 @@ exports.uploadAudition = function(req, res, next){
                                 });
 
                                 // write change to log
-                                var log = {
+                                let log = {
                                     type: 'talent',
                                     sharedKey: curTalent.talentId,
                                     description: project.title + ' status updated to ' + curTalent.status,
@@ -487,7 +484,7 @@ exports.uploadAudition = function(req, res, next){
 
                 }, function done(err) {
 
-                    var audition = {
+                    let audition = {
                         project: project._id,
 						owner: curUser,
                         file: curFile,
@@ -513,11 +510,11 @@ exports.uploadAudition = function(req, res, next){
                         };
 
                     // save audition to auditions collection
-                    var aud = new Audition(audition);
+                    let aud = new Audition(audition);
                     aud.save();
 
                     // write change to log
-                    var log = {
+                    let log = {
                         type: 'project',
                         sharedKey: String(project._id),
                         description: project.title + ' audition uploaded ' + sanitize(file.name),
@@ -556,22 +553,22 @@ exports.uploadAudition = function(req, res, next){
 exports.uploadTempAudition = function(req, res, next){
 	// We are able to access req.files.file thanks to
     // the multiparty middleware
-    var file = req.files.file;
+    let file = req.files.file,
+        project = JSON.parse(req.body.data);
 
-    var project = JSON.parse(req.body.data);
     project = project.project;
 
     //var file = req.files.file;
-    var appDir = global.appRoot;
-    var tempPath = file.path;
+    let appDir = global.appRoot,
+        tempPath = file.path;
     // check for passenger buffer file location
-    var passDir = '/usr/share/passenger/helper-scripts/public/res/' + 'auditions/' + 'temp/' + sanitize(file.name);
+    let passDir = '/usr/share/passenger/helper-scripts/public/res/' + 'auditions/' + 'temp/' + sanitize(file.name);
     if(fs.existsSync(passDir)){
       tempPath = passDir;
     }
-	var audPath =  'res' + '/' + 'auditions/';
-	var relativePath =  audPath + 'temp/';
-    var newPath = appDir + '/public/' + relativePath;
+	let audPath =  'res' + '/' + 'auditions/',
+        relativePath =  audPath + 'temp/',
+        newPath = appDir + '/public/' + relativePath;
 
 	// check for existing parent directory, create if needed
 	if (!fs.existsSync(appDir + '/public/' + audPath)) {
@@ -592,7 +589,7 @@ exports.uploadTempAudition = function(req, res, next){
         }else{
 			req.files.file.name = sanitize(req.files.file.name);
 
-			var audition = {
+			let audition = {
 						file: req.files.file,
 						discussion: [],
 						description: '',
@@ -624,21 +621,21 @@ exports.uploadTempAudition = function(req, res, next){
 exports.uploadTalentAudition = function(req, res, next){
 
 	// method vals
-	var tempPath, savePath, key = 0;
+	let tempPath, savePath, key = 0;
 
 	// gather submitted vals
-	var project = req.body.project;
-	var auditions = req.body.auditions;
-	var talentId = req.body.talent;
+	let project = req.body.project,
+        auditions = req.body.auditions,
+        talentId = req.body.talent;
 
 	// get app dir
-	var appDir = global.appRoot;
+	let appDir = global.appRoot;
 	// check for passenger buffer file location
-	var auditionsTempPath = '/usr/share/passenger/helper-scripts/public/res' + '/' + 'auditions' + '/' + 'temp' + '/';
-	var auditionsPath = appDir + '/public/' + 'res' + '/' + 'auditions' + '/' + 'temp' + '/';
-	var talentUploadParent = appDir + '/public/' + 'res' + '/' + 'talentUploads' + '/';
-	var talentUploadPath = talentUploadParent + project._id + '/';
-	var talentUploadTalentPath = talentUploadPath + talentId + '/';
+	let auditionsTempPath = '/usr/share/passenger/helper-scripts/public/res' + '/' + 'auditions' + '/' + 'temp' + '/',
+        auditionsPath = appDir + '/public/' + 'res' + '/' + 'auditions' + '/' + 'temp' + '/',
+        talentUploadParent = appDir + '/public/' + 'res' + '/' + 'talentUploads' + '/',
+        talentUploadPath = talentUploadParent + project._id + '/',
+        talentUploadTalentPath = talentUploadPath + talentId + '/';
 
 	// check for existing parent directory, create if needed
 	if (!fs.existsSync(talentUploadParent)) {
@@ -675,7 +672,7 @@ exports.uploadTalentAudition = function(req, res, next){
 					}
 
 					// write change to log
-					var log = {
+					let log = {
 						type: 'project',
 						sharedKey: String(project._id),
 						description: project.title + ' talent audition uploaded ' + audition.file.name,
@@ -755,21 +752,21 @@ exports.uploadTalentAudition = function(req, res, next){
 exports.uploadBackup = function(req, res, next){
     // We are able to access req.files.file thanks to
         // the multiparty middleware
-        var file = req.files.file, JSONobj, saveProj, parentPath, project;
-        var auditionsDir, scriptsDir, referenceFilesDir;
-        var auditionsBackupDir, scriptsBackupDir, referenceFilesBackupDir;
+        let file = req.files.file, JSONobj, saveProj, parentPath, project,
+            auditionsDir, scriptsDir, referenceFilesDir,
+            auditionsBackupDir, scriptsBackupDir, referenceFilesBackupDir;
     
         //var file = req.files.file;
-        var appDir = global.appRoot;
-        var tempPath = file.path;
+        let appDir = global.appRoot,
+            tempPath = file.path;
         // check for passenger buffer file location
-        var passDir = '/usr/share/passenger/helper-scripts/public/res/' + 'archives/' + 'backups/' + file.name;
+        let passDir = '/usr/share/passenger/helper-scripts/public/res/' + 'archives/' + 'backups/' + file.name;
         if(fs.existsSync(passDir)){
           tempPath = passDir;
         }
-        var archivesPath = appDir + '/public/' + 'res' + '/' + 'archives' + '/';
-        var backupPath = archivesPath + 'backups/';
-        var savePath = archivesPath + file.name;
+        let archivesPath = appDir + '/public/' + 'res' + '/' + 'archives' + '/',
+            backupPath = archivesPath + 'backups/',
+            savePath = archivesPath + file.name;
     
         // check for existing parent directory, create if needed
         if (!fs.existsSync(archivesPath)) {
@@ -814,9 +811,9 @@ exports.uploadBackup = function(req, res, next){
                                 Project.findById(project._id).then(function (delProject) {
     
                                     // generate delete files list
-                                    var auditionsDir = appDir + '/public/' + '/res/auditions/' + project._id + '/';
-                                    var scriptsDir = appDir + '/public/' + '/res/scripts/' + project._id + '/';
-                                    var referenceFilesDir = appDir + '/public/' + '/res/referenceFiles/' + project._id + '/';
+                                    let auditionsDir = appDir + '/public/' + '/res/auditions/' + project._id + '/',
+                                        scriptsDir = appDir + '/public/' + '/res/scripts/' + project._id + '/',
+                                        referenceFilesDir = appDir + '/public/' + '/res/referenceFiles/' + project._id + '/';
     
                                     // remove all file if exists
                                     rimraf.sync(auditionsDir);
