@@ -214,7 +214,7 @@ exports.findLimit = function(req, res) {
 	}
 
 	// permit certain user roles full access
-	var allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern', 'production coordinator','talent director'];
+	const allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern', 'production coordinator','talent director'];
 
 	if (radash.intersects(req.user.roles, allowedRoles)) {
 
@@ -273,7 +273,7 @@ exports.findLimitWithFilter = function(req, res) {
 	}
 
 	// permit certain user roles full access
-	var allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern', 'production coordinator','talent director'];
+	const allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern', 'production coordinator','talent director'];
 
 	if (radash.intersects(req.user.roles, allowedRoles)) {
 
@@ -307,7 +307,7 @@ exports.findLimitWithFilter = function(req, res) {
 exports.list = function(req, res) {
 
 	// permit certain user roles full access
-	var allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern', 'production coordinator','talent director'];
+	const allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern', 'production coordinator','talent director'];
 
 	if (radash.intersects(req.user.roles, allowedRoles)) {
 

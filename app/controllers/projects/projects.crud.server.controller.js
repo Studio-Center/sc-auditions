@@ -32,7 +32,7 @@ sgMail.setApiKey(config.mailer.options.auth.api_key);
  */
 exports.hasAuthorization = function(req, res, next) {
 	// recon 2/17/2015 to allow admin and producer level users to edit all projects
-	var allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern', 'production coordinator'];
+	const allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern', 'production coordinator'];
 
 	if (!radash.intersects(req.user.roles, allowedRoles)) {
 		return res.status(403).send('User is not authorized');
@@ -43,8 +43,8 @@ exports.hasAuthorization = function(req, res, next) {
 // update talent status
 exports.updateNoRefresh = function(req, res){
 
-	var allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern', 'production coordinator','client','client-client'],
-      	log = '';
+	const allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern', 'production coordinator','client','client-client']
+    let log = '';
 
     if(typeof req.body.project != 'undefined' && typeof req.body.project._id  != 'undefined'){
 	// validate user interaction
@@ -114,25 +114,26 @@ exports.updateNoRefresh = function(req, res){
 exports.create = function(req, res) {
 	
 	// remove project id definition if defined
-	var oldID = '';
+	let oldID = '';
 	if(typeof req.body.project != 'undefined'){
 		oldID = req.body.project._id;
 		delete req.body.project._id;
 	}
 	// method vars
-	var i, j;
-	var project = new Project(req.body.project),
+	let i, 
+		j,
+		project = new Project(req.body.project),
 		copiedScripts = req.body.copiedScripts,
 		
 	copiedReferenceFiles = req.body.copiedReferenceFiles;
 	project.user = req.user;
 
-	var appDir = '';
-	var tempPath = '';
-	var relativePath =  '';
-	var newPath = '';
+	let appDir = '',
+		tempPath = '',
+		relativePath =  '',
+		newPath = '';
 
-	var allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern','production coordinator'];
+	const allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern','production coordinator'];
 
 	if (radash.intersects(req.user.roles, allowedRoles)) {
 
@@ -142,8 +143,8 @@ exports.create = function(req, res) {
 			// perform before save routines
 			if(req.body.notifyClient === true){
 				// create new project note stating client notified
-				var discussionTxt = 'Client Notified of Project Start by ' + req.user.displayName;
-				var item = {date: moment().tz('America/New_York').format(), userid: '', username: 'system', item: discussionTxt, deleted: false};
+				let discussionTxt = 'Client Notified of Project Start by ' + req.user.displayName;
+				let item = {date: moment().tz('America/New_York').format(), userid: '', username: 'system', item: discussionTxt, deleted: false};
 
 				project.discussion.push(item);
 			}
@@ -282,7 +283,8 @@ exports.create = function(req, res) {
 			async.waterfall([
 				function(done) {
 
-					var i, email =  {
+					let i, 
+						email =  {
 									projectId: '',
 									to: [],
 									bcc: [],
@@ -339,9 +341,9 @@ exports.create = function(req, res) {
 				// send out regular project creation email
 				function(emailHTML, email, done) {
 					// send email
-					var fromEmail = req.user.email || config.mailer.from;
+					let fromEmail = req.user.email || config.mailer.from;
 
-					var mailOptions = {
+					let mailOptions = {
 						to: config.mailer.notifications,
 						from: fromEmail,
 						subject: email.subject,
@@ -367,8 +369,8 @@ exports.create = function(req, res) {
 
 					if(typeof project.talent !== 'undefined'){
 
-						var talentIds = [];
-						var emailTalentChk;
+						let talentIds = [],
+							emailTalentChk;
 						for(var i = 0; i < project.talent.length; ++i){
 							talentIds[i] = project.talent[i].talentId;
 						}
@@ -377,7 +379,7 @@ exports.create = function(req, res) {
 							async.eachSeries(talents, function (talent, talentCallback) {
 
 								// write change to log
-								var log = {
+								let log = {
 									type: 'talent',
 									sharedKey: String(talent._id),
 									description: talent.name + ' ' + talent.lastName + ' added to project ' + project.title,
@@ -425,7 +427,7 @@ exports.create = function(req, res) {
 							for(i = 0; i < project.client.length; ++i){
 
 								// write change to log
-								var log = {
+								let log = {
 									type: 'user',
 									sharedKey: String(project.client.clientId),
 									description: project.client.name + ' added to project ' + project.title,
@@ -455,8 +457,8 @@ exports.create = function(req, res) {
 						project.phases[2].status = 'Waiting For Clients to Be Added';
 
 						// gen project note
-						var discussion = 'Project phase ' + project.phases[2].name + ' status changed to ' + project.phases[2].status + ' on ' + moment().tz('America/New_York').format() + ' EST by ' + req.user.displayName;
-						var item = {
+						let discussion = 'Project phase ' + project.phases[2].name + ' status changed to ' + project.phases[2].status + ' on ' + moment().tz('America/New_York').format() + ' EST by ' + req.user.displayName;
+						let item = {
 							date: moment().tz('America/New_York').format(),
 							userid: '',
 							username: 'System',
@@ -471,7 +473,7 @@ exports.create = function(req, res) {
 					project.markModified("phases");
 					project.save().then(function () {
 						// write change to log
-						var log = {
+						let log = {
 							type: 'project',
 							sharedKey: String(project._id),
 							description: project.title + ' project created',
@@ -508,9 +510,9 @@ exports.create = function(req, res) {
  * Update a Project
  */
 exports.update = function(req, res) {
-	var project = req.project ;
+	let project = req.project ;
 
-	var allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern', 'production coordinator','client','client-client'];
+	const allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern', 'production coordinator','client','client-client'];
 
 	// validate user interaction
 	if (radash.intersects(req.user.roles, allowedRoles)) {
@@ -521,12 +523,12 @@ exports.update = function(req, res) {
 			// rename files as requested
 			function(done) {
 
-				var appDir = global.appRoot;
+				let appDir = global.appRoot;
 
 				for(var i = 0; i < project.auditions.length; ++i){
 					if(typeof project.auditions[i] !== 'undefined' && typeof project.auditions[i].file !== 'undefined'){
-						var file = appDir + '/public/res/auditions/' + project._id + '/' + project.auditions[i].file.name;
-						var newFile = appDir + '/public/res/auditions/' + project._id + '/' + project.auditions[i].rename;
+						let file = appDir + '/public/res/auditions/' + project._id + '/' + project.auditions[i].file.name;
+						let newFile = appDir + '/public/res/auditions/' + project._id + '/' + project.auditions[i].rename;
 
 						// move file if exists
 						if (fs.existsSync(file) && project.auditions[i].rename !== '') {
@@ -548,10 +550,10 @@ exports.update = function(req, res) {
 			// delete any files no longer in use
 			function(done) {
 
-				var appDir = global.appRoot;
+				let appDir = global.appRoot;
 
 				for(var i = 0; i < project.deleteFiles.length; ++i){
-					var file = appDir + '/public' + project.deleteFiles[i];
+					let file = appDir + '/public' + project.deleteFiles[i];
 
 					// remove file is exists
 					if (fs.existsSync(file)) {
@@ -572,7 +574,7 @@ exports.update = function(req, res) {
 				project.save().then(function (upproject) {
 
 					// write change to log
-					var log = {
+					let log = {
 						type: 'project',
 						sharedKey: String(upproject._id),
 						description: upproject.title + ' project updated',
@@ -600,14 +602,14 @@ exports.update = function(req, res) {
  * Delete a Project
  */
 exports.delete = function(req, res) {
-	var project = req.project,
+	let project = req.project,
 		prodId = Object.create(project._id);
 
 	// generate delete files list
-	var appDir = global.appRoot + '/public';
-	var auditionsDir = appDir + '/res/auditions/' + project._id + '/';
-	var scriptsDir = appDir + '/res/scripts/' + project._id + '/';
-	var referenceFilesDir = appDir + '/res/referenceFiles/' + project._id + '/';
+	let appDir = global.appRoot + '/public',
+		auditionsDir = appDir + '/res/auditions/' + project._id + '/',
+		scriptsDir = appDir + '/res/scripts/' + project._id + '/',
+		referenceFilesDir = appDir + '/res/referenceFiles/' + project._id + '/';
 
 	// remove all file if exists
 	rimraf.sync(auditionsDir);
@@ -615,7 +617,7 @@ exports.delete = function(req, res) {
 	rimraf.sync(referenceFilesDir);
 
 		// write change to log
-	var log = {
+	let log = {
 		type: 'project',
 		sharedKey: String(project._id),
 		description: 'project deleted ' + project.title,
@@ -645,10 +647,10 @@ exports.deleteById = function(req, res) {
 		if(project){
 
 			// generate delete files list
-			var appDir = global.appRoot + '/public';
-			var auditionsDir = appDir + '/res/auditions/' + project._id + '/';
-			var scriptsDir = appDir + '/res/scripts/' + project._id + '/';
-			var referenceFilesDir = appDir + '/res/referenceFiles/' + project._id + '/';
+			let appDir = global.appRoot + '/public',
+				auditionsDir = appDir + '/res/auditions/' + project._id + '/',
+				scriptsDir = appDir + '/res/scripts/' + project._id + '/',
+				referenceFilesDir = appDir + '/res/referenceFiles/' + project._id + '/';
 
 			// remove all file if exists
 			rimraf.sync(auditionsDir);
@@ -656,7 +658,7 @@ exports.deleteById = function(req, res) {
 			rimraf.sync(referenceFilesDir);
 
 			// write change to log
-			var log = {
+			let log = {
 				type: 'project',
 				sharedKey: String(project._id),
 				description: project.title + ' project deleted',

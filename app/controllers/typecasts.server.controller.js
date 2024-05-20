@@ -15,7 +15,7 @@ exports.create = function(req, res) {
 	var typecast = new Typecast(req.body);
 	typecast.user = req.user;
 
-	var allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern','talent director'];
+	const allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern','talent director'];
 
 	if (radash.intersects(req.user.roles, allowedRoles)) {
 		typecast.save().then(function () {
@@ -99,7 +99,7 @@ exports.typecastByID = function(req, res, next, id) {
  * Typecast authorization middleware
  */
 exports.hasAuthorization = function(req, res, next) {
-	var allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern','talent director'];
+	const allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern','talent director'];
 
 	if (!radash.intersects(req.user.roles, allowedRoles)) {
 		return res.status(403).send('User is not authorized');

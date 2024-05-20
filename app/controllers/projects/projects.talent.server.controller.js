@@ -84,7 +84,7 @@ exports.updateSingleTalentStatus = function (req, res){
 // update talent status
 exports.updateTalentStatus = function(req, res){
 
-	var allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern', 'production coordinator','client','client-client'];
+	const allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern', 'production coordinator','client','client-client'];
 
 	// validate user interaction
 	if (radash.intersects(req.user.roles, allowedRoles)) {

@@ -52,7 +52,7 @@ exports.requiresLogin = function(req, res, next) {
 exports.hasAuthorization = function(roles, res, next) {
 	var _this = this;
 
-	var allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern','production coordinator'];
+	const allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern','production coordinator'];
 
 	if (radash.intersects(roles.user.roles, allowedRoles)) {
 		return next();

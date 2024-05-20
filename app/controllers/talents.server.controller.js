@@ -28,7 +28,7 @@ exports.create = function(req, res) {
 	var talent = new Talent(req.body);
 	talent.user = req.user;
 
-	var allowedRoles = ['admin', 'production coordinator', 'producer/auditions director', 'auditions director', 'audio intern', 'talent director'];
+	const allowedRoles = ['admin', 'production coordinator', 'producer/auditions director', 'auditions director', 'audio intern', 'talent director'];
 
 	if (radash.intersects(req.user.roles, allowedRoles)) {
 		//console.log(talent);
@@ -514,7 +514,7 @@ exports.talentByID = function(req, res, next, id) {
  * Talent authorization middleware
  */
 exports.hasAuthorization = function(req, res, next) {
-	var allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern', 'production coordinator', 'talent director'];
+	const allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern', 'production coordinator', 'talent director'];
 
 	if (!radash.intersects(req.user.roles, allowedRoles)) {
 		return res.status(403).send('User is not authorized');
