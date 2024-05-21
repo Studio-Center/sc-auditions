@@ -20,6 +20,113 @@ const mongoose = require('mongoose'),
 // set sendgrid api key
 sgMail.setApiKey(config.mailer.options.auth.api_key);
 
+// call list methods
+var gatherTalentsSearch = function(req, res, filter){
+
+	let callTalents = [], talentId;
+	let searchCriteria = {'talent': {
+									$elemMatch: {
+										'status': filter
+									}
+								},
+						'status': { $nin: [
+							'Closed - Pending Client Decision',
+							'Canceled',
+							'Dead',
+							'Complete',
+							'Booked',
+							'ReAuditioned',
+							'On Hold',
+							'Not started'
+							]}
+						};
+
+	Project.find(searchCriteria).sort('-estimatedCompletionDate').then(function (projects) {
+
+			// walk through found projects
+			async.eachSeries(projects, function (project, callback) {
+				// walk through found talents
+				if(typeof project.talent !== 'undefined'){
+
+					// walk through project found talent
+					async.eachSeries(project.talent, function (talent, talentCallback) {
+
+						if(typeof talent !== 'undefined'){
+
+							async.waterfall([
+								// gather info for selected talent
+								function(done) {
+									Talent.findOne({'_id':talent.talentId}).sort('-created').then(function (talentInfo) {
+										done(null, talentInfo);
+									});
+								},
+								function(talentInfo, done){
+									if(talent.status === filter){
+										callTalents.push(talent);
+										talentId = callTalents.length - 1;
+										callTalents[talentId].data = talentInfo;
+										callTalents[talentId].project = {};
+										callTalents[talentId].project._id = project._id;
+										callTalents[talentId].project.title = project.title;
+										callTalents[talentId].project.estimatedCompletionDate = project.estimatedCompletionDate;
+										callTalents[talentId].project.scripts = project.scripts;
+										callTalents[talentId].project.note = '';
+										if(talentInfo !== null){
+
+											let talents = project.talent;
+
+											for(const i in project.talent) {
+												if(talents[i].talentId === String(talentInfo._id)){
+													callTalents[talentId].project.note = talents[i].note;
+												}
+											}
+										}
+									}
+									done('');
+								}
+								], function(err) {
+								if (err) {
+									return res.status(400).json(err);
+								} else {
+									talentCallback();
+								}
+							});
+
+						}
+
+					}, function (err) {
+						if( err ) {
+							return res.status(400).send({
+								message: errorHandler.getErrorMessage(err)
+							});
+						} else {
+			            	callback();
+						}
+		           	});
+
+				} else {
+
+					callback();
+
+				}
+
+			}, function (err) {
+				if( err ) {
+					return res.status(400).send({
+						message: errorHandler.getErrorMessage(err)
+					});
+				} else {
+					res.jsonp(callTalents);
+				}
+           	});
+
+	}).catch(function (err) {
+		return res.status(400).send({
+			message: errorHandler.getErrorMessage(err)
+		});
+	});
+};
+
 /* custom tools methods */
 exports.sendTalentEmails = function(req, res){
 	let email = req.body.email,
@@ -216,113 +323,6 @@ exports.sendTalentEmails = function(req, res){
 		});
 	}
 
-};
-
-// call list methods
-var gatherTalentsSearch = function(req, res, filter){
-
-	let callTalents = [], talentId;
-	let searchCriteria = {'talent': {
-									$elemMatch: {
-										'status': filter
-									}
-								},
-						'status': { $nin: [
-							'Closed - Pending Client Decision',
-							'Canceled',
-							'Dead',
-							'Complete',
-							'Booked',
-							'ReAuditioned',
-							'On Hold',
-							'Not started'
-							]}
-						};
-
-	Project.find(searchCriteria).sort('-estimatedCompletionDate').then(function (projects) {
-
-			// walk through found projects
-			async.eachSeries(projects, function (project, callback) {
-				// walk through found talents
-				if(typeof project.talent !== 'undefined'){
-
-					// walk through project found talent
-					async.eachSeries(project.talent, function (talent, talentCallback) {
-
-						if(typeof talent !== 'undefined'){
-
-							async.waterfall([
-								// gather info for selected talent
-								function(done) {
-									Talent.findOne({'_id':talent.talentId}).sort('-created').then(function (talentInfo) {
-										done(null, talentInfo);
-									});
-								},
-								function(talentInfo, done){
-									if(talent.status === filter){
-										callTalents.push(talent);
-										talentId = callTalents.length - 1;
-										callTalents[talentId].data = talentInfo;
-										callTalents[talentId].project = {};
-										callTalents[talentId].project._id = project._id;
-										callTalents[talentId].project.title = project.title;
-										callTalents[talentId].project.estimatedCompletionDate = project.estimatedCompletionDate;
-										callTalents[talentId].project.scripts = project.scripts;
-										callTalents[talentId].project.note = '';
-										if(talentInfo !== null){
-
-											let talents = project.talent;
-
-											for(const i in project.talent) {
-												if(talents[i].talentId === String(talentInfo._id)){
-													callTalents[talentId].project.note = talents[i].note;
-												}
-											}
-										}
-									}
-									done('');
-								}
-								], function(err) {
-								if (err) {
-									return res.status(400).json(err);
-								} else {
-									talentCallback();
-								}
-							});
-
-						}
-
-					}, function (err) {
-						if( err ) {
-							return res.status(400).send({
-								message: errorHandler.getErrorMessage(err)
-							});
-						} else {
-			            	callback();
-						}
-		           	});
-
-				} else {
-
-					callback();
-
-				}
-
-			}, function (err) {
-				if( err ) {
-					return res.status(400).send({
-						message: errorHandler.getErrorMessage(err)
-					});
-				} else {
-					res.jsonp(callTalents);
-				}
-           	});
-
-	}).catch(function (err) {
-		return res.status(400).send({
-			message: errorHandler.getErrorMessage(err)
-		});
-	});
 };
 exports.gatherTalentsToCall = function(req, res){
 

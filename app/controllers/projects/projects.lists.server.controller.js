@@ -9,7 +9,8 @@ const mongoose = require('mongoose'),
 	Audition = mongoose.model('Audition'),
 	Talent = mongoose.model('Talent'),
 	radash = require('radash'),
-	async = require('async');
+	async = require('async'),
+	performLoadList = require('./classes/etc.class').performLoadList;
 
 /**
  * Show the current Project
@@ -79,59 +80,6 @@ exports.loadAuditions = function(req, res){
 		});
 	});
 
-};
-
-/**
- * List of Projects
- */
-var performLoadList = function(req, res, allowedRoles, i, j, limit){
-
-	let curUserId = String(req.user._id),
-		selLimit = limit || 50;
-
-	if(req.user.roles[i] === allowedRoles[j]){
-
-		switch(allowedRoles[j]){
-			case 'user':
-				Project.find({'user._id': curUserId}).sort('-estimatedCompletionDate').limit(selLimit).then(function (projects) {
-					return res.jsonp(projects);
-				}).catch(function (err) {
-					return res.status(400).send({
-						message: errorHandler.getErrorMessage(err)
-					});
-				});
-			break;
-			case 'talent':
-			// talent does not currently have access, added to permit later access
-				Project.find({'talent': { $elemMatch: { 'talentId': curUserId}}}).sort('-estimatedCompletionDate').limit(selLimit).then(function (projects) {
-					return res.jsonp(projects);
-				}).catch(function (err) {
-					return res.status(400).send({
-						message: errorHandler.getErrorMessage(err)
-					});
-				});
-			break;
-			case 'client':
-				Project.find({'client': { $elemMatch: { 'userId': curUserId}}}).sort('-estimatedCompletionDate').limit(selLimit).then(function (projects) {
-					return res.jsonp(projects);
-				}).catch(function (err) {
-					return res.status(400).send({
-						message: errorHandler.getErrorMessage(err)
-					});
-				});
-			break;
-			case 'client-client':
-				Project.find({'clientClient': { $elemMatch: { 'userId': curUserId}}}).sort('-estimatedCompletionDate').limit(selLimit).then(function (projects) {
-					return res.jsonp(projects);
-				}).catch(function (err) {
-					return res.status(400).send({
-						message: errorHandler.getErrorMessage(err)
-					});
-				});
-			break;
-		}
-
-	}
 };
 
 // list projects assigned to talent

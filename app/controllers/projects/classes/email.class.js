@@ -85,7 +85,9 @@ const emailFuncs = {
             }
         ], function(err) {
             if (err) {
-                return res.status(400).json(err);
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
             } else {
                 res.status(200).jsonp();
             }
@@ -342,7 +344,9 @@ const emailFuncs = {
             ], function(err) {
             if (err) {
                 if (err) {
-                    return res.status(400).json(err);
+                    return res.status(400).send({
+                        message: errorHandler.getErrorMessage(err)
+                    });
                 } else {
                     return res.status(200).send();
                 }

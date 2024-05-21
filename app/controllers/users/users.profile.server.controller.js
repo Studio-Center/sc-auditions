@@ -10,6 +10,32 @@ const errorHandler = require('../errors'),
 	config = require('../../../config/config'),
 	sgMail = require('@sendgrid/mail');
 
+// assemble filters
+var getUsersFilters = function(req){
+
+	// gen filter object
+	let filterObj = {};
+	// filter by project title
+	if(req.body.filter.fName){
+		filterObj.firstName = new RegExp(req.body.filter.fName, 'i');
+	}
+	if(req.body.filter.lName){
+		filterObj.lastName = new RegExp(req.body.filter.lName, 'i');
+	}
+	if(req.body.filter.email){
+		filterObj.email = new RegExp(req.body.filter.email, 'i');
+	}
+	if(req.body.filter.company){
+		filterObj.company = new RegExp(req.body.filter.company, 'i');
+	}
+	// filter by role
+	if(req.body.filter.roles){
+		filterObj.roles = req.body.filter.roles;
+	}
+
+	return filterObj;
+};
+
 // set sendgrid api key
 sgMail.setApiKey(config.mailer.options.auth.api_key);
 
@@ -273,31 +299,6 @@ exports.create = function(req, res) {
 	});
 };
 
-// assemble filters
-var getUsersFilters = function(req){
-
-	// gen filter object
-	let filterObj = {};
-	// filter by project title
-	if(req.body.filter.fName){
-		filterObj.firstName = new RegExp(req.body.filter.fName, 'i');
-	}
-	if(req.body.filter.lName){
-		filterObj.lastName = new RegExp(req.body.filter.lName, 'i');
-	}
-	if(req.body.filter.email){
-		filterObj.email = new RegExp(req.body.filter.email, 'i');
-	}
-	if(req.body.filter.company){
-		filterObj.company = new RegExp(req.body.filter.company, 'i');
-	}
-	// filter by role
-	if(req.body.filter.roles){
-		filterObj.roles = req.body.filter.roles;
-	}
-
-	return filterObj;
-};
 // retrieve talents count
 exports.getUsersCnt = function(req, res){
 

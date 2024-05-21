@@ -16,7 +16,8 @@ const mongoose = require('mongoose'),
     radash = require('radash'),
 	dateFormat = require('dateformat'),
 	emailTalent = require('./classes/email.class').talent,
-    talentStartEmail = require('./classes/email.class').talentStartEmail;
+    talentStartEmail = require('./classes/email.class').talentStartEmail,
+    inWords = require('./classes/etc.class').inWords;
 
 // set sendgrid api key
 sgMail.setApiKey(config.mailer.options.auth.api_key);
@@ -78,6 +79,10 @@ exports.sendEmail = function(req, res){
                 }
         });
 
+    } else {
+        return res.status(400).send({
+            message: errorHandler.getErrorMessage('email undefined')
+        });
     }
 };
 
@@ -215,7 +220,7 @@ exports.sendTalentCanceledEmail = function(req, res){
                 res.jsonp(project);
 
             }
-            });
+        });
 
     });
 
@@ -462,22 +467,6 @@ exports.sendTalentEmailById = function(req, res){
     });
 
 };
-
-// convert number to word
-var a = ['','First ','Second ','Third ','Fourth ', 'Fifth ','Sixth ','Seventh ','Eighth ','Ninth ','Tenth ','Eleventh ','Twelfth ','Thirteenth ','Fourteenth ','Fifteenth ','Sixteenth ','Seventeenth ','Eighteenth ','Nineteenth '];
-var b = ['', '', 'twenty','thirty','forty','fifty', 'sixty','seventy','eighty','ninety'];
-
-function inWords (num) {
-    if ((num = num.toString()).length > 9) return 'overflow';
-    var n = ('000000000' + num).substr(-9).match(/^(\d{2})(\d{2})(\d{2})(\d{1})(\d{2})$/);
-    if (!n) return; var str = '';
-    // str += (n[1] !== 0) ? (a[Number(n[1])] || b[n[1][0]] + ' ' + a[n[1][1]]) : '';
-    // str += (n[2] !== 0) ? (a[Number(n[2])] || b[n[2][0]] + ' ' + a[n[2][1]]) : '';
-    // str += (n[3] !== 0) ? (a[Number(n[3])] || b[n[3][0]] + ' ' + a[n[3][1]])  : '';
-    // str += (n[4] !== 0) ? (a[Number(n[4])] || b[n[4][0]] + ' ' + a[n[4][1]]) : '';
-    str += a[n[5][1]];
-    return str;
-}
 
 // send client email based on user button click
 exports.sendClientEmail = function(req, res){

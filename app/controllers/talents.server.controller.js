@@ -15,6 +15,75 @@ const mongoose = require('mongoose'),
 // set sendgrid api key
 sgMail.setApiKey(config.mailer.options.auth.api_key);
 
+// assemble filters
+var getTalentsFilters = function(req){
+
+	// gen filter object
+	let filterObj = {},
+        orQry = [];
+
+	// filter by project title
+	if(req.body.filter.fName){
+		filterObj.name = new RegExp(req.body.filter.fName.trim(), 'i');
+	}
+	if(req.body.filter.lName){
+		filterObj.lastName = new RegExp(req.body.filter.lName.trim(), 'i');
+	}
+	if(req.body.filter.email){
+		filterObj.email = new RegExp(req.body.filter.email.trim(), 'i');
+	}
+	// filter by gender
+	if(req.body.filter.gender){
+		filterObj.gender = req.body.filter.gender;
+	}
+	// unionStatus
+	if(req.body.filter.unionStatus){
+		filterObj.unionStatus = req.body.filter.unionStatus;
+	}
+	// type
+	if(req.body.filter.type){
+		filterObj.type = req.body.filter.type;
+	}
+	// ageRange
+	if(req.body.filter.ageRange){
+		filterObj.ageRange = req.body.filter.ageRange;
+	}
+	// locationISDN
+	if(req.body.filter.locationISDN){
+		filterObj.locationISDN = req.body.filter.locationISDN;
+	}
+	// VOA
+	if(req.body.filter.voa){
+		filterObj.voa = true;
+	}
+	// producer
+	if(typeof req.body.filter.producerOptional != 'undefined'){
+		filterObj.producerOptional = req.body.filter.producerOptional;
+	}
+  // ISDNLine1
+	if(req.body.filter.ISDNLine1){
+		orQry.push({ISDNLine1: req.body.filter.ISDNLine1});
+	}
+	if(req.body.filter.sourceConnectUsername){
+		orQry.push({sourceConnectUsername: req.body.filter.sourceConnectUsername});
+	}
+	if(orQry.length > 0){
+		filterObj.$or = orQry;
+	}
+
+	// locationISDN
+	if(req.body.filter.typeCasts){
+		filterObj.typeCasts = new RegExp("^" + req.body.filter.typeCasts.toLowerCase().trim(), "i");
+		if(filterObj.typeCasts === 'Spanish'){
+			delete filterObj.typeCasts;
+			//filterObj.typeCasts = ['Spanish-Dialect','Spanish-Showcase'];
+			filterObj.prefLanguage = 'Spanish';
+		}
+	}
+
+	return filterObj;
+};
+
 /**
  * Create a Talent
  */
@@ -383,74 +452,6 @@ exports.delete = function(req, res) {
 
 };
 
-// assemble filters
-var getTalentsFilters = function(req){
-
-	// gen filter object
-	let filterObj = {},
-        orQry = [];
-
-	// filter by project title
-	if(req.body.filter.fName){
-		filterObj.name = new RegExp(req.body.filter.fName.trim(), 'i');
-	}
-	if(req.body.filter.lName){
-		filterObj.lastName = new RegExp(req.body.filter.lName.trim(), 'i');
-	}
-	if(req.body.filter.email){
-		filterObj.email = new RegExp(req.body.filter.email.trim(), 'i');
-	}
-	// filter by gender
-	if(req.body.filter.gender){
-		filterObj.gender = req.body.filter.gender;
-	}
-	// unionStatus
-	if(req.body.filter.unionStatus){
-		filterObj.unionStatus = req.body.filter.unionStatus;
-	}
-	// type
-	if(req.body.filter.type){
-		filterObj.type = req.body.filter.type;
-	}
-	// ageRange
-	if(req.body.filter.ageRange){
-		filterObj.ageRange = req.body.filter.ageRange;
-	}
-	// locationISDN
-	if(req.body.filter.locationISDN){
-		filterObj.locationISDN = req.body.filter.locationISDN;
-	}
-	// VOA
-	if(req.body.filter.voa){
-		filterObj.voa = true;
-	}
-	// producer
-	if(typeof req.body.filter.producerOptional != 'undefined'){
-		filterObj.producerOptional = req.body.filter.producerOptional;
-	}
-  // ISDNLine1
-	if(req.body.filter.ISDNLine1){
-		orQry.push({ISDNLine1: req.body.filter.ISDNLine1});
-	}
-	if(req.body.filter.sourceConnectUsername){
-		orQry.push({sourceConnectUsername: req.body.filter.sourceConnectUsername});
-	}
-	if(orQry.length > 0){
-		filterObj.$or = orQry;
-	}
-
-	// locationISDN
-	if(req.body.filter.typeCasts){
-		filterObj.typeCasts = new RegExp("^" + req.body.filter.typeCasts.toLowerCase().trim(), "i");
-		if(filterObj.typeCasts === 'Spanish'){
-			delete filterObj.typeCasts;
-			//filterObj.typeCasts = ['Spanish-Dialect','Spanish-Showcase'];
-			filterObj.prefLanguage = 'Spanish';
-		}
-	}
-
-	return filterObj;
-};
 // retrieve talents count
 exports.getTalentsCnt = function(req, res){
 

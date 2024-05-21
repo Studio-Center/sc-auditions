@@ -11,7 +11,6 @@ const mongoose = require('mongoose'),
 	fs = require('fs'),
 	rimraf = require('rimraf'),
 	async = require('async'),
-	mv = require('mv'),
 	moment = require('moment-timezone'),
 	fileFuncs = require('./classes/files.class');
 
