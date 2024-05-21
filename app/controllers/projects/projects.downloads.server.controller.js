@@ -8,7 +8,7 @@ const mongoose = require('mongoose'),
 	fs = require('fs'),
 	async = require('async'),
 	archiver = require('archiver'),
-    errorHandler = require('./errors');
+    errorHandler = require('../errors');
 
 
 exports.downloadAllAuditionsClient = function(req, res, next){

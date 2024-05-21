@@ -13,7 +13,7 @@ const mongoose = require('mongoose'),
 	sgMail = require('@sendgrid/mail'),
 	radash = require('radash'),
 	dateFormat = require('dateformat'),
-    errorHandler = require('./errors');
+    errorHandler = require('../errors');
 
 // set sendgrid api key
 sgMail.setApiKey(config.mailer.options.auth.api_key);

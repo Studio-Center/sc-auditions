@@ -6,7 +6,7 @@
 const radash = require('radash'),
 	mongoose = require('mongoose'),
 	User = mongoose.model('User'),
-    errorHandler = require('./errors');
+    errorHandler = require('../errors');
 
 /**
  * User middleware

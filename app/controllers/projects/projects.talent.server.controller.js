@@ -8,7 +8,7 @@ const mongoose = require('mongoose'),
 	Log = mongoose.model('Log'),
 	radash = require('radash'),
 	async = require('async'),
-    errorHandler = require('./errors');
+    errorHandler = require('../errors');
 
 // update single talent single project status
 exports.updateSingleTalentStatus = function (req, res){
