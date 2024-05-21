@@ -231,8 +231,8 @@ exports.findLimit = function(req, res) {
 
 		allowedRoles = ['user', 'talent', 'client', 'client-client'];
 
-		for(var i = 0; i < req.user.roles.length; ++i){
-			for(var j = 0; j < allowedRoles.length; ++j){
+		for(const i in req.user.roles) {
+			for(const j in allowedRoles) {
 				performLoadList(req, res, allowedRoles, i, j, limit);
 			}
 		}
@@ -295,8 +295,8 @@ exports.findLimitWithFilter = function(req, res) {
 
 		allowedRoles = ['user', 'talent', 'client', 'client-client'];
 
-		for(var i = 0; i < req.user.roles.length; ++i){
-			for(var j = 0; j < allowedRoles.length; ++j){
+		for(const i in req.user.roles) {
+			for(const j in allowedRoles) {
 				performLoadList(req, res, allowedRoles, i, j, limitVal);
 			}
 		}
@@ -325,8 +325,8 @@ exports.list = function(req, res) {
 
 		allowedRoles = ['user', 'talent', 'client', 'client-client'];
 
-		for(var i = 0; i < req.user.roles.length; ++i){
-			for(var j = 0; j < allowedRoles.length; ++j){
+		for(const i in req.user.roles) {
+			for(const j in allowedRoles) {
 				performLoadList(req, res, allowedRoles, i, j);
 			}
 		}

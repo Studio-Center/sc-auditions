@@ -120,9 +120,7 @@ exports.create = function(req, res) {
 		delete req.body.project._id;
 	}
 	// method vars
-	let i, 
-		j,
-		project = new Project(req.body.project),
+	let project = new Project(req.body.project),
 		copiedScripts = req.body.copiedScripts,
 		
 	copiedReferenceFiles = req.body.copiedReferenceFiles;
@@ -151,7 +149,7 @@ exports.create = function(req, res) {
 
 			// move new saved files from temp to project id based directory
 			if(typeof project.scripts !== 'undefined'){
-				for(i = 0; i < project.scripts.length; ++i){
+				for(const i in project.scripts) {
 					if(typeof project.scripts[i] !== 'undefined'){
 						appDir = global.appRoot;
 						tempPath = appDir + '/public/res/scripts/temp/' + project.scripts[i].file.name;
@@ -174,7 +172,7 @@ exports.create = function(req, res) {
 				}
 			}
 			if(typeof project.referenceFiles !== 'undefined'){
-				for(j = 0; j < project.referenceFiles.length; ++j){
+				for(const j in project.referenceFiles) {
 					if(typeof project.referenceFiles[j] !== 'undefined'){
 						appDir = global.appRoot;
 						tempPath = appDir + '/public/res/referenceFiles/temp/' + project.referenceFiles[j].file.name;
@@ -200,7 +198,7 @@ exports.create = function(req, res) {
 			// move copied ref and script files for re-auditioned projects
 			if(project.status[0] === 'ReAuditioned'){
 				if(typeof copiedScripts !== 'undefined'){
-					for(i = 0; i < copiedScripts.length; ++i){
+					for(const i in copiedScripts) {
 						if(typeof copiedScripts[i] !== 'undefined'){
 							appDir = global.appRoot;
 							tempPath = appDir + '/public/res/scripts/' + oldID + '/' + copiedScripts[i].file.name;
@@ -231,7 +229,7 @@ exports.create = function(req, res) {
 				}
 
 				if(typeof copiedReferenceFiles !== 'undefined'){
-					for(j = 0; j < copiedReferenceFiles.length; ++j){
+					for(const j in copiedReferenceFiles) {
 						if(typeof copiedReferenceFiles[j] !== 'undefined'){
 							appDir = global.appRoot;
 							tempPath = appDir + '/public/res/referenceFiles/' + oldID + '/' + copiedReferenceFiles[j].file.name;
@@ -306,7 +304,7 @@ exports.create = function(req, res) {
 					email.scripts = '\n' + '<strong>Scripts:</strong>' + '<br>';
 					if(typeof project.scripts !== 'undefined'){
 						if(project.scripts.length > 0){
-							for(i = 0; i < project.scripts.length; ++i){
+							for(const i in project.scripts) {
 								email.scripts += '<a href="http://' + req.headers.host + '/res/scripts/' + project._id + '/' + project.scripts[i].file.name + '">' + project.scripts[i].file.name + '</a><br>';
 							}
 						} else {
@@ -318,7 +316,7 @@ exports.create = function(req, res) {
 					email.referenceFiles = '\n' + '<strong>Reference Files:</strong>' + '<br>';
 					if(typeof project.referenceFiles !== 'undefined'){
 						if(project.referenceFiles.length > 0){
-							for(var j = 0; j < project.referenceFiles.length; ++j){
+							for(const j in project.referenceFiles) {
 								email.referenceFiles += '<a href="http://' + req.headers.host + '/res/referenceFiles/' + project._id + '/' + project.referenceFiles[j].file.name + '">' + project.referenceFiles[j].file.name + '</a><br>';
 							}
 						} else {
@@ -371,7 +369,8 @@ exports.create = function(req, res) {
 
 						let talentIds = [],
 							emailTalentChk;
-						for(var i = 0; i < project.talent.length; ++i){
+							
+						for(const i in project.talent) {
 							talentIds[i] = project.talent[i].talentId;
 						}
 						Talent.where('_id').in(talentIds).sort('-created').then(function (talents) {
@@ -396,7 +395,7 @@ exports.create = function(req, res) {
 
 								// verify talent needs to be emailed
 								if(emailTalentChk === true){
-									for(j = 0; j < project.talent.length; ++j){
+									for(const j in project.talent) {
 										if(project.talent[j].talentId === String(talent._id)){
 											// email talent
 											emailTalent(project.talent[j], talent, email, project, req, res);
@@ -424,7 +423,7 @@ exports.create = function(req, res) {
 					if(req.body.notifyClient === true){
 
 						if(typeof project.client !== 'undefined'){
-							for(i = 0; i < project.client.length; ++i){
+							for(const i in project.client) {
 
 								// write change to log
 								let log = {
@@ -525,7 +524,7 @@ exports.update = function(req, res) {
 
 				let appDir = global.appRoot;
 
-				for(var i = 0; i < project.auditions.length; ++i){
+				for(const i in project.auditions) {
 					if(typeof project.auditions[i] !== 'undefined' && typeof project.auditions[i].file !== 'undefined'){
 						let file = appDir + '/public/res/auditions/' + project._id + '/' + project.auditions[i].file.name;
 						let newFile = appDir + '/public/res/auditions/' + project._id + '/' + project.auditions[i].rename;
@@ -552,7 +551,7 @@ exports.update = function(req, res) {
 
 				let appDir = global.appRoot;
 
-				for(var i = 0; i < project.deleteFiles.length; ++i){
+				for(const i in project.deleteFiles) {
 					let file = appDir + '/public' + project.deleteFiles[i];
 
 					// remove file is exists

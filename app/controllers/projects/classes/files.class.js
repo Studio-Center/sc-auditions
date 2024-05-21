@@ -21,7 +21,7 @@ const fileFuncs = {
 
         let appDir = global.appRoot;
 
-        for(var i = 0; i < project.auditions.length; ++i){
+        for(const i in project.auditions) {
             let file = appDir + '/public/res/auditions/' + project._id + '/' + project.auditions[i].file.name;
             let newFile = appDir + '/public/res/auditions/' + project._id + '/' + project.auditions[i].rename;
 
@@ -52,7 +52,7 @@ const fileFuncs = {
 
         let appDir = global.appRoot;
 
-        for(var i = 0; i < project.deleteFiles.length; ++i){
+        for(const i in project.deleteFiles) {
             let file = appDir + '/public' + project.deleteFiles[i];
 
             // remove file if exists

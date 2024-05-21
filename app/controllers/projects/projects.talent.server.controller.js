@@ -29,7 +29,7 @@ exports.updateSingleTalentStatus = function (req, res){
 		function(project, done){
 
 			// update talent email status
-			for(var i = 0; i < project.talent.length; ++i){
+			for(const i in project.talent) {
 				if(project.talent[i].talentId === talentId){
 					project.talent[i].status = talentStatus;
 
@@ -135,7 +135,7 @@ exports.updateTalentNote = function (req, res){
 		function(project, done){
 
 			// update talent email status
-			for(var i = 0; i < project.talent.length; ++i){
+			for(const i in project.talent) {
 				if(project.talent[i].talentId === talentId){
 					project.talent[i].note = newNote;
 					done('', project);

@@ -15,7 +15,6 @@ exports.downloadAllAuditionsClient = function(req, res, next){
     Audition.find({'project': Object(req.body.project._id),'published':{ "$in": ["true",true] }}).sort('-created').then(function (auditionsFiles) {
         
         let i = 0,
-            audFileCnt = auditionsFiles.length,
             fileLoc = '';
         // get app dir
         let appDir = global.appRoot,
@@ -37,7 +36,7 @@ exports.downloadAllAuditionsClient = function(req, res, next){
             res.jsonp({zip:zipName});
         });
 
-        for(i = 0; i < audFileCnt; i++){
+        for(const i in auditionsFiles) {
             fileLoc = newPath + auditionsFiles[i].file.name;
             archive.file(fileLoc, { name:auditionsFiles[i].file.name });
         }

@@ -140,7 +140,7 @@ exports.bookAuditions = function(req, res, next){
 
 			// assign booked list
 			let bookedText = '<p>';
-			for(var i = 0; i < selAuds.length; ++i){
+			for(const i in selAuds) {
 				bookedText += '<a href="http://' + req.headers.host + '/res/auditions/' + project._id + '/' + selAuds[i].file.name + '">' + selAuds[i].file.name + '</a><br>';
 			}
 			bookedText += '</p>';

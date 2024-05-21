@@ -698,7 +698,7 @@ exports.uploadTalentAudition = function(req, res, next){
 		// update project with submitted auds
 		function(updatedProject, done){
 
-			for(var i = 0; i < updatedProject.talent.length; ++i){
+            for(const i in updatedProject.talent) {
 
 				if(updatedProject.talent[i].talentId === talentId){
 
@@ -709,7 +709,7 @@ exports.uploadTalentAudition = function(req, res, next){
 
 					} else {
 
-						for(var j = 0; j < auditions.length; ++j){
+                        for(const j in auditions) {
 							updatedProject.talent[i].submissions.push(auditions[j]);
 						}
 						done('', updatedProject);

@@ -104,7 +104,7 @@ exports.sendTalentCanceledEmail = function(req, res){
                             function(done){
 
                                 // update talent email status
-                                for(var i = 0; i < project.talent.length; ++i){
+                                for(const i in project.talent) {
                                     if(project.talent[i].talentId === selTalent.talentId){
 
                                         project.talent[i].status = 'Canceled';
@@ -248,7 +248,7 @@ exports.sendTalentScriptUpdateEmail = function(req, res){
         email.scripts = '\n' + '<strong>Scripts:</strong>' + '<br>';
         if(typeof project.scripts !== 'undefined'){
             if(project.scripts.length > 0){
-                for(i = 0; i < project.scripts.length; ++i){
+                for(const i in project.scripts) {
                     email.scripts += '<a href="http://' + req.headers.host + '/res/scripts/' + project._id + '/' + project.scripts[i].file.name + '">' + project.scripts[i].file.name + '</a><br>';
                 }
             } else {
@@ -260,7 +260,7 @@ exports.sendTalentScriptUpdateEmail = function(req, res){
         email.referenceFiles = '\n' + '<strong>Reference Files:</strong>' + '<br>';
         if(typeof project.referenceFiles !== 'undefined'){
             if(project.referenceFiles.length > 0){
-                for(var j = 0; j < project.referenceFiles.length; ++j){
+                for(const j in project.referenceFiles) {
                     email.referenceFiles += '<a href="http://' + req.headers.host + '/res/referenceFiles/' + project._id + '/' + project.referenceFiles[j].file.name + '">' + project.referenceFiles[j].file.name + '</a><br>';
                 }
             } else {
@@ -352,7 +352,7 @@ exports.sendTalentDirectorsEmail = function(req, res){
             let i = 0,
                 to = [];
 
-            for(i = 0; i < talentdirectors.length; ++i){
+            for(const i in talentdirectors) {
                 to.push(talentdirectors[i].email);
             }
 
@@ -496,7 +496,7 @@ exports.sendClientEmail = function(req, res){
 
 	// gather clients ids
 	let clientIds = [];
-	for(var i = 0; i < req.body.clients.length; ++i){
+    for(const i in req.body.clients) {
 		if(typeof req.body.clients[i] !== 'undefined' && req.body.clients[i] !== null && req.body.clients[i] !== false){
 			clientIds.push(req.body.clients[i]);
 		}
@@ -634,7 +634,7 @@ exports.lead = function(req, res){
             newPath = appDir + '/public/' + relativePath,
             attachements = [];
 
-		for(var i = 0; i < req.body.scripts.length; ++i){
+        for(const i in req.body.scripts) {
 			attachements[i] = {
 				filename: req.body.scripts[i].file.name,
 				path: newPath + req.body.scripts[i].file.name

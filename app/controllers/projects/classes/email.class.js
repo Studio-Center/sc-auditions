@@ -264,7 +264,7 @@ const emailFuncs = {
                     email.referenceFiles = '\n' + '<strong>Reference Files:</strong>' + '<br>';
                     if(typeof project.referenceFiles !== 'undefined'){
                         if(project.referenceFiles.length > 0){
-                            for(var j = 0; j < project.referenceFiles.length; ++j){
+                            for(const j in project.referenceFiles) {
                                 email.referenceFiles += '<a href="http://' + req.headers.host + '/res/referenceFiles/' + project._id + '/' + project.referenceFiles[j].file.name + '">' + project.referenceFiles[j].file.name + '</a><br>';
                             }
                         } else {
@@ -281,7 +281,7 @@ const emailFuncs = {
             function(email, talentInfo, done){
     
                 // update talent email status
-                for(var i = 0; i < project.talent.length; ++i){
+                for(const i in project.talent) {
                     if(project.talent[i].talentId === talent.talentId){
                         if(talentInfo.type.toLowerCase() === 'email' || override === true){
                             project.talent[i].status = 'Emailed';
