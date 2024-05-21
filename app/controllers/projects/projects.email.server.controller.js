@@ -34,7 +34,7 @@ exports.sendEmail = function(req, res){
                 res.render('templates/email-message', {
                     email: email
                 }, function(err, emailHTML) {
-                    done(err, emailHTML, email, bcc);
+                    done(err, emailHTML, email);
                 });
             },
             function(emailHTML, email, done) {
@@ -43,7 +43,7 @@ exports.sendEmail = function(req, res){
                 if(radash.isArray(email.to)){
                     email.to = email.to.map(v => v.toLowerCase());
                     email.to = radash.unique(email.to);
-                    email.to = radash.diff(email.to, config.mailer.notifications);
+                    email.to = radash.diff(email.to, [config.mailer.notifications]);
                 }
 
                 // send email                

@@ -285,8 +285,7 @@ exports.create = function(req, res) {
 			async.waterfall([
 				function(done) {
 
-					let i, 
-						email =  {
+					let email =  {
 									projectId: '',
 									to: [],
 									bcc: [],
