@@ -3,7 +3,8 @@ const mongoose = require('mongoose'),
 	Log = mongoose.model('Log'),
 	fs = require('fs'),
 	async = require('async'),
-	mv = require('mv');
+	mv = require('mv'),
+    errorHandler = require('../../errors');
     
 const fileFuncs = {
     moveFile: function(tempPath, newPath){
