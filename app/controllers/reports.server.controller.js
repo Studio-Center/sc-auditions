@@ -463,7 +463,7 @@ exports.findAuditionsBooked = function(req, res){
 						};
 
 						// check for PC within stats array
-						for(var i = 0; i < pCStats.length; ++i){
+						for(const i in pCStats) {
 							// find existing instance of PC stats
 							if(String(pCStats[i].id) === String(user._id)){
 								// xfer to variable

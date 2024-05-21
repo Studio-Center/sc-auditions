@@ -271,11 +271,9 @@ var gatherTalentsSearch = function(req, res, filter){
 										callTalents[talentId].project.note = '';
 										if(talentInfo !== null){
 
-											let talents = project.talent,
-													limit = project.talent.length,
-													i = 0;
+											let talents = project.talent;
 
-											for(i = 0; i < limit; ++i){
+											for(const i in project.talent) {
 												if(talents[i].talentId === String(talentInfo._id)){
 													callTalents[talentId].project.note = talents[i].note;
 												}
@@ -523,7 +521,7 @@ exports.sendPreCloseSummary = function(req, res){
 
 					// walk through all current talents assigned to project then query talent data
 					let talentIds = [];
-					for(var i = 0; i < project.talent.length; ++i){
+					for(const i in project.talent) {
 						talentIds[i] = project.talent[i].talentId;
 					}
 
@@ -543,7 +541,7 @@ exports.sendPreCloseSummary = function(req, res){
 
 					async.eachSeries(talents, function (talent, talentCallback) {
 
-						for(var j = 0; j < project.talent.length; ++j){
+						for(const j in project.talent) {
 							if(project.talent[j].talentId === String(talent._id)){
 
 								// sort current talent into correct list

@@ -72,11 +72,11 @@ exports.create = function(req, res) {
 						talentData += '<p><strong>Type</strong> ' + talent.type + '</p>';
 					}
 					talentData += '<p><strong>Union Status</strong> ';
-					for(i = 0; i < talent.unionStatus.length; ++i){
+					for(const i in talent.unionStatus) {
 						talentData += talent.unionStatus[i] + ' ';
 					}
 					talentData += '<br>';
-					for(i = 0; i < talent.unionJoined.length; ++i){
+					for(const i in talent.unionJoined) {
 						talentData += talent.unionJoined[i] + ' ';
 					}
 					talentData += '</p>';
@@ -108,7 +108,7 @@ exports.create = function(req, res) {
 						talentData += '<p><strong>VOA</strong> ' + talent.voa + '</p>';
 					}
 					talentData += '<p><strong>Typecasts</strong>';
-					for(i = 0; i < talent.typeCasts.length; ++i){
+					for(const i in talent.typeCasts) {
 						talentData += talent.typeCasts[i] + ' ';
 					}
 					talentData += '</p>';
