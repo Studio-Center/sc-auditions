@@ -22,7 +22,7 @@ sgMail.setApiKey(config.mailer.options.auth.api_key);
 
 /* custom tools methods */
 exports.sendTalentEmails = function(req, res){
-	var email = req.body.email,
+	let email = req.body.email,
 		emailClients = req.body.emailClients,
 		log = {};
 
@@ -35,7 +35,7 @@ exports.sendTalentEmails = function(req, res){
 					function(done) {
 
 						// generate email signature
-						var emailSig = '';
+						let emailSig = '';
 						if(req.user.emailSignature){
 							emailSig = req.user.emailSignature.replace(/\r?\n/g, '<br>');
 						} else {
@@ -54,14 +54,14 @@ exports.sendTalentEmails = function(req, res){
 						// walk through all available telent and send emails
 						async.eachSeries(talents, function (talent, callback) {
 
-							var curTalent = talent;
+							let curTalent = talent;
 
 							// check for talent preferred contact
-							var idx = curTalent.type.indexOf('Email');
+							let idx = curTalent.type.indexOf('Email');
 							if (idx > -1){
 
 								// add both email addresses if talent has backup
-								var talentEmails = [];
+								let talentEmails = [];
 								talentEmails[0] = curTalent.email;
 								if(typeof curTalent.email2 !== 'undefined' && curTalent.email2.length > 0){
 									talentEmails[1] = curTalent.email2;
@@ -73,7 +73,7 @@ exports.sendTalentEmails = function(req, res){
 								talentEmails = radash.unique(talentEmails);
 								talentEmails = radash.diff(talentEmails, [req.user.email]);
 
-								var mailOptions = {
+								let mailOptions = {
 													to: talentEmails,
 													from: req.user.email || config.mailer.from,
 													cc: config.mailer.notifications,
@@ -86,7 +86,7 @@ exports.sendTalentEmails = function(req, res){
 								.then(() => {
 
 									// write change to log
-									var log = {
+									let log = {
 										type: 'talent',
 										sharedKey: String(talent._id),
 										description: talent.name + ' ' + talent.lastName + ' sent custom email ',
@@ -140,7 +140,7 @@ exports.sendTalentEmails = function(req, res){
 					function(done) {
 
 						// generate email signature
-						var emailSig = '';
+						let emailSig = '';
 						if(req.user.emailSignature){
 							emailSig = req.user.emailSignature.replace(/\r?\n/g, '<br>');
 						} else {
@@ -159,13 +159,13 @@ exports.sendTalentEmails = function(req, res){
 						// walk through all available telent and send emails
 						async.eachSeries(talents, function (talent, callback) {
 
-								var curTalent = talent;
+								let curTalent = talent;
 
 								// check for talent preferred contact
 								if(curTalent.type.toLowerCase() === 'email'){
 
 									// add both email addresses if talent has backup
-									var talentEmails = [];
+									let talentEmails = [];
 									talentEmails[0] = curTalent.email;
 									if(typeof curTalent.email2 !== 'undefined' && curTalent.email2.length > 0){
 										talentEmails[1] = curTalent.email2;
@@ -177,7 +177,7 @@ exports.sendTalentEmails = function(req, res){
 									talentEmails = radash.unique(talentEmails);
 									talentEmails = radash.diff(talentEmails, [req.user.email]);
 
-									var mailOptions = {
+									let mailOptions = {
 														to: talentEmails,
 														from: req.user.email || config.mailer.from,
 														cc: config.mailer.notifications,
@@ -221,8 +221,8 @@ exports.sendTalentEmails = function(req, res){
 // call list methods
 var gatherTalentsSearch = function(req, res, filter){
 
-	var callTalents = [], talentId;
-	var searchCriteria = {'talent': {
+	let callTalents = [], talentId;
+	let searchCriteria = {'talent': {
 									$elemMatch: {
 										'status': filter
 									}
@@ -271,7 +271,7 @@ var gatherTalentsSearch = function(req, res, filter){
 										callTalents[talentId].project.note = '';
 										if(talentInfo !== null){
 
-											var talents = project.talent,
+											let talents = project.talent,
 													limit = project.talent.length,
 													i = 0;
 
@@ -349,15 +349,14 @@ exports.gatherEmailedTalent = function(req, res){
 exports.mainClientsCheck = function(req, res){
 
 	// method vars
-	var emailCnt = 0;
-
-	var currentTime = new Date();
+	let emailCnt = 0,
+		currentTime = new Date();
 	//currentTime.setDate(currentTime.getHours() - 1);
-	var inHalfHour = new Date();
+	let inHalfHour = new Date();
 	// modified 12/17/2015 for two hour intervals
 	inHalfHour.setHours(inHalfHour.getHours() + 0.6);
 
-	var searchCriteria = {
+	let searchCriteria = {
 							'estimatedCompletionDate':
                                 {
                                     $gte: currentTime,
@@ -377,7 +376,7 @@ exports.mainClientsCheck = function(req, res){
 			async.waterfall([
 				// gather owner data
 				function(done) {
-					var ownerId;
+					let ownerId;
 					if(!project.owner){
 						ownerId = project.user;
 					} else{
@@ -391,11 +390,11 @@ exports.mainClientsCheck = function(req, res){
 				function(owner, done){
 
 					// generate email signature
-					var newDate = new Date(project.estimatedCompletionDate);
+					let newDate = new Date(project.estimatedCompletionDate);
 					newDate = newDate.setHours(newDate.getHours() - 1);
 					newDate = dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT');
 
-					var emailSig = '';
+					let emailSig = '';
 					if(owner.emailSignature){
 						emailSig = owner.emailSignature;
 					} else {
@@ -416,17 +415,15 @@ exports.mainClientsCheck = function(req, res){
 				},
 				// send out project email
 				function(owner, summaryEmailHTML, done) {
-					var log;
-					// send email
-					var emailSubject = project.title + ' is due in 30 minutes and still needs a client added';
-
-					var mailOptions = {
-						to: owner.email,
-						cc: [config.mailer.notifications],
-						from: owner.email || config.mailer.from,
-						subject: emailSubject,
-						html: summaryEmailHTML
-					};
+					let log,
+						emailSubject = project.title + ' is due in 30 minutes and still needs a client added',
+						mailOptions = {
+							to: owner.email,
+							cc: [config.mailer.notifications],
+							from: owner.email || config.mailer.from,
+							subject: emailSubject,
+							html: summaryEmailHTML
+						};
 
 					sgMail
 					.send(mailOptions)
@@ -484,15 +481,14 @@ exports.mainClientsCheck = function(req, res){
 exports.sendPreCloseSummary = function(req, res){
 
 	// method vars
-	var emailCnt = 0;
-
-	var currentTime = new Date();
+	let emailCnt = 0,
+		currentTime = new Date();
 	//currentTime.setDate(currentTime.getHours() - 1);
-	var inOneHour = new Date();
+	let inOneHour = new Date();
 	// modified 12/17/2015 for two hour intervals
 	inOneHour.setHours(inOneHour.getHours() + 2);
 
-	var searchCriteria = {
+	let searchCriteria = {
 							'estimatedCompletionDate':
 													{
 														$gte: currentTime,
@@ -511,7 +507,7 @@ exports.sendPreCloseSummary = function(req, res){
 			async.waterfall([
 				// gather owner data
 				function(done) {
-					var ownerId;
+					let ownerId;
 					if(!project.owner){
 						ownerId = project.user;
 					} else{
@@ -526,7 +522,7 @@ exports.sendPreCloseSummary = function(req, res){
 				function(owner, done){
 
 					// walk through all current talents assigned to project then query talent data
-					var talentIds = [];
+					let talentIds = [];
 					for(var i = 0; i < project.talent.length; ++i){
 						talentIds[i] = project.talent[i].talentId;
 					}
@@ -538,9 +534,9 @@ exports.sendPreCloseSummary = function(req, res){
 				},
 				// filter selected talents
 				function(talents, owner, done){
-					var shortTblHeader = '<table><tr><th>First Name</th><th>Last Name</th></tr>';
-					var longTblHeader = '<table><tr><th>Name</th><th>Parent Name</th><th>Phone #</th><th>Alt Phone #</th><th>Location</th><th>Email</th></tr>';
-					var talentPosted = '<p>Talent Posted:</p>' + shortTblHeader,
+					let shortTblHeader = '<table><tr><th>First Name</th><th>Last Name</th></tr>',
+						longTblHeader = '<table><tr><th>Name</th><th>Parent Name</th><th>Phone #</th><th>Alt Phone #</th><th>Location</th><th>Email</th></tr>',
+						talentPosted = '<p>Talent Posted:</p>' + shortTblHeader,
 						talentNotCalled = '<p>Talent Not Called:</p>' + longTblHeader,
 						talentNotPosted = '<p>Talent Not Posted:</p>' + shortTblHeader,
 						talentOut = '<p>Talent Out:</p>' + shortTblHeader;
@@ -617,11 +613,11 @@ exports.sendPreCloseSummary = function(req, res){
 				function(talentPosted, talentNotCalled, talentNotPosted, talentOut, owner, done){
 
 					// generate email signature
-					var newDate = new Date(project.estimatedCompletionDate);
+					let newDate = new Date(project.estimatedCompletionDate);
 					newDate = newDate.setHours(newDate.getHours() - 1);
 					newDate = dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT');
 
-					var emailSig = '';
+					let emailSig = '';
 					if(owner.emailSignature){
 						emailSig = owner.emailSignature;
 					} else {
@@ -646,22 +642,21 @@ exports.sendPreCloseSummary = function(req, res){
 				},
 				// send out talent project creation email
 				function(owner, summaryEmailHTML, done) {
-					var log;
+					let log;
 					// send email
 					// generate email signature
-					var newDate = new Date(project.estimatedCompletionDate);
+					let newDate = new Date(project.estimatedCompletionDate);
 					newDate = newDate.setHours(newDate.getHours());
 					newDate = dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT');
 
-					var emailSubject = project.title + ' - Pre-Close Summary (Due in 2 hrs)' + ' - Due ' + newDate + ' EST';
-
-					var mailOptions = {
-						to: owner.email,
-						cc: [config.mailer.notifications],
-						from: owner.email || config.mailer.from,
-						subject: emailSubject,
-						html: summaryEmailHTML
-					};
+					let emailSubject = project.title + ' - Pre-Close Summary (Due in 2 hrs)' + ' - Due ' + newDate + ' EST',
+						mailOptions = {
+							to: owner.email,
+							cc: [config.mailer.notifications],
+							from: owner.email || config.mailer.from,
+							subject: emailSubject,
+							html: summaryEmailHTML
+						};
 
 					sgMail
 					.send(mailOptions)
@@ -737,56 +732,56 @@ exports.sendPreCloseSummary = function(req, res){
 exports.uploadTalentCSV = function(req, res){
 
 	// import counts
-	var newTalents = 0;
-	var updatedTalents = 0;
-	var failedImports = [];
+	let newTalents = 0,
+		updatedTalents = 0,
+		failedImports = [];
 
 	// parse uploaded CSV
-	var file = req.files.file;
-	var tempPath = file.path;
+	let file = req.files.file,
+		tempPath = file.path;
 
-	var Converter = require('csvtojson').Converter;
-	var fileStream = fs.createReadStream(tempPath);
+	let Converter = require('csvtojson').Converter,
+		fileStream = fs.createReadStream(tempPath),
+		converter = new Converter({constructResult:true});
 
-	var converter = new Converter({constructResult:true});
 	//end_parsed will be emitted once parsing finished
 	converter.on('end_parsed', function (jsonObj) {
 
 	   async.eachSeries(jsonObj, function (talent, talentCallback) {
 
-	   		var unionStatus = (talent.US === '' ? '' : (talent.US === 'U' ? ['union'] : ['union','non-union']));
+	   		let unionStatus = (talent.US === '' ? '' : (talent.US === 'U' ? ['union'] : ['union','non-union']));
 
 	   		// cerate new talent
-	   		var talentData = {
-				name: talent['first name'],
-				lastName: talent['last name'],
-				email: talent.email,
-				email2: talent['email alt'],
-				phone: talent.phone,
-				phone2: talent['phone alt'],
-				type: talent.type,
-				gender: talent.gender,
-				ageRange: talent.ageRange,
-				unionStatus: unionStatus,
-				lastNameCode: talent.lastNameCode,
-				locationISDN: talent.locationISDN
-			};
-	   		var newTalent = new Talent(talentData);
+	   		let talentData = {
+					name: talent['first name'],
+					lastName: talent['last name'],
+					email: talent.email,
+					email2: talent['email alt'],
+					phone: talent.phone,
+					phone2: talent['phone alt'],
+					type: talent.type,
+					gender: talent.gender,
+					ageRange: talent.ageRange,
+					unionStatus: unionStatus,
+					lastNameCode: talent.lastNameCode,
+					locationISDN: talent.locationISDN
+				},
+				newTalent = new Talent(talentData);
 
 			talent.user = req.user;
 
 			// check for missing import data
-			var failed = 0;
-			var failedReason = {
-				name: 0,
-				lastName: 0,
-				type: 0,
-				gender: 0,
-				ageRange: 0,
-				unionStatus: 0,
-				lastNameCode: 0,
-				locationISDN: 0
-			};
+			let failed = 0,
+				failedReason = {
+					name: 0,
+					lastName: 0,
+					type: 0,
+					gender: 0,
+					ageRange: 0,
+					unionStatus: 0,
+					lastNameCode: 0,
+					locationISDN: 0
+				};
 			if(newTalent.name === ''){
 				++failed;
 				failedReason.name = 1;

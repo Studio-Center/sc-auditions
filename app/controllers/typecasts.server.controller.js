@@ -12,7 +12,7 @@ const mongoose = require('mongoose'),
  * Create a Typecast
  */
 exports.create = function(req, res) {
-	var typecast = new Typecast(req.body);
+	let typecast = new Typecast(req.body);
 	typecast.user = req.user;
 
 	const allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern','talent director'];
@@ -41,7 +41,7 @@ exports.read = function(req, res) {
  * Update a Typecast
  */
 exports.update = function(req, res) {
-	var typecast = req.typecast ;
+	let typecast = req.typecast ;
 
 	typecast = Object.assign(typecast , req.body);
 
@@ -58,7 +58,7 @@ exports.update = function(req, res) {
  * Delete an Typecast
  */
 exports.delete = function(req, res) {
-	var typecast = req.typecast ;
+	let typecast = req.typecast ;
 
 	typecast.deleteOne().then(function (typecast) {
 		res.jsonp(typecast);

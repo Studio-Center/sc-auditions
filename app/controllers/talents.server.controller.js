@@ -25,7 +25,7 @@ exports.create = function(req, res) {
 		delete req.body._id;
 	}
 
-	var talent = new Talent(req.body);
+	let talent = new Talent(req.body);
 	talent.user = req.user;
 
 	const allowedRoles = ['admin', 'production coordinator', 'producer/auditions director', 'auditions director', 'audio intern', 'talent director'];
@@ -34,7 +34,7 @@ exports.create = function(req, res) {
 		//console.log(talent);
 		talent.save().then(function () {
 			// write change to log
-			var log = {
+			let log = {
 				type: 'talent',
 				sharedKey: String(talent._id),
 				description: talent.name + ' ' + talent.lastName + ' created',
@@ -46,9 +46,9 @@ exports.create = function(req, res) {
 			// send out new talent email
 			async.waterfall([
 				function(done) {
-					var i;
+					let i;
 					//generate talent report
-					var talentData = '<p><strong>First Name</strong> ' + talent.name + '</p>';
+					let talentData = '<p><strong>First Name</strong> ' + talent.name + '</p>';
 					talentData += '<p><strong>Last Name</strong> ' + talent.lastName + '</p>';
 					if(talent.parentName){
 						talentData += '<p><strong>Parent Name</strong> ' + talent.parentName + '</p>';
@@ -119,7 +119,7 @@ exports.create = function(req, res) {
 				function(talentData, done) {
 
 					// generate email signature
-					var emailSig = '';
+					let emailSig = '';
 					if(req.user.emailSignature){
 						emailSig = req.user.emailSignature;
 					} else {
@@ -136,11 +136,10 @@ exports.create = function(req, res) {
 				// send Dave an email
 				function(emailHTML, talentData, emailSig, done) {
 
-					var emailSubject = 'NEW TALENT ADDITION TO VO ROSTER:  ' + talent.name + ' ' + talent.lastName;
+					let emailSubject = 'NEW TALENT ADDITION TO VO ROSTER:  ' + talent.name + ' ' + talent.lastName;
 
 					// send email
-
-					var mailOptions = {
+					let mailOptions = {
 										to: 'Dave@studiocenter.com',
 										from: req.user.email || config.mailer.from,
 										cc: config.mailer.notifications,
@@ -169,10 +168,10 @@ exports.create = function(req, res) {
 				// send Ken an email
 				function(emailHTML, talentData, emailSig, done) {
 
-					var emailSubject = 'NEW TALENT ADDITION TO VO ROSTER:  ' + talent.name + ' ' + talent.lastName;
+					let emailSubject = 'NEW TALENT ADDITION TO VO ROSTER:  ' + talent.name + ' ' + talent.lastName;
 
 					// send email
-					var mailOptions = {
+					let mailOptions = {
 										to: ['Ken@studiocenter.com'],
 										from: req.user.email || config.mailer.from,
 										cc: config.mailer.notifications,
@@ -201,10 +200,10 @@ exports.create = function(req, res) {
 				// send Kevin an email
 				function(emailHTML, talentData, emailSig, done) {
 
-					var emailSubject = 'NEW TALENT ADDITION TO VO ROSTER:  ' + talent.name + ' ' + talent.lastName;
+					let emailSubject = 'NEW TALENT ADDITION TO VO ROSTER:  ' + talent.name + ' ' + talent.lastName;
 
 					// send email
-					var mailOptions = {
+					let mailOptions = {
 										to: config.mailer.notifications,
 										from: req.user.email || config.mailer.from,
 										subject: emailSubject,
@@ -245,14 +244,14 @@ exports.read = function(req, res) {
  * Update a Talent
  */
 exports.update = function(req, res) {
-	var talent = req.talent ;
+	let talent = req.talent ;
 
 	talent = Object.assign(talent , req.body);
 
 	talent.save().then(function () {
 
 		// write change to log
-		var log = {
+		let log = {
 			type: 'talent',
 			sharedKey: String(talent._id),
 			description: talent.name + ' ' + talent.lastName + ' updated ',
@@ -274,7 +273,7 @@ exports.update = function(req, res) {
  * Delete an Talent
  */
 exports.delete = function(req, res) {
-	var talent = req.talent;
+	let talent = req.talent;
 
 	// send delete talent emails
 	async.waterfall([
@@ -282,7 +281,7 @@ exports.delete = function(req, res) {
 		function(done) {
 
 			// generate email signature
-			var emailSig = '';
+			let emailSig = '';
 			if(req.user.emailSignature){
 				emailSig = req.user.emailSignature;
 			} else {
@@ -299,10 +298,10 @@ exports.delete = function(req, res) {
 		// send Dave an email
 		function(emailHTML, emailSig, done) {
 
-			var emailSubject = 'TALENT TERMINATED FROM VO ROSTER: ' + talent.name + ' ' + talent.lastName;
+			let emailSubject = 'TALENT TERMINATED FROM VO ROSTER: ' + talent.name + ' ' + talent.lastName;
 
 			// send email
-			var mailOptions = {
+			let mailOptions = {
 								to: 'Dave@studiocenter.com',
 								from: req.user.email || config.mailer.from,
 								cc: config.mailer.notifications,
@@ -331,10 +330,10 @@ exports.delete = function(req, res) {
 		// send Ken an email
 		function(emailHTML, done) {
 
-			var emailSubject = 'TALENT TERMINATED FROM VO ROSTER: ' + talent.name + ' ' + talent.lastName;
+			let emailSubject = 'TALENT TERMINATED FROM VO ROSTER: ' + talent.name + ' ' + talent.lastName;
 
 			// send email
-			var mailOptions = {
+			let mailOptions = {
 								to: 'Ken@studiocenter.com',
 								from: req.user.email || config.mailer.from,
 								cc: config.mailer.notifications,
@@ -354,7 +353,7 @@ exports.delete = function(req, res) {
 		function(done) {
 
 			// write change to log
-			var log = {
+			let log = {
 				type: 'talent',
 				sharedKey: String(talent._id),
 				description: talent.name + ' ' + talent.lastName + ' terminated ',
@@ -380,7 +379,7 @@ exports.delete = function(req, res) {
 var getTalentsFilters = function(req){
 
 	// gen filter object
-	var filterObj = {},
+	let filterObj = {},
         orQry = [];
 
 	// filter by project title
@@ -448,7 +447,7 @@ var getTalentsFilters = function(req){
 exports.getTalentsCnt = function(req, res){
 
 	// set filter vars
-	var filterObj = getTalentsFilters(req);
+	let filterObj = getTalentsFilters(req);
 	Talent.find(filterObj).count({}).then(function (count) {
 		res.jsonp(count);
 	}).catch(function (err) {
@@ -462,9 +461,9 @@ exports.getTalentsCnt = function(req, res){
 exports.findLimitWithFilter = function(req, res) {
 
 	// set filter vars
-	var filterObj = getTalentsFilters(req);
+	let filterObj = getTalentsFilters(req);
 	// set and store limits
-	var startVal, limitVal;
+	let startVal, limitVal;
 	if(req.body.startVal){
 		startVal = req.body.startVal;
 	} else {

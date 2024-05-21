@@ -24,15 +24,16 @@ sgMail.setApiKey(config.mailer.options.auth.api_key);
 
 exports.emailMissingAuds = function(req, res){
 
-	var callTalents = {}, talentId, missingCnt = 0;
+	let callTalents = {}, talentId, missingCnt = 0,
+		yesterday = new Date();
 
-	var yesterday = new Date();
 	yesterday.setHours(0,0,0,0);
+
 	//yesterday.setDate(yesterday.getDate() - 1);
-	var tomorrow = new Date(yesterday);
+	let tomorrow = new Date(yesterday);
 	tomorrow.setDate(tomorrow.getDate() + 1);
 
-	var searchCriteria = {'estimatedCompletionDate': {$gte: yesterday, $lt: tomorrow}};
+	let searchCriteria = {'estimatedCompletionDate': {$gte: yesterday, $lt: tomorrow}};
 
 	Project.find(searchCriteria).populate('user', 'displayName').sort('-estimatedCompletionDate').then(function (projects) {
 
@@ -125,12 +126,12 @@ exports.emailMissingAuds = function(req, res){
 				function(missingAudsEmailHTML, done) {
 
 					// send email
-					var newDate = new Date();
+					let newDate = new Date();
 
 					// assign email subject line
-					var emailSubject = ' Missing Auditions Report - ' + dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
+					let emailSubject = ' Missing Auditions Report - ' + dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
 
-					var mailOptions = {
+					let mailOptions = {
 						to: config.mailer.notifications,
 						from: config.mailer.from,
 						subject: emailSubject,
@@ -142,7 +143,7 @@ exports.emailMissingAuds = function(req, res){
 					.then(() => {
 
 						// log event
-						var log = {
+						let log = {
 							type: 'system',
 							sharedKey: 'N/A',
 							description: 'missing auditions email sent'
@@ -175,14 +176,13 @@ exports.emailMissingAuds = function(req, res){
 // methods for missing auditions report
 exports.findMissingAuds = function(req, res){
 
-	var callTalents = {}, talentId, missingCnt = 0;
-
-	var yesterday = new Date(req.body.dateFilter);
+	let callTalents = {}, talentId, missingCnt = 0,
+		yesterday = new Date(req.body.dateFilter);
 	//yesterday.setDate(yesterday.getDate() - 1);
-	var tomorrow = new Date(req.body.dateFilter);
+	let tomorrow = new Date(req.body.dateFilter);
 	tomorrow.setDate(tomorrow.getDate() + 1);
 
-	var searchCriteria = {'estimatedCompletionDate': {$gte: yesterday, $lt: tomorrow}};
+	let searchCriteria = {'estimatedCompletionDate': {$gte: yesterday, $lt: tomorrow}};
 
 	Project.find(searchCriteria).populate('user', 'displayName').sort('-estimatedCompletionDate').then(function (projects) {
 
@@ -275,9 +275,9 @@ exports.findMissingAuds = function(req, res){
 
 exports.convertToCSV = function(req, res){
 
-	var projects = req.body.jsonDoc.projects;
-	var clients = [], talents = [];
-	var fields = [
+	let projects = req.body.jsonDoc.projects,
+		clients = [], talents = [],
+		fields = [
 					'name',
 					'client',
 					'dueDate',
@@ -365,43 +365,43 @@ exports.convertToCSV = function(req, res){
 exports.findAuditionsBooked = function(req, res){
 
 	// projects
-	var projectsStats = [];
-	var projectData = {
-		id: '',
-		name: '',
-		client: [],
-		dueDate: '',
-		projectCoordinator: '',
-		status: '',
-		talentChosen: []
-	};
+	let projectsStats = [],
+		projectData = {
+			id: '',
+			name: '',
+			client: [],
+			dueDate: '',
+			projectCoordinator: '',
+			status: '',
+			talentChosen: []
+		};
 	// stats
-	var pCStats = [];
-	var pCStatsData = {
-		id: '',
-		name: '',
-		totalInProgress: 0,
-		totalOnHold: 0,
-		totalBooked: 0,
-		totalCanceled: 0,
-		totalPending: 0,
-		totalReAuditioned: 0,
-		totalDead: 0,
-		totalClosed: 0,
-		totalAuditions: 0,
-		totalBookedPercent: 0
-	};
+	let pCStats = [],
+		pCStatsData = {
+			id: '',
+			name: '',
+			totalInProgress: 0,
+			totalOnHold: 0,
+			totalBooked: 0,
+			totalCanceled: 0,
+			totalPending: 0,
+			totalReAuditioned: 0,
+			totalDead: 0,
+			totalClosed: 0,
+			totalAuditions: 0,
+			totalBookedPercent: 0
+		};
 
 	// generate start dates
-	var yesterday = new Date(req.body.dateFilterStart);
+	let yesterday = new Date(req.body.dateFilterStart);
 	yesterday.setDate(yesterday.getDate());
 	yesterday.setHours(0, 0, 0);
-	var tomorrow = new Date(req.body.dateFilterEnd);
+	let tomorrow = new Date(req.body.dateFilterEnd);
 	tomorrow.setDate(tomorrow.getDate());
 	tomorrow.setHours(23, 59, 59);
 
 	// assign filter criteria
-	var searchCriteria = {'estimatedCompletionDate': {$gte: yesterday, $lt: tomorrow}};
+	let searchCriteria = {'estimatedCompletionDate': {$gte: yesterday, $lt: tomorrow}};
 
 	// walk found projects
 	Project.find(searchCriteria).populate('user', 'displayName').sort('-estimatedCompletionDate').then(function (projects) {
@@ -410,7 +410,7 @@ exports.findAuditionsBooked = function(req, res){
 
 			// assign owner data
 			// gather project owner data
-			var ownerId;
+			let ownerId;
 			if(!project.owner){
 				ownerId = project.user;
 			} else{
@@ -419,7 +419,7 @@ exports.findAuditionsBooked = function(req, res){
 
 			User.findOne({'_id':ownerId}).sort('-created').then(function (user) {
 				if(user){
-					var talentBooked = [];
+					let talentBooked = [];
 
 					async.eachSeries(project.talent, function (talent, talentCallback) {
 
@@ -546,7 +546,7 @@ exports.hasAuthorization = function(req, res, next) {
 // gather system stats
 exports.systemStats = function(req, res, next){
 
-	var stats = {
+	let stats = {
 		arch: os.arch(),
 		cpus: os.cpus(),
 		totalmem: os.totalmem(),
@@ -576,17 +576,17 @@ exports.systemStats = function(req, res, next){
 exports.findAudsPerProducer = function(req, res, next){
     
 // generate start dates
-var yesterday = new Date(req.body.dateFilterStart);
+let yesterday = new Date(req.body.dateFilterStart);
 	yesterday.setDate(yesterday.getDate());
     yesterday.setHours(0, 0, 0);
-var tomorrow = new Date(req.body.dateFilterEnd);
+let tomorrow = new Date(req.body.dateFilterEnd);
 	tomorrow.setDate(tomorrow.getDate());
     tomorrow.setHours(23, 59, 59);
     
-    var audsResult = {};
+    let audsResult = {};
 
 	// assign filter criteria
-	var searchCriteria = {'created': {$gte: yesterday, $lt: tomorrow}};
+	let searchCriteria = {'created': {$gte: yesterday, $lt: tomorrow}};
 
     // walk found auditions
 	Audition.find(searchCriteria).sort('-created').then(function (auditions) {

@@ -46,7 +46,7 @@ bower install
 grunt
 ```
 
-Alternately you could run the app with forever.js (first insstall forever)
+Alternately you could run the app with forever.js (first install forever)
 ```
 npm install -g forever
 ```
