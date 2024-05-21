@@ -220,7 +220,11 @@ exports.create = function(req, res) {
 
 				},
 				], function(err) {
-				if (err) return console.log(err);
+				if (err) {
+					return res.status(400).send({
+						message: errorHandler.getErrorMessage(err)
+					});
+				}
 			});
 				return res.jsonp(talent);
 		}).catch(function (err) {
@@ -369,7 +373,11 @@ exports.delete = function(req, res) {
 			});
 		}
 	], function(err) {
-		if (err) return console.log(err);
+		if (err) {
+			return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
+		}
 	});
 
 

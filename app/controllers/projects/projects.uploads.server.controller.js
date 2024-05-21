@@ -50,7 +50,9 @@ exports.uploadFile = function(req, res, next){
     mv(tempPath, newPath, function(err) {
 
 		if (err){
-            return res.status(500).end();
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
         }else{
 
         	// write change to log
@@ -116,7 +118,9 @@ exports.uploadScript = function(req, res, next){
 			mv(tempPath, newPath, function(err) {
 
 				if (err){
-					return res.status(500).end();
+					return res.status(400).send({
+                        message: errorHandler.getErrorMessage(err)
+                    });
 				}else{
 
 					req.files.file.name = sanitize(req.files.file.name);
@@ -195,7 +199,9 @@ exports.uploadReferenceFile = function(req, res, next){
 	    mv(tempPath, newPath, function(err) {
 
 			if (err){
-	            return res.status(500).end();
+	            return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
 	        }else{
 
 					req.files.file.name = sanitize(req.files.file.name);
@@ -273,7 +279,9 @@ exports.uploadTempReferenceFile = function(req, res, next){
 
     mv(tempPath, newPath, function(err) {
         if (err){
-            return res.status(500).end();
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
         }else{
             return res.jsonp(referenceFiles);
         }
@@ -341,7 +349,9 @@ exports.uploadTempScript = function(req, res, next){
 
 		mv(tempPath, newPath, function(err) {
 		  if (err){
-			  return res.status(500).end();
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
 		  }else{
 			  return res.jsonp(scripts);
 		  }
@@ -533,13 +543,17 @@ exports.uploadAudition = function(req, res, next){
             }
             ], function(err) {
             if (err) {
-                //return res.status(500).json(err);
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
             }
         });
 
     }, function done(err) {
         if (err) {
-            return res.status(500).json(err);
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
         } else {
             return res.jsonp({'status':'success'});
 
@@ -585,7 +599,9 @@ exports.uploadTempAudition = function(req, res, next){
 
     mv(tempPath, newPath, function(err) {
         if (err){
-            res.status(500).end();
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
         }else{
 			req.files.file.name = sanitize(req.files.file.name);
 

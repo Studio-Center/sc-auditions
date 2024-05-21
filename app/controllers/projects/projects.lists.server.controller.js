@@ -44,7 +44,9 @@ exports.loadProject = function(req, res){
 				});
 		});
 	}).catch(function (err) {
-		return res.status(400).send();
+		return res.status(400).send({
+			message: errorHandler.getErrorMessage(err)
+		});
 	});
 
 };
@@ -56,7 +58,9 @@ exports.getproject = function(req, res){
 		project.populate('user', 'displayName');
 		res.status(200).jsonp(project);
 	}).catch(function (err) {
-		return res.status(400).json(err);
+		return res.status(400).send({
+			message: errorHandler.getErrorMessage(err)
+		});
 	});
 
 };
@@ -70,7 +74,9 @@ exports.loadAuditions = function(req, res){
 	Audition.find({'project': Object(projId)}).sort('-created').then(function (auditions) {
 		return res.jsonp(auditions);
 	}).catch(function (err) {
-		return res.status(400).send(err);
+		return res.status(400).send({
+			message: errorHandler.getErrorMessage(err)
+		});
 	});
 
 };

@@ -455,7 +455,9 @@ exports.mainClientsCheck = function(req, res){
 				}
 				], function(err) {
 				if (err) {
-					return res.status(400).json(err);
+					return res.status(400).send({
+						message: errorHandler.getErrorMessage(err)
+					});
 				} else {
 					callback();
 				}
@@ -706,7 +708,9 @@ exports.sendPreCloseSummary = function(req, res){
 				}
 				], function(err) {
 				if (err) {
-					return res.status(400).json(err);
+					return res.status(400).send({
+						message: errorHandler.getErrorMessage(err)
+					});
 				} else {
 					callback();
 				}

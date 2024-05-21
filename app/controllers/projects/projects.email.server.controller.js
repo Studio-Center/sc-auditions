@@ -70,7 +70,9 @@ exports.sendEmail = function(req, res){
             },
             ], function(err) {
                 if (err) {
-                    return res.status(400).json(err);
+                    return res.status(400).send({
+                        message: errorHandler.getErrorMessage(err)
+                    });
                 } else {
                     res.status(200).jsonp();
                 }
@@ -418,7 +420,9 @@ exports.sendTalentDirectorsEmail = function(req, res){
         }
         ], function(err) {
             if (err) {
-                return res.status(400).json(err);
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
             } else {
                 return res.status(200).jsonp();
             }
@@ -449,7 +453,9 @@ exports.sendTalentEmailById = function(req, res){
         }
         ], function(err) {
         if (err) {
-            return res.status(400).json(err);
+            return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
         } else {
             return res.status(200).send();
         }

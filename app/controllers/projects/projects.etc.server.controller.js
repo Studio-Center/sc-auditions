@@ -190,7 +190,9 @@ exports.bookAuditions = function(req, res, next){
 		}
 		], function(err) {
 		if (err) {
-			return res.status(400).json(err);
+			return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
 		} else {
 			return res.status(200).send();
 		}
@@ -238,7 +240,9 @@ exports.test = function(req, res, next){
 //			});
             //return res.jsonp(talent);
 	}).catch(function (err) {
-		return res.status(400).json(err);
+		return res.status(400).send({
+			message: errorHandler.getErrorMessage(err)
+		});
     });
 
 }

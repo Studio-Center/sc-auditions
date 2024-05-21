@@ -43,7 +43,9 @@ exports.update = function(req, res) {
 
 			req.login(user, function(err) {
 				if (err) {
-					res.status(400).send(err);
+					return res.status(400).send({
+						message: errorHandler.getErrorMessage(err)
+					});
 				} else {
 					res.jsonp(user);
 				}
@@ -129,7 +131,9 @@ exports.updateAdmin = function(req, res) {
 				User.findById(adminUserId).then(function (user) {
 					req.login(user, function(err) {
 						if (err) {
-							res.status(400).send(err);
+							return res.status(400).send({
+								message: errorHandler.getErrorMessage(err)
+							});
 						} else {
 							res.jsonp(user);
 						}

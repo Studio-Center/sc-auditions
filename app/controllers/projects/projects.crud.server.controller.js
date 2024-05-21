@@ -98,7 +98,9 @@ exports.updateNoRefresh = function(req, res){
 							log = new Log(log);
 							log.save();
 
-							return res.status(400).json(err);
+							return res.status(400).send({
+								message: errorHandler.getErrorMessage(err)
+							});
 						});
 					}
                 });
@@ -246,7 +248,9 @@ exports.create = function(req, res) {
 
 							fs.copyFile(tempPath, newPath, function(err){
 								if (err) {
-									console.log("Error Found:", err);
+									return res.status(400).send({
+										message: errorHandler.getErrorMessage(err)
+									});
 								}
 							});
 
@@ -491,7 +495,11 @@ exports.create = function(req, res) {
 				
 				},
 				], function(err) {
-				if (err) return console.log(err);
+				if (err) {
+					return res.status(400).send({
+						message: errorHandler.getErrorMessage(err)
+					});
+				}
 			});
 
 		}).catch(function (err) {
@@ -558,7 +566,9 @@ exports.update = function(req, res) {
 					if (fs.existsSync(file)) {
 						fs.unlinkSync(file, (err) => {
 							if (err) {
-								return res.status(400).send(err);
+								return res.status(400).send({
+									message: errorHandler.getErrorMessage(err)
+								});
 							}
 						});
 					}
@@ -631,7 +641,9 @@ exports.delete = function(req, res) {
 			// emit an event for all connected clients
 			return res.jsonp(project);
 		}).catch(function (err) {
-			return res.status(400).send(err);
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
 		});
 	}).catch(function (err) {
 		return res.status(400).send({

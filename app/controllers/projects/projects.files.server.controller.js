@@ -45,7 +45,9 @@ exports.deleteAudition = function(req, res){
 				});
 			});
 		}).catch(function (err) {
-			return res.status(400).send(err);
+			return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
 		});
 	}
 };
@@ -64,7 +66,9 @@ exports.deleteAllAuditions = function(req, res){
     Audition.remove({project: Object(prodId)}).then(function (audition) {
 		return res.status(200).send();
 	}).catch(function (err) {
-		return res.status(400).send(err);
+		return res.status(400).send({
+			message: errorHandler.getErrorMessage(err)
+		});
     });
 
 };
@@ -101,11 +105,15 @@ exports.saveAudition = function(req, res){
 		audition.save().then(function (upaud) {
 			return res.jsonp(audition);
 		}).catch(function (err) {
-			return res.status(400).send(err);
+			return res.status(400).send({
+                message: errorHandler.getErrorMessage(err)
+            });
 		});
 
 	}).catch(function (err) {
-		return res.status(400).send(err);
+		return res.status(400).send({
+			message: errorHandler.getErrorMessage(err)
+		});
 	});
 
 };
@@ -138,7 +146,9 @@ exports.deleteFileByName = function(req, res){
 	if (fs.existsSync(file)) {
 		fs.unlinkSync(file, (err) => {
 			if (err) {
-				return res.status(400).send(err);
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
 			}
 		});
 

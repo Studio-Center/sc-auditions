@@ -55,7 +55,9 @@ exports.signup = function(req, res) {
 			
 						req.login(user, function(err) {
 							if (err) {
-								res.status(400).send(err);
+								return res.status(400).send({
+									message: errorHandler.getErrorMessage(err)
+								});
 							} else {
 								user.passwordText = undefined;
 								res.jsonp(user);
@@ -94,7 +96,9 @@ exports.signin = function(req, res, next) {
 
 			req.login(user, function(err) {
 				if (err) {
-					res.status(400).send(err);
+					return res.status(400).send({
+						message: errorHandler.getErrorMessage(err)
+					});
 				} else {
 					user.passwordText = undefined;
 					res.jsonp(user);
@@ -116,7 +120,9 @@ exports.appsignin = function(req, res, next) {
 
 			req.login(user, function(err) {
 				if (err) {
-					res.status(400).send(err);
+					return res.status(400).send({
+						message: errorHandler.getErrorMessage(err)
+					});
 				} else {
 					user.passwordText = undefined;
 					user = user.toObject();
@@ -341,7 +347,9 @@ exports.removeOAuthProvider = function(req, res, next) {
 		user.save().then(function () {
 			req.login(user, function(err) {
 				if (err) {
-					res.status(400).send(err);
+					return res.status(400).send({
+						message: errorHandler.getErrorMessage(err)
+					});
 				} else {
 					res.jsonp(user);
 				}
