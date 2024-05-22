@@ -277,11 +277,11 @@ exports.list = function(req, res) {
 	// filter results as required for remaning uer roles
 	} else {
 
-		allowedRoles = ['user', 'talent', 'client', 'client-client'];
+		const remAllowedRoles = ['user', 'talent', 'client', 'client-client'];
 
 		for(const i in req.user.roles) {
-			for(const j in allowedRoles) {
-				performLoadList(req, res, allowedRoles, i, j);
+			for(const j in remAllowedRoles) {
+				performLoadList(req, res, remAllowedRoles, i, j);
 			}
 		}
 
