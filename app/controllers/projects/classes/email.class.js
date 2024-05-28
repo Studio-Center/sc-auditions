@@ -24,14 +24,14 @@ const emailFuncs = {
             function(done) {
                 User.findOne({'_id':client.userId}).sort('-created').then(function (clientInfo) {
                     done(null, clientInfo);
+                }).catch(function (err) {
+                    done(err, '');
                 });
             },
             function(clientInfo, done) {
                 let emailSig = '';
                 if(req.user.emailSignature){
                     emailSig = req.user.emailSignature;
-                } else {
-                    emailSig = '';
                 }
                 res.render('templates/projects/create-project-client-email', {
                     email: email,
@@ -50,9 +50,8 @@ const emailFuncs = {
                 let emailSubject = 'Your audition project:  ' + project.title + ' Due ' + dateFormat(project.estimatedCompletionDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
     
                 // send email
-                let fromEmail = req.user.email || config.mailer.from;
-
-                let mailOptions = {
+                let fromEmail = req.user.email || config.mailer.from,
+                    mailOptions = {
                                     to: client.email,
                                     from: fromEmail,
                                     cc: config.mailer.notifications,
@@ -78,7 +77,6 @@ const emailFuncs = {
                         done(error);
                     });
                 }catch (error) {
-                    console.error("Email could not be sent: ", error);
                     done(error);
                 }
                     
@@ -122,8 +120,6 @@ const emailFuncs = {
                 let emailSig = '';
                 if(owner.emailSignature){
                     emailSig = owner.emailSignature;
-                } else {
-                    emailSig = '';
                 }
     
                 // assign part text
@@ -214,14 +210,15 @@ const emailFuncs = {
                         done(error);
                     });
                 }catch (error) {
-                    console.error("Email could not be sent: ", error);
                     done(error);
                 }
                 
                 
             },
             ], function(err) {
-            //return res.status(400).json(err);
+                if(err){
+                    console.log(errorHandler.getErrorMessage(err));
+                }
         });
     
     },

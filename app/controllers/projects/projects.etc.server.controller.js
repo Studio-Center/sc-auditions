@@ -161,10 +161,6 @@ exports.bookAuditions = function(req, res, next){
 		function(ownerInfo, clientsEmails, selAuds, project, bookedEmailHTML, done) {
 			// send email
 			// generate email signature
-			let newDate = new Date(project.estimatedCompletionDate);
-			newDate = newDate.setHours(newDate.getHours() - 1);
-			newDate = dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT');
-
 			let emailSubject = 'Auditions Booked - ' + project.title;
 
 			// rem dups

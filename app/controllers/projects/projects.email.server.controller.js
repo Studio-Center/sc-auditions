@@ -65,7 +65,6 @@ exports.sendEmail = function(req, res){
                         done(error);
                     });
                 }catch (error) {
-                    console.error("Email could not be sent: ", error);
                     done(error);
                 }
             },
@@ -132,11 +131,6 @@ exports.sendTalentCanceledEmail = function(req, res){
                             },
                             function(owner, done) {
 
-                                let newDate = new Date(project.estimatedCompletionDate);
-                                newDate = newDate.setHours(newDate.getHours() - 1);
-                                newDate = dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT');
-                                let part = '';
-
                                 // generate email signature
                                 let emailSig = '';
                                 if(owner.emailSignature){
@@ -157,20 +151,15 @@ exports.sendTalentCanceledEmail = function(req, res){
                             // send out talent project creation email
                             function(talentEmailHTML, owner, done) {
                                 // send email
-                                let emailSubject = '',
-                                    newDate = new Date(project.estimatedCompletionDate);
-                                newDate = newDate.setHours(newDate.getHours() - 1);
-
                                 // assign email subject line
-                                emailSubject = 'The Audition Project ' + project.title + ' Has Been Cancelled';
-
-                                let mailOptions = {
-                                    to: talentInfo.email,
-                                    from: owner.email || config.mailer.from,
-                                    cc: config.mailer.notifications,
-                                    subject: emailSubject,
-                                    html: talentEmailHTML
-                                };
+                                let emailSubject = 'The Audition Project ' + project.title + ' Has Been Cancelled',
+                                    mailOptions = {
+                                        to: talentInfo.email,
+                                        from: owner.email || config.mailer.from,
+                                        cc: config.mailer.notifications,
+                                        subject: emailSubject,
+                                        html: talentEmailHTML
+                                    };
 
                                 try{
                                     sgMail
@@ -192,7 +181,6 @@ exports.sendTalentCanceledEmail = function(req, res){
                                         done(error);
                                     });
                                 }catch (error) {
-                                    console.error("Email could not be sent: ", error);
                                     done(error);
                                 }
 
@@ -232,8 +220,7 @@ exports.sendTalentScriptUpdateEmail = function(req, res){
     // pause execution for project save
     setTimeout(function() {
 
-    let i,
-        projectId = req.body.projectId,
+    let projectId = req.body.projectId,
         talents = req.body.talents,
         chgMade = req.body.chgMade;
 
@@ -241,15 +228,15 @@ exports.sendTalentScriptUpdateEmail = function(req, res){
     Project.findOne({'_id':projectId}).sort('-created').then(function (project) {
 
         let email =  {
-                            projectId: '',
-                            to: [],
-                            bcc: [],
-                            subject: '',
-                            header: '',
-                            footer: '',
-                            scripts: '',
-                            referenceFiles: ''
-                        };
+                        projectId: '',
+                        to: [],
+                        bcc: [],
+                        subject: '',
+                        header: '',
+                        footer: '',
+                        scripts: '',
+                        referenceFiles: ''
+                    };
 
         // add scripts and assets to email body
         email.scripts = '\n' + '<strong>Scripts:</strong>' + '<br>';
@@ -356,8 +343,7 @@ exports.sendTalentDirectorsEmail = function(req, res){
         },
         function(owner, talentdirectors, done) {
 
-            let i = 0,
-                to = [];
+            let to = [];
 
             for(const i in talentdirectors) {
                 to.push(talentdirectors[i].email);
@@ -373,12 +359,8 @@ exports.sendTalentDirectorsEmail = function(req, res){
         // send out talent project creation email
         function(owner, to, talentEmailHTML, done) {
             // send email
-            let emailSubject = '',
-                newDate = new Date(project.estimatedCompletionDate);
-            newDate = newDate.setHours(newDate.getHours() - 1);
-
             // assign email subject line
-            emailSubject = project.title + ' - Additional Talent Added';
+            let emailSubject = project.title + ' - Additional Talent Added';
 
             if(to.length > 0){
 
@@ -414,7 +396,6 @@ exports.sendTalentDirectorsEmail = function(req, res){
                         done(error);
                     });
                 }catch (error) {
-                    console.error("Email could not be sent: ", error);
                     done(error);
                 }
 
@@ -472,7 +453,7 @@ exports.sendTalentEmailById = function(req, res){
 exports.sendClientEmail = function(req, res){
 
 	// determine email type
-	let template,
+	let template = '',
         type = req.body.type,
         emlCnt = req.body.count;
 
@@ -523,8 +504,6 @@ exports.sendClientEmail = function(req, res){
 						emailSig = owner.emailSignature;
 					} else if(req.user.emailSignature){
 						emailSig = req.user.emailSignature;
-					} else {
-						emailSig = '';
 					}
 
 					res.render(template, {
@@ -542,7 +521,7 @@ exports.sendClientEmail = function(req, res){
 				},
 				function(clientEmailHTML, owner, done){
 
-					let emailSubject;
+					let emailSubject = '';
 
 					switch(type){
 						case 'opening':
@@ -586,7 +565,6 @@ exports.sendClientEmail = function(req, res){
                             done(error);
                         });
                     }catch (error) {
-                        console.error("Email could not be sent: ", error);
                         done(error);
                     }
 

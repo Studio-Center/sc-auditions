@@ -128,7 +128,9 @@ exports.fileExists = function(req, res){
 	if (fs.existsSync(file)) {
 		return res.status(200).send();
 	} else {
-		return res.status(400).send();
+		return res.status(400).send({
+			message: errorHandler.getErrorMessage('file not found')
+		});
 	}
 
 };

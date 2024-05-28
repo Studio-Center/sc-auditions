@@ -66,30 +66,16 @@ exports.emailMissingAuds = function(req, res){
 
 								if(typeof talent !== 'undefined'){
 
-									async.waterfall([
-										// gather info for selected talent
-										function(done) {
-											Talent.findOne({'_id':talent.talentId}).sort('-created').then(function (talentInfo) {
-												done(null, talentInfo);
-											});
-										},
-										function(talentInfo, done){
+									Talent.findOne({'_id':talent.talentId}).sort('-created').then(function (talentInfo) {
+										
+										if(talent.status !== 'Out' && talent.status !== 'Posted' && talent.status !== 'Not Posted (Bad Read)'){
+											callTalents[project._id].talents.push(talent);
+											talentId = callTalents[project._id].talents.length - 1;
+											callTalents[project._id].talents[talentId].data = talentInfo;
+											++callTalents[project._id].missingAudsCnt;
+											++missingCnt;
+										}
 
-											if(talent.status !== 'Out' && talent.status !== 'Posted' && talent.status !== 'Not Posted (Bad Read)'){
-												callTalents[project._id].talents.push(talent);
-												talentId = callTalents[project._id].talents.length - 1;
-												callTalents[project._id].talents[talentId].data = talentInfo;
-												++callTalents[project._id].missingAudsCnt;
-												++missingCnt;
-											}
-											done('');
-										}
-										], function(err) {
-										if (err) {
-											return res.status(400).json(err);
-										} else {
-											talentCallback();
-										}
 									});
 
 								}
@@ -212,30 +198,16 @@ exports.findMissingAuds = function(req, res){
 
 					if(typeof talent !== 'undefined'){
 
-						async.waterfall([
-							// gather info for selected talent
-							function(done) {
-								Talent.findOne({'_id':talent.talentId}).sort('-created').then(function (talentInfo) {
-									done(null, talentInfo);
-								});
-							},
-							function(talentInfo, done){
+						Talent.findOne({'_id':talent.talentId}).sort('-created').then(function (talentInfo) {
+							
+							if(talent.status !== 'Out' && talent.status !== 'Posted' && talent.status !== 'Not Posted (Bad Read)'){
+								callTalents[project._id].talents.push(talent);
+								talentId = callTalents[project._id].talents.length - 1;
+								callTalents[project._id].talents[talentId].data = talentInfo;
+								++callTalents[project._id].missingAudsCnt;
+								++missingCnt;
+							}
 
-								if(talent.status !== 'Out' && talent.status !== 'Posted' && talent.status !== 'Not Posted (Bad Read)'){
-									callTalents[project._id].talents.push(talent);
-									talentId = callTalents[project._id].talents.length - 1;
-									callTalents[project._id].talents[talentId].data = talentInfo;
-									++callTalents[project._id].missingAudsCnt;
-									++missingCnt;
-								}
-								done('');
-							}
-							], function(err) {
-							if (err) {
-								return res.status(400).json(err);
-							} else {
-								talentCallback();
-							}
 						});
 
 					}

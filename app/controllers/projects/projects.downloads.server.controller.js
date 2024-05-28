@@ -8,17 +8,16 @@ const mongoose = require('mongoose'),
 	fs = require('fs'),
 	async = require('async'),
 	archiver = require('archiver'),
-    errorHandler = require('../errors');
+    errorHandler = require('../errors'),
+    archive = archiver('zip');
 
 
 exports.downloadAllAuditionsClient = function(req, res, next){
 
     Audition.find({'project': Object(req.body.project._id),'published':{ "$in": ["true",true] }}).sort('-created').then(function (auditionsFiles) {
         
-        let i = 0,
-            fileLoc = '';
-        // get app dir
-        let appDir = global.appRoot,
+        let fileLoc = '',
+            appDir = global.appRoot,
             relativePath =  'res' + '/' + 'auditions' + '/' + req.body.project._id + '/',
             newPath = appDir + '/public/' + relativePath,
             savePath = appDir + '/public/' + 'res' + '/' + 'archives' + '/',
@@ -30,8 +29,7 @@ exports.downloadAllAuditionsClient = function(req, res, next){
             fs.mkdirSync(savePath);
         }
 
-        let output = fs.createWriteStream(newZip),
-            archive = archiver('zip');
+        let output = fs.createWriteStream(newZip);
 
         output.on('close', function() {
             res.jsonp({zip:zipName});
@@ -68,8 +66,7 @@ exports.downloadAllAuditions = function(req, res, next){
         fs.mkdirSync(savePath);
     }
 
-    let output = fs.createWriteStream(newZip),
-        archive = archiver('zip');
+    let output = fs.createWriteStream(newZip);
 
     output.on('close', function() {
         res.jsonp({zip:zipName});
@@ -80,10 +77,6 @@ exports.downloadAllAuditions = function(req, res, next){
     archive.pipe(output);
     archive.finalize();
 
-    //    res.setHeader('Content-Type', 'application/zip');
-    // res.setHeader('content-disposition', 'attachment; filename="auditions.zip"');
-    //    return archive.pipe(res);
-
 };
 
 exports.downloadBookedAuditions = function(req, res, next){
@@ -91,10 +84,8 @@ exports.downloadBookedAuditions = function(req, res, next){
     // method vars
     let projectId = req.body.projectId,
         projectTitle = req.body.projectTitle.replace('/','-'),
-        bookedAuds = req.body.bookedAuds;
-
-    // get app dir
-    let appDir = global.appRoot,
+        bookedAuds = req.body.bookedAuds,
+        appDir = global.appRoot,
         relativePath =  'res' + '/' + 'auditions' + '/' + projectId + '/',
         newPath = appDir + '/public/' + relativePath,
         savePath = appDir + '/public/' + 'res' + '/' + 'archives' + '/',
@@ -106,8 +97,7 @@ exports.downloadBookedAuditions = function(req, res, next){
         fs.mkdirSync(savePath);
     }
 
-    let output = fs.createWriteStream(newZip),
-        archive = archiver('zip');
+    let output = fs.createWriteStream(newZip);
 
     output.on('close', function() {
         res.jsonp({zip:zipName});
@@ -143,10 +133,8 @@ exports.downloadSelectedAuditions = function(req, res, next){
     // method vars
     let projectId = req.body.projectId,
         projectTitle = req.body.projectTitle.replace('/','-'),
-        selAuds = req.body.selectedAuds;
-
-    // get app dir
-    let appDir = global.appRoot,
+        selAuds = req.body.selectedAuds,
+        appDir = global.appRoot,
         relativePath =  'res' + '/' + 'auditions' + '/' + projectId + '/',
         newPath = appDir + '/public/' + relativePath,
         savePath = appDir + '/public/' + 'res' + '/' + 'archives' + '/',
@@ -158,8 +146,7 @@ exports.downloadSelectedAuditions = function(req, res, next){
         fs.mkdirSync(savePath);
     }
 
-    let output = fs.createWriteStream(newZip),
-        archive = archiver('zip');
+    let output = fs.createWriteStream(newZip);
 
     output.on('close', function() {
         res.jsonp({zip:zipName});

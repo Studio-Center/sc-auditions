@@ -9,7 +9,9 @@ const mongoose = require('mongoose'),
 const fileFuncs = {
     moveFile: function(tempPath, newPath){
         mv(tempPath, newPath, function(err) {
-            //console.log(err);
+            if (err){
+                console.log(err);
+            }
             // if (err){
             //     res.status(500).end();
             // }else{
@@ -60,7 +62,7 @@ const fileFuncs = {
             if (fs.existsSync(file)) {
                 fs.unlinkSync(file, (err) => {
                     if (err) {
-                        return res.status(400).send(err);
+                        console.log(errorHandler.getErrorMessage(err));
                     }
                 });
 
@@ -92,13 +94,13 @@ const fileFuncs = {
                         fileFuncs.removeFolder(file, cb);
                     } else {
                         if (fs.existsSync(file)) {
-                fs.unlink(file, function (err) {
-                    if (err) {
-                        return cb(err);
-                    }
-                    return cb();
-                });
-                }
+                            fs.unlink(file, function (err) {
+                                if (err) {
+                                    return cb(err);
+                                }
+                                return cb();
+                            });
+                        }
                     }
                 });
             });

@@ -38,11 +38,19 @@ exports.loadProject = function(req, res){
 					talentCallback();
 				});
 			}, function (err) {
-				project.save().then(function (upproject) {
-					return res.jsonp(upproject);
-				}).catch(function (err) {
-					return res.status(400).send(err);
-				});
+				if(err){
+					return res.status(400).send({
+						message: errorHandler.getErrorMessage(err)
+					});
+				} else {
+					project.save().then(function (upproject) {
+						return res.jsonp(upproject);
+					}).catch(function (err) {
+						return res.status(400).send({
+							message: errorHandler.getErrorMessage(err)
+						});
+					});
+				}
 		});
 	}).catch(function (err) {
 		return res.status(400).send({

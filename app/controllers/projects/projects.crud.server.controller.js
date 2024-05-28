@@ -126,7 +126,7 @@ exports.create = function(req, res) {
 	copiedReferenceFiles = req.body.copiedReferenceFiles;
 	project.user = req.user;
 
-	let appDir = '',
+	let appDir = global.appRoot,
 		tempPath = '',
 		relativePath =  '',
 		newPath = '';
@@ -151,7 +151,7 @@ exports.create = function(req, res) {
 			if(typeof project.scripts !== 'undefined'){
 				for(const i in project.scripts) {
 					if(typeof project.scripts[i] !== 'undefined'){
-						appDir = global.appRoot;
+						
 						tempPath = appDir + '/public/res/scripts/temp/' + project.scripts[i].file.name;
 						relativePath =  'res/scripts/' + project._id + '/';
 						newPath = appDir + '/public/' + relativePath;
@@ -174,7 +174,7 @@ exports.create = function(req, res) {
 			if(typeof project.referenceFiles !== 'undefined'){
 				for(const j in project.referenceFiles) {
 					if(typeof project.referenceFiles[j] !== 'undefined'){
-						appDir = global.appRoot;
+
 						tempPath = appDir + '/public/res/referenceFiles/temp/' + project.referenceFiles[j].file.name;
 						relativePath =  'res/referenceFiles/' + project._id + '/';
 						newPath = appDir + '/public/' + relativePath;
@@ -200,7 +200,7 @@ exports.create = function(req, res) {
 				if(typeof copiedScripts !== 'undefined'){
 					for(const i in copiedScripts) {
 						if(typeof copiedScripts[i] !== 'undefined'){
-							appDir = global.appRoot;
+
 							tempPath = appDir + '/public/res/scripts/' + oldID + '/' + copiedScripts[i].file.name;
 							relativePath =  'res/scripts/' + project._id + '/';
 							newPath = appDir + '/public/' + relativePath;
@@ -231,7 +231,7 @@ exports.create = function(req, res) {
 				if(typeof copiedReferenceFiles !== 'undefined'){
 					for(const j in copiedReferenceFiles) {
 						if(typeof copiedReferenceFiles[j] !== 'undefined'){
-							appDir = global.appRoot;
+
 							tempPath = appDir + '/public/res/referenceFiles/' + oldID + '/' + copiedReferenceFiles[j].file.name;
 							relativePath =  'res/referenceFiles/' + project._id + '/';
 							newPath = appDir + '/public/' + relativePath;
@@ -340,9 +340,8 @@ exports.create = function(req, res) {
 				// send out regular project creation email
 				function(emailHTML, email, done) {
 					// send email
-					let fromEmail = req.user.email || config.mailer.from;
-
-					let mailOptions = {
+					let fromEmail = req.user.email || config.mailer.from,
+						mailOptions = {
 						to: config.mailer.notifications,
 						from: fromEmail,
 						subject: email.subject,
@@ -358,7 +357,6 @@ exports.create = function(req, res) {
 							done(error, email);
 						});
 					}catch (error) {
-						console.error("Email could not be sent: ", error);
 						done(error, email);
 					}
 					
@@ -457,21 +455,21 @@ exports.create = function(req, res) {
 						project.phases[2].status = 'Waiting For Clients to Be Added';
 
 						// gen project note
-						let discussion = 'Project phase ' + project.phases[2].name + ' status changed to ' + project.phases[2].status + ' on ' + moment().tz('America/New_York').format() + ' EST by ' + req.user.displayName;
-						let item = {
-							date: moment().tz('America/New_York').format(),
-							userid: '',
-							username: 'System',
-							item: discussion,
-							deleted: false
-						};
+						let discussion = 'Project phase ' + project.phases[2].name + ' status changed to ' + project.phases[2].status + ' on ' + moment().tz('America/New_York').format() + ' EST by ' + req.user.displayName,
+							item = {
+								date: moment().tz('America/New_York').format(),
+								userid: '',
+								username: 'System',
+								item: discussion,
+								deleted: false
+							};
 						project.discussion.push(item);
 					}
 
 					// save final project
 					project.markModified("talent");
 					project.markModified("phases");
-					project.save().then(function () {
+					project.save().then(function (newProject) {
 						// write change to log
 						let log = {
 							type: 'project',
@@ -483,7 +481,7 @@ exports.create = function(req, res) {
 						log.save();
 
 						// emit an event for all connected clients
-						return res.jsonp(project);
+						return res.jsonp(newProject);
 					}).catch(function (err) {
 						return res.status(400).send({
 							message: errorHandler.getErrorMessage(err)
@@ -506,7 +504,9 @@ exports.create = function(req, res) {
 		});
 
 	} else {
-		return res.status(403).send('User is not authorized');
+		return res.status(403).send({
+			message: errorHandler.getErrorMessage('User is not authorized')
+		});
 	}
 };
 
@@ -514,7 +514,8 @@ exports.create = function(req, res) {
  * Update a Project
  */
 exports.update = function(req, res) {
-	let project = req.project ;
+	let project = req.project,
+		appDir = global.appRoot;
 
 	const allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern', 'production coordinator','client','client-client'];
 
@@ -526,8 +527,6 @@ exports.update = function(req, res) {
 		async.waterfall([
 			// rename files as requested
 			function(done) {
-
-				let appDir = global.appRoot;
 
 				for(const i in project.auditions) {
 					if(typeof project.auditions[i] !== 'undefined' && typeof project.auditions[i].file !== 'undefined'){
@@ -553,8 +552,6 @@ exports.update = function(req, res) {
 			},
 			// delete any files no longer in use
 			function(done) {
-
-				let appDir = global.appRoot;
 
 				for(const i in project.deleteFiles) {
 					let file = appDir + '/public' + project.deleteFiles[i];
@@ -633,9 +630,8 @@ exports.delete = function(req, res) {
 	log.save();
 
 	project.deleteOne().then(function () {
-		// remove all assocaited auditions
+		// remove all associated auditions
 		Audition.deleteMany({project: prodId}).then(function () {
-			// emit an event for all connected clients
 			return res.jsonp(project);
 		}).catch(function (err) {
 			return res.status(400).send({
