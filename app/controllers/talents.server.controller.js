@@ -205,10 +205,8 @@ exports.create = function(req, res) {
 				// send Dave an email
 				function(emailHTML, talentData, emailSig, done) {
 
-					let emailSubject = 'NEW TALENT ADDITION TO VO ROSTER:  ' + talent.name + ' ' + talent.lastName;
-
-					// send email
-					let mailOptions = {
+					let emailSubject = 'NEW TALENT ADDITION TO VO ROSTER:  ' + talent.name + ' ' + talent.lastName,
+						mailOptions = {
 										to: 'Dave@studiocenter.com',
 										from: req.user.email || config.mailer.from,
 										cc: config.mailer.notifications,
@@ -237,10 +235,8 @@ exports.create = function(req, res) {
 				// send Ken an email
 				function(emailHTML, talentData, emailSig, done) {
 
-					let emailSubject = 'NEW TALENT ADDITION TO VO ROSTER:  ' + talent.name + ' ' + talent.lastName;
-
-					// send email
-					let mailOptions = {
+					let emailSubject = 'NEW TALENT ADDITION TO VO ROSTER:  ' + talent.name + ' ' + talent.lastName,
+						mailOptions = {
 										to: ['Ken@studiocenter.com'],
 										from: req.user.email || config.mailer.from,
 										cc: config.mailer.notifications,
@@ -269,10 +265,8 @@ exports.create = function(req, res) {
 				// send Kevin an email
 				function(emailHTML, talentData, emailSig, done) {
 
-					let emailSubject = 'NEW TALENT ADDITION TO VO ROSTER:  ' + talent.name + ' ' + talent.lastName;
-
-					// send email
-					let mailOptions = {
+					let emailSubject = 'NEW TALENT ADDITION TO VO ROSTER:  ' + talent.name + ' ' + talent.lastName,
+						mailOptions = {
 										to: config.mailer.notifications,
 										from: req.user.email || config.mailer.from,
 										subject: emailSubject,
@@ -302,7 +296,9 @@ exports.create = function(req, res) {
 			});
 		});
 	} else {
-		return res.status(403).send('User is not authorized');
+		return res.status(403).send({
+			message: errorHandler.getErrorMessage('User is not authorized')
+		});
 	}
 };
 
@@ -403,10 +399,8 @@ exports.delete = function(req, res) {
 		// send Ken an email
 		function(emailHTML, done) {
 
-			let emailSubject = 'TALENT TERMINATED FROM VO ROSTER: ' + talent.name + ' ' + talent.lastName;
-
-			// send email
-			let mailOptions = {
+			let emailSubject = 'TALENT TERMINATED FROM VO ROSTER: ' + talent.name + ' ' + talent.lastName,
+				mailOptions = {
 								to: 'Ken@studiocenter.com',
 								from: req.user.email || config.mailer.from,
 								cc: config.mailer.notifications,
@@ -470,9 +464,9 @@ exports.getTalentsCnt = function(req, res){
 exports.findLimitWithFilter = function(req, res) {
 
 	// set filter vars
-	let filterObj = getTalentsFilters(req);
-	// set and store limits
-	let startVal, limitVal;
+	let filterObj = getTalentsFilters(req),
+		startVal, limitVal;
+		
 	if(req.body.startVal){
 		startVal = req.body.startVal;
 	} else {

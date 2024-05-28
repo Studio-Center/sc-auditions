@@ -75,9 +75,15 @@ exports.emailMissingAuds = function(req, res){
 											++callTalents[project._id].missingAudsCnt;
 											++missingCnt;
 										}
-
+										talentCallback();
+									}).catch(function (err) {
+										return res.status(400).send({
+											message: errorHandler.getErrorMessage(err)
+										});
 									});
 
+								} else {
+									talentCallback();
 								}
 
 							}, function (err) {
@@ -145,7 +151,9 @@ exports.emailMissingAuds = function(req, res){
 				}
 			], function(err) {
 				if (err) {
-					return console.log(err);
+					return res.status(400).send({
+						message: errorHandler.getErrorMessage(err)
+					});	
 				} else {
 					return res.status(200).send();
 				}
@@ -207,9 +215,16 @@ exports.findMissingAuds = function(req, res){
 								++callTalents[project._id].missingAudsCnt;
 								++missingCnt;
 							}
+							talentCallback();
 
+						}).catch(function (err) {
+							return res.status(400).send({
+								message: errorHandler.getErrorMessage(err)
+							});
 						});
 
+					} else {
+						talentCallback();
 					}
 
 				}, function (err) {
@@ -346,9 +361,8 @@ exports.findAuditionsBooked = function(req, res){
 			projectCoordinator: '',
 			status: '',
 			talentChosen: []
-		};
-	// stats
-	let pCStats = [],
+		},
+		pCStats = [],
 		pCStatsData = {
 			id: '',
 			name: '',
@@ -547,51 +561,37 @@ exports.systemStats = function(req, res, next){
 
 exports.findAudsPerProducer = function(req, res, next){
     
-// generate start dates
-let yesterday = new Date(req.body.dateFilterStart);
-	yesterday.setDate(yesterday.getDate());
-    yesterday.setHours(0, 0, 0);
-let tomorrow = new Date(req.body.dateFilterEnd);
-	tomorrow.setDate(tomorrow.getDate());
-    tomorrow.setHours(23, 59, 59);
-    
-    let audsResult = {};
+	// generate start dates
+	if(req.body.dateFilterStart && req.body.dateFilterEnd){
+		let yesterday = new Date(req.body.dateFilterStart);
+			yesterday.setDate(yesterday.getDate());
+			yesterday.setHours(0, 0, 0);
+		let tomorrow = new Date(req.body.dateFilterEnd);
+			tomorrow.setDate(tomorrow.getDate());
+			tomorrow.setHours(23, 59, 59);
+		
+		let audsResult = {};
 
-	// assign filter criteria
-	let searchCriteria = {'created': {$gte: yesterday, $lt: tomorrow}};
+		// assign filter criteria
+		let searchCriteria = {'created': {$gte: yesterday, $lt: tomorrow}};
 
-    // walk found auditions
-	Audition.find(searchCriteria).sort('-created').then(function (auditions) {
-		// walk through found projects
-		async.eachSeries(auditions, function (audition, callback) {
-			
-			// load project auditions
-			if(typeof audition.approved.by.userId !== 'undefined'){
-				User.findOne({'_id':audition.approved.by.userId}).sort('-created').then(function (user) {
-					if(typeof user !== 'undefined'){
-						if(typeof audsResult[audition.approved.by.userId] == 'undefined' && user != null){
-							//console.log(audition.approved);
-							audsResult[audition.approved.by.userId] = {};
-							audsResult[audition.approved.by.userId].name = user.firstName + ' ' + user.lastName;
-							audsResult[audition.approved.by.userId].email = user.email;
-							audsResult[audition.approved.by.userId].username = user.username;
-							audsResult[audition.approved.by.userId].projects = {};
-							audsResult[audition.approved.by.userId].projects[audition.project] = {};
-							audsResult[audition.approved.by.userId].projects[audition.project].title = audition.project;
-							Project.findOne({'_id':audition.project}).sort('-created').then(function (project) {
-								audsResult[audition.approved.by.userId].projects[audition.project].title = project.title;
-							}).catch(function (err) {
-								audsResult[audition.approved.by.userId].projects[audition.project].title = audition.project;
-							});
-							
-							audsResult[audition.approved.by.userId].projects[audition.project].count = 1;
-
-							audsResult[audition.approved.by.userId].count = 1;
-						} else {
-							
-							if(typeof audsResult[audition.approved.by.userId].projects[audition.project] == 'undefined'){
+		// walk found auditions
+		Audition.find(searchCriteria).sort('-created').then(function (auditions) {
+			// walk through found projects
+			async.eachSeries(auditions, function (audition, callback) {
+				
+				// load project auditions
+				if(typeof audition.approved.by.userId !== 'undefined'){
+					User.findOne({'_id':audition.approved.by.userId}).sort('-created').then(function (user) {
+						if(typeof user !== 'undefined'){
+							if(typeof audsResult[audition.approved.by.userId] == 'undefined' && user != null){
+								//console.log(audition.approved);
+								audsResult[audition.approved.by.userId] = {};
+								audsResult[audition.approved.by.userId].name = user.firstName + ' ' + user.lastName;
+								audsResult[audition.approved.by.userId].email = user.email;
+								audsResult[audition.approved.by.userId].username = user.username;
+								audsResult[audition.approved.by.userId].projects = {};
 								audsResult[audition.approved.by.userId].projects[audition.project] = {};
-								
 								audsResult[audition.approved.by.userId].projects[audition.project].title = audition.project;
 								Project.findOne({'_id':audition.project}).sort('-created').then(function (project) {
 									audsResult[audition.approved.by.userId].projects[audition.project].title = project.title;
@@ -600,34 +600,53 @@ let tomorrow = new Date(req.body.dateFilterEnd);
 								});
 								
 								audsResult[audition.approved.by.userId].projects[audition.project].count = 1;
+
+								audsResult[audition.approved.by.userId].count = 1;
 							} else {
-								audsResult[audition.approved.by.userId].projects[audition.project].count += 1;
+								
+								if(typeof audsResult[audition.approved.by.userId].projects[audition.project] == 'undefined'){
+									audsResult[audition.approved.by.userId].projects[audition.project] = {};
+									
+									audsResult[audition.approved.by.userId].projects[audition.project].title = audition.project;
+									Project.findOne({'_id':audition.project}).sort('-created').then(function (project) {
+										audsResult[audition.approved.by.userId].projects[audition.project].title = project.title;
+									}).catch(function (err) {
+										audsResult[audition.approved.by.userId].projects[audition.project].title = audition.project;
+									});
+									
+									audsResult[audition.approved.by.userId].projects[audition.project].count = 1;
+								} else {
+									audsResult[audition.approved.by.userId].projects[audition.project].count += 1;
+								}
+								
+								audsResult[audition.approved.by.userId].count += 1;
+
 							}
-							
-							audsResult[audition.approved.by.userId].count += 1;
-
 						}
-					}
-					
+						
+						callback();
+					});
+				} else {
 					callback();
-				});
-			} else {
-				callback();
-			}
-			
-		}, function (err) {
-			if( err ) {
-				return res.status(400).send({
-					message: errorHandler.getErrorMessage(err)
-				});
-			} else {
-				return res.jsonp(audsResult);
-			}
+				}
+				
+			}, function (err) {
+				if( err ) {
+					return res.status(400).send({
+						message: errorHandler.getErrorMessage(err)
+					});
+				} else {
+					return res.jsonp(audsResult);
+				}
+			});
+		}).catch(function (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
 		});
-	}).catch(function (err) {
+	} else {
 		return res.status(400).send({
-			message: errorHandler.getErrorMessage(err)
+			message: errorHandler.getErrorMessage('Please select a start and end date.')
 		});
-    });
-
+	}
 };

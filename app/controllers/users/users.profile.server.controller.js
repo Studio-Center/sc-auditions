@@ -84,7 +84,7 @@ exports.update = function(req, res) {
 		});
 	} else {
 		res.status(400).send({
-			message: 'User is not signed in'
+			message: errorHandler.getErrorMessage('User is not signed in')
 		});
 	}
 };
@@ -149,7 +149,11 @@ exports.updateAdmin = function(req, res) {
 
 					sgMail
 					.send(mailOptions)
-					.then(() => {}, error => {});
+					.then(() => {}, error => {
+						return res.status(400).send({
+							message: errorHandler.getErrorMessage(error)
+						});
+					});
 
 				});
 
@@ -236,10 +240,8 @@ exports.create = function(req, res) {
 
 	// store admins email address
 	let adminEmail = req.user.email,
-		savedPassword = req.body.password;
-
-	// Init Variables
-	let user = new User(req.body);
+		savedPassword = req.body.password,
+		user = new User(req.body);
 
 	// store password as Base64 Value
 	user.passwordText = new Buffer.from(savedPassword).toString('base64');
@@ -287,7 +289,9 @@ exports.create = function(req, res) {
 				res.jsonp(user);
 
 			}, error => {
-
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(error)
+				});
 			});
 
 		});
@@ -318,9 +322,9 @@ exports.getUsersCnt = function(req, res){
 exports.findLimitWithFilter = function(req, res) {
 
 	// set filter vars
-	let filterObj = getUsersFilters(req);
-	// set and store limits
-	let startVal, limitVal;
+	let filterObj = getUsersFilters(req),
+		startVal, limitVal;
+	
 	if(req.body.startVal){
 		startVal = req.body.startVal;
 	} else {

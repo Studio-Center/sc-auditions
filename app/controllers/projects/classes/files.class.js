@@ -10,7 +10,7 @@ const fileFuncs = {
     moveFile: function(tempPath, newPath){
         mv(tempPath, newPath, function(err) {
             if (err){
-                console.log(err);
+                errorHandler.getErrorMessage(err);
             }
             // if (err){
             //     res.status(500).end();
@@ -62,7 +62,7 @@ const fileFuncs = {
             if (fs.existsSync(file)) {
                 fs.unlinkSync(file, (err) => {
                     if (err) {
-                        console.log(errorHandler.getErrorMessage(err));
+                        errorHandler.getErrorMessage(err);
                     }
                 });
 

@@ -342,11 +342,11 @@ exports.create = function(req, res) {
 					// send email
 					let fromEmail = req.user.email || config.mailer.from,
 						mailOptions = {
-						to: config.mailer.notifications,
-						from: fromEmail,
-						subject: email.subject,
-						html: emailHTML
-					};
+							to: config.mailer.notifications,
+							from: fromEmail,
+							subject: email.subject,
+							html: emailHTML
+						};
 
 					try{
 						sgMail

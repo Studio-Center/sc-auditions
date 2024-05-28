@@ -10,74 +10,75 @@ const errorHandler = require('../errors'),
 	moment = require('moment'),
 	config = require('../../../config/config'),
 	url = require('url'),
-	jwt = require('jwt-simple');
+	jwt = require('jwt-simple'),
+	fetch = require('isomorphic-fetch');
 
 /**
  * Signup
  */
 exports.signup = function(req, res) {
-
-	const fetch = require('isomorphic-fetch');
 	
-	const secret_key = config.RECAPTCHA.SECRET;
-    const token = req.body.token;
-    const url = `https://www.google.com/recaptcha/api/siteverify?secret=${secret_key}&response=${token}`;
+	const secret_key = config.RECAPTCHA.SECRET,
+		token = req.body.token,
+		url = `https://www.google.com/recaptcha/api/siteverify?secret=${secret_key}&response=${token}`;
 
 	fetch(url, {
-			method: 'post'
-		})
-		.then(response => response.json())
-		.then(function(google_response){
+		method: 'post'
+	})
+	.then(response => response.json())
+	.then(function(google_response){
 
-			if(google_response.success == true){
+		if(google_response.success == true){
 
-				// For security measurement we remove the roles from the req.body object
-				delete req.body.roles;
-			
-				// Init Variables
-				var user = new User(req.body);
-				var message = null;
-			
-				// Add missing user fields
-				user.provider = 'local';
-				user.displayName = user.firstName + ' ' + user.lastName;
-			
-				// store password as Base64 Value
-				user.passwordText = new Buffer.from(user.password).toString('base64');
-			
-				// Then save the user 
-				user.save().then(function () {
-			
-					// Remove sensitive data before login
-						user.password = undefined;
-						user.passwordText = undefined;
-						user.salt = undefined;
-			
-						req.login(user, function(err) {
-							if (err) {
-								return res.status(400).send({
-									message: errorHandler.getErrorMessage(err)
-								});
-							} else {
-								user.passwordText = undefined;
-								res.jsonp(user);
-							}
-						});
-			
-				}).catch(function (err) {
-					return res.status(400).send({
-						message: errorHandler.getErrorMessage(err)
+			// For security measurement we remove the roles from the req.body object
+			delete req.body.roles;
+		
+			// Init Variables
+			var user = new User(req.body);
+			var message = null;
+		
+			// Add missing user fields
+			user.provider = 'local';
+			user.displayName = user.firstName + ' ' + user.lastName;
+		
+			// store password as Base64 Value
+			user.passwordText = new Buffer.from(user.password).toString('base64');
+		
+			// Then save the user 
+			user.save().then(function () {
+		
+				// Remove sensitive data before login
+					user.password = undefined;
+					user.passwordText = undefined;
+					user.salt = undefined;
+		
+					req.login(user, function(err) {
+						if (err) {
+							return res.status(400).send({
+								message: errorHandler.getErrorMessage(err)
+							});
+						} else {
+							user.passwordText = undefined;
+							res.jsonp(user);
+						}
 					});
-				});
-
-			} else {
+		
+			}).catch(function (err) {
 				return res.status(400).send({
-					message: errorHandler.getErrorMessage('Recaptcha in invalide.')
+					message: errorHandler.getErrorMessage(err)
 				});
-			}
+			});
 
-		})
-		.catch(error => res.json({ error }));
+		} else {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage('Recaptcha in invalide.')
+			});
+		}
+
+	})
+	.catch(error => res.status(400).send({
+		message: errorHandler.getErrorMessage(error)
+	}));
 
 };
 
@@ -213,7 +214,7 @@ exports.jwtauth = function(req, res, next){
 			});
 
 		} catch (err) {	
-			console.log(err);		
+			errorHandler.getErrorMessage(err);		
 			return next();
 		}
 

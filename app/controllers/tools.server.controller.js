@@ -23,8 +23,8 @@ sgMail.setApiKey(config.mailer.options.auth.api_key);
 // call list methods
 var gatherTalentsSearch = function(req, res, filter){
 
-	let callTalents = [], talentId;
-	let searchCriteria = {'talent': {
+	let callTalents = [], talentId,
+		searchCriteria = {'talent': {
 									$elemMatch: {
 										'status': filter
 									}
@@ -58,6 +58,8 @@ var gatherTalentsSearch = function(req, res, filter){
 								function(done) {
 									Talent.findOne({'_id':talent.talentId}).sort('-created').then(function (talentInfo) {
 										done(null, talentInfo);
+									}).catch(function (err) {
+										done(err, '');
 									});
 								},
 								function(talentInfo, done){
@@ -86,7 +88,9 @@ var gatherTalentsSearch = function(req, res, filter){
 								}
 								], function(err) {
 								if (err) {
-									return res.status(400).json(err);
+									return res.status(400).send({
+										message: errorHandler.getErrorMessage(err)
+									});
 								} else {
 									talentCallback();
 								}
@@ -145,8 +149,6 @@ exports.sendTalentEmails = function(req, res){
 						let emailSig = '';
 						if(req.user.emailSignature){
 							emailSig = req.user.emailSignature.replace(/\r?\n/g, '<br>');
-						} else {
-							emailSig = '';
 						}
 
 						res.render('templates/custom-talent-email', {
@@ -348,9 +350,9 @@ exports.mainClientsCheck = function(req, res){
 
 	// method vars
 	let emailCnt = 0,
-		currentTime = new Date();
-	//currentTime.setDate(currentTime.getHours() - 1);
-	let inHalfHour = new Date();
+		currentTime = new Date(),
+		inHalfHour = new Date();
+
 	// modified 12/17/2015 for two hour intervals
 	inHalfHour.setHours(inHalfHour.getHours() + 0.6);
 
@@ -395,10 +397,8 @@ exports.mainClientsCheck = function(req, res){
 					let emailSig = '';
 					if(owner.emailSignature){
 						emailSig = owner.emailSignature;
-					} else {
-						emailSig = '';
 					}
-
+					
 					// convert project id from object to string for email
 					project.id = String(project._id);
 
@@ -482,9 +482,9 @@ exports.sendPreCloseSummary = function(req, res){
 
 	// method vars
 	let emailCnt = 0,
-		currentTime = new Date();
-	//currentTime.setDate(currentTime.getHours() - 1);
-	let inOneHour = new Date();
+		currentTime = new Date(),
+		inOneHour = new Date();
+
 	// modified 12/17/2015 for two hour intervals
 	inOneHour.setHours(inOneHour.getHours() + 2);
 
@@ -516,6 +516,8 @@ exports.sendPreCloseSummary = function(req, res){
 
 					User.findOne({'_id':ownerId}).sort('-created').then(function (owner) {
 						done(null, owner);
+					}).catch(function (err) {
+						done(err, '');
 					});
 				},
 				// gather talent info
@@ -529,6 +531,8 @@ exports.sendPreCloseSummary = function(req, res){
 
 					Talent.where('_id').in(talentIds).sort('-created').then(function (talents) {
 						done(null, talents, owner);
+					}).catch(function (err) {
+						done(err, '', owner);
 					});
 
 				},
@@ -620,8 +624,6 @@ exports.sendPreCloseSummary = function(req, res){
 					let emailSig = '';
 					if(owner.emailSignature){
 						emailSig = owner.emailSignature;
-					} else {
-						emailSig = '';
 					}
 
 					// convert project id from object to string for email
@@ -642,10 +644,8 @@ exports.sendPreCloseSummary = function(req, res){
 				},
 				// send out talent project creation email
 				function(owner, summaryEmailHTML, done) {
-					let log;
-					// send email
-					// generate email signature
-					let newDate = new Date(project.estimatedCompletionDate);
+					let log,
+						newDate = new Date(project.estimatedCompletionDate);
 					newDate = newDate.setHours(newDate.getHours());
 					newDate = dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT');
 
@@ -704,6 +704,8 @@ exports.sendPreCloseSummary = function(req, res){
 						}).catch(function (err) {
 							done(err);
 						});
+					}).catch(function (err) {
+						done(err);
 					});
 				}
 				], function(err) {
@@ -736,13 +738,10 @@ exports.uploadTalentCSV = function(req, res){
 	// import counts
 	let newTalents = 0,
 		updatedTalents = 0,
-		failedImports = [];
-
-	// parse uploaded CSV
-	let file = req.files.file,
-		tempPath = file.path;
-
-	let Converter = require('csvtojson').Converter,
+		failedImports = [],
+		file = req.files.file,
+		tempPath = file.path,
+		Converter = require('csvtojson').Converter,
 		fileStream = fs.createReadStream(tempPath),
 		converter = new Converter({constructResult:true});
 
@@ -834,8 +833,12 @@ exports.uploadTalentCSV = function(req, res){
 
 			   			talentCallback();
 
-			   		});
+					}).catch(function (err) {
+						talentCallback(err);
+					});
 
+				}).catch(function (err) {
+					talentCallback(err);
 				});
 
 			} else {
@@ -890,7 +893,9 @@ exports.newprojectByID = function(req, res, next) {
  */
 exports.hasAuthorization = function(req, res, next) {
 	if (req.tool.user.id !== req.user.id) {
-		return res.status(403).send('User is not authorized');
+		return res.status(403).send({
+			message: errorHandler.getErrorMessage('User is not authorized')
+		});
 	}
 	next();
 };

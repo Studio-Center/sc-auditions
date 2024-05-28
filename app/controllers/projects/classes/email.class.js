@@ -54,7 +54,7 @@ const emailFuncs = {
                     mailOptions = {
                                     to: client.email,
                                     from: fromEmail,
-                                    cc: config.mailer.notifications,
+                                    bcc: config.mailer.notifications,
                                     subject: emailSubject,
                                     html: clientEmailHTML
                                 };
@@ -187,6 +187,7 @@ const emailFuncs = {
                 let mailOptions = {
                     to: talentEmails,
                     from: fromEmail,
+                    bcc: config.mailer.notifications,
                     subject: emailSubject,
                     html: talentEmailHTML
                 };

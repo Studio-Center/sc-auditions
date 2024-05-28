@@ -34,11 +34,11 @@ exports.forgot = function(req, res, next) {
 				}, '-salt -password').then(function (user) {
 					if (!user) {
 						return res.status(400).send({
-							message: 'No account with that username has been found'
+							message: errorHandler.getErrorMessage('No account with that username has been found')
 						});
 					} else if (user.provider !== 'local') {
 						return res.status(400).send({
-							message: 'It seems like you signed up using your ' + user.provider + ' account'
+							message: errorHandler.getErrorMessage('It seems like you signed up using your ' + user.provider + ' account')
 						});
 					} else {
 						user.resetPasswordToken = token;
@@ -51,7 +51,7 @@ exports.forgot = function(req, res, next) {
 				});
 			} else {
 				return res.status(400).send({
-					message: 'Username field must not be blank'
+					message: errorHandler.getErrorMessage('Username field must not be blank')
 				});
 			}
 		},
@@ -155,17 +155,17 @@ exports.reset = function(req, res, next) {
 							});
 						} else {
 							return res.status(400).send({
-								message: 'Passwords do not match'
+								message: errorHandler.getErrorMessage('Passwords do not match')
 							});
 						}
 					} else {
 						return res.status(400).send({
-							message: 'Password reset token is invalid or has expired.'
+							message: errorHandler.getErrorMessage('Password reset token is invalid or has expired.')
 						});
 					}
 				}).catch(function (err) {
 					return res.status(400).send({
-						message: 'Password reset token is invalid or has expired.'
+						message: errorHandler.getErrorMessage('Password reset token is invalid or has expired.')
 					});
 				});
 			},
@@ -200,7 +200,9 @@ exports.reset = function(req, res, next) {
 		});
 
 	} else {
-		return res.status(400).send('password field empty');
+		return res.status(400).send({
+			message: errorHandler.getErrorMessage('password field empty')
+		});
 	}
 };
 
@@ -242,32 +244,32 @@ exports.changePassword = function(req, res) {
 							});
 						} else {
 							res.status(400).send({
-								message: 'Passwords do not match'
+								message: errorHandler.getErrorMessage('Passwords do not match')
 							});
 						}
 					} else {
 						res.status(400).send({
-							message: 'Current password is incorrect'
+							message: errorHandler.getErrorMessage('Current password is incorrect')
 						});
 					}
 				} else {
 					res.status(400).send({
-						message: 'User is not found'
+						message: errorHandler.getErrorMessage('User is not found')
 					});
 				}
 			}).catch(function (err) {
 				res.status(400).send({
-					message: 'User is not found'
+					message: errorHandler.getErrorMessage('User is not found')
 				});
 			});
 		} else {
 			res.status(400).send({
-				message: 'Please provide a new password'
+				message: errorHandler.getErrorMessage('Please provide a new password')
 			});
 		}
 	} else {
 		res.status(400).send({
-			message: 'User is not signed in'
+			message: errorHandler.getErrorMessage('User is not signed in')
 		});
 	}
 };
