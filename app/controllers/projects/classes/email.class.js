@@ -187,7 +187,6 @@ const emailFuncs = {
                 let mailOptions = {
                     to: talentEmails,
                     from: fromEmail,
-                    bcc: config.mailer.notifications,
                     subject: emailSubject,
                     html: talentEmailHTML
                 };
