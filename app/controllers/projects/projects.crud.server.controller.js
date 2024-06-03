@@ -122,14 +122,13 @@ exports.create = function(req, res) {
 	// method vars
 	let project = new Project(req.body.project),
 		copiedScripts = req.body.copiedScripts,
-		
-	copiedReferenceFiles = req.body.copiedReferenceFiles;
-	project.user = req.user;
-
-	let appDir = global.appRoot,
+		copiedReferenceFiles = req.body.copiedReferenceFiles
+		appDir = global.appRoot,
 		tempPath = '',
 		relativePath =  '',
 		newPath = '';
+	
+	project.user = req.user;
 
 	const allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern','production coordinator'];
 
@@ -215,7 +214,9 @@ exports.create = function(req, res) {
 
 							fs.copyFile(tempPath, newPath, function(err){
 								if (err) {
-									console.log("Error Found:", err);
+									return res.status(400).send({
+										message: errorHandler.getErrorMessage(err)
+									});
 								}
 							});
 
@@ -267,7 +268,7 @@ exports.create = function(req, res) {
 
 					oldProject.status = 'ReAuditioned';
 
-					oldProject.save().then(function (oldProject) {
+					oldProject.save().then(function () {
 					}).catch(function (err) {
 						return res.status(400).send({
 							message: errorHandler.getErrorMessage(err)
@@ -303,25 +304,17 @@ exports.create = function(req, res) {
 
 					// add scripts and assets to email body
 					email.scripts = '\n' + '<strong>Scripts:</strong>' + '<br>';
-					if(typeof project.scripts !== 'undefined'){
-						if(project.scripts.length > 0){
-							for(const i in project.scripts) {
-								email.scripts += '<a href="http://' + req.headers.host + '/res/scripts/' + project._id + '/' + project.scripts[i].file.name + '">' + project.scripts[i].file.name + '</a><br>';
-							}
-						} else {
-							email.scripts += 'None';
+					if(typeof project.scripts !== 'undefined' && project.scripts.length > 0){
+						for(const i in project.scripts) {
+							email.scripts += '<a href="http://' + req.headers.host + '/res/scripts/' + project._id + '/' + project.scripts[i].file.name + '">' + project.scripts[i].file.name + '</a><br>';
 						}
 					} else {
 						email.scripts += 'None';
 					}
 					email.referenceFiles = '\n' + '<strong>Reference Files:</strong>' + '<br>';
-					if(typeof project.referenceFiles !== 'undefined'){
-						if(project.referenceFiles.length > 0){
-							for(const j in project.referenceFiles) {
-								email.referenceFiles += '<a href="http://' + req.headers.host + '/res/referenceFiles/' + project._id + '/' + project.referenceFiles[j].file.name + '">' + project.referenceFiles[j].file.name + '</a><br>';
-							}
-						} else {
-							email.referenceFiles += 'None';
+					if(typeof project.referenceFiles !== 'undefined' && project.referenceFiles.length > 0){
+						for(const j in project.referenceFiles) {
+							email.referenceFiles += '<a href="http://' + req.headers.host + '/res/referenceFiles/' + project._id + '/' + project.referenceFiles[j].file.name + '">' + project.referenceFiles[j].file.name + '</a><br>';
 						}
 					} else {
 						email.referenceFiles += 'None';
@@ -421,7 +414,7 @@ exports.create = function(req, res) {
 					// send email to client accounts, if needed
 					if(req.body.notifyClient === true){
 
-						if(typeof project.client !== 'undefined'){
+						if(typeof project.client !== 'undefined' && project.client.length === 0){
 							for(const i in project.client) {
 
 								// write change to log
@@ -449,7 +442,7 @@ exports.create = function(req, res) {
 					project.owner = req.user._id;
 
 					// check for assigned clients, if none assigned update P&P phase
-					if(project.client.length === 0){
+					if(typeof project.client !== 'undefined' && project.client.length === 0){
 
 						// set project phase status
 						project.phases[2].status = 'Waiting For Clients to Be Added';
@@ -556,7 +549,7 @@ exports.update = function(req, res) {
 				for(const i in project.deleteFiles) {
 					let file = appDir + '/public' + project.deleteFiles[i];
 
-					// remove file is exists
+					// remove file if exists
 					if (fs.existsSync(file)) {
 						fs.unlinkSync(file, (err) => {
 							if (err) {
@@ -606,10 +599,8 @@ exports.update = function(req, res) {
  */
 exports.delete = function(req, res) {
 	let project = req.project,
-		prodId = Object.create(project._id);
-
-	// generate delete files list
-	let appDir = global.appRoot + '/public',
+		prodId = Object.create(project._id),
+		appDir = global.appRoot + '/public',
 		auditionsDir = appDir + '/res/auditions/' + project._id + '/',
 		scriptsDir = appDir + '/res/scripts/' + project._id + '/',
 		referenceFilesDir = appDir + '/res/referenceFiles/' + project._id + '/';

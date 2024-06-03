@@ -465,17 +465,14 @@ exports.findLimitWithFilter = function(req, res) {
 
 	// set filter vars
 	let filterObj = getTalentsFilters(req),
-		startVal, limitVal;
+		startVal = 0, 
+		limitVal = 100;
 		
 	if(req.body.startVal){
 		startVal = req.body.startVal;
-	} else {
-		startVal = 0;
 	}
 	if(req.body.limitVal){
 		limitVal = req.body.limitVal;
-	} else {
-		limitVal = 100;
 	}
 
 	Talent.find(filterObj).sort({'firstName': 1,'lastName': 1,'locationISDN': 1,'created': -1}).skip(startVal).limit(limitVal).then(function (talents) {

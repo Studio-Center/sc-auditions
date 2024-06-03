@@ -21,7 +21,7 @@ exports.deleteAudition = function(req, res){
         appDir = global.appRoot,
         audFile = '';
 
-	if(aud != null){
+	if(aud){
 		Audition.findById(aud._id).sort('-created').then(function (audition) {
 			// set aud file path
 			audFile = appDir + '/public/res/auditions/' + String(audition.project) + '/' + audition.file.name;
@@ -29,7 +29,9 @@ exports.deleteAudition = function(req, res){
 			if (fs.existsSync(audFile)) {
 				fs.unlink(audFile, (err) => {
 						if (err) {
-							return res.status(400).send(err);
+							return res.status(400).send({
+								message: errorHandler.getErrorMessage(err)
+							});
 						}
 					}
 				);
@@ -82,7 +84,7 @@ exports.saveAudition = function(req, res){
 	Audition.findById(aud._id).sort('-created').then(function (audition) {
 
 		// check for aud rename
-		if (aud.rename !== '') {
+		if (aud.rename) {
 
 			let file = appDir + '/public/res/auditions/' + String(aud.project) + '/' + aud.file.name,
 				newFile = appDir + '/public/res/auditions/' + String(aud.project) + '/' + aud.rename;
@@ -190,13 +192,13 @@ exports.deleteTempScript = function(req, res){
 	if (fs.existsSync(file)) {
 		fs.unlinkSync(file, (err) => {
 			if (err) {
-				return res.status(400).send(err);
+				return res.status(400).send({
+					message: errorHandler.getErrorMessage(err)
+				});
 			}
 		});
-		return res.status(200).send();
-	} else {
-		return res.status(200).send();
 	}
+	return res.status(200).send();
 };
 
 exports.backupProjectsById = function(req, res, next){
@@ -240,7 +242,7 @@ exports.backupProjectsById = function(req, res, next){
 
 		Project.findById(projectId).then(function (project) {
 			if (!project) return next(new Error('Failed to load Project '));
-			req.project = project ;
+			req.project = project;
 
 			// set project file directory params
 			auditionsDir = appDir + '/public/res/auditions/' + project._id + '/';

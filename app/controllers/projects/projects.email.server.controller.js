@@ -135,10 +135,8 @@ exports.sendTalentCanceledEmail = function(req, res){
                                 let emailSig = '';
                                 if(owner.emailSignature){
                                     emailSig = owner.emailSignature;
-                                } else {
-                                    emailSig = '';
                                 }
-
+                                
                                 res.render('templates/cancelled-project-email', {
                                     emailSignature: emailSig,
                                     talent: talentInfo,
@@ -240,25 +238,17 @@ exports.sendTalentScriptUpdateEmail = function(req, res){
 
         // add scripts and assets to email body
         email.scripts = '\n' + '<strong>Scripts:</strong>' + '<br>';
-        if(typeof project.scripts !== 'undefined'){
-            if(project.scripts.length > 0){
-                for(const i in project.scripts) {
-                    email.scripts += '<a href="http://' + req.headers.host + '/res/scripts/' + project._id + '/' + project.scripts[i].file.name + '">' + project.scripts[i].file.name + '</a><br>';
-                }
-            } else {
-                email.scripts += 'None';
+        if(typeof project.scripts !== 'undefined' && project.scripts.length > 0){
+            for(const i in project.scripts) {
+                email.scripts += '<a href="http://' + req.headers.host + '/res/scripts/' + project._id + '/' + project.scripts[i].file.name + '">' + project.scripts[i].file.name + '</a><br>';
             }
         } else {
             email.scripts += 'None';
         }
         email.referenceFiles = '\n' + '<strong>Reference Files:</strong>' + '<br>';
-        if(typeof project.referenceFiles !== 'undefined'){
-            if(project.referenceFiles.length > 0){
-                for(const j in project.referenceFiles) {
-                    email.referenceFiles += '<a href="http://' + req.headers.host + '/res/referenceFiles/' + project._id + '/' + project.referenceFiles[j].file.name + '">' + project.referenceFiles[j].file.name + '</a><br>';
-                }
-            } else {
-                email.referenceFiles += 'None';
+        if(typeof project.referenceFiles !== 'undefined' && project.referenceFiles.length > 0){
+            for(const j in project.referenceFiles) {
+                email.referenceFiles += '<a href="http://' + req.headers.host + '/res/referenceFiles/' + project._id + '/' + project.referenceFiles[j].file.name + '">' + project.referenceFiles[j].file.name + '</a><br>';
             }
         } else {
             email.referenceFiles += 'None';
@@ -344,7 +334,6 @@ exports.sendTalentDirectorsEmail = function(req, res){
         function(owner, talentdirectors, done) {
 
             let to = [];
-
             for(const i in talentdirectors) {
                 to.push(talentdirectors[i].email);
             }
@@ -392,7 +381,6 @@ exports.sendTalentDirectorsEmail = function(req, res){
 
                         done();
                     }, error => {
-                        console.error(error);
                         done(error);
                     });
                 }catch (error) {

@@ -34,7 +34,7 @@ exports.uploadFile = function(req, res, next){
       tempPath = passDir;
     }
 
-    let relativePath =  'res' + '/' + project.project._id + '/',
+    let relativePath =  'res/' + project.project._id + '/',
         newPath = appDir + '/public/' + relativePath;
 
     // create project directory if not found
@@ -78,19 +78,20 @@ exports.uploadScript = function(req, res, next){
         projectId = recBody.projectId,
         appDir = global.appRoot,
         tempPath = file.path,
-        scriptPath =  'res' + '/' + 'scripts/',
+        scriptPath =  'res/scripts/',
         relativePath =  scriptPath + projectId + '/',
+        scriptsDir = appDir + '/public/' + scriptPath,
         newPath = appDir + '/public/' + relativePath;
 
     // check for passenger buffer file location
-    let passDir = '/usr/share/passenger/helper-scripts/public/res/' + 'scripts/' + projectId + '/' + sanitize(file.name);
+    let passDir = '/usr/share/passenger/helper-scripts/public/res/scripts/' + projectId + '/' + sanitize(file.name);
     if(fs.existsSync(passDir)){
       tempPath = passDir;
     }
 
 	// check for existing parent directory, create if needed
-	if (!fs.existsSync(appDir + '/public/' + scriptPath)) {
-		fs.mkdirSync(appDir + '/public/' + scriptPath);
+	if (!fs.existsSync(scriptsDir)) {
+		fs.mkdirSync(scriptsDir);
 	}
 
     // create project directory if not found
@@ -160,19 +161,20 @@ exports.uploadReferenceFile = function(req, res, next){
         projectId = recBody.projectId,
         appDir = global.appRoot,
         tempPath = file.path,
-        refsPath =  'res' + '/' + 'referenceFiles/',
+        refsPath =  'res/referenceFiles/',
         relativePath =  refsPath + projectId + '/',
+        refsDir = appDir + '/public/' + refsPath,
         newPath = appDir + '/public/' + relativePath;
 
     // check for passenger buffer file location
-    let passDir = '/usr/share/passenger/helper-scripts/public/res/' + 'referenceFiles/' + projectId + '/' + sanitize(file.name);
+    let passDir = '/usr/share/passenger/helper-scripts/public/res/referenceFiles/' + projectId + '/' + sanitize(file.name);
     if(fs.existsSync(passDir)){
       tempPath = passDir;
     }
 	
 	// check for existing parent directory, create if needed
-	if (!fs.existsSync(appDir + '/public/' + refsPath)) {
-		fs.mkdirSync(appDir + '/public/' + refsPath);
+	if (!fs.existsSync(refsDir)) {
+		fs.mkdirSync(refsDir);
 	}
 
     // create project directory if not found
@@ -230,19 +232,20 @@ exports.uploadTempReferenceFile = function(req, res, next){
         referenceFiles = [],
         appDir = global.appRoot,
         tempPath = file.path,
-        refsPath =  'res' + '/' + 'referenceFiles/',
+        refsPath =  'res/referenceFiles/',
         relativePath =  refsPath + 'temp/',
+        refsDir = appDir + '/public/' + refsPath,
         newPath = appDir + '/public/' + relativePath;
 
     // check for passenger buffer file location
-    let passDir = '/usr/share/passenger/helper-scripts/public/res/' + 'referenceFiles/' + 'temp/' + sanitize(file.name);
+    let passDir = '/usr/share/passenger/helper-scripts/public/res/referenceFiles/temp/' + sanitize(file.name);
     if(fs.existsSync(passDir)){
       tempPath = passDir;
     }
 
 	// check for existing parent directory, create if needed
-	if (!fs.existsSync(appDir + '/public/' + refsPath)) {
-		fs.mkdirSync(appDir + '/public/' + refsPath);
+	if (!fs.existsSync(refsDir)) {
+		fs.mkdirSync(refsDir);
 	}
 
 	// check for existing temp directory, create if needed
@@ -284,19 +287,20 @@ exports.uploadTempScript = function(req, res, next){
         scripts = [],
         appDir = global.appRoot,
         tempPath = file.path,
-        scriptPath =  'res' + '/' + 'scripts/',
+        scriptPath =  'res/scripts/',
         relativePath =  scriptPath + 'temp/',
+        scriptsDir = appDir + '/public/' + scriptPath,
         newPath = appDir + '/public/' + relativePath;
 
 	// check for passenger buffer file location
-	let passDir = '/usr/share/passenger/helper-scripts/public/res/' + 'scripts/' + 'temp/' + file.name;
+	let passDir = '/usr/share/passenger/helper-scripts/public/res/scripts/temp/' + file.name;
 	if(fs.existsSync(passDir)){
 	  tempPath = passDir;
 	}
 
 	// check for existing parent directory, create if needed
-	if (!fs.existsSync(appDir + '/public/' + scriptPath)) {
-		fs.mkdirSync(appDir + '/public/' + scriptPath);
+	if (!fs.existsSync(scriptsDir)) {
+		fs.mkdirSync(scriptsDir);
 	}
 
 	// check for existing temp directory, create if needed
@@ -371,8 +375,9 @@ exports.uploadAudition = function(req, res, next){
             projectId = recBody.projectId,
             appDir = global.appRoot,
             tempPath = file.path,
-            audPath =  'res' + '/' + 'auditions/',
+            audPath =  'res/auditions/',
             relativePath =  audPath + projectId + '/',
+            audsDir = appDir + '/public/' + audPath,
             newPath = appDir + '/public/' + relativePath;
 
         // check for passenger buffer file location
@@ -382,8 +387,8 @@ exports.uploadAudition = function(req, res, next){
         }
 
         // check for existing parent directory, create if needed
-        if (!fs.existsSync(appDir + '/public/' + audPath)) {
-            fs.mkdirSync(appDir + '/public/' + audPath);
+        if (!fs.existsSync(audsDir)) {
+            fs.mkdirSync(audsDir);
         }
 
         // create project directory if not found
@@ -553,21 +558,22 @@ exports.uploadTempAudition = function(req, res, next){
         project = JSON.parse(req.body.data),
         appDir = global.appRoot,
         tempPath = file.path,
-        audPath =  'res' + '/' + 'auditions/',
+        audPath =  'res/auditions/',
         relativePath =  audPath + 'temp/',
+        audsDir = appDir + '/public/' + audPath,
         newPath = appDir + '/public/' + relativePath;
 
     project = project.project;
 
     // check for passenger buffer file location
-    let passDir = '/usr/share/passenger/helper-scripts/public/res/' + 'auditions/' + 'temp/' + sanitize(file.name);
+    let passDir = '/usr/share/passenger/helper-scripts/public/res/auditions/temp/' + sanitize(file.name);
     if(fs.existsSync(passDir)){
       tempPath = passDir;
     }
 
 	// check for existing parent directory, create if needed
-	if (!fs.existsSync(appDir + '/public/' + audPath)) {
-		fs.mkdirSync(appDir + '/public/' + audPath);
+	if (!fs.existsSync(audsDir)) {
+		fs.mkdirSync(audsDir);
 	}
 
     // create project directory if not found
@@ -626,8 +632,8 @@ exports.uploadTalentAudition = function(req, res, next){
         appDir = global.appRoot;
 
 	// check for passenger buffer file location
-	let auditionsTempPath = '/usr/share/passenger/helper-scripts/public/res' + '/' + 'auditions' + '/' + 'temp' + '/',
-        talentUploadParent = appDir + '/public/' + 'res' + '/' + 'talentUploads' + '/',
+	let auditionsTempPath = '/usr/share/passenger/helper-scripts/public/res/auditions/temp/',
+        talentUploadParent = appDir + '/public/res/talentUploads/',
         talentUploadPath = talentUploadParent + project._id + '/',
         talentUploadTalentPath = talentUploadPath + talentId + '/';
 
@@ -752,12 +758,12 @@ exports.uploadBackup = function(req, res, next){
             auditionsBackupDir, scriptsBackupDir, referenceFilesBackupDir,
             appDir = global.appRoot,
             tempPath = file.path,
-            archivesPath = appDir + '/public/' + 'res' + '/' + 'archives' + '/',
+            archivesPath = appDir + '/public/res/archives/',
             backupPath = archivesPath + 'backups/',
             savePath = archivesPath + file.name;
 
         // check for passenger buffer file location
-        let passDir = '/usr/share/passenger/helper-scripts/public/res/' + 'archives/' + 'backups/' + file.name;
+        let passDir = '/usr/share/passenger/helper-scripts/public/res/archives/backups/' + file.name;
         if(fs.existsSync(passDir)){
           tempPath = passDir;
         }
@@ -805,9 +811,9 @@ exports.uploadBackup = function(req, res, next){
                                 Project.findById(project._id).then(function (delProject) {
     
                                     // generate delete files list
-                                    let auditionsDir = appDir + '/public/' + '/res/auditions/' + project._id + '/',
-                                        scriptsDir = appDir + '/public/' + '/res/scripts/' + project._id + '/',
-                                        referenceFilesDir = appDir + '/public/' + '/res/referenceFiles/' + project._id + '/';
+                                    let auditionsDir = appDir + '/public/res/auditions/' + project._id + '/',
+                                        scriptsDir = appDir + '/public/res/scripts/' + project._id + '/',
+                                        referenceFilesDir = appDir + '/public//res/referenceFiles/' + project._id + '/';
     
                                     // remove all file if exists
                                     rimraf.sync(auditionsDir);

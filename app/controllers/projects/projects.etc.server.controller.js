@@ -204,7 +204,7 @@ exports.test = function(req, res, next){
 
 	if(regStr !== null){
 		let regStrOP = regStr[1],
-			   lastNm = /([A-Z])[a-z]*$/.exec(regStrOP);
+			lastNm = /([A-Z])[a-z]*$/.exec(regStrOP);
 
 		if(lastNm !== null){
 			let lastNmPos = lastNm.index;

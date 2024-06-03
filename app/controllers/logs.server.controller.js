@@ -92,16 +92,13 @@ exports.recCount = function(req, res){
 exports.list = function(req, res) {
 
 	// set and store limits
-	let startVal, limitVal;
+	let startVal = 0, 
+		limitVal = 100;
 	if(req.body.startVal){
 		startVal = req.body.startVal;
-	} else {
-		startVal = 0;
 	}
 	if(req.body.limitVal){
 		limitVal = req.body.limitVal;
-	} else {
-		limitVal = 100;
 	}
 
 	Log.find().sort('-created').skip(startVal).limit(limitVal).then(function (logs) {
@@ -117,16 +114,13 @@ exports.list = function(req, res) {
 exports.listFilter = function(req, res){
 
 	// set and store limits
-	let startVal, limitVal;
+	let startVal = 0, 
+		limitVal = 100;
 	if(req.body.startVal){
 		startVal = req.body.startVal;
-	} else {
-		startVal = 0;
 	}
 	if(req.body.limitVal){
 		limitVal = req.body.limitVal;
-	} else {
-		limitVal = 100;
 	}
 
 	let filter = req.body.filter;
@@ -145,16 +139,13 @@ exports.listFilter = function(req, res){
 exports.listTypeFilter = function(req, res){
 
 	// set and store limits
-	let startVal, limitVal;
+	let startVal = 0, 
+		limitVal = 100;
 	if(req.body.startVal){
 		startVal = req.body.startVal;
-	} else {
-		startVal = 0;
 	}
 	if(req.body.limitVal){
 		limitVal = req.body.limitVal;
-	} else {
-		limitVal = 100;
 	}
 
 	let filter = req.body.filter,

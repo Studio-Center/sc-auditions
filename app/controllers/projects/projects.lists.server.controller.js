@@ -12,6 +12,33 @@ const mongoose = require('mongoose'),
 	async = require('async'),
 	performLoadList = require('./classes/etc.class').performLoadList;
 
+// assemble filters
+var getProjectsFilters = function(req){
+
+	// gen filter object
+	let filterObj = {};
+	// filter by project title
+	if(req.body.filter.title){
+		filterObj.title = new RegExp(req.body.filter.title, 'i');
+	}
+	if(req.body.filter.description){
+		filterObj.description = new RegExp(req.body.filter.description, 'i');
+	}
+	// filter my Projects
+	if(req.body.filter.myProjects === true){
+		filterObj.user = req.user._id;
+	}
+	// set in progress bit
+	if(req.body.filter.status){
+		filterObj.status = req.body.filter.status;
+	}
+	// set in progress bit
+	if(req.body.filter.clientEmail){
+		filterObj.client = { $elemMatch: {  email : new RegExp(req.body.filter.clientEmail, 'i') } };
+	}
+
+	return filterObj;
+};
 /**
  * Show the current Project
  */
@@ -123,33 +150,6 @@ exports.getTalentFilteredProjects = function(req, res){
 	}
 
 };
-// assemble filters
-var getProjectsFilters = function(req){
-
-	// gen filter object
-	let filterObj = {};
-	// filter by project title
-	if(req.body.filter.title){
-		filterObj.title = new RegExp(req.body.filter.title, 'i');
-	}
-	if(req.body.filter.description){
-		filterObj.description = new RegExp(req.body.filter.description, 'i');
-	}
-	// filter my Projects
-	if(req.body.filter.myProjects === true){
-		filterObj.user = req.user._id;
-	}
-	// set in progress bit
-	if(req.body.filter.status){
-		filterObj.status = req.body.filter.status;
-	}
-	// set in progress bit
-	if(req.body.filter.clientEmail){
-		filterObj.client = { $elemMatch: {  email : new RegExp(req.body.filter.clientEmail, 'i') } };
-	}
-
-	return filterObj;
-};
 // retrieve projects count
 exports.getProjectsCnt = function(req, res){
 
@@ -171,7 +171,7 @@ exports.findLimit = function(req, res) {
 
 	let limit = req.body.queryLimit || 50;
 
-	if(req.body.queryLimit === 'all') {
+	if(req.body.queryLimit.toLowerCase() === 'all') {
 		limit = 0;
 	}
 
@@ -212,7 +212,7 @@ exports.findLimitWithFilter = function(req, res) {
 	// set collection sort order
 	if(req.body.filter.sortOrder){
 		let selSort = req.body.filter.sortOrder;
-		if(req.body.filter.ascDesc === 'desc'){
+		if(req.body.filter.ascDesc.toLowerCase() === 'desc'){
 			sortOrder[selSort] = -1;
 		} else {
 			sortOrder[selSort] = 1;
@@ -222,16 +222,13 @@ exports.findLimitWithFilter = function(req, res) {
 		sortOrder = '-estimatedCompletionDate';
 	}
 	// set and store limits
-	let startVal, limitVal;
+	let startVal = 0, 
+		limitVal = 100;
 	if(req.body.startVal){
 		startVal = req.body.startVal;
-	} else {
-		startVal = 0;
 	}
 	if(req.body.limitVal){
 		limitVal = req.body.limitVal;
-	} else {
-		limitVal = 100;
 	}
 
 	// permit certain user roles full access

@@ -124,7 +124,7 @@ const emailFuncs = {
     
                 // assign part text
                 if(typeof selTalent.part !== 'undefined'){
-                    if(talentInfo.prefLanguage !== 'Spanish'){
+                    if(talentInfo.prefLanguage.toLowerCase() !== 'spanish'){
                         if(selTalent.part !== ''){
                             part = '<p>You are cast for the part of ' + selTalent.part + '</p>';
                         }
@@ -169,12 +169,8 @@ const emailFuncs = {
                 }
     
                 // assign email subject line
-                if(selTalent.requested === true){
-                    emailSubject = nameArr[0] + ' has a REQUESTED Audition - ' + project.title + ' - Due ' + dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
-                } else {
-                    emailSubject = nameArr[0] + ' has an Audition - ' + project.title + ' - Due ' + dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
-                }
-                if(typeof subjectAd !== 'undefined'){
+                emailSubject = nameArr[0] + ' has a '+(selTalent.requested === true ? 'REQUESTED ' : '')+'Audition - ' + project.title + ' - Due ' + dateFormat(newDate, 'dddd, mmmm dS, yyyy, h:MM TT') + ' EST';
+                if(typeof subjectAd !== 'undefined' && subjectAd !== ''){
                     emailSubject = 'NEW ' + subjectAd + ' FILE ' + emailSubject;
                 }
 
@@ -246,29 +242,20 @@ const emailFuncs = {
                                 referenceFiles: ''
                             };
                 if(talentInfo.type.toLowerCase() === 'email' || override === true){
-                    let i;
     
                     // add scripts and assets to email body
                     email.scripts = '\n' + '<strong>Scripts:</strong>' + '<br>';
-                    if(typeof project.scripts !== 'undefined'){
-                        if(project.scripts.length > 0){
-                            for(i = 0; i < project.scripts.length; ++i){
-                                email.scripts += '<a href="http://' + req.headers.host + '/res/scripts/' + project._id + '/' + project.scripts[i].file.name + '">' + project.scripts[i].file.name + '</a><br>';
-                            }
-                        } else {
-                            email.scripts += 'None';
+                    if(typeof project.scripts !== 'undefined' && project.scripts.length > 0){
+                        for(const i in project.scripts) {
+                            email.scripts += '<a href="http://' + req.headers.host + '/res/scripts/' + project._id + '/' + project.scripts[i].file.name + '">' + project.scripts[i].file.name + '</a><br>';
                         }
                     } else {
                         email.scripts += 'None';
                     }
                     email.referenceFiles = '\n' + '<strong>Reference Files:</strong>' + '<br>';
-                    if(typeof project.referenceFiles !== 'undefined'){
-                        if(project.referenceFiles.length > 0){
-                            for(const j in project.referenceFiles) {
-                                email.referenceFiles += '<a href="http://' + req.headers.host + '/res/referenceFiles/' + project._id + '/' + project.referenceFiles[j].file.name + '">' + project.referenceFiles[j].file.name + '</a><br>';
-                            }
-                        } else {
-                            email.referenceFiles += 'None';
+                    if(typeof project.referenceFiles !== 'undefined' && project.referenceFiles.length > 0){
+                        for(const j in project.referenceFiles) {
+                            email.referenceFiles += '<a href="http://' + req.headers.host + '/res/referenceFiles/' + project._id + '/' + project.referenceFiles[j].file.name + '">' + project.referenceFiles[j].file.name + '</a><br>';
                         }
                     } else {
                         email.referenceFiles += 'None';

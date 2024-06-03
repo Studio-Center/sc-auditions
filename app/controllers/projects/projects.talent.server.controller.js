@@ -78,7 +78,6 @@ exports.updateSingleTalentStatus = function (req, res){
                 message: errorHandler.getErrorMessage(err)
             });
 		} else {
-
 			return res.status(200).send();
 		}
 	});
