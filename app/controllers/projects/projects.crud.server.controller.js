@@ -122,7 +122,7 @@ exports.create = function(req, res) {
 	// method vars
 	let project = new Project(req.body.project),
 		copiedScripts = req.body.copiedScripts,
-		copiedReferenceFiles = req.body.copiedReferenceFiles
+		copiedReferenceFiles = req.body.copiedReferenceFiles,
 		appDir = global.appRoot,
 		tempPath = '',
 		relativePath =  '',
