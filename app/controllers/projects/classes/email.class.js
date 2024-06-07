@@ -22,11 +22,14 @@ const emailFuncs = {
     clients: function(client, email, project, req, res){
         async.waterfall([
             function(done) {
-                User.findOne({'_id':client.userId}).sort('-created').then(function (clientInfo) {
-                    done(null, clientInfo);
-                }).catch(function (err) {
-                    done(err, '');
-                });
+                try{
+                    User.findOne({'_id':client.userId}).sort('-created')
+                    .then(function (clientInfo) {
+                        done(null, clientInfo);
+                    });
+                }catch (error) {
+                    done(error, '');
+                }
             },
             function(clientInfo, done) {
                 let emailSig = '';
@@ -95,13 +98,18 @@ const emailFuncs = {
 
         async.waterfall([
             function(done) {
+
                 let ownerId = project.owner || project.user._id;
-                User.findOne({'_id':ownerId}).sort('-created').then(function (owner) {
-                    owner = owner || req.user;
-                    done(null, owner);
-                }).catch(function (err) {
-                    done(err, req.user);
-                });
+
+                try{
+                    User.findOne({'_id':ownerId}).sort('-created')
+                    .then(function (owner) {
+                        owner = owner || req.user;
+                        done(null, owner);
+                    });
+                }catch (error) {
+                    done(error, req.user);
+                }
             },
             function(owner, done) {
 
@@ -223,11 +231,13 @@ const emailFuncs = {
         async.waterfall([
             // gather info for selected talent
             function(done) {
-                Talent.findOne({'_id':talent.talentId}).sort('-created').then(function (talentInfo) {
-                    done(null, talentInfo);
-                }).catch(function (err) {
-                    done(err, null);
-                });
+                try{
+                    Talent.findOne({'_id':talent.talentId}).sort('-created').then(function (talentInfo) {
+                        done(null, talentInfo);
+                    });
+                }catch (error) {
+                    done(error, null);
+                }
             },
             // generate email body
             function(talentInfo, done) {
