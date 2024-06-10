@@ -115,7 +115,7 @@ const emailFuncs = {
 
                 let emailTmpl = 'templates/projects/new-project-talent-email';
                 // load language specific email templates
-                if(typeof talentInfo.prefLanguage !== 'undefined' && talentInfo.prefLanguage.toLowerCase() === 'Spanish'){
+                if(typeof talentInfo.prefLanguage !== 'undefined' && talentInfo.prefLanguage.toLowerCase() === 'spanish'){
                     emailTmpl = 'templates/projects/new-project-talent-email-spanish';
                 }
     
