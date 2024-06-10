@@ -115,7 +115,7 @@ const emailFuncs = {
 
                 let emailTmpl = 'templates/projects/new-project-talent-email';
                 // load language specific email templates
-                if(talentInfo.prefLanguage === 'Spanish'){
+                if(typeof talentInfo.prefLanguage !== 'undefined' && talentInfo.prefLanguage.toLowerCase() === 'Spanish'){
                     emailTmpl = 'templates/projects/new-project-talent-email-spanish';
                 }
     
@@ -132,7 +132,7 @@ const emailFuncs = {
     
                 // assign part text
                 if(typeof selTalent.part !== 'undefined'){
-                    if(talentInfo.prefLanguage.toLowerCase() !== 'spanish'){
+                    if(typeof talentInfo.prefLanguage !== 'undefined' && talentInfo.prefLanguage.toLowerCase() !== 'spanish'){
                         if(selTalent.part !== ''){
                             part = '<p>You are cast for the part of ' + selTalent.part + '</p>';
                         }
