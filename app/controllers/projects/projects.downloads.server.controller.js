@@ -18,9 +18,9 @@ exports.downloadAllAuditionsClient = function(req, res, next){
         
         let fileLoc = '',
             appDir = global.appRoot,
-            relativePath =  'res' + '/' + 'auditions' + '/' + req.body.project._id + '/',
+            relativePath =  'res/auditions/' + req.body.project._id + '/',
             newPath = appDir + '/public/' + relativePath,
-            savePath = appDir + '/public/' + 'res' + '/' + 'archives' + '/',
+            savePath = appDir + '/public/res/archives/',
             zipName = req.body.project.title.replace('/','-') + '.zip',
             newZip = savePath + zipName;
 
@@ -55,9 +55,9 @@ exports.downloadAllAuditionsClient = function(req, res, next){
 exports.downloadAllAuditions = function(req, res, next){
     // get app dir
     let appDir = global.appRoot,
-        relativePath =  'res' + '/' + 'auditions' + '/' + req.body.project._id + '/',
+        relativePath =  'res/auditions/' + req.body.project._id + '/',
         newPath = appDir + '/public/' + relativePath,
-        savePath = appDir + '/public/' + 'res' + '/' + 'archives' + '/',
+        savePath = appDir + '/public/res/archives/',
         zipName = req.body.project.title.replace('/','-') + '.zip',
         newZip = savePath + zipName;
 
@@ -86,9 +86,9 @@ exports.downloadBookedAuditions = function(req, res, next){
         projectTitle = req.body.projectTitle.replace('/','-'),
         bookedAuds = req.body.bookedAuds,
         appDir = global.appRoot,
-        relativePath =  'res' + '/' + 'auditions' + '/' + projectId + '/',
+        relativePath =  'res/auditions/' + projectId + '/',
         newPath = appDir + '/public/' + relativePath,
-        savePath = appDir + '/public/' + 'res' + '/' + 'archives' + '/',
+        savePath = appDir + '/public/res/archives/',
         zipName = projectTitle + '.zip',
         newZip = savePath + zipName;
 
@@ -135,9 +135,9 @@ exports.downloadSelectedAuditions = function(req, res, next){
         projectTitle = req.body.projectTitle.replace('/','-'),
         selAuds = req.body.selectedAuds,
         appDir = global.appRoot,
-        relativePath =  'res' + '/' + 'auditions' + '/' + projectId + '/',
+        relativePath =  'res/auditions/' + projectId + '/',
         newPath = appDir + '/public/' + relativePath,
-        savePath = appDir + '/public/' + 'res' + '/' + 'archives' + '/',
+        savePath = appDir + '/public/res/archives/',
         zipName = projectTitle + '.zip',
         newZip = savePath + zipName;
 
