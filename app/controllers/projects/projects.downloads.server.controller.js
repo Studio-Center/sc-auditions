@@ -35,12 +35,17 @@ exports.downloadAllAuditionsClient = function(req, res, next){
             res.jsonp({zip:zipName});
         });
 
+        archive.on("error", function (err) {
+            errorHandler.getErrorMessage(err);
+        });
+
+        archive.pipe(output);
+
         for(const i in auditionsFiles) {
             fileLoc = newPath + auditionsFiles[i].file.name;
             archive.file(fileLoc, { name:auditionsFiles[i].file.name });
         }
-
-        archive.pipe(output);
+        
         archive.finalize();
 
     }).catch(function (err) {
@@ -72,10 +77,13 @@ exports.downloadAllAuditions = function(req, res, next){
         res.jsonp({zip:zipName});
     });
 
-    archive.directory(newPath, 'my-auditions');
+    archive.on("error", function (err) {
+        errorHandler.getErrorMessage(err);
+    });
 
     archive.pipe(output);
-    archive.finalize();
+
+    archive.directory(newPath, 'my-auditions').finalize();
 
 };
 
@@ -103,6 +111,12 @@ exports.downloadBookedAuditions = function(req, res, next){
         res.jsonp({zip:zipName});
     });
 
+    archive.on("error", function (err) {
+        errorHandler.getErrorMessage(err);
+    });
+
+    archive.pipe(output);
+
     // add all booked auditions
     async.eachSeries(bookedAuds, function (audition, next) {
 
@@ -119,7 +133,6 @@ exports.downloadBookedAuditions = function(req, res, next){
                 message: errorHandler.getErrorMessage(err)
             });
         } else {
-            archive.pipe(output);
             archive.finalize();
         }
         
@@ -152,6 +165,12 @@ exports.downloadSelectedAuditions = function(req, res, next){
         res.jsonp({zip:zipName});
     });
 
+    archive.on("error", function (err) {
+        errorHandler.getErrorMessage(err);
+    });
+
+    archive.pipe(output);
+    
     // add all booked auditions
     async.eachSeries(selAuds, function (audition, next) {
 
@@ -167,7 +186,6 @@ exports.downloadSelectedAuditions = function(req, res, next){
                 message: errorHandler.getErrorMessage(err)
             });
         } else {
-           archive.pipe(output);
             archive.finalize(); 
         }
 
