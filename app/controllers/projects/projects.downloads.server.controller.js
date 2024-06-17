@@ -16,8 +16,7 @@ exports.downloadAllAuditionsClient = function(req, res, next){
 
     Audition.find({'project': Object(req.body.project._id),'published':{ "$in": ["true",true] }}).sort('-created').then(function (auditionsFiles) {
         
-        let fileLoc = '',
-            appDir = global.appRoot,
+        let appDir = global.appRoot,
             relativePath =  'res/auditions/' + req.body.project._id + '/',
             newPath = appDir + '/public/' + relativePath,
             savePath = appDir + '/public/res/archives/',
@@ -39,14 +38,26 @@ exports.downloadAllAuditionsClient = function(req, res, next){
             errorHandler.getErrorMessage(err);
         });
 
-        archive.pipe(output);
+        // add all booked auditions
+        async.eachSeries(auditionsFiles, function (audition, next) {
 
-        for(const i in auditionsFiles) {
-            fileLoc = newPath + auditionsFiles[i].file.name;
-            archive.file(fileLoc, { name:auditionsFiles[i].file.name });
-        }
-        
-        archive.finalize();
+            if (fs.existsSync(newPath + audition.file.name)) {
+                archive.file(newPath + audition.file.name, { name:audition.file.name });
+            }
+            next();
+
+        }, function (err) {
+
+            if(err){
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
+            } else {
+                archive.finalize(); 
+                archive.pipe(output);
+            }
+
+        });
 
     }).catch(function (err) {
         return res.status(400).send({
@@ -81,9 +92,8 @@ exports.downloadAllAuditions = function(req, res, next){
         errorHandler.getErrorMessage(err);
     });
 
-    archive.pipe(output);
-
     archive.directory(newPath, 'my-auditions').finalize();
+    archive.pipe(output);
 
 };
 
@@ -115,8 +125,6 @@ exports.downloadBookedAuditions = function(req, res, next){
         errorHandler.getErrorMessage(err);
     });
 
-    archive.pipe(output);
-
     // add all booked auditions
     async.eachSeries(bookedAuds, function (audition, next) {
 
@@ -134,6 +142,7 @@ exports.downloadBookedAuditions = function(req, res, next){
             });
         } else {
             archive.finalize();
+            archive.pipe(output);
         }
         
     });
@@ -169,8 +178,6 @@ exports.downloadSelectedAuditions = function(req, res, next){
         errorHandler.getErrorMessage(err);
     });
 
-    archive.pipe(output);
-    
     // add all booked auditions
     async.eachSeries(selAuds, function (audition, next) {
 
@@ -180,13 +187,13 @@ exports.downloadSelectedAuditions = function(req, res, next){
         next();
 
     }, function (err) {
-
         if(err){
             return res.status(400).send({
                 message: errorHandler.getErrorMessage(err)
             });
         } else {
             archive.finalize(); 
+            archive.pipe(output);
         }
 
     });
