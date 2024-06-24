@@ -251,35 +251,6 @@ exports.create = function(req, res) {
 					});
 
 				},
-				// generate Kevin's email
-				function(talentData, emailSig, done) {
-					res.render('templates/talents/new-talent-kevin', {
-						talentData: talent,
-						emailSignature: emailSig
-					}, function(err, emailHTML) {
-						done(err, emailHTML, talentData, emailSig);
-					});
-				},
-				// send Kevin an email
-				function(emailHTML, talentData, emailSig, done) {
-
-					let emailSubject = 'NEW TALENT ADDITION TO VO ROSTER:  ' + talent.name + ' ' + talent.lastName,
-						mailOptions = {
-										to: config.mailer.notifications,
-										from: req.user.email || config.mailer.from,
-										subject: emailSubject,
-										html: emailHTML
-									};
-
-					sgMail
-					.send(mailOptions)
-					.then(() => {
-						done(null);
-					}, error => {
-						done(error);
-					});
-
-				},
 				], function(err) {
 				if (err) {
 					return res.status(400).send({
