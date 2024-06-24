@@ -207,9 +207,8 @@ exports.create = function(req, res) {
 
 					let emailSubject = 'NEW TALENT ADDITION TO VO ROSTER:  ' + talent.name + ' ' + talent.lastName,
 						mailOptions = {
-										to: 'Dave@studiocenter.com',
+										to: ['dave@studiocenter.com','samantha@studiocenter.com','shippley@studiocenter.com '],
 										from: req.user.email || config.mailer.from,
-										cc: config.mailer.notifications,
 										subject: emailSubject,
 										html: emailHTML
 									};
@@ -239,7 +238,6 @@ exports.create = function(req, res) {
 						mailOptions = {
 										to: ['Ken@studiocenter.com'],
 										from: req.user.email || config.mailer.from,
-										cc: config.mailer.notifications,
 										subject: emailSubject,
 										html: emailHTML
 									};
