@@ -324,6 +324,8 @@ const emailFuncs = {
                     project = Object.assign(project, newProject);
     
                     req.project = project;
+                    // clear version
+                    delete req.project.__v;
     
                     project.save().then(function () {
                         res.status(200).json(project);
