@@ -81,8 +81,7 @@ exports.updateNoRefresh = function(req, res){
 						project.markModified('modified');
 
 						req.project = project;
-
-						//delete project.__v;
+						delete req.project.__v;
 
 						project.save().then(function () {
 							res.jsonp(project);

@@ -63,6 +63,7 @@ exports.updateSingleTalentStatus = function (req, res){
 				project = Object.assign(project, newProject);
 
 				req.project = project;
+				delete req.project.__v;
 
 				project.save().then(function () {
 				}).catch(function (err) {
@@ -161,6 +162,7 @@ exports.updateTalentNote = function (req, res){
                 project.markModified('modified');
 
 				req.project = project;
+				delete req.project.__v;
 
 				project.save().then(function () {
 					done(null);

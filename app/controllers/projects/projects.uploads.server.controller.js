@@ -806,6 +806,7 @@ exports.uploadBackup = function(req, res, next){
                                 project = new Project(JSONobj);
     
                                 req.project = project;
+                                delete req.project.__v;
     
                                 // delete existing project if exists
                                 Project.findById(project._id).then(function (delProject) {
