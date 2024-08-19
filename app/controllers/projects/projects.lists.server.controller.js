@@ -70,6 +70,8 @@ exports.loadProject = function(req, res){
 						message: errorHandler.getErrorMessage(err)
 					});
 				} else {
+					// clear version
+                    delete project.__v;
 					project.save().then(function (upproject) {
 						return res.jsonp(upproject);
 					}).catch(function (err) {

@@ -179,23 +179,29 @@ exports.downloadSelectedAuditions = function(req, res, next){
     });
 
     // add all booked auditions
-    async.eachSeries(selAuds, function (audition, next) {
+    if(selAuds.length > 0){
+        async.eachSeries(selAuds, function (audition, next) {
 
-        if (fs.existsSync(newPath + audition)) {
-            archive.file(newPath + audition, { name:audition });
-        }
-        next();
-
-    }, function (err) {
-        if(err){
-            return res.status(400).send({
-                message: errorHandler.getErrorMessage(err)
-            });
-        } else {
-            archive.finalize(); 
-            archive.pipe(output);
-        }
-
-    });
+            if (fs.existsSync(newPath + audition)) {
+                archive.file(newPath + audition, { name:audition });
+            }
+            next();
+    
+        }, function (err) {
+            if(err){
+                return res.status(400).send({
+                    message: errorHandler.getErrorMessage(err)
+                });
+            } else {
+                archive.finalize(); 
+                archive.pipe(output);
+            }
+    
+        });
+    } else {
+        archive.finalize(); 
+        archive.pipe(output);
+    }
+    
 
 };

@@ -58,6 +58,8 @@ describe('Project Model Unit Tests:', function() {
 		});
 
 		it('should be able to save without problems', function(done) {
+			// clear version
+			delete project.__v;
 			project.save().then(function (project) {
 				expect(project).to.exist;
 				done();
@@ -69,7 +71,8 @@ describe('Project Model Unit Tests:', function() {
 
 		it('should be able to show an error when try to save without name', function(done) {
 			project.title = '';
-
+			// clear version
+			delete project.__v;
 			project.save().then(function (project) {
 				expect(project).to.exist;
 				done();

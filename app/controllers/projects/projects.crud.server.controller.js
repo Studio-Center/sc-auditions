@@ -80,8 +80,10 @@ exports.updateNoRefresh = function(req, res){
 						project.markModified('talent');
 						project.markModified('modified');
 
+						// clear version
+						delete project.__v;
+
 						req.project = project;
-						delete req.project.__v;
 
 						project.save().then(function () {
 							res.jsonp(project);
@@ -132,6 +134,9 @@ exports.create = function(req, res) {
 	const allowedRoles = ['admin','producer/auditions director', 'auditions director', 'audio intern','production coordinator'];
 
 	if (radash.intersects(req.user.roles, allowedRoles)) {
+
+		// clear version
+		delete project.__v;
 
 		// save final project
 		project.save().then(function (project) {
@@ -266,6 +271,9 @@ exports.create = function(req, res) {
 				Project.findById(project.id).then(function (oldProject) {
 
 					oldProject.status = 'ReAuditioned';
+
+					// clear version
+                    delete oldProject.__v;
 
 					oldProject.save().then(function () {
 					}).catch(function (err) {
@@ -461,6 +469,8 @@ exports.create = function(req, res) {
 					// save final project
 					project.markModified("talent");
 					project.markModified("phases");
+					// clear version
+                    delete project.__v;
 					project.save().then(function (newProject) {
 						// write change to log
 						let log = {
@@ -566,6 +576,8 @@ exports.update = function(req, res) {
 				done();
 			},
 			function(done) {
+				// clear version
+				delete project.__v;
 				project.save().then(function (upproject) {
 
 					// write change to log

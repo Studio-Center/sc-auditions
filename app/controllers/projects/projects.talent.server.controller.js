@@ -62,8 +62,10 @@ exports.updateSingleTalentStatus = function (req, res){
 
 				project = Object.assign(project, newProject);
 
+				// clear version
+				delete project.__v;
+
 				req.project = project;
-				delete req.project.__v;
 
 				project.save().then(function () {
 				}).catch(function (err) {
@@ -99,6 +101,9 @@ exports.updateTalentStatus = function(req, res){
 				project.populate('user', 'displayName');
 
                 project = Object.assign(project, req.body.project);
+
+				// clear version
+				delete project.__v;
 
                 req.project = project ;
 
@@ -161,8 +166,10 @@ exports.updateTalentNote = function (req, res){
                 project.markModified('talent');
                 project.markModified('modified');
 
+				// clear version
+				delete project.__v;
+
 				req.project = project;
-				delete req.project.__v;
 
 				project.save().then(function () {
 					done(null);

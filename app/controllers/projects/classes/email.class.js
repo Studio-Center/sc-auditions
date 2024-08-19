@@ -322,10 +322,11 @@ const emailFuncs = {
                     project.populate('user', 'displayName');
     
                     project = Object.assign(project, newProject);
-    
-                    req.project = project;
+
                     // clear version
-                    delete req.project.__v;
+                    delete project.__v;
+
+                    req.project = project;
     
                     project.save().then(function () {
                         res.status(200).json(project);

@@ -74,7 +74,8 @@ exports.bookAuditions = function(req, res, next){
 			Project.findById(project._id).then(function (project) {
 
 				project = Object.assign(project, newProject);
-
+				// clear version
+				delete project.__v;
 				project.save().then(function () {
 						done(null, selAuds, project);
 				});

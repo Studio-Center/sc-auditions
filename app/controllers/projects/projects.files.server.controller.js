@@ -242,8 +242,8 @@ exports.backupProjectsById = function(req, res, next){
 
 		Project.findById(projectId).then(function (project) {
 			if (!project) return next(new Error('Failed to load Project '));
+			delete project.__v;
 			req.project = project;
-			delete req.project.__v;
 
 			// set project file directory params
 			auditionsDir = appDir + '/public/res/auditions/' + project._id + '/';

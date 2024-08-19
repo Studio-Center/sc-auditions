@@ -450,6 +450,8 @@ exports.uploadAudition = function(req, res, next){
                                 project.markModified('talent');
                                 project.markModified('modified');
                                 //curTalent.markModified('status');
+                                // clear version
+                                delete project.__v;
                                 project.save().catch(function (err) {
 									log = {
                                         type: 'error',
@@ -730,6 +732,9 @@ exports.uploadTalentAudition = function(req, res, next){
 
 				project = Object.assign(project, updatedProject.toObject());
 
+                // clear version
+                delete project.__v;
+                
 				project.save().then(function () {
 
 					done(err);
@@ -804,9 +809,11 @@ exports.uploadBackup = function(req, res, next){
                                 delete(JSONobj.user);
     
                                 project = new Project(JSONobj);
-    
+                                
+                                // clear version
+                                delete project.__v;
+
                                 req.project = project;
-                                delete req.project.__v;
     
                                 // delete existing project if exists
                                 Project.findById(project._id).then(function (delProject) {
