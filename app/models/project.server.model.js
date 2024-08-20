@@ -155,6 +155,8 @@ const ProjectSchema = new Schema({
 	clientNotes: {
 		type: Array
 	},
+},{
+	versionKey: false
 });
 
 /**

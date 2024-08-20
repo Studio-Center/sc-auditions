@@ -75,6 +75,8 @@ const AuditionSchema = new Schema({
 	approved: {
 		type: Object
 	},
+},{
+	versionKey: false
 });
 
 mongoose.model('Audition', AuditionSchema);

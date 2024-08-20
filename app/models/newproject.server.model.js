@@ -26,6 +26,8 @@ const NewprojectSchema = new Schema({
 		type: Date,
 		default: Date.now
 	}
+},{
+	versionKey: false
 });
 
 mongoose.model('Newproject', NewprojectSchema);

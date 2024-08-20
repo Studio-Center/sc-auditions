@@ -117,7 +117,8 @@ const UserSchema = new Schema({
 		type: Object
 	}
 }, {
-	strictPopulate: false
+	strictPopulate: false,
+	versionKey: false
 });
 
 UserSchema.plugin(uniqueValidator);

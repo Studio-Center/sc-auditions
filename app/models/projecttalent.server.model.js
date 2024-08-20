@@ -56,6 +56,8 @@ const ProjecttalentSchema = new Schema({
 	talentId : {
 		type: String
 	},
+},{
+	versionKey: false
 });
 
 mongoose.model('Projecttalent', ProjecttalentSchema);

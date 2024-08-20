@@ -34,6 +34,8 @@ const TypecastSchema = new Schema({
 		type: Schema.ObjectId,
 		ref: 'User'
 	}
+},{
+	versionKey: false
 });
 
 mongoose.model('Typecast', TypecastSchema);
