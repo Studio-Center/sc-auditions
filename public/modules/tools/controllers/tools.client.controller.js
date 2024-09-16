@@ -301,6 +301,7 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 			success(function(data, status, headers, config) {
 				alert('Selected talent has been emailed.');
 
+				$scope.gatherTalents();
 				$scope.gatherTalentsToCall();
 				$scope.gatherTalentsMessagesLeft();
 				$scope.gatherTalentsAlreadyScheduled();
@@ -316,6 +317,7 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 		        projectId: projectId
 		    }).
 			success(function(data, status, headers, config) {
+				$scope.gatherTalents();
 				$scope.gatherTalentsToCall();
 				$scope.gatherTalentsMessagesLeft();
 				$scope.gatherTalentsAlreadyScheduled();
@@ -570,6 +572,11 @@ angular.module('tools').controller('ToolsController', ['$scope', '$stateParams',
 			success(function(data, status, headers, config) {
 				//$scope.alerts.push({type: 'success', msg: 'All talents have been imported into the database.'});
 				alert('Talent note has been updated!');
+				$scope.gatherTalents();
+				$scope.gatherTalentsToCall();
+				$scope.gatherTalentsMessagesLeft();
+				$scope.gatherTalentsAlreadyScheduled();
+				$scope.gatherEmailedTalent();
 			}).
 			error(function(data, status, headers, config){
 				alert('An error occured while attempting to add a note to selected talent. ' + String(data.message));
