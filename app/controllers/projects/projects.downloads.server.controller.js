@@ -53,6 +53,7 @@ exports.downloadAllAuditionsClient = function(req, res, next){
                     message: errorHandler.getErrorMessage(err)
                 });
             } else {
+                archive.finalize();
                 archive.pipe(output);
             }
 
@@ -91,7 +92,7 @@ exports.downloadAllAuditions = function(req, res, next){
         errorHandler.getErrorMessage(err);
     });
 
-    archive.directory(newPath, 'my-auditions');
+    archive.directory(newPath, 'my-auditions').finalize();
     archive.pipe(output);
 
 };
