@@ -141,6 +141,7 @@ exports.downloadBookedAuditions = function(req, res, next){
                 message: errorHandler.getErrorMessage(err)
             });
         } else {
+            archive.finalize();
             archive.pipe(output);
         }
         
@@ -192,11 +193,13 @@ exports.downloadSelectedAuditions = function(req, res, next){
                     message: errorHandler.getErrorMessage(err)
                 });
             } else {
+                archive.finalize();
                 archive.pipe(output);
             }
     
         });
     } else {
+        archive.finalize();
         archive.pipe(output);
     }
     
