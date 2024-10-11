@@ -92,7 +92,7 @@ exports.sendTalentCanceledEmail = function(req, res){
         override = req.body.override || false;
 
     // reload project
-    Project.findOne({'_id':projectId}).sort('-created').then(function (project) {
+    Project.findById(projectId).then(function (project) {
 
         // walk through and email all selected clients
         async.eachSeries(talents, function (selTalent, callback) {
@@ -223,7 +223,7 @@ exports.sendTalentScriptUpdateEmail = function(req, res){
         chgMade = req.body.chgMade;
 
     // reload project
-    Project.findOne({'_id':projectId}).sort('-created').then(function (project) {
+    Project.findById(projectId).then(function (project) {
 
         let email =  {
                         projectId: '',
@@ -313,7 +313,7 @@ exports.sendTalentDirectorsEmail = function(req, res){
     let projectId = req.body.projectId;
 
     // reload project
-    Project.findOne({'_id':projectId}).sort('-created').then(function (project) {
+    Project.findById(projectId).then(function (project) {
 
         // walk through and email all selected clients
         async.waterfall([
@@ -415,7 +415,7 @@ exports.sendTalentEmailById = function(req, res){
     async.waterfall([
         // gather info for selected talent
         function(done) {
-            Project.findOne({'_id':projectId}).sort('-created').then(function (project) {
+            Project.findById(projectId).then(function (project) {
                 done(null, project);
             }).catch(function (err) {
                 done(err, null);

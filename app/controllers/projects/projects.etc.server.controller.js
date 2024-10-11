@@ -26,7 +26,7 @@ exports.bookAuditions = function(req, res, next){
 	async.waterfall([
 		// gather info for selected project
 		function(done) {
-			Project.findOne({'_id':projectId}).sort('-created').then(function (project) {
+			Project.findById(projectId).then(function (project) {
 				done(null, project);
 			});
 		},

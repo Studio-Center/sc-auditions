@@ -593,7 +593,7 @@ exports.findAudsPerProducer = function(req, res, next){
 								audsResult[audition.approved.by.userId].projects = {};
 								audsResult[audition.approved.by.userId].projects[audition.project] = {};
 								audsResult[audition.approved.by.userId].projects[audition.project].title = audition.project;
-								Project.findOne({'_id':audition.project}).sort('-created').then(function (project) {
+								Project.findById(audition.project).sort('-created').then(function (project) {
 									audsResult[audition.approved.by.userId].projects[audition.project].title = project.title;
 								}).catch(function (err) {
 									audsResult[audition.approved.by.userId].projects[audition.project].title = audition.project;
@@ -608,7 +608,7 @@ exports.findAudsPerProducer = function(req, res, next){
 									audsResult[audition.approved.by.userId].projects[audition.project] = {};
 									
 									audsResult[audition.approved.by.userId].projects[audition.project].title = audition.project;
-									Project.findOne({'_id':audition.project}).sort('-created').then(function (project) {
+									Project.findById(audition.project).sort('-created').then(function (project) {
 										audsResult[audition.approved.by.userId].projects[audition.project].title = project.title;
 									}).catch(function (err) {
 										audsResult[audition.approved.by.userId].projects[audition.project].title = audition.project;

@@ -20,7 +20,7 @@ exports.updateSingleTalentStatus = function (req, res){
 	async.waterfall([
 		// gather info for selected talent
 		function(done) {
-			Project.findOne({'_id':projectId}).sort('-created').then(function (project) {
+			Project.findById(projectId).then(function (project) {
 				done(null, project);
 			}).catch(function (err) {
 				done(err, null);
@@ -135,7 +135,7 @@ exports.updateTalentNote = function (req, res){
 	async.waterfall([
 		// gather info for selected talent
 		function(done) {
-			Project.findOne({'_id':projectId}).sort('-created').then(function (project) {
+			Project.findById(projectId).then(function (project) {
 				done(null, project);
 			}).catch(function (err) {
 				done(err, null);

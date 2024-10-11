@@ -22,7 +22,7 @@ exports.deleteAudition = function(req, res){
         audFile = '';
 
 	if(aud){
-		Audition.findById(aud._id).sort('-created').then(function (audition) {
+		Audition.findById(aud._id).then(function (audition) {
 			// set aud file path
 			audFile = appDir + '/public/res/auditions/' + String(audition.project) + '/' + audition.file.name;
 			// remove file from file system
@@ -81,7 +81,7 @@ exports.saveAudition = function(req, res){
 	let aud = req.body.audition,
 		appDir = global.appRoot;
 
-	Audition.findById(aud._id).sort('-created').then(function (audition) {
+	Audition.findById(aud._id).then(function (audition) {
 
 		// check for aud rename
 		if (aud.rename) {
@@ -158,7 +158,7 @@ exports.deleteFileByName = function(req, res){
 		// log instance if project info included
 		if(typeof req.body.projectId !== 'undefined'){
 
-			Project.findOne({'_id':projectId}).sort('-created').then(function (project) {
+			Project.findById(projectId).then(function (project) {
 
 				if(project){
 
