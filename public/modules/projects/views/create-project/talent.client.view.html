@@ -228,7 +228,7 @@
 </div>
 
 <div data-ng-show="error" class="text-danger">
-    <strong data-ng-bind="error"></strong>
+    <strong data-ng-bind="error.logString"></strong>
 </div>
 <div class="redBG" style="padding:10px 5px;text-align:center" ng-if="(newProject.scripts.length == 0 && newProject.copiedScripts.length == 0) || newProject.estimatedCompletionDate.length == 0 || newProject.title.length == 0 || newProject.talent.length == 0">
         <span ng-if="newProject.title.length == 0"><h4>Please add a project title to continue.</h4></span>

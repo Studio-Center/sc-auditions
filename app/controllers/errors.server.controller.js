@@ -23,7 +23,8 @@ var getUniqueErrorMessage = function(err) {
  * Get the error message from error object
  */
 exports.getErrorMessage = function(err) {
-	let message = '';
+	let message = '',
+	logString = '';
 
 	if(typeof err === 'string'){
 		message = err;
@@ -45,8 +46,12 @@ exports.getErrorMessage = function(err) {
 		message = err;
 	}
 
+	logString = moment().format('MM-DD-YYYY hh:mm a') + ' ' + message;
+	message.logString = logString;
+
 	// write message to console
-	console.log(moment().format('MM-DD-YYYY hh:mm a') + ' ' + message);
+	console.log(logString);
+
 	// return value
 	return message;
 };
