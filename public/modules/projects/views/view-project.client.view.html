@@ -490,6 +490,9 @@
               <input style="-ms-transform: scale(2);-moz-transform: scale(2);-webkit-transform: scale(2);-o-transform: scale(2);margin:10px" type="checkbox" ng-model="selectedMainClients[key]" ng-true-value="'{{::member.userId}}'">
               <a target="_blank" ng-href="/#!/usersedit/{{::member.userId}}" ng-bind="::member.name + ' ' + member.company"></a> - <span ng-bind="::useredit.company"></span> </li>
           </ul>
+          <div style="text-align:center;padding-bottom:7px">
+            <button class="btn btn-danger" ng-click="deleteClientUser()">Delete</button>
+          </div>
           <uib-accordion close-others="oneAtATime" ng-if="::permitRoles(['admin','production coordinator'])">
             <uib-accordion-group is-open="statusInt.open">
               <uib-accordion-heading data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">

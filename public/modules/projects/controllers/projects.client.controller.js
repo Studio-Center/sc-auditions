@@ -1015,6 +1015,40 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			$scope.updateNoRefresh();
 		};
 
+		$scope.deleteClientUser = function(){
+			var selectedMainClients = $scope.selectedMainClients,
+				smcLimit = selectedMainClients.length,
+				clients = $scope.project.client,
+				cLimit = clients.length,
+				i = 0,
+				j = 0;
+
+			if(smcLimit > 0){
+				for(i = 0; i < smcLimit; ++i){
+					console.log(i);
+					if(typeof selectedMainClients[i] !== 'undefined'){
+						if(cLimit > 0){
+							for(j = 0; j < cLimit; ++j){
+								console.log(i);
+								if(typeof clients[j] !== 'undefined'){
+									if(clients[j].userId === selectedMainClients[i]){
+										clients.splice(j, 1);
+										selectedMainClients.splice(i, 1);
+										--i;
+										--j;
+									}
+								} 
+							}
+						}
+					}
+				}
+			}
+
+			// update project store
+			//$scope.update();
+			$scope.updateNoRefresh();
+		};
+
 		$scope.updateClient = function(userId, displayName, email){
 
 			var clients = $scope.project.client,
