@@ -142,7 +142,6 @@ exports.updateAdmin = function(req, res) {
 					let mailOptions = {
 						to: user.email,
 						from: adminEmail || config.mailer.from,
-						cc: ccAddr,
 						subject: 'Studio Center Auditions - Client Information Updated',
 						html: clientEmailHTML
 					};
