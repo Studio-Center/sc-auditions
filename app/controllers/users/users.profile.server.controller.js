@@ -267,7 +267,6 @@ exports.create = function(req, res) {
 			let mailOptions = {
 				to: user.email,
 				from: adminEmail || config.mailer.from,
-				cc: config.mailer.notifications,
 				subject: emailSubject,
 				html: clientEmailHTML
 			};
