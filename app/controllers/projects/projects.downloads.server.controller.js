@@ -53,8 +53,8 @@ exports.downloadAllAuditionsClient = function(req, res, next){
                     message: errorHandler.getErrorMessage(err)
                 });
             } else {
-                archive.finalize();
                 archive.pipe(output);
+                archive.finalize();
             }
 
         });
