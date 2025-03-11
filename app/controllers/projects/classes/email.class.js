@@ -166,7 +166,7 @@ const emailFuncs = {
                 let emailSubject = '',
                     newDate = new Date(project.estimatedCompletionDate),
                     nameArr = [],
-                    talentEmails = [talentInfo.email];
+                    talentEmails = [(typeof talentInfo.email !== 'undefined' && talentInfo.email != '' ? talentInfo.email : '')];
     
                 // set vars
                 newDate = newDate.setHours(newDate.getHours() - 1);
@@ -184,39 +184,40 @@ const emailFuncs = {
 
                 // rem dups
                 let fromEmail = owner.email || config.mailer.from;
-                talentEmails = talentEmails.map(v => v.toLowerCase());
-                talentEmails = radash.unique(talentEmails);
-                talentEmails = radash.diff(talentEmails, [fromEmail]);
-
-                let mailOptions = {
-                    to: talentEmails,
-                    from: fromEmail,
-                    subject: emailSubject,
-                    html: talentEmailHTML
-                };
-
-                try{
-                    sgMail
-                    .send(mailOptions)
-                    .then(() => {
-                        // write change to log
-                        let log = {
-                            type: 'talent',
-                            sharedKey: selTalent.talentId,
-                            description: 'sent new project email to talent ' + selTalent.name + ' for ' + project.title,
-                            user: req.user
-                        };
-                        log = new Log(log);
-                        log.save();
+                if(talentEmails.length > 0){
+                    talentEmails = talentEmails.map(v => v.toLowerCase());
+                    talentEmails = radash.unique(talentEmails);
+                    talentEmails = radash.diff(talentEmails, [fromEmail]);
     
-                        done(null);
-                    }, error => {
+                    let mailOptions = {
+                        to: talentEmails,
+                        from: fromEmail,
+                        subject: emailSubject,
+                        html: talentEmailHTML
+                    };
+    
+                    try{
+                        sgMail
+                        .send(mailOptions)
+                        .then(() => {
+                            // write change to log
+                            let log = {
+                                type: 'talent',
+                                sharedKey: selTalent.talentId,
+                                description: 'sent new project email to talent ' + selTalent.name + ' for ' + project.title,
+                                user: req.user
+                            };
+                            log = new Log(log);
+                            log.save();
+        
+                            done(null);
+                        }, error => {
+                            done(error);
+                        });
+                    }catch (error) {
                         done(error);
-                    });
-                }catch (error) {
-                    done(error);
+                    }
                 }
-                
                 
             },
             ], function(err) {
