@@ -92,9 +92,9 @@ exports.downloadAllAuditions = function(req, res, next){
         errorHandler.getErrorMessage(err);
     });
 
-    archive.directory(newPath, 'my-auditions').finalize();
     archive.pipe(output);
-
+    archive.directory(newPath, 'my-auditions').finalize();
+    
 };
 
 exports.downloadBookedAuditions = function(req, res, next){
@@ -141,8 +141,8 @@ exports.downloadBookedAuditions = function(req, res, next){
                 message: errorHandler.getErrorMessage(err)
             });
         } else {
-            archive.finalize();
             archive.pipe(output);
+            archive.finalize();
         }
         
     });
@@ -193,14 +193,14 @@ exports.downloadSelectedAuditions = function(req, res, next){
                     message: errorHandler.getErrorMessage(err)
                 });
             } else {
-                archive.finalize();
                 archive.pipe(output);
+                archive.finalize();
             }
     
         });
     } else {
-        archive.finalize();
         archive.pipe(output);
+        archive.finalize();
     }
     
 

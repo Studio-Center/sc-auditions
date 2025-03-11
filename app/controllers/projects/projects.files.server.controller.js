@@ -295,8 +295,8 @@ exports.backupProjectsById = function(req, res, next){
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
-			archive.finalize();
 			archive.pipe(output);
+			archive.finalize();
 			res.jsonp({count: missingCnt, results:callTalents});
 		}
    	});
