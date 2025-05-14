@@ -46,7 +46,7 @@ exports.downloadAllAuditionsClient = function(req, res, next){
             }
             next();
 
-        }, function (err) {
+        }, function done(err) {
 
             if(err){
                 return res.status(400).send({
@@ -54,6 +54,7 @@ exports.downloadAllAuditionsClient = function(req, res, next){
                 });
             } else {
                 archive.pipe(output);
+                archive.finalize();
             }
 
         });
@@ -186,7 +187,7 @@ exports.downloadSelectedAuditions = function(req, res, next){
             }
             next();
     
-        }, function (err) {
+        }, function done(err) {
             if(err){
                 return res.status(400).send({
                     message: errorHandler.getErrorMessage(err)
