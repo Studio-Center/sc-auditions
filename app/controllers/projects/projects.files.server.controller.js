@@ -222,6 +222,18 @@ exports.backupProjectsById = function(req, res, next){
     	rimraf.sync(newZip);
     }
 
+	// remove zip file if exists
+	if (fs.existsSync(newZip)) {
+		fs.unlink(newZip, (err) => {
+				if (err) {
+					return res.status(400).send({
+						message: errorHandler.getErrorMessage(err)
+					});
+				}
+			}
+		);
+	}
+
     // archiver settings
     let output = fs.createWriteStream(newZip),
 		archive = archiver('zip');
