@@ -20,12 +20,24 @@ exports.downloadAllAuditionsClient = function(req, res, next){
             relativePath =  'res/auditions/' + req.body.project._id + '/',
             newPath = appDir + '/public/' + relativePath,
             savePath = appDir + '/public/res/archives/',
-            zipName = req.body.project.title.replace('/','-') + '.zip',
+            zipName = req.body.project.title.replace('/','-') + '-client-full.zip',
             newZip = savePath + zipName;
 
         // check for existing parent directory, create if needed
         if (!fs.existsSync(savePath)) {
             fs.mkdirSync(savePath);
+        }
+
+        // remove zip file if exists
+        if (fs.existsSync(newZip)) {
+            fs.unlink(newZip, (err) => {
+                    if (err) {
+                        return res.status(400).send({
+                            message: errorHandler.getErrorMessage(err)
+                        });
+                    }
+                }
+            );
         }
 
         let output = fs.createWriteStream(newZip);
@@ -74,12 +86,24 @@ exports.downloadAllAuditions = function(req, res, next){
         relativePath =  'res/auditions/' + req.body.project._id + '/',
         newPath = appDir + '/public/' + relativePath,
         savePath = appDir + '/public/res/archives/',
-        zipName = req.body.project.title.replace('/','-') + '.zip',
+        zipName = req.body.project.title.replace('/','-') + '-all.zip',
         newZip = savePath + zipName;
 
     // check for existing parent directory, create if needed
     if (!fs.existsSync(savePath)) {
         fs.mkdirSync(savePath);
+    }
+
+    // remove zip file if exists
+    if (fs.existsSync(newZip)) {
+        fs.unlink(newZip, (err) => {
+                if (err) {
+                    return res.status(400).send({
+                        message: errorHandler.getErrorMessage(err)
+                    });
+                }
+            }
+        );
     }
 
     let output = fs.createWriteStream(newZip);
@@ -107,12 +131,24 @@ exports.downloadBookedAuditions = function(req, res, next){
         relativePath =  'res/auditions/' + projectId + '/',
         newPath = appDir + '/public/' + relativePath,
         savePath = appDir + '/public/res/archives/',
-        zipName = projectTitle + '.zip',
+        zipName = projectTitle + '-booked.zip',
         newZip = savePath + zipName;
 
     // check for existing parent directory, create if needed
     if (!fs.existsSync(savePath)) {
         fs.mkdirSync(savePath);
+    }
+
+    // remove zip file if exists
+    if (fs.existsSync(newZip)) {
+        fs.unlink(newZip, (err) => {
+                if (err) {
+                    return res.status(400).send({
+                        message: errorHandler.getErrorMessage(err)
+                    });
+                }
+            }
+        );
     }
 
     let output = fs.createWriteStream(newZip);
@@ -160,12 +196,24 @@ exports.downloadSelectedAuditions = function(req, res, next){
         relativePath =  'res/auditions/' + projectId + '/',
         newPath = appDir + '/public/' + relativePath,
         savePath = appDir + '/public/res/archives/',
-        zipName = projectTitle + '.zip',
+        zipName = projectTitle + '-selected.zip',
         newZip = savePath + zipName;
 
     // check for existing parent directory, create if needed
     if (!fs.existsSync(savePath)) {
         fs.mkdirSync(savePath);
+    }
+
+    // remove zip file if exists
+    if (fs.existsSync(newZip)) {
+        fs.unlink(newZip, (err) => {
+                if (err) {
+                    return res.status(400).send({
+                        message: errorHandler.getErrorMessage(err)
+                    });
+                }
+            }
+        );
     }
 
     let output = fs.createWriteStream(newZip);
