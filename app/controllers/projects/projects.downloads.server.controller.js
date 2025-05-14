@@ -54,7 +54,6 @@ exports.downloadAllAuditionsClient = function(req, res, next){
                 });
             } else {
                 archive.pipe(output);
-                archive.finalize();
             }
 
         });
