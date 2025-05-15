@@ -872,8 +872,8 @@ exports.processGoogleSheet = function(req, res){
 // cleanup old archives and cache
 exports.garbageCleanup = function(req, res){
 
-	appDir = global.appRoot,
-	savePath = appDir + '/public/res/archives/';
+	let appDir = global.appRoot,
+		savePath = appDir + '/public/res/archives/';
 
 	// remove existing archive directory and files
 	if (fs.existsSync(savePath)) {
