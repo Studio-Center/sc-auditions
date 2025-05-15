@@ -20,7 +20,7 @@ module.exports = function(app) {
 		.get(tools.mainClientsCheck);
 
 	app.route('/tools/garbageCleanup')
-		.get(tools.mainClientsCheck);
+		.get(tools.garbageCleanup);
 
 	// call list routes
 	app.route('/tools/gatherTalentsToCall')
