@@ -869,6 +869,21 @@ exports.processGoogleSheet = function(req, res){
 
 };
 
+// cleanup old archives and cache
+exports.garbageCleanup = function(req, res){
+
+	appDir = global.appRoot,
+	savePath = appDir + '/public/res/archives/';
+
+	// remove existing archive directory and files
+	if (fs.existsSync(savePath)) {
+		fs.rmSync(savePath, { recursive: true, force: true });
+		// then recreate directory
+		fs.mkdirSync(savePath);
+	}
+
+}
+
 // list stored new projects
 exports.listNewprojects = function(req, res) {
 	Newproject.find().sort('-created').then(function (newprojects) {

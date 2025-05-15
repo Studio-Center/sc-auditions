@@ -19,6 +19,9 @@ module.exports = function(app) {
 	app.route('/tools/mainClientsCheck')
 		.get(tools.mainClientsCheck);
 
+	app.route('/tools/garbageCleanup')
+		.get(tools.mainClientsCheck);
+
 	// call list routes
 	app.route('/tools/gatherTalentsToCall')
 		.post(users.requiresLogin, tools.gatherTalentsToCall);
