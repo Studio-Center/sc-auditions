@@ -873,13 +873,31 @@ exports.processGoogleSheet = function(req, res){
 exports.garbageCleanup = function(req, res){
 
 	let appDir = global.appRoot,
-		savePath = appDir + '/public/res/archives/';
+		savePath = appDir + '/public/res/archives/',
+		savePathScriptTemp = appDir + '/public/res/scripts/temp/',
+		savePathRefTemp = appDir + '/public/res/referenceFiles/temp/',
+		savePathTalentTemp = appDir + '/public/res/talentUploads/';
 
 	// remove existing archive directory and files
 	if (fs.existsSync(savePath)) {
 		fs.rmSync(savePath, { recursive: true, force: true });
 		// then recreate directory
 		fs.mkdirSync(savePath);
+	}
+	if (fs.existsSync(savePathScriptTemp)) {
+		fs.rmSync(savePathScriptTemp, { recursive: true, force: true });
+		// then recreate directory
+		fs.mkdirSync(savePathScriptTemp);
+	}
+	if (fs.existsSync(savePathRefTemp)) {
+		fs.rmSync(savePathRefTemp, { recursive: true, force: true });
+		// then recreate directory
+		fs.mkdirSync(savePathRefTemp);
+	}
+	if (fs.existsSync(savePathTalentTemp)) {
+		fs.rmSync(savePathTalentTemp, { recursive: true, force: true });
+		// then recreate directory
+		fs.mkdirSync(savePathTalentTemp);
 	}
 
 }
