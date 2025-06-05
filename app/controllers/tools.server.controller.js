@@ -875,8 +875,7 @@ exports.garbageCleanup = function(req, res){
 	let appDir = global.appRoot,
 		savePath = appDir + '/public/res/archives/',
 		savePathScriptTemp = appDir + '/public/res/scripts/temp/',
-		savePathRefTemp = appDir + '/public/res/referenceFiles/temp/',
-		savePathTalentTemp = appDir + '/public/res/talentUploads/';
+		savePathRefTemp = appDir + '/public/res/referenceFiles/temp/';
 
 	// remove existing archive directory and files
 	if (fs.existsSync(savePath)) {
@@ -893,11 +892,6 @@ exports.garbageCleanup = function(req, res){
 		fs.rmSync(savePathRefTemp, { recursive: true, force: true });
 		// then recreate directory
 		fs.mkdirSync(savePathRefTemp);
-	}
-	if (fs.existsSync(savePathTalentTemp)) {
-		fs.rmSync(savePathTalentTemp, { recursive: true, force: true });
-		// then recreate directory
-		fs.mkdirSync(savePathTalentTemp);
 	}
 
 }
