@@ -133,7 +133,7 @@ exports.updateAdmin = function(req, res) {
 				res.render(template, {
 					emailSignature: emailSig,
 					user: user,
-					audURL: 'http://' + req.headers.host,
+					audURL: config.APP_BASE_URL,
 				}, function(err, clientEmailHTML) {
 
 					let ccAddr = [config.mailer.notifications];
@@ -259,7 +259,7 @@ exports.create = function(req, res) {
 			emailSignature: emailSig,
 			user: user,
 			password: savedPassword,
-			audURL: 'http://' + req.headers.host,
+			audURL: config.APP_BASE_URL,
 		}, function(err, clientEmailHTML) {
 
 			let emailSubject = 'Studio Center Auditions - Client Login Information';

@@ -10,6 +10,7 @@ module.exports = {
 	templateEngine: 'html',
 	sessionSecret: 'MEAN',
 	sessionCollection: 'sessions',
+	APP_BASE_URL: 'https://studiocenterauditions.com',
 	assets: {
 		lib: {
 			css: [

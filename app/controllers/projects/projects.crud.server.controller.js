@@ -313,7 +313,7 @@ exports.create = function(req, res) {
 					email.scripts = '\n' + '<strong>Scripts:</strong>' + '<br>';
 					if(typeof project.scripts !== 'undefined' && project.scripts.length > 0){
 						for(const i in project.scripts) {
-							email.scripts += '<a href="http://' + req.headers.host + '/res/scripts/' + project._id + '/' + project.scripts[i].file.name + '">' + project.scripts[i].file.name + '</a><br>';
+							email.scripts += '<a href="' + config.APP_BASE_URL + '/res/scripts/' + project._id + '/' + project.scripts[i].file.name + '">' + project.scripts[i].file.name + '</a><br>';
 						}
 					} else {
 						email.scripts += 'None';
@@ -321,7 +321,7 @@ exports.create = function(req, res) {
 					email.referenceFiles = '\n' + '<strong>Reference Files:</strong>' + '<br>';
 					if(typeof project.referenceFiles !== 'undefined' && project.referenceFiles.length > 0){
 						for(const j in project.referenceFiles) {
-							email.referenceFiles += '<a href="http://' + req.headers.host + '/res/referenceFiles/' + project._id + '/' + project.referenceFiles[j].file.name + '">' + project.referenceFiles[j].file.name + '</a><br>';
+							email.referenceFiles += '<a href="' + config.APP_BASE_URL + '/res/referenceFiles/' + project._id + '/' + project.referenceFiles[j].file.name + '">' + project.referenceFiles[j].file.name + '</a><br>';
 						}
 					} else {
 						email.referenceFiles += 'None';
